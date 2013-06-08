@@ -26,6 +26,12 @@ class Editor
     TEXT_INPUT_LOAD_MAP,
     TEXT_INPUT_SELECT_MUSIC
   };
+
+  enum EditState
+  {
+    EDIT_STATE_PLACE_TILES,
+    EDIT_STATE_PLACE_ENTITES
+  };
 public:
   Editor();
   ~Editor();
@@ -63,6 +69,8 @@ private:
   void handleCarriageReturn();
   void setTextInputState(TextInputState newState);
   std::string textInputStateToString() const;
+
+  const Entity* getEntityAt(int x, int y) const;
 private:
   sf::RenderWindow m_window;
 
@@ -87,7 +95,8 @@ private:
   std::string m_currentInput;
 
   std::vector<Entity*> m_entities;
-  bool m_entityMode;
+  std::string m_currentEntityName;
+  EditState m_editState;
 };
 
 #endif

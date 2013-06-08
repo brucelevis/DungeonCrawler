@@ -21,7 +21,7 @@ Editor::Editor()
    m_currentLayer(0),
    m_currentTile({0, 0}),
    m_textInputState(TEXT_INPUT_NONE),
-   m_entityMode(false)
+   m_editState(EDIT_STATE_PLACE_TILES)
 {
   m_window.create(sf::VideoMode(640, 480), "DPOC Editor");
 
@@ -54,6 +54,8 @@ Editor::~Editor()
   cache::releaseTexture("Resources/DqTileset.png");
   for (int i = 0; i < MAX_LAYERS; i++)
     delete[] m_tiles[i];
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+    delete *it;
 }
 
 void Editor::run()
@@ -143,19 +145,32 @@ void Editor::checkKeyEvents(sf::Event& event)
     if (event.key.code == sf::Keyboard::F5)
     {
       m_currentLayer = 0;
-      m_entityMode = false;
+
+      // Reset scrolling if changing back to tile mode.
+      if (m_editState == EDIT_STATE_PLACE_ENTITES)
+      {
+        m_tileScrollY = 0;
+        m_editState = EDIT_STATE_PLACE_TILES;
+      }
     }
     else if (event.key.code == sf::Keyboard::F6)
     {
       m_currentLayer = 1;
-      m_entityMode = false;
+
+      // Reset scrolling if changing back to tile mode.
+      if (m_editState == EDIT_STATE_PLACE_ENTITES)
+      {
+        m_tileScrollY = 0;
+        m_editState = EDIT_STATE_PLACE_TILES;
+      }
     }
     else if (event.key.code == sf::Keyboard::F7)
     {
-      m_entityMode = true;
+      m_tileScrollY = 0;
+      m_editState = EDIT_STATE_PLACE_ENTITES;
     }
 
-    if (event.key.code == sf::Keyboard::F)
+    if (event.key.code == sf::Keyboard::F && m_editState == EDIT_STATE_PLACE_TILES)
     {
       int mouseX = sf::Mouse::getPosition(m_window).x;
       int mouseY = sf::Mouse::getPosition(m_window).y;
@@ -214,10 +229,21 @@ void Editor::checkMouseEvents()
       int px = (mouseX - m_tilesetArea.left) / 16;
       int py = m_tileScrollY + (mouseY - m_tilesetArea.top) / 16;
 
-      int index = py * (m_tilesetArea.width / TILE_W) + px;
-      if (index >= 0 && index < (int)m_tileParts.size())
+      if (m_editState == EDIT_STATE_PLACE_TILES)
       {
-        m_currentTile = m_tileParts[index];
+        int index = py * (m_tilesetArea.width / TILE_W) + px;
+        if (index >= 0 && index < (int)m_tileParts.size())
+        {
+          m_currentTile = m_tileParts[index];
+        }
+      }
+      else if (m_editState == EDIT_STATE_PLACE_ENTITES)
+      {
+        int index = py * (m_tilesetArea.width / TILE_W) + px;
+        if (index >= 0 && index < (int)ENTITY_DEF.size())
+        {
+          m_currentEntityName = ENTITY_DEF.at(index).name;
+        }
       }
     }
     else if (m_editArea.contains(mouseX, mouseY))
@@ -225,9 +251,24 @@ void Editor::checkMouseEvents()
       int px = m_scrollX + (mouseX - m_editArea.left) / 16;
       int py = m_scrollY + (mouseY - m_editArea.top) / 16;
 
-      if (getTileAt(px, py, m_currentLayer))
+      if (m_editState == EDIT_STATE_PLACE_TILES)
       {
-        updateTile(px, py);
+        if (getTileAt(px, py, m_currentLayer))
+        {
+          updateTile(px, py);
+        }
+      }
+      else if (m_editState == EDIT_STATE_PLACE_ENTITES)
+      {
+        if (!getEntityAt(px, py))
+        {
+          TRACE("Placing entity: %s at [%d, %d]", m_currentEntityName.c_str(), px, py);
+
+          Entity* entity = create_entity(m_currentEntityName);
+          entity->x = px;
+          entity->y = py;
+          m_entities.push_back(entity);
+        }
       }
     }
   }
@@ -241,11 +282,25 @@ void Editor::checkMouseEvents()
       int px = m_scrollX + (mouseX - m_editArea.left) / 16;
       int py = m_scrollY + (mouseY - m_editArea.top) / 16;
 
-      const TilePart* tile = getTileAt(px, py, m_currentLayer);
-      if (tile)
+      if (m_editState == EDIT_STATE_PLACE_TILES)
       {
-        m_currentTile.tileX = tile->tileX;
-        m_currentTile.tileY = tile->tileY;
+        const TilePart* tile = getTileAt(px, py, m_currentLayer);
+        if (tile)
+        {
+          m_currentTile.tileX = tile->tileX;
+          m_currentTile.tileY = tile->tileY;
+        }
+      }
+      else if (m_editState == EDIT_STATE_PLACE_ENTITES)
+      {
+        const Entity* entity = getEntityAt(px, py);
+        if (entity)
+        {
+          TRACE("Removing entity: %s at [%d, %d]", entity->name.c_str(), px, py);
+
+          m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
+          delete entity;
+        }
       }
     }
   }
@@ -255,11 +310,11 @@ void Editor::draw()
 {
   m_window.clear();
 
-  if (!m_entityMode)
+  if (m_editState == EDIT_STATE_PLACE_TILES)
   {
     drawTileset();
   }
-  else
+  else if (m_editState == EDIT_STATE_PLACE_ENTITES)
   {
     drawAvailableEntities();
   }
@@ -334,7 +389,66 @@ void Editor::drawTileset()
 
 void Editor::drawAvailableEntities()
 {
+//  sf::Sprite sprite;
+//  sprite.setTexture(*m_tileset);
 
+  int x = 0;
+  int y = 0;
+
+  for (auto it = ENTITY_DEF.begin(); it != ENTITY_DEF.end(); ++it)
+  {
+    int posX = x * TILE_W;
+    int posY = (y - m_tileScrollY) * TILE_H;
+
+    if (posY >= (m_tilesetArea.top + m_tilesetArea.height))
+      continue;
+
+    posX += m_tilesetArea.left;
+    posY += m_tilesetArea.top;
+
+//    sprite.setTextureRect(sf::IntRect(tp.tileX*TILE_W, tp.tileY*TILE_H, TILE_W, TILE_H));
+//    sprite.setPosition(posX, posY);
+//    m_window.draw(sprite);
+    sf::RectangleShape tmpRect;
+    tmpRect.setPosition(posX, posY);
+    tmpRect.setSize(sf::Vector2f(TILE_W, TILE_H));
+    tmpRect.setFillColor(sf::Color::Blue);
+    tmpRect.setOutlineColor(sf::Color::Transparent);
+    m_window.draw(tmpRect);
+
+    if (m_currentEntityName == it->name)
+    {
+      sf::RectangleShape rect;
+      rect.setPosition(posX + 2, posY + 2);
+      rect.setSize(sf::Vector2f(TILE_W - 4, TILE_H - 4));
+      rect.setFillColor(sf::Color::Transparent);
+      rect.setOutlineColor(sf::Color::Green);
+      rect.setOutlineThickness(2.0f);
+      m_window.draw(rect);
+    }
+
+    int mouseX = sf::Mouse::getPosition(m_window).x;
+    int mouseY = sf::Mouse::getPosition(m_window).y;
+    if (mouseX > posX && mouseY > posY && mouseX < (posX + TILE_W) && mouseY < (posY + TILE_H))
+    {
+      sf::RectangleShape rect;
+      rect.setPosition(posX + 2, posY + 2);
+      rect.setSize(sf::Vector2f(TILE_W - 4, TILE_H - 4));
+      rect.setFillColor(sf::Color::Transparent);
+      rect.setOutlineColor(sf::Color::Red);
+      rect.setOutlineThickness(2.0f);
+      m_window.draw(rect);
+
+      draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4, "Entity: %s", it->name.c_str());
+    }
+
+    x++;
+    if ((x % (m_tilesetArea.width / TILE_W)) == 0)
+    {
+      x = 0;
+      y++;
+    }
+  }
 }
 
 void Editor::drawEditArea()
@@ -377,6 +491,25 @@ void Editor::drawEditArea()
           m_window.draw(sprite);
         }
       }
+    }
+  }
+
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+  {
+    int px = (*it)->x;
+    int py = (*it)->y;
+
+    if (px >= m_scrollX && py >= m_scrollY && px < m_scrollXMax && py < m_scrollYMax)
+    {
+      int posX = TILE_W*(px - m_scrollX) + m_editArea.left;
+      int posY = TILE_H*(py - m_scrollY) + m_editArea.top;
+
+      sf::RectangleShape tmpRect;
+      tmpRect.setPosition(posX, posY);
+      tmpRect.setSize(sf::Vector2f(TILE_W, TILE_H));
+      tmpRect.setFillColor(sf::Color::Blue);
+      tmpRect.setOutlineColor(sf::Color::Transparent);
+      m_window.draw(tmpRect);
     }
   }
 
@@ -594,4 +727,17 @@ std::string Editor::textInputStateToString() const
   default:
     return "<Unknown textInputState>";
   }
+}
+
+const Entity* Editor::getEntityAt(int x, int y) const
+{
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+  {
+    if ((int)(*it)->x == x && (int)(*it)->y == y)
+    {
+      return *it;
+    }
+  }
+
+  return 0;
 }
