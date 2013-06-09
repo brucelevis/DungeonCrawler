@@ -9,7 +9,7 @@
 
 class Editor
 {
-  struct TilePart
+  struct Tile
   {
     int tileX, tileY;
     int zone;
@@ -59,7 +59,7 @@ private:
     return m_mapW * m_mapH;
   }
 
-  TilePart* getTileAt(int x, int y, int layer);
+  Tile* getTileAt(int x, int y, int layer);
   void updateTile(int x, int y);
 
   void doFloodFill(int px, int py);
@@ -78,7 +78,7 @@ private:
 
   sf::Texture* m_tileset;
 
-  std::vector<TilePart> m_tileParts;
+  std::vector<Tile> m_tileParts;
   sf::IntRect m_tilesetArea;
   int m_tileScrollY;
 
@@ -86,10 +86,10 @@ private:
   int m_mapW, m_mapH;
   int m_scrollX, m_scrollY;
   int m_scrollXMax, m_scrollYMax;
-  TilePart* m_tiles[config::MAX_LAYERS];
+  Tile* m_tiles[config::MAX_LAYERS];
   int m_currentLayer;
 
-  TilePart m_currentTile;
+  Tile m_currentTile;
 
   TextInputState m_textInputState;
   std::string m_currentInput;

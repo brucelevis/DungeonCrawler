@@ -44,7 +44,7 @@ Editor::Editor()
 
   for (int i = 0; i < config::MAX_LAYERS; i++)
   {
-    m_tiles[i] = new TilePart[m_mapW * m_mapH];
+    m_tiles[i] = new Tile[m_mapW * m_mapH];
 
     for (int j = 0; j < getNumberOfTiles(); j++)
     {
@@ -299,7 +299,7 @@ void Editor::checkMouseEvents()
       }
       else if (m_editState == EDIT_STATE_PLACE_ZONE)
       {
-        TilePart* tile = getTileAt(px, py, 0);
+        Tile* tile = getTileAt(px, py, 0);
         if (tile)
         {
           tile->zone = m_currentZone;
@@ -319,7 +319,7 @@ void Editor::checkMouseEvents()
 
       if (m_editState == EDIT_STATE_PLACE_TILES)
       {
-        TilePart* tile = getTileAt(px, py, m_currentLayer);
+        Tile* tile = getTileAt(px, py, m_currentLayer);
         if (tile)
         {
           m_currentTile.tileX = tile->tileX;
@@ -339,7 +339,7 @@ void Editor::checkMouseEvents()
       }
       else if (m_editState == EDIT_STATE_PLACE_ZONE)
       {
-        TilePart* tile = getTileAt(px, py, 0);
+        Tile* tile = getTileAt(px, py, 0);
         if (tile)
         {
           tile->zone = 0;
@@ -392,7 +392,7 @@ void Editor::drawTileset()
 
   for (size_t i = 0; i < m_tileParts.size(); i++)
   {
-    const TilePart& tp = m_tileParts[i];
+    const Tile& tp = m_tileParts[i];
     int posX = x * config::TILE_W;
     int posY = (y - m_tileScrollY) * config::TILE_H;
 
@@ -583,7 +583,7 @@ void Editor::drawEditArea()
 
       for (int i = 0; i < config::MAX_LAYERS; i++)
       {
-        TilePart* tp = getTileAt(x, y, i);
+        Tile* tp = getTileAt(x, y, i);
         if (tp)
         {
           sprite.setPosition(posX, posY);
@@ -693,14 +693,14 @@ void Editor::buildTileParts()
   {
     for (int x = 0; x < numTilesX; x++)
     {
-      TilePart part = { x, y };
+      Tile part = { x, y };
       m_tileParts.push_back(part);
     }
   }
 
 }
 
-Editor::TilePart* Editor::getTileAt(int x, int y, int layer)
+Editor::Tile* Editor::getTileAt(int x, int y, int layer)
 {
   if (x < 0 || y < 0 || x >= m_mapW || y >= m_mapH)
     return 0;
@@ -728,7 +728,7 @@ void Editor::updateTile(int x, int y)
 
 void Editor::doFloodFill(int px, int py)
 {
-  TilePart* originTile = getTileAt(px, py, m_currentLayer);
+  Tile* originTile = getTileAt(px, py, m_currentLayer);
 
   if (!originTile)
     return;
@@ -740,7 +740,7 @@ void Editor::doFloodFill(int px, int py)
     {
       int index = y * m_mapW + x;
 
-      TilePart* t = getTileAt(x, y, m_currentLayer);
+      Tile* t = getTileAt(x, y, m_currentLayer);
       if (t->tileX == originTile->tileX && t->tileY == originTile->tileY)
       {
 
@@ -773,10 +773,10 @@ void Editor::resizeMap(int width, int height)
 {
   TRACE("Changing map size from (%d %d) to (%d %d)", m_mapW, m_mapH, width, height);
 
-  TilePart* newTiles[config::MAX_LAYERS];
+  Tile* newTiles[config::MAX_LAYERS];
   for (int i = 0; i < config::MAX_LAYERS; i++)
   {
-    newTiles[i] = new TilePart[width * height]();
+    newTiles[i] = new Tile[width * height]();
   }
 
   for (int i = 0; i < config::MAX_LAYERS; i++)
@@ -795,7 +795,7 @@ void Editor::resizeMap(int width, int height)
     {
       for (int x = 0; x < m_mapW; x++)
       {
-        TilePart* tp = getTileAt(x, y, i);
+        Tile* tp = getTileAt(x, y, i);
 
         if (x < width && y < height)
         {
