@@ -10,7 +10,7 @@ class Sprite
 public:
   Sprite();
   ~Sprite();
-  void create(const std::string& spriteId, int spriteSheetX, int spriteSheetY, int speed);
+  void create(const std::string& spriteId, int spriteSheetX, int spriteSheetY, int speed = 10);
   void update(Direction direction);
   void render(sf::RenderTarget& target, float x, float y);
 
