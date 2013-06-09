@@ -5,11 +5,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
-
-static const int MAX_LAYERS = 2;
-// Put this somewhere
-static const int TILE_W = 16;
-static const int TILE_H = 16;
+#include "Config.h"
 
 class Editor
 {
@@ -86,7 +82,7 @@ private:
   int m_mapW, m_mapH;
   int m_scrollX, m_scrollY;
   int m_scrollXMax, m_scrollYMax;
-  TilePart* m_tiles[MAX_LAYERS];
+  TilePart* m_tiles[config::MAX_LAYERS];
   int m_currentLayer;
 
   TilePart m_currentTile;

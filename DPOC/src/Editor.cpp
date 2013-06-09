@@ -36,7 +36,7 @@ Editor::Editor()
     buildTileParts();
   }
 
-  for (int i = 0; i < MAX_LAYERS; i++)
+  for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     m_tiles[i] = new TilePart[m_mapW * m_mapH];
 
@@ -52,7 +52,7 @@ Editor::~Editor()
 {
   m_window.close();
   cache::releaseTexture("Resources/DqTileset.png");
-  for (int i = 0; i < MAX_LAYERS; i++)
+  for (int i = 0; i < config::MAX_LAYERS; i++)
     delete[] m_tiles[i];
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
@@ -66,13 +66,13 @@ void Editor::run()
 
     checkMouseEvents();
 
-    m_scrollX = std::min(m_mapW - m_editArea.width / TILE_W, m_scrollX);
-    m_scrollY = std::min(m_mapH - m_editArea.height / TILE_H, m_scrollY);
+    m_scrollX = std::min(m_mapW - m_editArea.width / config::TILE_W, m_scrollX);
+    m_scrollY = std::min(m_mapH - m_editArea.height / config::TILE_H, m_scrollY);
     m_scrollX = std::max(0, m_scrollX);
     m_scrollY = std::max(0, m_scrollY);
 
-    m_scrollXMax = m_scrollX + m_editArea.width / TILE_W;
-    m_scrollYMax = m_scrollY + m_editArea.height / TILE_H;
+    m_scrollXMax = m_scrollX + m_editArea.width / config::TILE_W;
+    m_scrollYMax = m_scrollY + m_editArea.height / config::TILE_H;
     if (m_scrollXMax > m_mapW) m_scrollXMax = m_mapW;
     if (m_scrollYMax > m_mapH) m_scrollYMax = m_mapH;
 
@@ -231,7 +231,7 @@ void Editor::checkMouseEvents()
 
       if (m_editState == EDIT_STATE_PLACE_TILES)
       {
-        int index = py * (m_tilesetArea.width / TILE_W) + px;
+        int index = py * (m_tilesetArea.width / config::TILE_W) + px;
         if (index >= 0 && index < (int)m_tileParts.size())
         {
           m_currentTile = m_tileParts[index];
@@ -239,7 +239,7 @@ void Editor::checkMouseEvents()
       }
       else if (m_editState == EDIT_STATE_PLACE_ENTITES)
       {
-        int index = py * (m_tilesetArea.width / TILE_W) + px;
+        int index = py * (m_tilesetArea.width / config::TILE_W) + px;
         if (index >= 0 && index < (int)ENTITY_DEF.size())
         {
           m_currentEntityName = ENTITY_DEF.at(index).name;
@@ -341,8 +341,8 @@ void Editor::drawTileset()
   for (size_t i = 0; i < m_tileParts.size(); i++)
   {
     const TilePart& tp = m_tileParts[i];
-    int posX = x * TILE_W;
-    int posY = (y - m_tileScrollY) * TILE_H;
+    int posX = x * config::TILE_W;
+    int posY = (y - m_tileScrollY) * config::TILE_H;
 
     if (posY >= (m_tilesetArea.top + m_tilesetArea.height))
       continue;
@@ -350,7 +350,7 @@ void Editor::drawTileset()
     posX += m_tilesetArea.left;
     posY += m_tilesetArea.top;
 
-    sprite.setTextureRect(sf::IntRect(tp.tileX*TILE_W, tp.tileY*TILE_H, TILE_W, TILE_H));
+    sprite.setTextureRect(sf::IntRect(tp.tileX*config::TILE_W, tp.tileY*config::TILE_H, config::TILE_W, config::TILE_H));
     sprite.setPosition(posX, posY);
     m_window.draw(sprite);
 
@@ -358,7 +358,7 @@ void Editor::drawTileset()
     {
       sf::RectangleShape rect;
       rect.setPosition(posX + 2, posY + 2);
-      rect.setSize(sf::Vector2f(TILE_W - 4, TILE_H - 4));
+      rect.setSize(sf::Vector2f(config::TILE_W - 4, config::TILE_H - 4));
       rect.setFillColor(sf::Color::Transparent);
       rect.setOutlineColor(sf::Color::Green);
       rect.setOutlineThickness(2.0f);
@@ -367,11 +367,11 @@ void Editor::drawTileset()
 
     int mouseX = sf::Mouse::getPosition(m_window).x;
     int mouseY = sf::Mouse::getPosition(m_window).y;
-    if (mouseX > posX && mouseY > posY && mouseX < (posX + TILE_W) && mouseY < (posY + TILE_H))
+    if (mouseX > posX && mouseY > posY && mouseX < (posX + config::TILE_W) && mouseY < (posY + config::TILE_H))
     {
       sf::RectangleShape rect;
       rect.setPosition(posX + 2, posY + 2);
-      rect.setSize(sf::Vector2f(TILE_W - 4, TILE_H - 4));
+      rect.setSize(sf::Vector2f(config::TILE_W - 4, config::TILE_H - 4));
       rect.setFillColor(sf::Color::Transparent);
       rect.setOutlineColor(sf::Color::Red);
       rect.setOutlineThickness(2.0f);
@@ -379,7 +379,7 @@ void Editor::drawTileset()
     }
 
     x++;
-    if ((x % (m_tilesetArea.width / TILE_W)) == 0)
+    if ((x % (m_tilesetArea.width / config::TILE_W)) == 0)
     {
       x = 0;
       y++;
@@ -397,8 +397,8 @@ void Editor::drawAvailableEntities()
 
   for (auto it = ENTITY_DEF.begin(); it != ENTITY_DEF.end(); ++it)
   {
-    int posX = x * TILE_W;
-    int posY = (y - m_tileScrollY) * TILE_H;
+    int posX = x * config::TILE_W;
+    int posY = (y - m_tileScrollY) * config::TILE_H;
 
     if (posY >= (m_tilesetArea.top + m_tilesetArea.height))
       continue;
@@ -406,12 +406,12 @@ void Editor::drawAvailableEntities()
     posX += m_tilesetArea.left;
     posY += m_tilesetArea.top;
 
-//    sprite.setTextureRect(sf::IntRect(tp.tileX*TILE_W, tp.tileY*TILE_H, TILE_W, TILE_H));
+//    sprite.setTextureRect(sf::IntRect(tp.tileX*config::TILE_W, tp.tileY*config::TILE_H, config::TILE_W, config::TILE_H));
 //    sprite.setPosition(posX, posY);
 //    m_window.draw(sprite);
     sf::RectangleShape tmpRect;
     tmpRect.setPosition(posX, posY);
-    tmpRect.setSize(sf::Vector2f(TILE_W, TILE_H));
+    tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
     tmpRect.setFillColor(sf::Color::Blue);
     tmpRect.setOutlineColor(sf::Color::Transparent);
     m_window.draw(tmpRect);
@@ -420,7 +420,7 @@ void Editor::drawAvailableEntities()
     {
       sf::RectangleShape rect;
       rect.setPosition(posX + 2, posY + 2);
-      rect.setSize(sf::Vector2f(TILE_W - 4, TILE_H - 4));
+      rect.setSize(sf::Vector2f(config::TILE_W - 4, config::TILE_H - 4));
       rect.setFillColor(sf::Color::Transparent);
       rect.setOutlineColor(sf::Color::Green);
       rect.setOutlineThickness(2.0f);
@@ -429,11 +429,11 @@ void Editor::drawAvailableEntities()
 
     int mouseX = sf::Mouse::getPosition(m_window).x;
     int mouseY = sf::Mouse::getPosition(m_window).y;
-    if (mouseX > posX && mouseY > posY && mouseX < (posX + TILE_W) && mouseY < (posY + TILE_H))
+    if (mouseX > posX && mouseY > posY && mouseX < (posX + config::TILE_W) && mouseY < (posY + config::TILE_H))
     {
       sf::RectangleShape rect;
       rect.setPosition(posX + 2, posY + 2);
-      rect.setSize(sf::Vector2f(TILE_W - 4, TILE_H - 4));
+      rect.setSize(sf::Vector2f(config::TILE_W - 4, config::TILE_H - 4));
       rect.setFillColor(sf::Color::Transparent);
       rect.setOutlineColor(sf::Color::Red);
       rect.setOutlineThickness(2.0f);
@@ -443,7 +443,7 @@ void Editor::drawAvailableEntities()
     }
 
     x++;
-    if ((x % (m_tilesetArea.width / TILE_W)) == 0)
+    if ((x % (m_tilesetArea.width / config::TILE_W)) == 0)
     {
       x = 0;
       y++;
@@ -468,16 +468,16 @@ void Editor::drawEditArea()
   {
     for (int x = m_scrollX; x < m_scrollXMax; x++)
     {
-      int posX = TILE_W*(x - m_scrollX) + m_editArea.left;
-      int posY = TILE_H*(y - m_scrollY) + m_editArea.top;
+      int posX = config::TILE_W*(x - m_scrollX) + m_editArea.left;
+      int posY = config::TILE_H*(y - m_scrollY) + m_editArea.top;
 
-      for (int i = 0; i < MAX_LAYERS; i++)
+      for (int i = 0; i < config::MAX_LAYERS; i++)
       {
         const TilePart* tp = getTileAt(x, y, i);
         if (tp)
         {
           sprite.setPosition(posX, posY);
-          sprite.setTextureRect(sf::IntRect(tp->tileX*TILE_W, tp->tileY*TILE_H, TILE_W, TILE_H));
+          sprite.setTextureRect(sf::IntRect(tp->tileX*config::TILE_W, tp->tileY*config::TILE_H, config::TILE_W, config::TILE_H));
 
           if (i != m_currentLayer && m_editState == EDIT_STATE_PLACE_TILES)
           {
@@ -501,34 +501,34 @@ void Editor::drawEditArea()
 
     if (px >= m_scrollX && py >= m_scrollY && px < m_scrollXMax && py < m_scrollYMax)
     {
-      int posX = TILE_W*(px - m_scrollX) + m_editArea.left;
-      int posY = TILE_H*(py - m_scrollY) + m_editArea.top;
+      int posX = config::TILE_W*(px - m_scrollX) + m_editArea.left;
+      int posY = config::TILE_H*(py - m_scrollY) + m_editArea.top;
 
       sf::RectangleShape tmpRect;
       tmpRect.setPosition(posX, posY);
-      tmpRect.setSize(sf::Vector2f(TILE_W, TILE_H));
+      tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
       tmpRect.setFillColor(sf::Color::Blue);
       tmpRect.setOutlineColor(sf::Color::Transparent);
       m_window.draw(tmpRect);
     }
   }
 
-  for (int y = 0; y < m_editArea.height / TILE_H; y++)
+  for (int y = 0; y < m_editArea.height / config::TILE_H; y++)
   {
-    for (int x = 0; x < m_editArea.width / TILE_W; x++)
+    for (int x = 0; x < m_editArea.width / config::TILE_W; x++)
     {
       int px = x + m_scrollX;
       int py = y + m_scrollY;
 
       if (px >= m_mapW || py >= m_mapH)
       {
-        int posX = (px - m_scrollX) * TILE_W + m_editArea.left + 1;
-        int posY = (py - m_scrollY) * TILE_H + m_editArea.top + 1;
+        int posX = (px - m_scrollX) * config::TILE_W + m_editArea.left + 1;
+        int posY = (py - m_scrollY) * config::TILE_H + m_editArea.top + 1;
 
         if (m_editArea.contains(posX, posY))
         {
           rect.setPosition(posX, posY);
-          rect.setSize(sf::Vector2f(TILE_W-2, TILE_H-2));
+          rect.setSize(sf::Vector2f(config::TILE_W-2, config::TILE_H-2));
           rect.setFillColor(sf::Color(64, 64, 64));
           rect.setOutlineColor(sf::Color(64, 64, 64));
           m_window.draw(rect);
@@ -542,11 +542,11 @@ void Editor::drawEditArea()
 
   if (m_editArea.contains(mouseX, mouseY))
   {
-    mouseX /= TILE_W;
-    mouseY /= TILE_H;
+    mouseX /= config::TILE_W;
+    mouseY /= config::TILE_H;
 
-    rect.setPosition(mouseX * TILE_W, mouseY * TILE_H);
-    rect.setSize(sf::Vector2f(TILE_W, TILE_H));
+    rect.setPosition(mouseX * config::TILE_W, mouseY * config::TILE_H);
+    rect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
     rect.setFillColor(sf::Color::Transparent);
     rect.setOutlineColor(sf::Color::Red);
     m_window.draw(rect);
@@ -557,8 +557,8 @@ void Editor::drawEditArea()
 
 void Editor::buildTileParts()
 {
-  int numTilesX = m_tileset->getSize().x / TILE_W;
-  int numTilesY = m_tileset->getSize().y / TILE_H;
+  int numTilesX = m_tileset->getSize().x / config::TILE_W;
+  int numTilesY = m_tileset->getSize().y / config::TILE_H;
 
   for (int y = 0; y < numTilesY; y++)
   {
@@ -644,13 +644,13 @@ void Editor::resizeMap(int width, int height)
 {
   TRACE("Changing map size from (%d %d) to (%d %d)", m_mapW, m_mapH, width, height);
 
-  TilePart* newTiles[MAX_LAYERS];
-  for (int i = 0; i < MAX_LAYERS; i++)
+  TilePart* newTiles[config::MAX_LAYERS];
+  for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     newTiles[i] = new TilePart[width * height]();
   }
 
-  for (int i = 0; i < MAX_LAYERS; i++)
+  for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     for (int j = 0; j < width * height; j++)
     {
@@ -659,7 +659,7 @@ void Editor::resizeMap(int width, int height)
     }
   }
 
-  for (int i = 0; i < MAX_LAYERS; i++)
+  for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     for (int y = 0; y < m_mapH; y++)
     {
@@ -678,7 +678,7 @@ void Editor::resizeMap(int width, int height)
     }
   }
 
-  for (int i = 0; i < MAX_LAYERS; i++)
+  for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     delete[] m_tiles[i];
     m_tiles[i] = newTiles[i];
