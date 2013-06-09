@@ -479,7 +479,7 @@ void Editor::drawEditArea()
           sprite.setPosition(posX, posY);
           sprite.setTextureRect(sf::IntRect(tp->tileX*TILE_W, tp->tileY*TILE_H, TILE_W, TILE_H));
 
-          if (i != m_currentLayer)
+          if (i != m_currentLayer && m_editState == EDIT_STATE_PLACE_TILES)
           {
             sprite.setColor(sf::Color(255, 255, 255, 127));
           }
