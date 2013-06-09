@@ -26,7 +26,9 @@ class Editor
   enum EditState
   {
     EDIT_STATE_PLACE_TILES,
-    EDIT_STATE_PLACE_ENTITES
+    EDIT_STATE_PLACE_ENTITES,
+    EDIT_STATE_PLACE_WARP,
+    EDIT_STATE_PLACE_ZONE
   };
 public:
   Editor();
