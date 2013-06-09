@@ -36,6 +36,11 @@ Editor::Editor()
     buildTileParts();
   }
 
+  for (auto it = ENTITY_DEF.begin(); it != ENTITY_DEF.end(); ++it)
+  {
+    m_availableEntities.push_back(new Entity(it->name));
+  }
+
   for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     m_tiles[i] = new TilePart[m_mapW * m_mapH];
@@ -54,6 +59,8 @@ Editor::~Editor()
   cache::releaseTexture("Resources/DqTileset.png");
   for (int i = 0; i < config::MAX_LAYERS; i++)
     delete[] m_tiles[i];
+  for (auto it = m_availableEntities.begin(); it != m_availableEntities.end(); ++it)
+    delete *it;
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
 }
@@ -264,7 +271,7 @@ void Editor::checkMouseEvents()
         {
           TRACE("Placing entity: %s at [%d, %d]", m_currentEntityName.c_str(), px, py);
 
-          Entity* entity = create_entity(m_currentEntityName);
+          Entity* entity = new Entity(m_currentEntityName);
           entity->x = px;
           entity->y = py;
           m_entities.push_back(entity);
@@ -296,7 +303,7 @@ void Editor::checkMouseEvents()
         const Entity* entity = getEntityAt(px, py);
         if (entity)
         {
-          TRACE("Removing entity: %s at [%d, %d]", entity->name.c_str(), px, py);
+          TRACE("Removing entity: %s at [%d, %d]", entity->getName().c_str(), px, py);
 
           m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
           delete entity;
@@ -395,7 +402,7 @@ void Editor::drawAvailableEntities()
   int x = 0;
   int y = 0;
 
-  for (auto it = ENTITY_DEF.begin(); it != ENTITY_DEF.end(); ++it)
+  for (auto it = m_availableEntities.begin(); it != m_availableEntities.end(); ++it)
   {
     int posX = x * config::TILE_W;
     int posY = (y - m_tileScrollY) * config::TILE_H;
@@ -409,14 +416,17 @@ void Editor::drawAvailableEntities()
 //    sprite.setTextureRect(sf::IntRect(tp.tileX*config::TILE_W, tp.tileY*config::TILE_H, config::TILE_W, config::TILE_H));
 //    sprite.setPosition(posX, posY);
 //    m_window.draw(sprite);
-    sf::RectangleShape tmpRect;
-    tmpRect.setPosition(posX, posY);
-    tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
-    tmpRect.setFillColor(sf::Color::Blue);
-    tmpRect.setOutlineColor(sf::Color::Transparent);
-    m_window.draw(tmpRect);
 
-    if (m_currentEntityName == it->name)
+    (*it)->sprite()->render(m_window, posX, posY);
+
+//    sf::RectangleShape tmpRect;
+//    tmpRect.setPosition(posX, posY);
+//    tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
+//    tmpRect.setFillColor(sf::Color::Blue);
+//    tmpRect.setOutlineColor(sf::Color::Transparent);
+//    m_window.draw(tmpRect);
+
+    if (m_currentEntityName == (*it)->getName())
     {
       sf::RectangleShape rect;
       rect.setPosition(posX + 2, posY + 2);
@@ -439,7 +449,7 @@ void Editor::drawAvailableEntities()
       rect.setOutlineThickness(2.0f);
       m_window.draw(rect);
 
-      draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4, "Entity: %s", it->name.c_str());
+      draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4, "Entity: %s", (*it)->getName().c_str());
     }
 
     x++;
@@ -504,12 +514,14 @@ void Editor::drawEditArea()
       int posX = config::TILE_W*(px - m_scrollX) + m_editArea.left;
       int posY = config::TILE_H*(py - m_scrollY) + m_editArea.top;
 
-      sf::RectangleShape tmpRect;
-      tmpRect.setPosition(posX, posY);
-      tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
-      tmpRect.setFillColor(sf::Color::Blue);
-      tmpRect.setOutlineColor(sf::Color::Transparent);
-      m_window.draw(tmpRect);
+      (*it)->sprite()->render(m_window, posX, posY);
+
+//      sf::RectangleShape tmpRect;
+//      tmpRect.setPosition(posX, posY);
+//      tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
+//      tmpRect.setFillColor(sf::Color::Blue);
+//      tmpRect.setOutlineColor(sf::Color::Transparent);
+//      m_window.draw(tmpRect);
     }
   }
 

@@ -10,7 +10,7 @@ Sprite::Sprite()
     m_maxFrame(config::NUM_SPRITES_X),
     m_ticksPerFrame(0),
     m_ticks(0),
-    m_direction(0),
+    m_direction(DIR_DOWN),
     m_spriteSheetX(0),
     m_spriteSheetY(0)
 {
@@ -18,6 +18,8 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
+  TRACE("Deleting sprite %s", m_textureName.c_str());
+
   cache::releaseTexture(m_textureName);
 }
 
@@ -27,6 +29,11 @@ void Sprite::create(const std::string& spriteId, int spriteSheetX, int spriteShe
   {
     TRACE("Recreating sprite %s with new textureName=%s", m_textureName.c_str(), spriteId.c_str());
     cache::releaseTexture(m_textureName);
+  }
+  else
+  {
+    TRACE("Creating sprite %s, spriteSheetX=%d, spriteSheety=%d, speed=%d",
+        spriteId.c_str(), spriteSheetX, spriteSheetY, speed);
   }
 
   m_textureName = spriteId;
@@ -40,8 +47,15 @@ void Sprite::create(const std::string& spriteId, int spriteSheetX, int spriteShe
   if (spriteTexture)
   {
     m_sprite.setTexture(*spriteTexture);
-    m_width = (spriteTexture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X)) / config::NUM_SPRITES_X;
-    m_height = (spriteTexture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y)) / config::NUM_SPRITES_Y;
+
+    int numberOfBlocksX = (spriteTexture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X));
+    int numberOfBlocksY = (spriteTexture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y));
+
+    int blockW = spriteTexture->getSize().x / numberOfBlocksX;
+    int blockH = spriteTexture->getSize().y / numberOfBlocksY;
+
+    m_width = blockW / config::NUM_SPRITES_X;
+    m_height = blockH / config::NUM_SPRITES_Y;
   }
   else
   {

@@ -4,9 +4,12 @@
 #include <vector>
 #include "Entity.h"
 
-static std::vector<Entity> ENTITY_DEF =
+static std::vector<EntityDef> ENTITY_DEF =
 {
-  { "bug_entity" }
+  {
+    "bug_entity",
+    "Resources/Hero.png", 0, 0
+  }
 };
 
 #endif

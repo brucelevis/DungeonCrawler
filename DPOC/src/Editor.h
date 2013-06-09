@@ -90,6 +90,7 @@ private:
   TextInputState m_textInputState;
   std::string m_currentInput;
 
+  std::vector<Entity*> m_availableEntities;
   std::vector<Entity*> m_entities;
   std::string m_currentEntityName;
   EditState m_editState;
