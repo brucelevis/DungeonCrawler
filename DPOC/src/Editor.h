@@ -12,6 +12,7 @@ class Editor
   struct TilePart
   {
     int tileX, tileY;
+    int zone;
   };
 
   enum TextInputState
@@ -50,6 +51,7 @@ private:
 
   void drawTileset();
   void drawAvailableEntities();
+  void drawZones();
   void drawEditArea();
 
   int getNumberOfTiles() const
@@ -57,7 +59,7 @@ private:
     return m_mapW * m_mapH;
   }
 
-  const TilePart* getTileAt(int x, int y, int layer) const;
+  TilePart* getTileAt(int x, int y, int layer);
   void updateTile(int x, int y);
 
   void doFloodFill(int px, int py);
@@ -98,6 +100,8 @@ private:
   EditState m_editState;
 
   std::string m_music;
+
+  int m_currentZone;
 };
 
 #endif
