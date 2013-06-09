@@ -6,7 +6,8 @@
 
 Entity::Entity(const std::string& name)
  : x(0),
-   y(0)
+   y(0),
+   m_sprite(0)
 {
   auto it = std::find_if(ENTITY_DEF.begin(), ENTITY_DEF.end(),
       [=](const EntityDef& entity)
@@ -17,8 +18,11 @@ Entity::Entity(const std::string& name)
   if (it != ENTITY_DEF.end())
   {
     m_name = name;
-    m_sprite = new Sprite;
-    m_sprite->create(it->spriteSheet, it->spriteSheetX, it->spriteSheetY);
+    if (!it->spriteSheet.empty())
+    {
+      m_sprite = new Sprite;
+      m_sprite->create(it->spriteSheet, it->spriteSheetX, it->spriteSheetY);
+    }
   }
   else
   {

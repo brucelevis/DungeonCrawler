@@ -396,9 +396,6 @@ void Editor::drawTileset()
 
 void Editor::drawAvailableEntities()
 {
-//  sf::Sprite sprite;
-//  sprite.setTexture(*m_tileset);
-
   int x = 0;
   int y = 0;
 
@@ -413,18 +410,19 @@ void Editor::drawAvailableEntities()
     posX += m_tilesetArea.left;
     posY += m_tilesetArea.top;
 
-//    sprite.setTextureRect(sf::IntRect(tp.tileX*config::TILE_W, tp.tileY*config::TILE_H, config::TILE_W, config::TILE_H));
-//    sprite.setPosition(posX, posY);
-//    m_window.draw(sprite);
-
-    (*it)->sprite()->render(m_window, posX, posY);
-
-//    sf::RectangleShape tmpRect;
-//    tmpRect.setPosition(posX, posY);
-//    tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
-//    tmpRect.setFillColor(sf::Color::Blue);
-//    tmpRect.setOutlineColor(sf::Color::Transparent);
-//    m_window.draw(tmpRect);
+    if ((*it)->sprite())
+    {
+      (*it)->sprite()->render(m_window, posX, posY);
+    }
+    else
+    {
+      sf::RectangleShape tmpRect;
+      tmpRect.setPosition(posX, posY);
+      tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
+      tmpRect.setFillColor(sf::Color::Blue);
+      tmpRect.setOutlineColor(sf::Color::Transparent);
+      m_window.draw(tmpRect);
+    }
 
     if (m_currentEntityName == (*it)->getName())
     {
@@ -514,14 +512,19 @@ void Editor::drawEditArea()
       int posX = config::TILE_W*(px - m_scrollX) + m_editArea.left;
       int posY = config::TILE_H*(py - m_scrollY) + m_editArea.top;
 
-      (*it)->sprite()->render(m_window, posX, posY);
-
-//      sf::RectangleShape tmpRect;
-//      tmpRect.setPosition(posX, posY);
-//      tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
-//      tmpRect.setFillColor(sf::Color::Blue);
-//      tmpRect.setOutlineColor(sf::Color::Transparent);
-//      m_window.draw(tmpRect);
+      if ((*it)->sprite())
+      {
+        (*it)->sprite()->render(m_window, posX, posY);
+      }
+      else
+      {
+        sf::RectangleShape tmpRect;
+        tmpRect.setPosition(posX, posY);
+        tmpRect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
+        tmpRect.setFillColor(sf::Color::Blue);
+        tmpRect.setOutlineColor(sf::Color::Transparent);
+        m_window.draw(tmpRect);
+      }
     }
   }
 
