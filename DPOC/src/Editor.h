@@ -6,15 +6,10 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Config.h"
+#include "Map.h"
 
 class Editor
 {
-  struct Tile
-  {
-    int tileX, tileY;
-    int zone;
-  };
-
   enum TextInputState
   {
     TEXT_INPUT_NONE,

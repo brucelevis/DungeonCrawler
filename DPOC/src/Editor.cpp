@@ -700,7 +700,7 @@ void Editor::buildTileParts()
 
 }
 
-Editor::Tile* Editor::getTileAt(int x, int y, int layer)
+Tile* Editor::getTileAt(int x, int y, int layer)
 {
   if (x < 0 || y < 0 || x >= m_mapW || y >= m_mapH)
     return 0;
