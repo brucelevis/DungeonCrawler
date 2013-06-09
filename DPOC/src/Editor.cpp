@@ -59,10 +59,17 @@ Editor::~Editor()
 {
   m_window.close();
   cache::releaseTexture("Resources/DqTileset.png");
-  for (int i = 0; i < config::MAX_LAYERS; i++)
-    delete[] m_tiles[i];
+
+  clear();
+
   for (auto it = m_availableEntities.begin(); it != m_availableEntities.end(); ++it)
     delete *it;
+}
+
+void Editor::clear()
+{
+  for (int i = 0; i < config::MAX_LAYERS; i++)
+    delete[] m_tiles[i];
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
 }
@@ -206,6 +213,16 @@ void Editor::checkKeyEvents(sf::Event& event)
     if (event.key.code == sf::Keyboard::M)
     {
       setTextInputState(TEXT_INPUT_SELECT_MUSIC);
+    }
+
+    if (event.key.code == sf::Keyboard::S)
+    {
+      setTextInputState(TEXT_INPUT_SAVE_MAP);
+    }
+
+    if (event.key.code == sf::Keyboard::L)
+    {
+      setTextInputState(TEXT_INPUT_LOAD_MAP);
     }
   }
   else if (m_textInputState != TEXT_INPUT_NONE && event.type == sf::Event::TextEntered)
@@ -377,6 +394,11 @@ void Editor::draw()
   {
     draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Current music (%s) New music: %s_", m_music.c_str(), m_currentInput.c_str());
+  }
+  else if (m_textInputState == TEXT_INPUT_SAVE_MAP || m_textInputState == TEXT_INPUT_LOAD_MAP)
+  {
+    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+        "Enter map name (no ext): %s_", m_currentInput.c_str());
   }
 
   m_window.display();
@@ -821,6 +843,18 @@ void Editor::resizeMap(int width, int height)
 
 void Editor::handleCarriageReturn()
 {
+  if (m_textInputState == TEXT_INPUT_LOAD_MAP || m_textInputState == TEXT_INPUT_SAVE_MAP)
+  {
+    // Replace spaces with underscores.
+    for (size_t i = 0; i < m_currentInput.size(); i++)
+    {
+      if (m_currentInput[i] == ' ')
+      {
+        m_currentInput[i] = '_';
+      }
+    }
+  }
+
   if (m_textInputState == TEXT_INPUT_RESIZE)
   {
     std::istringstream ss(m_currentInput);
@@ -831,6 +865,21 @@ void Editor::handleCarriageReturn()
   else if (m_textInputState == TEXT_INPUT_SELECT_MUSIC)
   {
     m_music = m_currentInput;
+  }
+  else if (m_textInputState == TEXT_INPUT_SAVE_MAP)
+  {
+    Map* map = createMap();
+    map->saveToFile("Resources/" + m_currentInput + ".map");
+    delete map;
+  }
+  else if (m_textInputState == TEXT_INPUT_LOAD_MAP)
+  {
+    Map* map = Map::loadFromFile("Resources/" + m_currentInput + ".map");
+    if (map)
+    {
+      loadFromMap(map);
+      delete map;
+    }
   }
 }
 
@@ -875,4 +924,73 @@ const Entity* Editor::getEntityAt(int x, int y) const
   }
 
   return 0;
+}
+
+Map* Editor::createMap() const
+{
+  Map* map = new Map;
+  map->m_width = m_mapW;
+  map->m_height = m_mapH;
+
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+  {
+    Entity* entityCopy = new Entity((*it)->getName());
+    entityCopy->x = (*it)->x;
+    entityCopy->y = (*it)->y;
+    map->m_entities.push_back(entityCopy);
+  }
+
+  for (int i = 0; i < config::MAX_LAYERS; i++)
+  {
+    map->m_tiles[i] = new Tile[m_mapW * m_mapH]();
+    for (int j = 0; j < m_mapW * m_mapH; j++)
+    {
+      map->m_tiles[i][j] = m_tiles[i][j];
+    }
+  }
+
+  if (m_music.empty())
+  {
+    map->m_music = "<no_music>";
+  }
+  else
+  {
+    map->m_music = m_music;
+  }
+
+  return map;
+}
+
+void Editor::loadFromMap(Map* map)
+{
+  clear();
+
+  m_mapW = map->m_width;
+  m_mapH = map->m_height;
+
+  if (map->m_music == "<no_music>")
+  {
+    m_music.clear();
+  }
+  else
+  {
+    m_music = map->m_music;
+  }
+
+  for (int i = 0; i < config::MAX_LAYERS; i++)
+  {
+    m_tiles[i] = new Tile[m_mapW * m_mapH]();
+    for (int j = 0; j < m_mapW * m_mapH; j++)
+    {
+      m_tiles[i][j] = map->m_tiles[i][j];
+    }
+  }
+
+  for (auto it = map->m_entities.begin(); it != map->m_entities.end(); ++it)
+  {
+    Entity* entity = new Entity((*it)->getName());
+    entity->x = (*it)->x;
+    entity->y = (*it)->y;
+    m_entities.push_back(entity);
+  }
 }

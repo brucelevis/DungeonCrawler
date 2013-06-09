@@ -35,6 +35,8 @@ private:
   Editor(const Editor&);
   Editor& operator=(const Editor&);
 
+  void clear();
+
   void pollEvents();
 
   void checkWindowEvents(sf::Event& event);
@@ -66,6 +68,9 @@ private:
   std::string textInputStateToString() const;
 
   const Entity* getEntityAt(int x, int y) const;
+
+  Map* createMap() const;
+  void loadFromMap(Map* map);
 private:
   sf::RenderWindow m_window;
 
