@@ -195,6 +195,11 @@ void Editor::checkKeyEvents(sf::Event& event)
     {
       setTextInputState(TEXT_INPUT_RESIZE);
     }
+
+    if (event.key.code == sf::Keyboard::M)
+    {
+      setTextInputState(TEXT_INPUT_SELECT_MUSIC);
+    }
   }
   else if (m_textInputState != TEXT_INPUT_NONE && event.type == sf::Event::TextEntered)
   {
@@ -332,6 +337,11 @@ void Editor::draw()
   {
     draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Current size (%d %d) New size: %s_", m_mapW, m_mapH, m_currentInput.c_str());
+  }
+  else if (m_textInputState == TEXT_INPUT_SELECT_MUSIC)
+  {
+    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+        "Current music (%s) New music: %s_", m_music.c_str(), m_currentInput.c_str());
   }
 
   m_window.display();
@@ -711,6 +721,10 @@ void Editor::handleCarriageReturn()
     int w, h;
     ss >> w >> h;
     resizeMap(w, h);
+  }
+  else if (m_textInputState == TEXT_INPUT_SELECT_MUSIC)
+  {
+    m_music = m_currentInput;
   }
 }
 

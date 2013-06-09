@@ -94,6 +94,8 @@ private:
   std::vector<Entity*> m_entities;
   std::string m_currentEntityName;
   EditState m_editState;
+
+  std::string m_music;
 };
 
 #endif
