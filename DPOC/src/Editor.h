@@ -16,7 +16,8 @@ class Editor
     TEXT_INPUT_RESIZE,
     TEXT_INPUT_SAVE_MAP,
     TEXT_INPUT_LOAD_MAP,
-    TEXT_INPUT_SELECT_MUSIC
+    TEXT_INPUT_SELECT_MUSIC,
+    TEXT_INPUT_WARP
   };
 
   enum EditState
@@ -102,6 +103,8 @@ private:
   std::string m_music;
 
   int m_currentZone;
+
+  std::vector<Warp> m_warps;
 };
 
 #endif

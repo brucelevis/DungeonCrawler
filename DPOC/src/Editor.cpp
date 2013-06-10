@@ -190,6 +190,10 @@ void Editor::checkKeyEvents(sf::Event& event)
       m_tileScrollY = 0;
       m_editState = EDIT_STATE_PLACE_ZONE;
     }
+    else if (event.key.code == sf::Keyboard::F9)
+    {
+      m_editState = EDIT_STATE_PLACE_WARP;
+    }
 
     if (event.key.code == sf::Keyboard::F && m_editState == EDIT_STATE_PLACE_TILES)
     {
@@ -322,6 +326,21 @@ void Editor::checkMouseEvents()
           tile->zone = m_currentZone;
         }
       }
+      else if (m_editState == EDIT_STATE_PLACE_WARP && m_textInputState != TEXT_INPUT_WARP)
+      {
+        Tile* tile = getTileAt(px, py, 0);
+        if (tile)
+        {
+          if (std::find_if(m_warps.begin(), m_warps.end(), [=](const Warp& w) { return w.srcX == px && w.srcY == py; }) == m_warps.end())
+          {
+            Warp warp;
+            warp.srcX = px;
+            warp.srcY = py;
+            m_warps.push_back(warp);
+            setTextInputState(TEXT_INPUT_WARP);
+          }
+        }
+      }
     }
   }
   else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
@@ -362,6 +381,17 @@ void Editor::checkMouseEvents()
           tile->zone = 0;
         }
       }
+      else if (m_editState == EDIT_STATE_PLACE_WARP && m_textInputState != TEXT_INPUT_WARP)
+      {
+        for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+        {
+          if (it->srcX == px && it->srcY == py)
+          {
+            m_warps.erase(it);
+            break;
+          }
+        }
+      }
     }
   }
 }
@@ -399,6 +429,11 @@ void Editor::draw()
   {
     draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Enter map name (no ext): %s_", m_currentInput.c_str());
+  }
+  else if (m_textInputState == TEXT_INPUT_WARP)
+  {
+    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+        "Enter new warp ToX ToY ToMap: %s_", m_currentInput.c_str());
   }
 
   m_window.display();
@@ -664,6 +699,27 @@ void Editor::drawEditArea()
     }
   }
 
+  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+  {
+    int px = it->srcX;
+    int py = it->srcY;
+
+    if (px >= m_scrollX && py >= m_scrollY && px < m_scrollXMax && py < m_scrollYMax)
+    {
+      int posX = config::TILE_W*(px - m_scrollX) + m_editArea.left;
+      int posY = config::TILE_H*(py - m_scrollY) + m_editArea.top;
+
+      sf::RectangleShape tmpRect;
+      tmpRect.setPosition(posX + 2, posY + 2);
+      tmpRect.setSize(sf::Vector2f(config::TILE_W - 4, config::TILE_H - 4));
+      tmpRect.setFillColor(sf::Color::Yellow);
+      tmpRect.setOutlineColor(sf::Color::Transparent);
+      m_window.draw(tmpRect);
+
+      draw_text(m_window, posX, posY, "W");
+    }
+  }
+
   for (int y = 0; y < m_editArea.height / config::TILE_H; y++)
   {
     for (int x = 0; x < m_editArea.width / config::TILE_W; x++)
@@ -693,6 +749,10 @@ void Editor::drawEditArea()
 
   if (m_editArea.contains(mouseX, mouseY))
   {
+    int tx = m_scrollX + (mouseX - m_editArea.left) / config::TILE_W;
+    int ty = m_scrollY + (mouseY - m_editArea.top) / config::TILE_H;
+
+
     mouseX /= config::TILE_W;
     mouseY /= config::TILE_H;
 
@@ -701,6 +761,20 @@ void Editor::drawEditArea()
     rect.setFillColor(sf::Color::Transparent);
     rect.setOutlineColor(sf::Color::Red);
     m_window.draw(rect);
+
+    std::ostringstream statusText;
+    statusText << "X=" << tx << " Y=" << ty;
+
+    for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+    {
+      if (it->srcX == tx && it->srcY == ty)
+      {
+        statusText << " [Warp={dstX=" << it->dstX << " dstY=" << it->dstY << " toMap=" << it->destMap << "}]";
+      }
+    }
+
+    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_editArea.top + m_editArea.height + 8,
+        "%s", statusText.str().c_str());
   }
 
 
@@ -881,6 +955,17 @@ void Editor::handleCarriageReturn()
       delete map;
     }
   }
+  else if (m_textInputState == TEXT_INPUT_WARP)
+  {
+    int x, y;
+    std::string toMap;
+
+    std::istringstream ss(m_currentInput);
+    ss >> x >> y >> toMap;
+    m_warps.back().dstX = x;
+    m_warps.back().dstY = y;
+    m_warps.back().destMap = toMap;
+  }
 }
 
 void Editor::setTextInputState(TextInputState newState)
@@ -908,6 +993,8 @@ std::string Editor::textInputStateToString() const
     return "TEXT_INPUT_LOAD_MAP";
   case TEXT_INPUT_SELECT_MUSIC:
     return "TEXT_INPUT_SELECT_MUSIC";
+  case TEXT_INPUT_WARP:
+    return "TEXT_INPUT_WARP";
   default:
     return "<Unknown textInputState>";
   }

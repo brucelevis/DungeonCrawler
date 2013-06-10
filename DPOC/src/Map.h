@@ -12,6 +12,13 @@ struct Tile
   int zone;
 };
 
+struct Warp
+{
+  int srcX, srcY;
+  int dstX, dstY;
+  std::string destMap;
+};
+
 class Map
 {
   friend class Editor;
