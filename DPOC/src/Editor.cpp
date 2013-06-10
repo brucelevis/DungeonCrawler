@@ -72,6 +72,10 @@ void Editor::clear()
     delete[] m_tiles[i];
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
+
+  m_warps.clear();
+  m_entities.clear();
+  m_music.clear();
 }
 
 void Editor::run()
@@ -436,6 +440,8 @@ void Editor::draw()
         "Enter new warp ToX ToY ToMap: %s_", m_currentInput.c_str());
   }
 
+  draw_text(m_window, m_window.getSize().x - editStateToString().size() * 9, 8, "%s", editStateToString().c_str());
+
   m_window.display();
 }
 
@@ -710,9 +716,9 @@ void Editor::drawEditArea()
       int posY = config::TILE_H*(py - m_scrollY) + m_editArea.top;
 
       sf::RectangleShape tmpRect;
-      tmpRect.setPosition(posX + 2, posY + 2);
-      tmpRect.setSize(sf::Vector2f(config::TILE_W - 4, config::TILE_H - 4));
-      tmpRect.setFillColor(sf::Color::Yellow);
+      tmpRect.setPosition(posX + 1, posY + 1);
+      tmpRect.setSize(sf::Vector2f(config::TILE_W - 2, config::TILE_H - 2));
+      tmpRect.setFillColor(sf::Color::Magenta);
       tmpRect.setOutlineColor(sf::Color::Transparent);
       m_window.draw(tmpRect);
 
@@ -1000,6 +1006,23 @@ std::string Editor::textInputStateToString() const
   }
 }
 
+std::string Editor::editStateToString() const
+{
+  switch (m_editState)
+  {
+  case EDIT_STATE_PLACE_TILES:
+    return "EDIT_STATE_PLACE_TILES";
+  case EDIT_STATE_PLACE_ENTITES:
+    return "EDIT_STATE_PLACE_ENTITES";
+  case EDIT_STATE_PLACE_WARP:
+    return "EDIT_STATE_PLACE_WARP";
+  case EDIT_STATE_PLACE_ZONE:
+    return "EDIT_STATE_PLACE_ZONE";
+  default:
+    return "<Unknown EditState>";
+  }
+}
+
 const Entity* Editor::getEntityAt(int x, int y) const
 {
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
@@ -1045,6 +1068,11 @@ Map* Editor::createMap() const
     map->m_music = m_music;
   }
 
+  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+  {
+    map->m_warps.push_back(*it);
+  }
+
   return map;
 }
 
@@ -1079,5 +1107,10 @@ void Editor::loadFromMap(Map* map)
     entity->x = (*it)->x;
     entity->y = (*it)->y;
     m_entities.push_back(entity);
+  }
+
+  for (auto it = map->m_warps.begin(); it != map->m_warps.end(); ++it)
+  {
+    m_warps.push_back(*it);
   }
 }

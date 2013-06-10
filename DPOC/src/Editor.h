@@ -67,6 +67,7 @@ private:
   void handleCarriageReturn();
   void setTextInputState(TextInputState newState);
   std::string textInputStateToString() const;
+  std::string editStateToString() const;
 
   const Entity* getEntityAt(int x, int y) const;
 

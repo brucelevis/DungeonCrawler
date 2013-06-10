@@ -54,6 +54,16 @@ bool Map::saveToFile(const std::string& filename) const
             << (int)(*it)->y << " ";
     }
 
+    ofile << m_warps.size() << " ";
+    for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+    {
+      ofile << it->srcX << " "
+            << it->srcY << " "
+            << it->dstX << " "
+            << it->dstY << " "
+            << it->destMap << " ";
+    }
+
     ofile.close();
 
     success = true;
@@ -110,6 +120,19 @@ Map* Map::loadFromFile(const std::string& filename)
       entity->y = entY;
 
       map->m_entities.push_back(entity);
+    }
+
+    int numWarps;
+    ifile >> numWarps;
+    for (int i = 0; i < numWarps; i++)
+    {
+      Warp warp;
+      ifile >> warp.srcX
+            >> warp.srcY
+            >> warp.dstX
+            >> warp.dstY
+            >> warp.destMap;
+      map->m_warps.push_back(warp);
     }
 
     ifile.close();

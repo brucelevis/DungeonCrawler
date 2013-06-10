@@ -39,6 +39,7 @@ private:
   int m_width, m_height;
   std::vector<Entity*> m_entities;
   std::string m_music;
+  std::vector<Warp> m_warps;
 };
 
 #endif
