@@ -21,6 +21,11 @@ struct Warp
   std::string destMap;
 };
 
+static inline std::string getWarpTargetName(const Warp& warp)
+{
+  return "Resources/" + warp.destMap + ".map";
+}
+
 class Map
 {
   friend class Editor;
@@ -33,9 +38,12 @@ public:
   void draw(sf::RenderTarget& target, const coord_t& view);
 
   Tile* getTileAt(int x, int y, int layer);
+  bool warpAt(int x, int y) const;
+  const Warp* getWarpAt(int x, int y) const;
+
+  std::string getName() const { return m_name; }
 
   bool saveToFile(const std::string& filename) const;
-
   static Map* loadFromFile(const std::string& filename);
 private:
   Map();
@@ -54,6 +62,7 @@ private:
   std::vector<Warp> m_warps;
 
   sf::Texture* m_tileset;
+  std::string m_name;
 };
 
 #endif

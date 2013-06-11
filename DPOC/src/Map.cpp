@@ -60,6 +60,15 @@ void Map::draw(sf::RenderTarget& target, const coord_t& view)
   {
     (*it)->draw(target, view);
   }
+
+  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+  {
+    sf::RectangleShape rect;
+    rect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
+    rect.setFillColor(sf::Color::Red);
+    rect.setPosition(it->srcX*config::TILE_W - view.x, it->srcY*config::TILE_H - view.y);
+    target.draw(rect);
+  }
 }
 
 bool Map::saveToFile(const std::string& filename) const
@@ -122,6 +131,7 @@ Map* Map::loadFromFile(const std::string& filename)
   if (ifile.is_open())
   {
     Map* map = new Map;
+    map->m_name = filename;
 
     int layers;
 
@@ -193,6 +203,30 @@ Tile* Map::getTileAt(int x, int y, int layer)
   if (index >= 0 && index < getNumberOfTiles())
   {
     return &m_tiles[layer][index];
+  }
+  return 0;
+}
+
+bool Map::warpAt(int x, int y) const
+{
+  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+  {
+    if (it->srcX == x && it->srcY == y)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+const Warp* Map::getWarpAt(int x, int y) const
+{
+  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+  {
+    if (it->srcX == x && it->srcY == y)
+    {
+      return &(*it);
+    }
   }
   return 0;
 }

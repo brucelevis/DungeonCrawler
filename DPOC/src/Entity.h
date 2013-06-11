@@ -35,6 +35,8 @@ public:
 
   float getRealX() const;
   float getRealY() const;
+
+  bool isWalking() const { return m_walking; }
 public:
   float x, y;
 private:
