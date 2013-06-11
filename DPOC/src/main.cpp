@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <string>
 
 #include "logger.h"
 
@@ -6,7 +7,7 @@
 #include "Editor.h"
 #include "Game.h"
 
-int main()
+int main(int argc, char* argv[])
 {
   START_LOG;
 
@@ -14,10 +15,23 @@ int main()
 
   srand(time(0));
 
-//  Editor editor;
-//  editor.run();
-
-  Game::instance().run();
+  if (argc > 1)
+  {
+    std::string arg = argv[1];
+    if (arg == "e")
+    {
+      Editor editor;
+      editor.run();
+    }
+    else
+    {
+      Game::instance().run();
+    }
+  }
+  else
+  {
+    Game::instance().run();
+  }
 
   return 0;
 }
