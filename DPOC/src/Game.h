@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "coord.h"
 
@@ -18,6 +19,7 @@ public:
   Player* getPlayer() { return m_player; }
 
   void transferPlayer(const std::string& targetMap, int x, int y);
+  void playMusic(const std::string& music);
 private:
   Game();
   ~Game();
@@ -26,11 +28,16 @@ private:
   void draw();
   void updatePlayer();
   void checkWarps();
+
+  void loadNewMap(const std::string& file);
 private:
   sf::RenderWindow m_window;
   Map* m_currentMap;
   Player* m_player;
   coord_t m_view;
+
+  std::string m_currentMusicName;
+  sf::Music m_currentMusic;
 };
 
 #endif

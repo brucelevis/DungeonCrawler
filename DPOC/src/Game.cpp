@@ -15,10 +15,11 @@ Game& Game::instance()
 }
 
 Game::Game()
- : m_currentMap(Map::loadFromFile("Resources/test.map")),
+ : m_currentMap(0),
    m_player(Player::create(4, 4))
 {
   m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
+  loadNewMap("Resources/test.map");
 }
 
 Game::~Game()
@@ -127,10 +128,33 @@ void Game::transferPlayer(const std::string& targetMap, int x, int y)
 {
   if (targetMap != m_currentMap->getName())
   {
-    delete m_currentMap;
-    m_currentMap = Map::loadFromFile(targetMap);
+    loadNewMap(targetMap);
   }
 
   m_player->player()->x = x;
   m_player->player()->y = y;
+}
+
+void Game::playMusic(const std::string& music)
+{
+  if (music != m_currentMusicName)
+  {
+    m_currentMusicName = music;
+
+    m_currentMusic.stop();
+    m_currentMusic.openFromFile("Resources/" + music);
+    m_currentMusic.setLoop(true);
+    m_currentMusic.play();
+  }
+}
+
+void Game::loadNewMap(const std::string& file)
+{
+  delete m_currentMap;
+  m_currentMap = Map::loadFromFile(file);
+
+  if (m_currentMap->getMusic() != "<none>")
+  {
+    playMusic(m_currentMap->getMusic());
+  }
 }

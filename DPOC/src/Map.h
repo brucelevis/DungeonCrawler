@@ -42,6 +42,7 @@ public:
   const Warp* getWarpAt(int x, int y) const;
 
   std::string getName() const { return m_name; }
+  std::string getMusic() const { return m_music; }
 
   bool saveToFile(const std::string& filename) const;
   static Map* loadFromFile(const std::string& filename);
