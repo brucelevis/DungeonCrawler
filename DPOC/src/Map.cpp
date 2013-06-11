@@ -61,14 +61,14 @@ void Map::draw(sf::RenderTarget& target, const coord_t& view)
     (*it)->draw(target, view);
   }
 
-  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
-  {
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
-    rect.setFillColor(sf::Color::Red);
-    rect.setPosition(it->srcX*config::TILE_W - view.x, it->srcY*config::TILE_H - view.y);
-    target.draw(rect);
-  }
+//  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
+//  {
+//    sf::RectangleShape rect;
+//    rect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
+//    rect.setFillColor(sf::Color::Red);
+//    rect.setPosition(it->srcX*config::TILE_W - view.x, it->srcY*config::TILE_H - view.y);
+//    target.draw(rect);
+//  }
 }
 
 bool Map::saveToFile(const std::string& filename) const
