@@ -1,3 +1,6 @@
+#include <SFML/System.hpp>
+
+#include "Config.h"
 #include "Game.h"
 
 Game::Game()
@@ -7,10 +10,23 @@ Game::Game()
 
 void Game::run()
 {
+  sf::Clock clock;
+  int timerThen = clock.restart().asMilliseconds();
+
   while (m_window.isOpen())
   {
-    pollEvents();
+    int timerNow = clock.getElapsedTime().asMilliseconds();
+
+    while (timerThen < timerNow)
+    {
+      pollEvents();
+
+      timerThen += 1000 / config::FPS;
+    }
+
     draw();
+
+    sf::sleep(sf::milliseconds(timerThen - timerNow));
   }
 }
 

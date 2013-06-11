@@ -10,6 +10,8 @@ namespace config
   static const int TILE_W = 16;
   static const int TILE_H = 16;
   static const int MAX_ZONES = 16;
+
+  static const int FPS = 60;
 }
 
 #endif
