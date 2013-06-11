@@ -12,6 +12,9 @@ namespace config
   static const int MAX_ZONES = 16;
 
   static const int FPS = 60;
+
+  static const int GAME_RES_X = 256;
+  static const int GAME_RES_Y = 240;
 }
 
 #endif

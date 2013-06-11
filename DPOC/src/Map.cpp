@@ -1,5 +1,6 @@
 #include <fstream>
 
+#include "Cache.h"
 #include "logger.h"
 #include "Map.h"
 
@@ -11,6 +12,8 @@ Map::Map()
   {
     m_tiles[i] = 0;
   }
+
+  m_tileset = cache::loadTexture("Resources/DqTileset.png");
 }
 
 Map::~Map()
@@ -23,6 +26,40 @@ Map::~Map()
 
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
+
+  cache::releaseTexture("Resources/DqTileset.png");
+}
+
+void Map::update()
+{
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+    (*it)->update();
+}
+
+void Map::draw(sf::RenderTarget& target, const coord_t& view)
+{
+  sf::Sprite sprite;
+  sprite.setTexture(*m_tileset);
+
+  for (int y = 0; y < m_height; y++)
+  {
+    for (int x = 0; x < m_width; x++)
+    {
+      for (int layer = 0; layer < config::MAX_LAYERS; layer++)
+      {
+        Tile* tile = getTileAt(x, y, layer);
+
+        sprite.setTextureRect(sf::IntRect(tile->tileX * config::TILE_W, tile->tileY * config::TILE_H, config::TILE_W, config::TILE_H));
+        sprite.setPosition(x * config::TILE_W - view.x, y * config::TILE_H - view.y);
+        target.draw(sprite);
+      }
+    }
+  }
+
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+  {
+    (*it)->draw(target, view);
+  }
 }
 
 bool Map::saveToFile(const std::string& filename) const
@@ -144,5 +181,18 @@ Map* Map::loadFromFile(const std::string& filename)
     TRACE("Unable to open file %s for reading", filename.c_str());
   }
 
+  return 0;
+}
+
+Tile* Map::getTileAt(int x, int y, int layer)
+{
+  if (x < 0 || y < 0 || x >= m_width || y >= m_height)
+    return 0;
+
+  int index = y * m_width + x;
+  if (index >= 0 && index < getNumberOfTiles())
+  {
+    return &m_tiles[layer][index];
+  }
   return 0;
 }
