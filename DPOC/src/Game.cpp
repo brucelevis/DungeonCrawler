@@ -34,6 +34,8 @@ void Game::run()
   sf::Clock clock;
   int timerThen = clock.restart().asMilliseconds();
 
+  bool playerMoved = false;
+
   while (m_window.isOpen())
   {
     int timerNow = clock.getElapsedTime().asMilliseconds();
@@ -45,9 +47,13 @@ void Game::run()
       if (m_currentMap)
         m_currentMap->update();
 
+      playerMoved = m_player->player()->isWalking();
+
       updatePlayer();
 
-      checkWarps();
+      // Only check for warps if the player moved onto the tile this update step.
+      if (playerMoved && !m_player->player()->isWalking())
+        checkWarps();
 
       timerThen += 1000 / config::FPS;
     }
