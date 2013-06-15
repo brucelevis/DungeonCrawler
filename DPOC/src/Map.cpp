@@ -71,7 +71,7 @@ void Map::draw(sf::RenderTarget& target, const coord_t& view)
 //  }
 }
 
-bool Map::saveToFile(const std::string& filename) const
+bool Map::saveToFile(const std::string& filename)
 {
   bool success = false;
 
@@ -80,6 +80,8 @@ bool Map::saveToFile(const std::string& filename) const
   std::ofstream ofile(filename.c_str());
   if (ofile.is_open())
   {
+    m_name = filename;
+
     ofile << m_width << " " << m_height << " " << config::MAX_LAYERS << " ";
     for (int i = 0; i < config::MAX_LAYERS; i++)
     {

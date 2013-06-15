@@ -44,7 +44,7 @@ public:
   std::string getName() const { return m_name; }
   std::string getMusic() const { return m_music; }
 
-  bool saveToFile(const std::string& filename) const;
+  bool saveToFile(const std::string& filename);
   static Map* loadFromFile(const std::string& filename);
 private:
   Map();

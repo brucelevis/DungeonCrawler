@@ -71,6 +71,7 @@ private:
 
   const Entity* getEntityAt(int x, int y) const;
 
+  void saveMap(const std::string& name);
   Map* createMap() const;
   void loadFromMap(Map* map);
 private:
@@ -106,6 +107,8 @@ private:
   int m_currentZone;
 
   std::vector<Warp> m_warps;
+
+  std::string m_currentMapName;
 };
 
 #endif

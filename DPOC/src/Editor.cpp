@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "logger.h"
 #include "floodfill.h"
@@ -225,7 +226,14 @@ void Editor::checkKeyEvents(sf::Event& event)
 
     if (event.key.code == sf::Keyboard::S)
     {
-      setTextInputState(TEXT_INPUT_SAVE_MAP);
+      if (m_currentMapName.empty())
+      {
+        setTextInputState(TEXT_INPUT_SAVE_MAP);
+      }
+      else
+      {
+        saveMap(m_currentMapName);
+      }
     }
 
     if (event.key.code == sf::Keyboard::L)
@@ -780,7 +788,7 @@ void Editor::drawEditArea()
     }
 
     draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_editArea.top + m_editArea.height + 8,
-        "%s", statusText.str().c_str());
+        "%s   %s", statusText.str().c_str(), m_currentMapName.c_str());
   }
 
 
@@ -948,9 +956,7 @@ void Editor::handleCarriageReturn()
   }
   else if (m_textInputState == TEXT_INPUT_SAVE_MAP)
   {
-    Map* map = createMap();
-    map->saveToFile("Resources/" + m_currentInput + ".map");
-    delete map;
+    saveMap("Resources/" + m_currentInput + ".map");
   }
   else if (m_textInputState == TEXT_INPUT_LOAD_MAP)
   {
@@ -958,6 +964,7 @@ void Editor::handleCarriageReturn()
     if (map)
     {
       loadFromMap(map);
+      m_currentMapName = map->getName();
       delete map;
     }
   }
@@ -1034,6 +1041,27 @@ const Entity* Editor::getEntityAt(int x, int y) const
   }
 
   return 0;
+}
+
+void Editor::saveMap(const std::string& name)
+{
+  Map* map = createMap();
+  map->saveToFile(name);
+  m_currentMapName = map->getName();
+  delete map;
+
+  // :-)
+  sf::Sound sound;
+  sf::SoundBuffer buffer;
+  if (buffer.loadFromFile("Resources/Success2.wav"))
+  {
+    sound.setBuffer(buffer);
+    sound.play();
+  }
+  else
+  {
+    TRACE("Unable to load sound to play");
+  }
 }
 
 Map* Editor::createMap() const
