@@ -2,9 +2,11 @@
 
 #include "logger.h"
 #include "draw_text.h"
+#include "Cache.h"
 
 static sf::Font font;
 static sf::Text text;
+static sf::Texture* bmpFont;
 
 void init_text_drawing()
 {
@@ -18,6 +20,8 @@ void init_text_drawing()
   text.setFont(font);
   text.setColor(sf::Color::White);
   text.setCharacterSize(14);
+
+  bmpFont = cache::loadTexture("Resources/font_8x8.png");
 }
 
 void draw_text(sf::RenderTarget& target, int x, int y, const char* fmt, ...)
@@ -35,4 +39,31 @@ void draw_text(sf::RenderTarget& target, int x, int y, const char* fmt, ...)
   text.setPosition(x, y);
 
   target.draw(text);
+}
+
+void draw_text_bmp(sf::RenderTarget& target, int x, int y, const char* fmt, ...)
+{
+  char buffer[512];
+
+  va_list args;
+  va_start(args, fmt);
+
+  vsprintf(buffer, fmt, args);
+
+  va_end(args);
+
+  sf::Sprite sprite;
+  sprite.setTexture(*bmpFont);
+
+  std::string str = buffer;
+  for (size_t i = 0; i < str.size(); i++)
+  {
+    char c = str[i];
+    int charX = 8 * (c % (bmpFont->getSize().x / 8));
+    int charY = 8 * (c / (bmpFont->getSize().x / 8));
+
+    sprite.setTextureRect(sf::IntRect(charX, charY, 8, 8));
+    sprite.setPosition(x + i * 8, y);
+    target.draw(sprite);
+  }
 }

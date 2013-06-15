@@ -6,5 +6,6 @@
 void init_text_drawing();
 
 void draw_text(sf::RenderTarget& target, int x, int y, const char* fmt, ...);
+void draw_text_bmp(sf::RenderTarget& target, int x, int y, const char* fmt, ...);
 
 #endif
