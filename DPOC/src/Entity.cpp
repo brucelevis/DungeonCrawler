@@ -13,7 +13,8 @@ Entity::Entity(const std::string& name)
    m_direction(DIR_DOWN),
    m_speed(0.1),
    m_targetX(0), m_targetY(0),
-   m_walking(false)
+   m_state(STATE_NORMAL),
+   m_waitCounter(0)
 {
   auto it = std::find_if(ENTITY_DEF.begin(), ENTITY_DEF.end(),
       [=](const EntityDef& entity)
@@ -34,6 +35,16 @@ Entity::Entity(const std::string& name)
     {
       m_script.loadFromFile(it->scriptFile);
     }
+
+    if (!it->stepScriptFile.empty())
+    {
+      if (m_stepScript.loadFromFile(it->stepScriptFile))
+      {
+        m_stepScript.execute();
+      }
+    }
+
+    m_speed = it->walkSpeed;
   }
   else
   {
@@ -48,20 +59,42 @@ Entity::~Entity()
 
 void Entity::update()
 {
-  if (m_script.active())
-  {
-    executeScriptLine(m_script.getCurrentData());
-
-    m_script.advance();
-  }
-
-  if (m_walking)
+  if (m_state == STATE_WALKING)
   {
     walk();
 
     if (m_sprite)
     {
       m_sprite->update(m_direction);
+    }
+  }
+  else if (m_state == STATE_WAITING)
+  {
+    m_waitCounter--;
+    if (m_waitCounter == 0)
+    {
+      m_state = STATE_NORMAL;
+    }
+  }
+  else
+  {
+    if (m_script.active())
+    {
+      executeScriptLine(m_script.getCurrentData());
+
+      m_script.advance();
+    }
+
+    if (!m_script.active() && m_stepScript.active())
+    {
+      executeScriptLine(m_stepScript.getCurrentData());
+
+      m_stepScript.advance();
+
+      if (!m_stepScript.active())
+      {
+        m_stepScript.execute();
+      }
     }
   }
 }
@@ -82,7 +115,7 @@ void Entity::setDirection(Direction dir)
 
 void Entity::step(Direction dir)
 {
-  if (!m_walking)
+  if (m_state != STATE_WALKING)
   {
     setDirection(dir);
 
@@ -95,7 +128,7 @@ void Entity::step(Direction dir)
     else if (m_direction == DIR_UP)
       m_targetY = y - 1;
 
-    m_walking = true;
+    m_state = STATE_WALKING;
   }
 }
 
@@ -107,7 +140,7 @@ void Entity::walk()
     if (x >= m_targetX)
     {
       x = m_targetX;
-      m_walking = false;
+      m_state = STATE_NORMAL;
     }
   }
   else if (m_direction == DIR_LEFT)
@@ -116,7 +149,7 @@ void Entity::walk()
     if (x <= m_targetX)
     {
       x = m_targetX;
-      m_walking = false;
+      m_state = STATE_NORMAL;
     }
   }
   else if (m_direction == DIR_DOWN)
@@ -125,7 +158,7 @@ void Entity::walk()
     if (y >= m_targetY)
     {
       y = m_targetY;
-      m_walking = false;
+      m_state = STATE_NORMAL;
     }
   }
   else if (m_direction == DIR_UP)
@@ -134,7 +167,7 @@ void Entity::walk()
     if (y <= m_targetY)
     {
       y = m_targetY;
-      m_walking = false;
+      m_state = STATE_NORMAL;
     }
   }
 }
@@ -193,7 +226,7 @@ void Entity::face(const Entity* entity)
 
 bool Entity::canInteractWith(const Entity* interactor) const
 {
-  if (!m_walking && !interactor->m_walking)
+  if (!isWalking() && !interactor->isWalking())
   {
     int myX = x;
     int myY = y;
@@ -234,5 +267,22 @@ void Entity::executeScriptLine(const Script::ScriptData& data)
         executeScriptLine(next);
       }
     }
+  }
+  else if (data.opcode == Script::OP_WALK)
+  {
+    step(data.data.walkData.dir);
+  }
+  else if (data.opcode == Script::OP_WAIT)
+  {
+    wait(data.data.waitData.duration);
+  }
+}
+
+void Entity::wait(int duration)
+{
+  if (m_state != STATE_WALKING)
+  {
+    m_state = STATE_WAITING;
+    m_waitCounter = duration;
   }
 }

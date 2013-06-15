@@ -16,11 +16,19 @@ struct EntityDef
   std::string name;
   std::string spriteSheet;
   int spriteSheetX, spriteSheetY;
+  float walkSpeed;
   std::string scriptFile;
+  std::string stepScriptFile;
 };
 
 class Entity
 {
+  enum State
+  {
+    STATE_NORMAL,
+    STATE_WAITING,
+    STATE_WALKING
+  };
 public:
   Entity(const std::string& name);
   ~Entity();
@@ -38,11 +46,13 @@ public:
   float getRealX() const;
   float getRealY() const;
 
-  bool isWalking() const { return m_walking; }
+  bool isWalking() const { return m_state == STATE_WALKING; }
 
   void interact(const Entity* interactor);
   void face(const Entity* entity);
   bool canInteractWith(const Entity* interactor) const;
+
+  void wait(int duration);
 public:
   float x, y;
 private:
@@ -59,9 +69,14 @@ private:
   Direction m_direction;
   float m_speed;
   float m_targetX, m_targetY;
-  bool m_walking;
 
+  // Run on interaction.
   Script m_script;
+  // Run every update step.
+  Script m_stepScript;
+
+  State m_state;
+  int m_waitCounter;
 };
 
 #endif

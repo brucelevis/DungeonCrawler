@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <cstring>
+#include <cstdlib>
 
 #include "logger.h"
 #include "Utility.h"
@@ -16,7 +17,7 @@ Script::Script()
 
 }
 
-void Script::loadFromFile(const std::string& file)
+bool Script::loadFromFile(const std::string& file)
 {
   m_currentIndex = 0;
   m_loaded = true;
@@ -38,11 +39,15 @@ void Script::loadFromFile(const std::string& file)
     }
 
     infile.close();
+
+    return true;
   }
   else
   {
     TRACE("Unable to open %s", file.c_str());
   }
+
+  return false;
 }
 
 void Script::execute()
@@ -110,6 +115,14 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       }
     }
   }
+  else if (opcode == OP_WALK)
+  {
+    data.data.walkData.dir = directionFromString(strings[1]);
+  }
+  else if (opcode == OP_WAIT)
+  {
+    data.data.waitData.duration = atoi(strings[1].c_str());
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -122,7 +135,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
 {
   static std::map<std::string, Opcode> OP_MAP =
   {
-    { "message", OP_MESSAGE }
+    { "message", OP_MESSAGE },
+    { "walk", OP_WALK },
+    { "wait", OP_WAIT }
   };
 
   auto it = OP_MAP.find(opStr);

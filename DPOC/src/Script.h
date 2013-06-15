@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Direction.h"
 
 static const int MAX_SCRIPT_MESSAGE_BUFFER_SIZE = 512;
 
@@ -12,7 +13,9 @@ public:
   enum Opcode
   {
     OP_NOP,
-    OP_MESSAGE
+    OP_MESSAGE,
+    OP_WALK,
+    OP_WAIT
   };
 
   struct ScriptData
@@ -25,12 +28,22 @@ public:
       {
         char message[MAX_SCRIPT_MESSAGE_BUFFER_SIZE];
       } messageData;
+
+      struct
+      {
+        Direction dir;
+      } walkData;
+
+      struct
+      {
+        int duration;
+      } waitData;
     } data;
   };
 
   Script();
 
-  void loadFromFile(const std::string& file);
+  bool loadFromFile(const std::string& file);
 
   bool isLoaded() const { return m_loaded; }
 
