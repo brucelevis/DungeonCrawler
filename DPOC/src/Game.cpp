@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "Config.h"
 #include "Player.h"
+#include "Message.h"
 #include "Game.h"
 
 Game& Game::instance()
@@ -45,16 +46,23 @@ void Game::run()
     {
       pollEvents();
 
-      if (m_currentMap)
-        m_currentMap->update();
+      if (Message::instance().isVisible())
+      {
+        Message::instance().update();
+      }
+      else
+      {
+        if (m_currentMap)
+          m_currentMap->update();
 
-      playerMoved = m_player->player()->isWalking();
+        playerMoved = m_player->player()->isWalking();
 
-      updatePlayer();
+        updatePlayer();
 
-      // Only check for warps if the player moved onto the tile this update step.
-      if (playerMoved && !m_player->player()->isWalking())
-        checkWarps();
+        // Only check for warps if the player moved onto the tile this update step.
+        if (playerMoved && !m_player->player()->isWalking())
+          checkWarps();
+      }
 
       timerThen += 1000 / config::FPS;
     }
@@ -76,8 +84,31 @@ void Game::pollEvents()
     case sf::Event::Closed:
       m_window.close();
       break;
+    case sf::Event::KeyPressed:
+      handleKeyPress(event.key.code);
+
+      break;
     default:
       break;
+    }
+  }
+}
+
+void Game::handleKeyPress(sf::Keyboard::Key key)
+{
+  if (key == sf::Keyboard::Space)
+  {
+    if (Message::instance().isVisible() && Message::instance().isWaitingForKey())
+    {
+      Message::instance().nextPage();
+    }
+    else if (Message::instance().isVisible())
+    {
+      Message::instance().flush();
+    }
+    else if (!Message::instance().isVisible())
+    {
+      Message::instance().show("\x01: Here comes the test message and it's really long and cool I love my test message and want cherish it forever good night!");
     }
   }
 }
@@ -91,6 +122,11 @@ void Game::draw()
 
   if (m_player)
     m_player->draw(m_window, m_view);
+
+  if (Message::instance().isVisible())
+  {
+    Message::instance().draw(m_window);
+  }
 
   m_window.display();
 }

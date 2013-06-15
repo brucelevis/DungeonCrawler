@@ -29,6 +29,8 @@ private:
   void updatePlayer();
   void checkWarps();
 
+  void handleKeyPress(sf::Keyboard::Key key);
+
   void loadNewMap(const std::string& file);
 private:
   sf::RenderWindow m_window;

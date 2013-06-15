@@ -56,14 +56,27 @@ void draw_text_bmp(sf::RenderTarget& target, int x, int y, const char* fmt, ...)
   sprite.setTexture(*bmpFont);
 
   std::string str = buffer;
+  int px = x;
+  int py = y;
   for (size_t i = 0; i < str.size(); i++)
   {
     char c = str[i];
-    int charX = 8 * (c % (bmpFont->getSize().x / 8));
-    int charY = 8 * (c / (bmpFont->getSize().x / 8));
 
-    sprite.setTextureRect(sf::IntRect(charX, charY, 8, 8));
-    sprite.setPosition(x + i * 8, y);
-    target.draw(sprite);
+    if (c != '\n')
+    {
+      int charX = 8 * (c % (bmpFont->getSize().x / 8));
+      int charY = 8 * (c / (bmpFont->getSize().x / 8));
+
+      sprite.setTextureRect(sf::IntRect(charX, charY, 8, 8));
+      sprite.setPosition(px, py);
+      target.draw(sprite);
+
+      px += 8;
+    }
+    else
+    {
+      px = x;
+      py += 8;
+    }
   }
 }
