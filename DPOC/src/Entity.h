@@ -9,12 +9,14 @@
 
 #include "Direction.h"
 #include "Sprite.h"
+#include "Script.h"
 
 struct EntityDef
 {
   std::string name;
   std::string spriteSheet;
   int spriteSheetX, spriteSheetY;
+  std::string scriptFile;
 };
 
 class Entity
@@ -37,6 +39,10 @@ public:
   float getRealY() const;
 
   bool isWalking() const { return m_walking; }
+
+  void interact(const Entity* interactor);
+  void face(const Entity* entity);
+  bool canInteractWith(const Entity* interactor) const;
 public:
   float x, y;
 private:
@@ -45,6 +51,7 @@ private:
   Entity& operator=(const Entity&);
 
   void walk();
+  void executeScriptLine(const Script::ScriptData& data);
 private:
   std::string m_name;
   Sprite* m_sprite;
@@ -53,6 +60,8 @@ private:
   float m_speed;
   float m_targetX, m_targetY;
   bool m_walking;
+
+  Script m_script;
 };
 
 #endif

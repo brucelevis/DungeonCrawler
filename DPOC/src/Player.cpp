@@ -53,7 +53,7 @@ void Player::draw(sf::RenderTarget& target, const coord_t& view)
 Player* Player::create(int x, int y)
 {
   Player* player = new Player;
-  player->m_playerTrain.push_back(new Entity("hero"));
+  player->m_playerTrain.push_back(new Entity("player"));
   player->player()->x = x;
   player->player()->y = y;
   return player;

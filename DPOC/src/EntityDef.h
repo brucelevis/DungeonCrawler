@@ -13,6 +13,12 @@ static std::vector<EntityDef> ENTITY_DEF =
 
   {
     "hero",
+    "Resources/Hero.png", 0, 0,
+    "Resources/Scripts/test.script"
+  },
+
+  {
+    "player",
     "Resources/Hero.png", 0, 0
   }
 };

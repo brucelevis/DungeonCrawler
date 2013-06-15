@@ -14,6 +14,11 @@ public:
   void update(Direction direction);
   void render(sf::RenderTarget& target, float x, float y);
 
+  void setDirection(Direction dir)
+  {
+    m_direction = dir;
+  }
+
   void setFrame(int frame)
   {
     m_frame = frame;

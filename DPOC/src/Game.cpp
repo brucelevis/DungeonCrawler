@@ -108,7 +108,13 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     }
     else if (!Message::instance().isVisible())
     {
-      Message::instance().show("\x01: Here comes the test message and it's really long and cool I love my test message and want cherish it forever good night!");
+      for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
+      {
+        if ((*it)->canInteractWith(m_player->player()))
+        {
+          (*it)->interact(m_player->player());
+        }
+      }
     }
   }
 }

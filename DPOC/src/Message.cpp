@@ -3,23 +3,10 @@
 
 #include "Config.h"
 #include "draw_text.h"
+#include "Utility.h"
 #include "Message.h"
 
 static const size_t CHARS_PER_LINE = 30;
-
-std::vector<std::string> split_string(const std::string& str, char delim)
-{
-  std::istringstream istream(str);
-
-  std::string part;
-  std::vector<std::string> elements;
-  while (std::getline(istream, part, delim))
-  {
-    elements.push_back(part);
-  }
-
-  return elements;
-}
 
 Message& Message::instance()
 {

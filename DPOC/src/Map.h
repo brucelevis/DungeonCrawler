@@ -46,6 +46,8 @@ public:
 
   bool saveToFile(const std::string& filename);
   static Map* loadFromFile(const std::string& filename);
+
+  const std::vector<Entity*>& getEntities() const { return m_entities; }
 private:
   Map();
   Map(const Map&);
