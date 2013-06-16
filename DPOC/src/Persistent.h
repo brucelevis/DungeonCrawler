@@ -6,56 +6,45 @@
 #include <string>
 #include <map>
 
-namespace persistent
+#include "logger.h"
+
+template <typename T>
+class Persistent
 {
-  template <typename T, typename What>
-  class Persistent
+public:
+  static Persistent& instance()
   {
-  public:
-    static What& instance()
-    {
-      static What what;
-      return what;
-    }
+    static Persistent what;
+    return what;
+  }
 
-    bool isSet(const std::string& key) const
-    {
-      return m_storage.count(key) > 0;
-    }
-
-    T get(const std::string& key) const
-    {
-      typename std::map<std::string, T>::iterator it = m_storage.find(key);
-      if (it != m_storage.end())
-      {
-        return it->second;
-      }
-      return T();
-    }
-
-    void set(const std::string& key, T value)
-    {
-      m_storage[key] = value;
-    }
-  protected:
-    Persistent() {}
-  private:
-    std::map<std::string, T> m_storage;
-  };
-
-  template <typename T>
-  class Global : public Persistent<T, Global<T> >
+  bool isSet(const std::string& key) const
   {
-    friend class Persistent<T, Global<T> >;
-    Global() {}
-  };
+    return m_storage.count(key) > 0;
+  }
 
-  template <typename T>
-  class Local : public Persistent<T, Local<T> >
+  T get(const std::string& key) const
   {
-    friend class Persistent<T, Local<T> >;
-    Local() {}
-  };
-}
+    auto it = m_storage.find(key);
+    if (it != m_storage.end())
+    {
+      TRACE("GET %s = %d", key.c_str(), it->second);
+
+      return it->second;
+    }
+    return T();
+  }
+
+  void set(const std::string& key, T value)
+  {
+    TRACE("SET %s = %d", key.c_str(), value);
+
+    m_storage[key] = value;
+  }
+protected:
+  Persistent() {}
+private:
+  std::map<std::string, T> m_storage;
+};
 
 #endif

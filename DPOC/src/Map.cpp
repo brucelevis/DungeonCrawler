@@ -175,7 +175,7 @@ Map* Map::loadFromFile(const std::string& filename)
       Entity* entity = new Entity(entName);
       entity->x = entX;
       entity->y = entY;
-      entity->setTag(make_tag(i, m_name));
+      entity->setTag(make_tag(i, map->m_name));
 
       map->m_entities.push_back(entity);
     }

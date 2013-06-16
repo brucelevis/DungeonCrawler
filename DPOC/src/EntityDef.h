@@ -15,8 +15,8 @@ static std::vector<EntityDef> ENTITY_DEF =
     "hero",
     "Resources/Hero.png", 0, 0,
     0.05f,
-    "Resources/Scripts/test.script",
-    "Resources/Scripts/test-step.script"
+    "Resources/Scripts/test.script"
+//    "Resources/Scripts/test-step.script"
   },
 
   {

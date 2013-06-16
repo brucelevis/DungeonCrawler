@@ -17,10 +17,11 @@ public:
     OP_MESSAGE,
     OP_WALK,
     OP_WAIT,
-    OP_SET_GLOBAL_INT,
-    OP_SET_LOCAL_INT,
-    OP_TOGGLE_GLOBAL,
-    OP_TOGGLE_LOCAL
+    OP_SET_GLOBAL,
+    OP_SET_LOCAL,
+    OP_IF,
+    OP_END_IF,
+    OP_ELSE
   };
 
   struct ScriptData
@@ -48,21 +49,24 @@ public:
       {
         char key[MAX_SCRIPT_KEY_SIZE];
         int value;
-      } setGlobalIntData;
-
-      struct
-      {
-        int value;
-      } setLocalIntData;
+      } setGlobalData;
 
       struct
       {
         char key[MAX_SCRIPT_KEY_SIZE];
-      } toggleGlobalData;
+        int value;
+      } setLocalData;
 
       struct
       {
-      } toggleLocalData;
+        char lhs[MAX_SCRIPT_KEY_SIZE];
+        char rhs[MAX_SCRIPT_KEY_SIZE];
+
+        char lhsKey[MAX_SCRIPT_KEY_SIZE];
+        char rhsKey[MAX_SCRIPT_KEY_SIZE];
+
+        char boolOperation[MAX_SCRIPT_KEY_SIZE];
+      } ifData;
     } data;
   };
 
@@ -74,6 +78,7 @@ public:
 
   void execute();
   void advance();
+  void stepBack();
   bool active() const;
   ScriptData getCurrentData() const;
 

@@ -7,6 +7,22 @@
 #include "EntityDef.h"
 #include "Entity.h"
 
+static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
+{
+  TRACE("exec_bool_operation: (%d %s %d)", lhs, operation.c_str(), rhs);
+
+  if (operation == "==") return lhs == rhs;
+  if (operation == "!=") return lhs != rhs;
+  if (operation == "<") return lhs < rhs;
+  if (operation == ">") return lhs > rhs;
+  if (operation == "<=") return lhs <= rhs;
+  if (operation == ">=") return lhs >= rhs;
+
+  TRACE("Unknown operation '%s'", operation.c_str());
+
+  return false;
+}
+
 Entity::Entity(const std::string& name)
  : x(0),
    y(0),
@@ -81,14 +97,14 @@ void Entity::update()
   {
     if (m_script.active())
     {
-      executeScriptLine(m_script.getCurrentData());
+      executeScriptLine(m_script.getCurrentData(), m_script);
 
       m_script.advance();
     }
 
     if (!m_script.active() && m_stepScript.active())
     {
-      executeScriptLine(m_stepScript.getCurrentData());
+      executeScriptLine(m_stepScript.getCurrentData(), m_stepScript);
 
       m_stepScript.advance();
 
@@ -173,6 +189,15 @@ void Entity::walk()
   }
 }
 
+void Entity::wait(int duration)
+{
+  if (m_state != STATE_WALKING)
+  {
+    m_state = STATE_WAITING;
+    m_waitCounter = duration;
+  }
+}
+
 void Entity::draw(sf::RenderTarget& target, const coord_t& view)
 {
   if (m_sprite)
@@ -253,19 +278,19 @@ bool Entity::canInteractWith(const Entity* interactor) const
   return false;
 }
 
-void Entity::executeScriptLine(const Script::ScriptData& data)
+void Entity::executeScriptLine(const Script::ScriptData& data, Script& executingScript)
 {
   if (data.opcode == Script::OP_MESSAGE)
   {
     Message::instance().show(data.data.messageData.message);
 
     Script::ScriptData next;
-    if (m_script.peekNext(next))
+    if (executingScript.peekNext(next))
     {
       if (next.opcode == Script::OP_MESSAGE)
       {
-        m_script.advance();
-        executeScriptLine(next);
+        executingScript.advance();
+        executeScriptLine(next, executingScript);
       }
     }
   }
@@ -277,49 +302,99 @@ void Entity::executeScriptLine(const Script::ScriptData& data)
   {
     wait(data.data.waitData.duration);
   }
-  else if (data.opcode == Script::OP_SET_GLOBAL_INT)
+  else if (data.opcode == Script::OP_SET_GLOBAL)
   {
-    persistent::Global<int>::instance().set(data.data.setGlobalIntData.key, data.data.setGlobalIntData.value);
+    Persistent<int>::instance().set(data.data.setGlobalData.key, data.data.setGlobalData.value);
   }
-  else if (data.opcode == Script::OP_SET_LOCAL_INT)
+  else if (data.opcode == Script::OP_SET_LOCAL)
   {
-    persistent::Local<int>::instance().set(getTag(), data.data.setLocalIntData.value);
+    Persistent<int>::instance().set(getTag() + "@@" + data.data.setLocalData.key, data.data.setLocalData.value);
   }
-  else if (data.opcode == Script::OP_TOGGLE_GLOBAL)
+  else if (data.opcode == Script::OP_IF)
   {
-    std::string key = data.data.toggleGlobalData.key;
+    std::string lhs = data.data.ifData.lhs;
+    std::string rhs = data.data.ifData.rhs;
+    std::string lhsKey = data.data.ifData.lhsKey;
+    std::string rhsKey = data.data.ifData.rhsKey;
+    std::string operation = data.data.ifData.boolOperation;
 
-    if (persistent::Global<bool>::instance().isSet(key))
+    int lhsValue, rhsValue;
+
+    TRACE("lhs=%s rhs=%s lhsKey=%s rhsKey=%s operation=%s", lhs.c_str(), rhs.c_str(), lhsKey.c_str(), rhsKey.c_str(), operation.c_str());
+
+    getIfValue(lhs, lhsKey, lhsValue);
+    getIfValue(rhs, rhsKey, rhsValue);
+
+    bool result = exec_bool_operation(operation, lhsValue, rhsValue);
+
+    if (!result)
     {
-      bool value = persistent::Global<bool>::instance().get(key);
-      persistent::Global<bool>::instance().set(key, !value);
-    }
-    else
-    {
-      persistent::Global<bool>::instance().set(key, false);
+      // Find matching end_if or else, in case the expression was false.
+      int ifCount = 1;
+      while (ifCount > 0)
+      {
+        executingScript.advance();
+        if (executingScript.getCurrentData().opcode == Script::OP_IF)
+        {
+          ifCount++;
+        }
+        else if (executingScript.getCurrentData().opcode == Script::OP_END_IF)
+        {
+          ifCount--;
+        }
+        else if (executingScript.getCurrentData().opcode == Script::OP_ELSE && ifCount == 1)
+        {
+          // IfCount == 1 means it is the original IF, so enter this ELSE branch.
+          ifCount--;
+        }
+      }
     }
   }
-  else if (data.opcode == Script::OP_TOGGLE_LOCAL)
+  else if (data.opcode == Script::OP_ELSE)
   {
-    std::string key = getTag();
-
-    if (persistent::Local<bool>::instance().isSet(key))
+    // In case we advanced into an ELSE opcode, continue until we find the matching END.
+    int ifCount = 1;
+    while (ifCount > 0)
     {
-      bool value = persistent::Local<bool>::instance().get(key);
-      persistent::Local<bool>::instance().set(key, !value);
-    }
-    else
-    {
-      persistent::Local<bool>::instance().set(key, false);
+      executingScript.advance();
+      if (executingScript.getCurrentData().opcode == Script::OP_IF)
+      {
+        ifCount++;
+      }
+      else if (executingScript.getCurrentData().opcode == Script::OP_END_IF)
+      {
+        ifCount--;
+      }
     }
   }
 }
 
-void Entity::wait(int duration)
+void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const
 {
-  if (m_state != STATE_WALKING)
+  std::string fixedKey = key;
+
+  if (input == "local")
   {
-    m_state = STATE_WAITING;
-    m_waitCounter = duration;
+    fixedKey = getTag() + "@@" + fixedKey;
+  }
+
+  if (input == "local" || input == "global")
+  {
+    value = Persistent<int>::instance().get(fixedKey);
+  }
+  else if (input == "const")
+  {
+    if (fixedKey == "true" || fixedKey == "false")
+    {
+      value = fixedKey == "true";
+    }
+    else
+    {
+      value = atoi(key.c_str());
+    }
+  }
+  else
+  {
+    TRACE("%s: Unknown input value %s from script.", getTag().c_str(), input.c_str());
   }
 }

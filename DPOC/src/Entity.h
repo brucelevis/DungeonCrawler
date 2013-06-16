@@ -64,7 +64,9 @@ private:
   Entity& operator=(const Entity&);
 
   void walk();
-  void executeScriptLine(const Script::ScriptData& data);
+  void executeScriptLine(const Script::ScriptData& data, Script& executingScript);
+
+  void getIfValue(const std::string& input, const std::string& key, int& value) const;
 private:
   std::string m_name;
   Sprite* m_sprite;
