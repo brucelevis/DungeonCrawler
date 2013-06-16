@@ -9,6 +9,25 @@
 #include "Utility.h"
 #include "Script.h"
 
+static void strip_comments(std::vector<std::string>& lines)
+{
+  for (auto it = lines.begin(); it != lines.end();)
+  {
+    if (it->size() == 0)
+    {
+      it = lines.erase(it);
+    }
+    else if (it->at(0) == '#')
+    {
+      it = lines.erase(it);
+    }
+    else
+    {
+      ++it;
+    }
+  }
+}
+
 Script::Script()
  : m_currentIndex(0),
    m_running(false),
@@ -29,13 +48,12 @@ bool Script::loadFromFile(const std::string& file)
   {
     std::vector<std::string> lines = get_lines(infile);
 
+    strip_comments(lines);
+
     for (auto it = lines.begin(); it != lines.end(); ++it)
     {
-      if (it->size() > 0)
-      {
-        ScriptData data = parseLine(*it);
-        m_data.push_back(data);
-      }
+      ScriptData data = parseLine(*it);
+      m_data.push_back(data);
     }
 
     infile.close();
@@ -92,10 +110,6 @@ bool Script::peekNext(ScriptData& out) const
 Script::ScriptData Script::parseLine(const std::string& line) const
 {
   std::vector<std::string> strings = split_string(line, ' ');
-
-  // Comment
-  if (strings[0][0] == '#')
-    return ScriptData();
 
   Opcode opcode = getOpCode(strings[0]);
 
