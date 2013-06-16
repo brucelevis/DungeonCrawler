@@ -137,6 +137,33 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.data.waitData.duration = atoi(strings[1].c_str());
   }
+  else if (opcode == OP_SET_GLOBAL_INT)
+  {
+    std::string key = strings[1];
+    int value = atoi(strings[2].c_str());
+
+    memset(data.data.setGlobalIntData.key, 0, MAX_SCRIPT_KEY_SIZE);
+
+    strcpy(data.data.setGlobalIntData.key, key.c_str());
+    data.data.setGlobalIntData.value = value;
+  }
+  else if (opcode == OP_SET_LOCAL_INT)
+  {
+    int value = atoi(strings[1].c_str());
+
+    data.data.setLocalIntData.value = value;
+  }
+  else if (opcode == OP_TOGGLE_GLOBAL)
+  {
+    std::string key = strings[1];
+
+    memset(data.data.toggleGlobalData.key, 0, MAX_SCRIPT_KEY_SIZE);
+    strcpy(data.data.toggleGlobalData.key, key.c_str());
+  }
+  else if (opcode == OP_TOGGLE_LOCAL)
+  {
+    // Nothing
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -151,7 +178,11 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
   {
     { "message", OP_MESSAGE },
     { "walk", OP_WALK },
-    { "wait", OP_WAIT }
+    { "wait", OP_WAIT },
+    { "set_global_int", OP_SET_GLOBAL_INT },
+    { "set_local_int", OP_SET_LOCAL_INT },
+    { "toggle_global", OP_TOGGLE_GLOBAL },
+    { "toggle_local", OP_TOGGLE_LOCAL }
   };
 
   auto it = OP_MAP.find(opStr);

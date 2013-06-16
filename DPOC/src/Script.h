@@ -6,6 +6,7 @@
 #include "Direction.h"
 
 static const int MAX_SCRIPT_MESSAGE_BUFFER_SIZE = 512;
+static const int MAX_SCRIPT_KEY_SIZE = 32;
 
 class Script
 {
@@ -15,7 +16,11 @@ public:
     OP_NOP,
     OP_MESSAGE,
     OP_WALK,
-    OP_WAIT
+    OP_WAIT,
+    OP_SET_GLOBAL_INT,
+    OP_SET_LOCAL_INT,
+    OP_TOGGLE_GLOBAL,
+    OP_TOGGLE_LOCAL
   };
 
   struct ScriptData
@@ -38,6 +43,26 @@ public:
       {
         int duration;
       } waitData;
+
+      struct
+      {
+        char key[MAX_SCRIPT_KEY_SIZE];
+        int value;
+      } setGlobalIntData;
+
+      struct
+      {
+        int value;
+      } setLocalIntData;
+
+      struct
+      {
+        char key[MAX_SCRIPT_KEY_SIZE];
+      } toggleGlobalData;
+
+      struct
+      {
+      } toggleLocalData;
     } data;
   };
 

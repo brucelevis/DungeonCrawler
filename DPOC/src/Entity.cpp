@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "Persistent.h"
 #include "Message.h"
 #include "logger.h"
 #include "Config.h"
@@ -275,6 +276,42 @@ void Entity::executeScriptLine(const Script::ScriptData& data)
   else if (data.opcode == Script::OP_WAIT)
   {
     wait(data.data.waitData.duration);
+  }
+  else if (data.opcode == Script::OP_SET_GLOBAL_INT)
+  {
+    persistent::Global<int>::instance().set(data.data.setGlobalIntData.key, data.data.setGlobalIntData.value);
+  }
+  else if (data.opcode == Script::OP_SET_LOCAL_INT)
+  {
+    persistent::Local<int>::instance().set(getTag(), data.data.setLocalIntData.value);
+  }
+  else if (data.opcode == Script::OP_TOGGLE_GLOBAL)
+  {
+    std::string key = data.data.toggleGlobalData.key;
+
+    if (persistent::Global<bool>::instance().isSet(key))
+    {
+      bool value = persistent::Global<bool>::instance().get(key);
+      persistent::Global<bool>::instance().set(key, !value);
+    }
+    else
+    {
+      persistent::Global<bool>::instance().set(key, false);
+    }
+  }
+  else if (data.opcode == Script::OP_TOGGLE_LOCAL)
+  {
+    std::string key = getTag();
+
+    if (persistent::Local<bool>::instance().isSet(key))
+    {
+      bool value = persistent::Local<bool>::instance().get(key);
+      persistent::Local<bool>::instance().set(key, !value);
+    }
+    else
+    {
+      persistent::Local<bool>::instance().set(key, false);
+    }
   }
 }
 

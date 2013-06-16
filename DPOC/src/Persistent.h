@@ -56,18 +56,6 @@ namespace persistent
     friend class Persistent<T, Local<T> >;
     Local() {}
   };
-
-  class GlobalToggle : public Persistent<bool, GlobalToggle>
-  {
-    friend class Persistent<bool, GlobalToggle>;
-    GlobalToggle() {}
-  };
-
-  class LocalToggle : public Persistent<bool, LocalToggle>
-  {
-    friend class Persistent<bool, LocalToggle>;
-    LocalToggle() {}
-  };
 }
 
 #endif
