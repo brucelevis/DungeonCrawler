@@ -1,8 +1,16 @@
+#include <sstream>
 #include <fstream>
 
 #include "Cache.h"
 #include "logger.h"
 #include "Map.h"
+
+static std::string make_tag(int index, const std::string& name)
+{
+  std::ostringstream ss;
+  ss << index << "@@" << name;
+  return ss.str();
+}
 
 Map::Map()
  : m_width(0),
@@ -167,6 +175,7 @@ Map* Map::loadFromFile(const std::string& filename)
       Entity* entity = new Entity(entName);
       entity->x = entX;
       entity->y = entY;
+      entity->setTag(make_tag(i, m_name));
 
       map->m_entities.push_back(entity);
     }

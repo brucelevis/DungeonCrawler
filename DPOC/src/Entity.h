@@ -53,6 +53,9 @@ public:
   bool canInteractWith(const Entity* interactor) const;
 
   void wait(int duration);
+
+  void setTag(const std::string& tag) { m_tag = tag; }
+  std::string getTag() const { return m_tag; }
 public:
   float x, y;
 private:
@@ -77,6 +80,8 @@ private:
 
   State m_state;
   int m_waitCounter;
+
+  std::string m_tag;
 };
 
 #endif
