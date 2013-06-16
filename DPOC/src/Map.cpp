@@ -97,7 +97,8 @@ bool Map::saveToFile(const std::string& filename)
       {
         ofile << m_tiles[i][j].tileX << " "
               << m_tiles[i][j].tileY << " "
-              << m_tiles[i][j].zone << " ";
+              << m_tiles[i][j].zone << " "
+              << m_tiles[i][j].solid << " ";
       }
     }
     ofile << m_music << " ";
@@ -154,7 +155,7 @@ Map* Map::loadFromFile(const std::string& filename)
       for (int j = 0; j < map->m_width * map->m_height; j++)
       {
         Tile tile;
-        ifile >> tile.tileX >> tile.tileY >> tile.zone;
+        ifile >> tile.tileX >> tile.tileY >> tile.zone >> tile.solid;
 
         map->m_tiles[i][j] = tile;
       }
@@ -240,4 +241,19 @@ const Warp* Map::getWarpAt(int x, int y) const
     }
   }
   return 0;
+}
+
+bool Map::blocking(int x, int y)
+{
+  // TODO: Draw solids in editor instead?
+
+  for (int i = 0; i < config::MAX_LAYERS; i++)
+  {
+    Tile* tile = getTileAt(x, y, i);
+
+    if (tile && tile->solid)
+      return true;
+  }
+
+  return false;
 }

@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "coord.h"
 #include "Config.h"
 #include "Entity.h"
 
@@ -12,6 +13,7 @@ struct Tile
 {
   int tileX, tileY;
   int zone;
+  bool solid;
 };
 
 struct Warp
@@ -48,6 +50,8 @@ public:
   static Map* loadFromFile(const std::string& filename);
 
   const std::vector<Entity*>& getEntities() const { return m_entities; }
+
+  bool blocking(int x, int y);
 private:
   Map();
   Map(const Map&);

@@ -52,6 +52,7 @@ Editor::Editor()
       m_tiles[i][j].tileX = m_currentTile.tileX;
       m_tiles[i][j].tileY = m_currentTile.tileY;
       m_tiles[i][j].zone = 0;
+      m_tiles[i][j].solid = false;
     }
   }
 }
@@ -198,6 +199,10 @@ void Editor::checkKeyEvents(sf::Event& event)
     else if (event.key.code == sf::Keyboard::F9)
     {
       m_editState = EDIT_STATE_PLACE_WARP;
+    }
+    else if (event.key.code == sf::Keyboard::F4)
+    {
+      m_editState = EDIT_STATE_PLACE_SOLID;
     }
 
     if (event.key.code == sf::Keyboard::F && m_editState == EDIT_STATE_PLACE_TILES)
@@ -353,6 +358,14 @@ void Editor::checkMouseEvents()
           }
         }
       }
+      else if (m_editState == EDIT_STATE_PLACE_SOLID)
+      {
+        Tile* tile = getTileAt(px, py, 0);
+        if (tile)
+        {
+          tile->solid = true;
+        }
+      }
     }
   }
   else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
@@ -402,6 +415,14 @@ void Editor::checkMouseEvents()
             m_warps.erase(it);
             break;
           }
+        }
+      }
+      else if (m_editState == EDIT_STATE_PLACE_SOLID)
+      {
+        Tile* tile = getTileAt(px, py, 0);
+        if (tile)
+        {
+          tile->solid = false;
         }
       }
     }
@@ -682,6 +703,15 @@ void Editor::drawEditArea()
 
             draw_text(m_window, posX, posY, "%d", tp->zone);
           }
+
+          if (m_editState == EDIT_STATE_PLACE_SOLID && tp->solid)
+          {
+            rect.setPosition(posX+1, posY+1);
+            rect.setSize(sf::Vector2f(config::TILE_W-2, config::TILE_H-2));
+            rect.setFillColor(sf::Color(255, 0, 0, 127));
+            rect.setOutlineColor(sf::Color(0, 255, 0, 127));
+            m_window.draw(rect);
+          }
         }
       }
     }
@@ -896,6 +926,7 @@ void Editor::resizeMap(int width, int height)
       newTiles[i][j].tileX = 0;//m_currentTile.tileX;
       newTiles[i][j].tileY = 0;//m_currentTile.tileY;
       newTiles[i][j].zone = 0;
+      newTiles[i][j].solid = false;
     }
   }
 
@@ -914,6 +945,7 @@ void Editor::resizeMap(int width, int height)
           newTiles[i][index].tileX = tp->tileX;
           newTiles[i][index].tileY = tp->tileY;
           newTiles[i][index].zone = tp->zone;
+          newTiles[i][index].solid = tp->solid;
         }
       }
     }
@@ -1025,6 +1057,8 @@ std::string Editor::editStateToString() const
     return "EDIT_STATE_PLACE_WARP";
   case EDIT_STATE_PLACE_ZONE:
     return "EDIT_STATE_PLACE_ZONE";
+  case EDIT_STATE_PLACE_SOLID:
+    return "EDIT_STATE_PLACE_SOLID";
   default:
     return "<Unknown EditState>";
   }

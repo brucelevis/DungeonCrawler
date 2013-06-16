@@ -1,5 +1,8 @@
 #include <algorithm>
 
+#include "Map.h"
+#include "Player.h"
+#include "Game.h"
 #include "Persistent.h"
 #include "Message.h"
 #include "logger.h"
@@ -145,7 +148,15 @@ void Entity::step(Direction dir)
     else if (m_direction == DIR_UP)
       m_targetY = y - 1;
 
-    m_state = STATE_WALKING;
+    if (!Game::instance().getCurrentMap()->blocking(m_targetX, m_targetY) && !checkPlayerCollision() && !checkEntityCollision())
+    {
+      m_state = STATE_WALKING;
+    }
+    else
+    {
+      m_targetX = x;
+      m_targetY = y;
+    }
   }
 }
 
@@ -397,4 +408,40 @@ void Entity::getIfValue(const std::string& input, const std::string& key, int& v
   {
     TRACE("%s: Unknown input value %s from script.", getTag().c_str(), input.c_str());
   }
+}
+
+bool Entity::checkPlayerCollision() const
+{
+  Entity* player = Game::instance().getPlayer()->player();
+
+  if (player == this)
+    return false;
+
+  return (((int)player->x == x && (int)player->y == y) ||
+          (player->getTargetX() == getTargetX() && player->getTargetY() == getTargetY()));
+}
+
+bool Entity::checkEntityCollision() const
+{
+  Map* map = Game::instance().getCurrentMap();
+
+  for (auto it = map->getEntities().begin(); it != map->getEntities().end(); ++it)
+  {
+    if ((*it) == this)
+      continue;
+
+    int px = (*it)->x;
+    int py = (*it)->y;
+
+    if (px == x && py == y)
+      return true;
+
+    if (px == getTargetX() && py == getTargetY())
+      return true;
+
+    if (getTargetX() == (*it)->getTargetX() && getTargetY() == (*it)->getTargetY())
+      return true;
+  }
+
+  return false;
 }

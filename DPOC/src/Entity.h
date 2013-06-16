@@ -46,6 +46,9 @@ public:
   float getRealX() const;
   float getRealY() const;
 
+  int getTargetX() const { return m_targetX; }
+  int getTargetY() const { return m_targetY; }
+
   bool isWalking() const { return m_state == STATE_WALKING; }
 
   void interact(const Entity* interactor);
@@ -67,6 +70,9 @@ private:
   void executeScriptLine(const Script::ScriptData& data, Script& executingScript);
 
   void getIfValue(const std::string& input, const std::string& key, int& value) const;
+
+  bool checkPlayerCollision() const;
+  bool checkEntityCollision() const;
 private:
   std::string m_name;
   Sprite* m_sprite;
