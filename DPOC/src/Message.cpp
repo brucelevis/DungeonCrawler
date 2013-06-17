@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "draw_text.h"
 #include "Utility.h"
+#include "Frame.h"
 #include "Message.h"
 
 static const size_t CHARS_PER_LINE = 30;
@@ -87,13 +88,6 @@ void Message::update()
 
 void Message::draw(sf::RenderTarget& target)
 {
-  sf::RectangleShape rect;
-  rect.setSize(sf::Vector2f(252, 46));
-  rect.setPosition(2, config::GAME_RES_Y - 48);
-  rect.setFillColor(sf::Color::Black);
-  rect.setOutlineColor(sf::Color::White);
-  rect.setOutlineThickness(2.0f);
-  target.draw(rect);
-
+  draw_frame(target, 0, config::GAME_RES_Y - 48, 256, 48);
   draw_text_bmp(target, 8, config::GAME_RES_Y - 48 + 8, "%s", m_currentBuffer.c_str());
 }
