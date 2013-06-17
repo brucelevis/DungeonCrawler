@@ -1,3 +1,4 @@
+#include "logger.h"
 #include "Cache.h"
 #include "Frame.h"
 #include "draw_text.h"
@@ -19,7 +20,9 @@ static std::string get_longest_menu_choice(const std::vector<std::string>& menuC
 Menu::Menu()
  : m_arrowTexture(cache::loadTexture("Resources/Arrow.png")),
    m_visible(false),
-   m_currentMenuChoice(0)
+   m_currentMenuChoice(0),
+   m_maxVisible(-1),
+   m_scroll(0)
 {
 
 }
@@ -27,14 +30,6 @@ Menu::Menu()
 Menu::~Menu()
 {
   cache::releaseTexture("Resources/Arrow.png");
-}
-
-void Menu::handleConfirm()
-{
-  if (currentMenuChoice() == "Close")
-  {
-    setVisible(false);
-  }
 }
 
 void Menu::moveArrow(Direction dir)
@@ -46,6 +41,14 @@ void Menu::moveArrow(Direction dir)
     {
       m_currentMenuChoice = 0;
     }
+
+    if (m_maxVisible != -1)
+    {
+      if (m_currentMenuChoice < m_scroll)
+      {
+        m_scroll--;
+      }
+    }
   }
   else if (dir == DIR_DOWN)
   {
@@ -54,24 +57,64 @@ void Menu::moveArrow(Direction dir)
     {
       m_currentMenuChoice = m_menuChoices.size() - 1;
     }
+
+    if (m_maxVisible != -1)
+    {
+      if (m_currentMenuChoice >= m_maxVisible + m_scroll)
+      {
+        m_scroll++;
+      }
+    }
   }
 }
 
 void Menu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, (3 + get_longest_menu_choice(m_menuChoices).size()) * 8, (2 + m_menuChoices.size()) * 8);
+  int start = m_maxVisible == -1 ? 0 : m_scroll;
+  int end = m_maxVisible == -1 ? m_menuChoices.size() : m_maxVisible;
 
-  for (size_t i = 0; i < m_menuChoices.size(); i++)
+  int w = (4 + get_longest_menu_choice(m_menuChoices).size()) * 8;
+  int h = (2 + end) * 8;
+
+  if (m_maxVisible != -1)
+    end += m_scroll;
+
+  draw_frame(target, x, y, w, h);
+
+  int i = 0;
+  for (int index = start; index < end; index++, i++)
   {
-    draw_text_bmp(target, x + 16, y + 8 + i * 8, "%s", m_menuChoices[i].c_str());
+    if (index < (int)m_menuChoices.size())
+    {
+      draw_text_bmp(target, x + 16, y + 8 + i * 8, "%s", m_menuChoices[index].c_str());
+    }
 
-    if (m_currentMenuChoice == (int)i)
+    if (m_currentMenuChoice == index)
     {
       sf::Sprite sprite;
       sprite.setTexture(*m_arrowTexture);
+      sprite.setTextureRect(sf::IntRect(0, 0, 8, 8));
       sprite.setPosition(x + 8, y + 8 + i * 8);
       target.draw(sprite);
     }
+  }
+
+  if (m_scroll > 0)
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*m_arrowTexture);
+    sprite.setPosition(x + w - 12, y + 4);
+    sprite.setTextureRect(sf::IntRect(8, 0, 8, 8));
+    target.draw(sprite);
+  }
+
+  if (end < (int)m_menuChoices.size())
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*m_arrowTexture);
+    sprite.setPosition(x + w - 12, y + h - 12);
+    sprite.setTextureRect(sf::IntRect(16, 0, 8, 8));
+    target.draw(sprite);
   }
 
 }
@@ -83,4 +126,12 @@ MainMenu::MainMenu()
   addEntry("Equip");
   addEntry("Status");
   addEntry("Close");
+}
+
+void MainMenu::handleConfirm()
+{
+  if (currentMenuChoice() == "Close")
+  {
+    setVisible(false);
+  }
 }
