@@ -144,8 +144,6 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   {
     if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
     else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
-    else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
-    else if (key == sf::Keyboard::Left) m_menu.moveArrow(DIR_LEFT);
   }
 }
 
