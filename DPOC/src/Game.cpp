@@ -208,8 +208,7 @@ void Game::transferPlayer(const std::string& targetMap, int x, int y)
     loadNewMap(targetMap);
   }
 
-  m_player->player()->x = x;
-  m_player->player()->y = y;
+  m_player->player()->setPosition(x, y);
 }
 
 void Game::playMusic(const std::string& music)

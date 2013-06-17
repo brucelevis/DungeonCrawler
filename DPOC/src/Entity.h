@@ -43,6 +43,14 @@ public:
 
   void draw(sf::RenderTarget& target, const coord_t& view);
 
+  void setPosition(int _x, int _y)
+  {
+    x = _x;
+    y = _y;
+    m_targetX = x;
+    m_targetY = y;
+  }
+
   float getRealX() const;
   float getRealY() const;
 

@@ -54,7 +54,6 @@ Player* Player::create(int x, int y)
 {
   Player* player = new Player;
   player->m_playerTrain.push_back(new Entity("player"));
-  player->player()->x = x;
-  player->player()->y = y;
+  player->player()->setPosition(x, y);
   return player;
 }
