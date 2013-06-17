@@ -143,6 +143,8 @@ MainMenu::MainMenu()
   addEntry("Equip");
   addEntry("Status");
   addEntry("Close");
+
+  m_stateStack.push(STATE_MAIN_MENU);
 }
 
 void MainMenu::handleConfirm()
@@ -159,9 +161,16 @@ void MainMenu::handleConfirm()
 
 void MainMenu::handleEscape()
 {
-  if (m_itemMenu)
+  State currentState = m_stateStack.top();
+
+  if (currentState != STATE_MAIN_MENU)
   {
-    closeItemMenu();
+    if (m_stateStack.top() == STATE_ITEM_MENU && m_itemMenu)
+    {
+      closeItemMenu();
+    }
+
+    m_stateStack.pop();
   }
   else
   {
@@ -171,11 +180,13 @@ void MainMenu::handleEscape()
 
 void MainMenu::moveArrow(Direction dir)
 {
-  if (m_itemMenu)
+  State currentState = m_stateStack.top();
+
+  if (currentState == STATE_ITEM_MENU && m_itemMenu)
   {
     m_itemMenu->moveArrow(dir);
   }
-  else
+  else if (currentState == STATE_MAIN_MENU)
   {
     Menu::moveArrow(dir);
   }
@@ -185,6 +196,8 @@ void MainMenu::openItemMenu()
 {
   m_itemMenu = new ItemMenu;
   m_itemMenu->setVisible(true);
+
+  m_stateStack.push(STATE_ITEM_MENU);
 }
 
 void MainMenu::closeItemMenu()

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <stack>
 
 #include <SFML/Graphics.hpp>
 
@@ -49,6 +50,15 @@ class ItemMenu;
 
 class MainMenu : public Menu
 {
+  enum State
+  {
+    STATE_MAIN_MENU,
+    STATE_ITEM_MENU,
+    STATE_CHARACTER_MENU,
+    STATE_EQUIP_MENU,
+    STATE_SPELL_MENU,
+    STATE_STATUS_MENU
+  };
 public:
   MainMenu();
 
@@ -63,6 +73,8 @@ private:
   void closeItemMenu();
 private:
   ItemMenu* m_itemMenu;
+
+  std::stack<State> m_stateStack;
 };
 
 class ItemMenu : public Menu
