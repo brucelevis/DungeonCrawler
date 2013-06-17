@@ -50,6 +50,10 @@ void Game::run()
       {
         Message::instance().update();
       }
+      else if (m_menu.isVisible())
+      {
+
+      }
       else
       {
         if (m_currentMap)
@@ -108,14 +112,40 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     }
     else if (!Message::instance().isVisible())
     {
-      for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
+      if (m_menu.isVisible())
       {
-        if ((*it)->canInteractWith(m_player->player()))
+        m_menu.handleConfirm();
+      }
+      else
+      {
+        for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
         {
-          (*it)->interact(m_player->player());
+          if ((*it)->canInteractWith(m_player->player()))
+          {
+            (*it)->interact(m_player->player());
+          }
         }
       }
     }
+  }
+  else if (key == sf::Keyboard::Escape)
+  {
+    if (!m_player->player()->isWalking() && !Message::instance().isVisible() && !m_menu.isVisible())
+    {
+      m_menu.setVisible(true);
+    }
+    else
+    {
+      m_menu.setVisible(false);
+    }
+  }
+
+  if (m_menu.isVisible())
+  {
+    if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
+    else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
+    else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
+    else if (key == sf::Keyboard::Left) m_menu.moveArrow(DIR_LEFT);
   }
 }
 
@@ -128,6 +158,11 @@ void Game::draw()
 
   if (m_player)
     m_player->draw(m_window, m_view);
+
+  if (m_menu.isVisible())
+  {
+    m_menu.draw(m_window, 8, 8);
+  }
 
   if (Message::instance().isVisible())
   {

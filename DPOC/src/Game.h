@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "coord.h"
+#include "Menu.h"
 
 class Map;
 class Player;
@@ -40,6 +41,8 @@ private:
 
   std::string m_currentMusicName;
   sf::Music m_currentMusic;
+
+  MainMenu m_menu;
 };
 
 #endif
