@@ -2,6 +2,12 @@
 #include "Cache.h"
 #include "Frame.h"
 #include "draw_text.h"
+#include "Utility.h"
+
+#include "Player.h"
+#include "Game.h"
+#include "Item.h"
+
 #include "Menu.h"
 
 static std::string get_longest_menu_choice(const std::vector<std::string>& menuChoices)
@@ -68,16 +74,24 @@ void Menu::moveArrow(Direction dir)
   }
 }
 
+int Menu::getWidth() const
+{
+  return (4 + get_longest_menu_choice(m_menuChoices).size()) * 8;
+}
+
+int Menu::getHeight() const
+{
+  int end = m_maxVisible == -1 ? m_menuChoices.size() : m_maxVisible;
+  return (2 + end) * 8;
+}
+
 void Menu::draw(sf::RenderTarget& target, int x, int y)
 {
   int start = m_maxVisible == -1 ? 0 : m_scroll;
-  int end = m_maxVisible == -1 ? m_menuChoices.size() : m_maxVisible;
+  int end = m_maxVisible == -1 ? m_menuChoices.size() : (m_maxVisible + m_scroll);
 
-  int w = (4 + get_longest_menu_choice(m_menuChoices).size()) * 8;
-  int h = (2 + end) * 8;
-
-  if (m_maxVisible != -1)
-    end += m_scroll;
+  int w = getWidth();
+  int h = getHeight();
 
   draw_frame(target, x, y, w, h);
 
@@ -119,7 +133,10 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
 
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 MainMenu::MainMenu()
+ : m_itemMenu(0)
 {
   addEntry("Item");
   addEntry("Spell");
@@ -134,4 +151,88 @@ void MainMenu::handleConfirm()
   {
     setVisible(false);
   }
+  else if (currentMenuChoice() == "Item")
+  {
+    openItemMenu();
+  }
+}
+
+void MainMenu::handleEscape()
+{
+  if (m_itemMenu)
+  {
+    closeItemMenu();
+  }
+  else
+  {
+    Menu::handleEscape();
+  }
+}
+
+void MainMenu::moveArrow(Direction dir)
+{
+  if (m_itemMenu)
+  {
+    m_itemMenu->moveArrow(dir);
+  }
+  else
+  {
+    Menu::moveArrow(dir);
+  }
+}
+
+void MainMenu::openItemMenu()
+{
+  m_itemMenu = new ItemMenu;
+  m_itemMenu->setVisible(true);
+}
+
+void MainMenu::closeItemMenu()
+{
+  delete m_itemMenu;
+  m_itemMenu = 0;
+}
+
+void MainMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  Menu::draw(target, x, y);
+
+  if (m_itemMenu)
+  {
+    m_itemMenu->draw(target, x + getWidth() + 16, y);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ItemMenu::ItemMenu()
+{
+  refresh();
+}
+
+void ItemMenu::handleConfirm()
+{
+
+}
+
+void ItemMenu::refresh()
+{
+  clear();
+
+  const std::vector<Item*>& items = Game::instance().getPlayer()->getInventory();
+
+  for (auto it = items.begin(); it != items.end(); ++it)
+  {
+    std::string stack = toString((*it)->stack);
+    std::string name = (*it)->getName();
+
+    addEntry(stack + " " + name);
+  }
+
+  for (int i = 0; i < 20; i++)
+  {
+    addEntry(toString(i) + " " + std::string("DummyItem"));
+  }
+
+  setMaxVisible(10);
 }

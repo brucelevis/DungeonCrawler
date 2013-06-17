@@ -136,7 +136,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     }
     else
     {
-      m_menu.setVisible(false);
+      m_menu.handleEscape();
     }
   }
 

@@ -18,14 +18,20 @@ public:
   bool isVisible() const { return m_visible; }
 
   virtual void handleConfirm() = 0;
+  virtual void handleEscape() { setVisible(false); }
 
-  void moveArrow(Direction dir);
+  virtual void moveArrow(Direction dir);
 
-  void draw(sf::RenderTarget& target, int x, int y);
+  virtual void draw(sf::RenderTarget& target, int x, int y);
 
   std::string currentMenuChoice() const { return m_menuChoices[m_currentMenuChoice]; }
 
   void addEntry(const std::string& choice) { m_menuChoices.push_back(choice); }
+
+  void clear() { m_menuChoices.clear(); }
+
+  int getWidth() const;
+  int getHeight() const;
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
 private:
@@ -38,12 +44,35 @@ private:
   int m_scroll;
 };
 
+class MainMenu;
+class ItemMenu;
+
 class MainMenu : public Menu
 {
 public:
   MainMenu();
 
-  virtual void handleConfirm();
+  void handleConfirm();
+  void handleEscape();
+
+  void moveArrow(Direction dir);
+
+  void draw(sf::RenderTarget& target, int x, int y);
+private:
+  void openItemMenu();
+  void closeItemMenu();
+private:
+  ItemMenu* m_itemMenu;
+};
+
+class ItemMenu : public Menu
+{
+public:
+  ItemMenu();
+
+  void handleConfirm();
+
+  void refresh();
 private:
 };
 
