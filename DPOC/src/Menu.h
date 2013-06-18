@@ -26,15 +26,20 @@ public:
   virtual void draw(sf::RenderTarget& target, int x, int y);
 
   std::string currentMenuChoice() const { return m_menuChoices[m_currentMenuChoice]; }
+  std::string getChoice(size_t index) const { return m_menuChoices[index]; }
 
   void addEntry(const std::string& choice) { m_menuChoices.push_back(choice); }
 
   void clear() { m_menuChoices.clear(); }
 
-  int getWidth() const;
-  int getHeight() const;
+  virtual int getWidth() const;
+  virtual int getHeight() const;
+
+  int getNumberOfChoice() const { return m_menuChoices.size(); }
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
+  int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
+  void drawSelectArrow(sf::RenderTarget& target, int x, int y);
 private:
   sf::Texture* m_arrowTexture;
   bool m_visible;
@@ -47,6 +52,7 @@ private:
 
 class MainMenu;
 class ItemMenu;
+class CharacterMenu;
 
 class MainMenu : public Menu
 {
@@ -71,8 +77,12 @@ public:
 private:
   void openItemMenu();
   void closeItemMenu();
+
+  void openCharacterMenu();
+  void closeCharacterMenu();
 private:
   ItemMenu* m_itemMenu;
+  CharacterMenu* m_characterMenu;
 
   std::stack<State> m_stateStack;
 };
@@ -85,6 +95,20 @@ public:
   void handleConfirm();
 
   void refresh();
+private:
+};
+
+class CharacterMenu : public Menu
+{
+public:
+  CharacterMenu();
+
+  void handleConfirm();
+
+  int getWidth() const;
+  int getHeight() const;
+
+  void draw(sf::RenderTarget& target, int x, int y);
 private:
 };
 

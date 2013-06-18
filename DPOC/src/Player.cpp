@@ -10,6 +10,11 @@ Player::~Player()
   {
     delete *it;
   }
+
+  for (auto it = m_party.begin(); it != m_party.end(); ++it)
+  {
+    delete *it;
+  }
 }
 
 Entity* Player::player()
@@ -50,10 +55,27 @@ void Player::draw(sf::RenderTarget& target, const coord_t& view)
   }
 }
 
+const Character* Player::getCharacter(const std::string& name) const
+{
+  for (auto it = m_party.begin(); it != m_party.end(); ++it)
+  {
+    if ((*it)->getName() == name)
+      return *it;
+  }
+
+  return 0;
+}
+
 Player* Player::create(int x, int y)
 {
   Player* player = new Player;
   player->m_playerTrain.push_back(new Entity("player"));
   player->player()->setPosition(x, y);
+
+  player->m_party.push_back(Character::create("Char1"));
+  player->m_party.push_back(Character::create("Char2"));
+  player->m_party.push_back(Character::create("Char3"));
+  player->m_party.push_back(Character::create("Char4"));
+
   return player;
 }

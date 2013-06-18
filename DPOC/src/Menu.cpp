@@ -5,6 +5,7 @@
 #include "Utility.h"
 
 #include "Player.h"
+#include "Character.h"
 #include "Game.h"
 #include "Item.h"
 
@@ -115,11 +116,7 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
 
   if (m_scroll > 0)
   {
-    sf::Sprite sprite;
-    sprite.setTexture(*m_arrowTexture);
-    sprite.setPosition(x + w - 12, y + 4);
-    sprite.setTextureRect(sf::IntRect(8, 0, 8, 8));
-    target.draw(sprite);
+    drawSelectArrow(target, x + w - 12, y + 4);
   }
 
   if (end < (int)m_menuChoices.size())
@@ -131,6 +128,15 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
     target.draw(sprite);
   }
 
+}
+
+void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
+{
+  sf::Sprite sprite;
+  sprite.setTexture(*m_arrowTexture);
+  sprite.setTextureRect(sf::IntRect(0, 0, 8, 8));
+  sprite.setPosition(x, y);
+  target.draw(sprite);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -149,13 +155,22 @@ MainMenu::MainMenu()
 
 void MainMenu::handleConfirm()
 {
-  if (currentMenuChoice() == "Close")
+  State currentState = m_stateStack.top();
+
+  if (currentState == STATE_MAIN_MENU)
   {
-    setVisible(false);
-  }
-  else if (currentMenuChoice() == "Item")
-  {
-    openItemMenu();
+    if (currentMenuChoice() == "Close")
+    {
+      setVisible(false);
+    }
+    else if (currentMenuChoice() == "Item")
+    {
+      openItemMenu();
+    }
+    else if (currentMenuChoice() == "Status")
+    {
+      openCharacterMenu();
+    }
   }
 }
 
@@ -165,9 +180,13 @@ void MainMenu::handleEscape()
 
   if (currentState != STATE_MAIN_MENU)
   {
-    if (m_stateStack.top() == STATE_ITEM_MENU && m_itemMenu)
+    if (currentState == STATE_ITEM_MENU)
     {
       closeItemMenu();
+    }
+    else if (currentState == STATE_CHARACTER_MENU)
+    {
+      closeCharacterMenu();
     }
 
     m_stateStack.pop();
@@ -182,9 +201,13 @@ void MainMenu::moveArrow(Direction dir)
 {
   State currentState = m_stateStack.top();
 
-  if (currentState == STATE_ITEM_MENU && m_itemMenu)
+  if (currentState == STATE_ITEM_MENU)
   {
     m_itemMenu->moveArrow(dir);
+  }
+  else if (currentState == STATE_CHARACTER_MENU)
+  {
+    m_characterMenu->moveArrow(dir);
   }
   else if (currentState == STATE_MAIN_MENU)
   {
@@ -206,6 +229,20 @@ void MainMenu::closeItemMenu()
   m_itemMenu = 0;
 }
 
+void MainMenu::openCharacterMenu()
+{
+  m_characterMenu = new CharacterMenu;
+  m_characterMenu->setVisible(true);
+
+  m_stateStack.push(STATE_CHARACTER_MENU);
+}
+
+void MainMenu::closeCharacterMenu()
+{
+  delete m_characterMenu;
+  m_characterMenu = 0;
+}
+
 void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 {
   Menu::draw(target, x, y);
@@ -213,6 +250,11 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
   if (m_itemMenu)
   {
     m_itemMenu->draw(target, x + getWidth() + 16, y);
+  }
+
+  if (m_characterMenu)
+  {
+    m_characterMenu->draw(target, x, y + getHeight() + 8);
   }
 }
 
@@ -248,4 +290,58 @@ void ItemMenu::refresh()
   }
 
   setMaxVisible(10);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+CharacterMenu::CharacterMenu()
+{
+  const std::vector<Character*>& party = Game::instance().getPlayer()->getParty();
+
+  for (auto it = party.begin(); it != party.end(); ++it)
+  {
+    addEntry((*it)->getName());
+  }
+}
+
+void CharacterMenu::handleConfirm()
+{
+
+}
+
+int CharacterMenu::getWidth() const
+{
+  return Menu::getWidth() + 32;
+}
+
+int CharacterMenu::getHeight() const
+{
+  return (4 + 32) * getNumberOfChoice();
+}
+
+void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+//  Menu::draw(target, x, y);
+
+  int w = getWidth();
+  int h = getHeight();
+
+  draw_frame(target, x, y, w, h);
+
+  for (int i = 0; i < getNumberOfChoice(); i++)
+  {
+    const sf::Texture* face = Game::instance().getPlayer()->getCharacter(getChoice(i))->getTexture();
+
+    sf::Sprite sprite;
+    sprite.setTexture(*face);
+    sprite.setPosition(x + 16, y + 8 + i * 32);
+    target.draw(sprite);
+
+    draw_text_bmp(target, x + 52, y + 8 + i * 32 + 12, "%s", getChoice(i).c_str());
+
+    if (getCurrentChoiceIndex() == i)
+    {
+      drawSelectArrow(target, x + 8, y + 8 + i * 32 + 12);
+    }
+  }
 }

@@ -14,6 +14,8 @@ public:
   std::string getName() const { return m_name; }
 
   static Character* create(const std::string& name);
+
+  const sf::Texture* getTexture() const { return m_faceTexture; }
 private:
   std::string m_name;
   std::vector<std::string> m_spells;

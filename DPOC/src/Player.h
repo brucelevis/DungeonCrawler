@@ -23,6 +23,8 @@ public:
   const std::vector<Item*>& getInventory() const { return m_inventory; }
   const std::vector<Character*>& getParty() const { return m_party; }
 
+  const Character* getCharacter(const std::string& name) const;
+
   static Player* create(int x, int y);
 private:
   std::vector<Entity*> m_playerTrain;
