@@ -8,6 +8,7 @@ class Entity;
 
 #include "coord.h"
 #include "Item.h"
+#include "Character.h"
 
 class Player
 {
@@ -20,11 +21,13 @@ public:
   void draw(sf::RenderTarget& target, const coord_t& view);
 
   const std::vector<Item*>& getInventory() const { return m_inventory; }
+  const std::vector<Character*>& getParty() const { return m_party; }
 
   static Player* create(int x, int y);
 private:
   std::vector<Entity*> m_playerTrain;
   std::vector<Item*> m_inventory;
+  std::vector<Character*> m_party;
 };
 
 #endif
