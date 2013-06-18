@@ -338,7 +338,7 @@ SpellMenu::SpellMenu(const std::string& characterName)
 
   for (auto it = spells.begin(); it != spells.end(); ++it)
   {
-    addEntry(*it);
+    addEntry("10 " + *it);
   }
 
   setMaxVisible(10);
@@ -394,7 +394,9 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
     sprite.setPosition(x + 16, y + 8 + i * 32);
     target.draw(sprite);
 
-    draw_text_bmp(target, x + 52, y + 8 + i * 32 + 12, "%s", getChoice(i).c_str());
+    draw_text_bmp(target, x + 52, y + 8 + i * 32, "%s", getChoice(i).c_str());
+    draw_text_bmp(target, x + 52, y + 8 + i * 32 + 8, "HP%d", 999);
+    draw_text_bmp(target, x + 52, y + 8 + i * 32 + 16, "MP%d", 999);
 
     if (getCurrentChoiceIndex() == i)
     {
