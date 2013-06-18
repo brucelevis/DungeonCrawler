@@ -12,6 +12,7 @@ public:
   ~Character();
 
   std::string getName() const { return m_name; }
+  const std::vector<std::string>& getSpells() const { return m_spells; }
 
   static Character* create(const std::string& name);
 

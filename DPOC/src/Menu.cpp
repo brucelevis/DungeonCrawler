@@ -167,9 +167,20 @@ void MainMenu::handleConfirm()
     {
       openItemMenu();
     }
+    else if (currentMenuChoice() == "Spell")
+    {
+      openCharacterMenu();
+    }
     else if (currentMenuChoice() == "Status")
     {
       openCharacterMenu();
+    }
+  }
+  else if (currentState == STATE_CHARACTER_MENU)
+  {
+    if (currentMenuChoice() == "Spell")
+    {
+      openSpellMenu(m_characterMenu->currentMenuChoice());
     }
   }
 }
@@ -183,6 +194,10 @@ void MainMenu::handleEscape()
     if (currentState == STATE_ITEM_MENU)
     {
       closeItemMenu();
+    }
+    else if (currentState == STATE_SPELL_MENU)
+    {
+      closeSpellMenu();
     }
     else if (currentState == STATE_CHARACTER_MENU)
     {
@@ -209,6 +224,10 @@ void MainMenu::moveArrow(Direction dir)
   {
     m_characterMenu->moveArrow(dir);
   }
+  else if (currentState == STATE_SPELL_MENU)
+  {
+    m_spellMenu->moveArrow(dir);
+  }
   else if (currentState == STATE_MAIN_MENU)
   {
     Menu::moveArrow(dir);
@@ -229,6 +248,20 @@ void MainMenu::closeItemMenu()
   m_itemMenu = 0;
 }
 
+void MainMenu::openSpellMenu(const std::string& characterName)
+{
+  m_spellMenu = new SpellMenu(characterName);
+  m_spellMenu->setVisible(true);
+
+  m_stateStack.push(STATE_SPELL_MENU);
+}
+
+void MainMenu::closeSpellMenu()
+{
+  delete m_spellMenu;
+  m_spellMenu = 0;
+}
+
 void MainMenu::openCharacterMenu()
 {
   m_characterMenu = new CharacterMenu;
@@ -247,14 +280,19 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 {
   Menu::draw(target, x, y);
 
+  if (m_characterMenu)
+  {
+    m_characterMenu->draw(target, x, y + getHeight() + 8);
+  }
+
   if (m_itemMenu)
   {
     m_itemMenu->draw(target, x + getWidth() + 16, y);
   }
 
-  if (m_characterMenu)
+  if (m_spellMenu)
   {
-    m_characterMenu->draw(target, x, y + getHeight() + 8);
+    m_spellMenu->draw(target, x + getWidth() + 16, y);
   }
 }
 
@@ -290,6 +328,25 @@ void ItemMenu::refresh()
   }
 
   setMaxVisible(10);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SpellMenu::SpellMenu(const std::string& characterName)
+{
+  const std::vector<std::string>& spells = Game::instance().getPlayer()->getCharacter(characterName)->getSpells();
+
+  for (auto it = spells.begin(); it != spells.end(); ++it)
+  {
+    addEntry(*it);
+  }
+
+  setMaxVisible(10);
+}
+
+void SpellMenu::handleConfirm()
+{
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

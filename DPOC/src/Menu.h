@@ -52,6 +52,7 @@ private:
 
 class MainMenu;
 class ItemMenu;
+class SpellMenu;
 class CharacterMenu;
 
 class MainMenu : public Menu
@@ -78,10 +79,14 @@ private:
   void openItemMenu();
   void closeItemMenu();
 
+  void openSpellMenu(const std::string& characterName);
+  void closeSpellMenu();
+
   void openCharacterMenu();
   void closeCharacterMenu();
 private:
   ItemMenu* m_itemMenu;
+  SpellMenu* m_spellMenu;
   CharacterMenu* m_characterMenu;
 
   std::stack<State> m_stateStack;
@@ -95,6 +100,15 @@ public:
   void handleConfirm();
 
   void refresh();
+private:
+};
+
+class SpellMenu : public Menu
+{
+public:
+  SpellMenu(const std::string& characterName);
+
+  void handleConfirm();
 private:
 };
 
