@@ -106,17 +106,17 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
 
     if (m_currentMenuChoice == index)
     {
-      sf::Sprite sprite;
-      sprite.setTexture(*m_arrowTexture);
-      sprite.setTextureRect(sf::IntRect(0, 0, 8, 8));
-      sprite.setPosition(x + 8, y + 8 + i * 8);
-      target.draw(sprite);
+      drawSelectArrow(target, x + 8, y + 8 + i * 8);
     }
   }
 
   if (m_scroll > 0)
   {
-    drawSelectArrow(target, x + w - 12, y + 4);
+    sf::Sprite sprite;
+    sprite.setTexture(*m_arrowTexture);
+    sprite.setPosition(x + w - 12, y + 4);
+    sprite.setTextureRect(sf::IntRect(8, 0, 8, 8));
+    target.draw(sprite);
   }
 
   if (end < (int)m_menuChoices.size())
