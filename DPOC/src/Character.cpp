@@ -11,7 +11,7 @@ Character* Character::create(const std::string& name)
   Character* character = new Character;
 
   character->m_name = name;
-  character->m_spells.push_back("DummySpell");
+  character->m_spells.push_back("Hurt");
   character->m_faceTexture = cache::loadTexture("Resources/Faces/Face.png");
 
   return character;

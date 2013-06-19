@@ -8,6 +8,7 @@
 #include "Character.h"
 #include "Game.h"
 #include "Item.h"
+#include "Spell.h"
 
 #include "Menu.h"
 
@@ -143,7 +144,8 @@ void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
 
 MainMenu::MainMenu()
  : m_itemMenu(0),
-   m_spellMenu(0)
+   m_spellMenu(0),
+   m_characterMenu(0)
 {
   addEntry("Item");
   addEntry("Spell");
@@ -334,7 +336,12 @@ SpellMenu::SpellMenu(const std::string& characterName)
 
   for (auto it = spells.begin(); it != spells.end(); ++it)
   {
-    addEntry("10 " + *it);
+    const Spell* spell = get_spell(*it);
+
+    if (spell)
+    {
+      addEntry(toString(spell->mpCost) + " " + spell->name);
+    }
   }
 
   setMaxVisible(10);
