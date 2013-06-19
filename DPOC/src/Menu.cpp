@@ -142,7 +142,8 @@ void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
 ///////////////////////////////////////////////////////////////////////////////
 
 MainMenu::MainMenu()
- : m_itemMenu(0)
+ : m_itemMenu(0),
+   m_spellMenu(0)
 {
   addEntry("Item");
   addEntry("Spell");
@@ -312,19 +313,14 @@ void ItemMenu::refresh()
 {
   clear();
 
-  const std::vector<Item*>& items = Game::instance().getPlayer()->getInventory();
+  const std::vector<Item>& items = Game::instance().getPlayer()->getInventory();
 
   for (auto it = items.begin(); it != items.end(); ++it)
   {
-    std::string stack = toString((*it)->stack);
-    std::string name = (*it)->getName();
+    std::string stack = toString(it->stackSize);
+    std::string name = it->name;
 
     addEntry(stack + " " + name);
-  }
-
-  for (int i = 0; i < 20; i++)
-  {
-    addEntry(toString(i) + " " + std::string("DummyItem"));
   }
 
   setMaxVisible(10);

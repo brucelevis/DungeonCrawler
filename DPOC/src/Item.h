@@ -12,25 +12,15 @@ enum ItemType
   ITEM_HELMET
 };
 
-struct ItemDef
+struct Item
 {
   std::string name;
   int cost;
   ItemType type;
+
+  int stackSize;
 };
 
-class Item
-{
-public:
-  Item(const std::string& name);
-
-  void merge(const Item& rhs);
-
-  std::string getName() const { return m_definition.name; }
-public:
-  int stack;
-private:
-  ItemDef m_definition;
-};
+Item create_item(const std::string& name, int stackSize = 1);
 
 #endif

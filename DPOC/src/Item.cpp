@@ -1,7 +1,7 @@
 #include <vector>
 #include "Item.h"
 
-static std::vector<ItemDef> itemDefinitions =
+static std::vector<Item> itemDefinitions =
 {
   {
     "Herb",
@@ -10,22 +10,17 @@ static std::vector<ItemDef> itemDefinitions =
   }
 };
 
-Item::Item(const std::string& name)
- : stack(1)
+Item create_item(const std::string& name, int stackSize)
 {
   for (auto it = itemDefinitions.begin(); it != itemDefinitions.end(); ++it)
   {
     if (it->name == name)
     {
-      m_definition = *it;
+      Item itemCopy = *it;
+      itemCopy.stackSize = stackSize;
+      return itemCopy;
     }
   }
-}
 
-void Item::merge(const Item& rhs)
-{
-  if (rhs.m_definition.name == m_definition.name)
-  {
-    stack += rhs.stack;
-  }
+  return Item();
 }
