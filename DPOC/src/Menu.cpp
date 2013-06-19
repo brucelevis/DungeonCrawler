@@ -183,7 +183,28 @@ void MainMenu::handleConfirm()
   {
     if (currentMenuChoice() == "Spell")
     {
-      openSpellMenu(m_characterMenu->currentMenuChoice());
+      if (m_characterMenu->getSpellToUse())
+      {
+        cast_spell(m_characterMenu->getSpellToUse(),
+            Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice()),
+            Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice()));
+        closeCharacterMenu();
+        m_stateStack.pop();
+      }
+      else
+      {
+        m_stateStack.pop();
+        openSpellMenu(m_characterMenu->currentMenuChoice());
+        closeCharacterMenu();
+      }
+    }
+  }
+  else if (currentState == STATE_SPELL_MENU)
+  {
+    const Spell* spell = m_spellMenu->getSelectedSpell();
+    if (!spell->battleOnly)
+    {
+      openCharacterMenu();
     }
   }
 }
@@ -352,9 +373,22 @@ void SpellMenu::handleConfirm()
 
 }
 
+const Spell* SpellMenu::getSelectedSpell() const
+{
+  std::istringstream ss(currentMenuChoice());
+
+  std::string spellName;
+  int mpCost;
+
+  ss >> mpCost >> spellName;
+
+  return get_spell(spellName);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 CharacterMenu::CharacterMenu()
+ : m_spellToUse(0)
 {
   const std::vector<Character*>& party = Game::instance().getPlayer()->getParty();
 

@@ -23,7 +23,7 @@ public:
   const std::vector<Item>& getInventory() const { return m_inventory; }
   const std::vector<Character*>& getParty() const { return m_party; }
 
-  const Character* getCharacter(const std::string& name) const;
+  Character* getCharacter(const std::string& name);
 
   static Player* create(int x, int y);
 private:

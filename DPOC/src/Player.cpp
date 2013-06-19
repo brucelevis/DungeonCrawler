@@ -55,7 +55,7 @@ void Player::draw(sf::RenderTarget& target, const coord_t& view)
   }
 }
 
-const Character* Player::getCharacter(const std::string& name) const
+Character* Player::getCharacter(const std::string& name)
 {
   for (auto it = m_party.begin(); it != m_party.end(); ++it)
   {

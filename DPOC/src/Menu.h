@@ -9,6 +9,8 @@
 
 #include "Direction.h"
 
+class Spell;
+
 class Menu
 {
 public:
@@ -109,6 +111,8 @@ public:
   SpellMenu(const std::string& characterName);
 
   void handleConfirm();
+
+  const Spell* getSelectedSpell() const;
 private:
 };
 
@@ -123,7 +127,11 @@ public:
   int getHeight() const;
 
   void draw(sf::RenderTarget& target, int x, int y);
+
+  void setSpellToUse(const Spell* spell) { m_spellToUse = spell; }
+  const Spell* getSpellToUse() const { return m_spellToUse; }
 private:
+  const Spell* m_spellToUse;
 };
 
 #endif
