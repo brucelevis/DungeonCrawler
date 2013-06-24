@@ -26,3 +26,8 @@ std::vector<std::string> get_lines(std::ifstream& infile)
   }
   return lines;
 }
+
+std::string limitString(const std::string& str, int limit)
+{
+  return str.substr(0, limit);
+}

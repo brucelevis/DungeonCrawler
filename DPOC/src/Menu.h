@@ -9,6 +9,7 @@
 
 #include "Direction.h"
 
+class Item;
 class Spell;
 
 class Menu
@@ -114,7 +115,13 @@ public:
   void handleConfirm();
 
   void refresh();
+
+  void draw(sf::RenderTarget& target, int x, int y);
+
+  int getWidth() const;
+  int getHeight() const;
 private:
+  std::vector<const Item*> m_items;
 };
 
 class SpellMenu : public Menu

@@ -78,6 +78,8 @@ Player* Player::create(int x, int y)
   player->m_party.push_back(Character::create("Char4"));
 
   player->m_inventory.push_back(create_item("Herb", 99));
+  player->m_inventory.push_back(create_item("Rusty Knife", 3));
+  player->m_inventory.push_back(create_item("Wood Shield", 21));
 
   return player;
 }

@@ -17,4 +17,6 @@ std::string toString(T val)
   return ss.str();
 }
 
+std::string limitString(const std::string& str, int limit);
+
 #endif

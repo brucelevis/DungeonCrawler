@@ -91,6 +91,8 @@ int Menu::getHeight() const
 
 void Menu::draw(sf::RenderTarget& target, int x, int y)
 {
+  static const int ENTRY_OFFSET = 12;
+
   int start = m_maxVisible == -1 ? 0 : m_scroll;
   int end = m_maxVisible == -1 ? m_menuChoices.size() : (m_maxVisible + m_scroll);
 
@@ -104,12 +106,12 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
   {
     if (index < (int)m_menuChoices.size())
     {
-      draw_text_bmp(target, x + 16, y + 8 + i * 8, "%s", m_menuChoices[index].c_str());
+      draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_menuChoices[index].c_str());
     }
 
     if (m_currentMenuChoice == index)
     {
-      drawSelectArrow(target, x + 8, y + 8 + i * 8);
+      drawSelectArrow(target, x + 8, y + 8 + i * ENTRY_OFFSET);
     }
   }
 
@@ -319,11 +321,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 //  Menu::draw(target, x, y);
   State currentState = m_stateStack.top();
 
-  if (currentState == STATE_ITEM_MENU)
-  {
-
-  }
-  else if (currentState == STATE_SPELL_MENU)
+  if (currentState == STATE_SPELL_MENU)
   {
 
   }
@@ -358,6 +356,10 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     if (currentState == STATE_STATUS_MENU)
     {
       drawStatus(target, x + 24, y + 24);
+    }
+    else if (currentState == STATE_ITEM_MENU)
+    {
+      m_itemMenu->draw(target, x + 16, y + 16);
     }
   }
 }
@@ -422,10 +424,35 @@ void ItemMenu::refresh()
     std::string stack = toString(it->stackSize);
     std::string name = it->name;
 
+    // Add some padding.
+    if (stack.size() == 1)
+      stack += " ";
+
     addEntry(stack + " " + name);
+
+    m_items.push_back(&(*it));
   }
 
   setMaxVisible(10);
+}
+
+void ItemMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  draw_frame(target, x, y, getWidth(), 3*16);
+
+  Menu::draw(target, x, y + 24);
+
+  draw_text_bmp(target, x + 8, y + 8, "%s", m_items[getCurrentChoiceIndex()]->description.c_str());
+}
+
+int ItemMenu::getWidth() const
+{
+  return 14*16;
+}
+
+int ItemMenu::getHeight() const
+{
+  return 12*16;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
