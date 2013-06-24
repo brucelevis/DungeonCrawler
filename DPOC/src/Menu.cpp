@@ -1,3 +1,4 @@
+#include "Config.h"
 #include "logger.h"
 #include "Cache.h"
 #include "Frame.h"
@@ -30,7 +31,8 @@ Menu::Menu()
    m_visible(false),
    m_currentMenuChoice(0),
    m_maxVisible(-1),
-   m_scroll(0)
+   m_scroll(0),
+   m_cursorVisible(true)
 {
 
 }
@@ -145,12 +147,13 @@ void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
 MainMenu::MainMenu()
  : m_itemMenu(0),
    m_spellMenu(0),
-   m_characterMenu(0)
+   m_characterMenu(new CharacterMenu)
 {
   addEntry("Item");
   addEntry("Spell");
   addEntry("Equip");
   addEntry("Status");
+  addEntry("Save");
   addEntry("Close");
 
   m_stateStack.push(STATE_MAIN_MENU);
@@ -197,6 +200,10 @@ void MainMenu::handleConfirm()
         openSpellMenu(m_characterMenu->currentMenuChoice());
         closeCharacterMenu();
       }
+    }
+    else if (currentMenuChoice() == "Status")
+    {
+      m_stateStack.push(STATE_STATUS_MENU);
     }
   }
   else if (currentState == STATE_SPELL_MENU)
@@ -288,35 +295,71 @@ void MainMenu::closeSpellMenu()
 
 void MainMenu::openCharacterMenu()
 {
-  m_characterMenu = new CharacterMenu;
-  m_characterMenu->setVisible(true);
-
+  m_characterMenu->resetChoice();
+  m_characterMenu->setCursorVisible(true);
   m_stateStack.push(STATE_CHARACTER_MENU);
 }
 
 void MainMenu::closeCharacterMenu()
 {
-  delete m_characterMenu;
-  m_characterMenu = 0;
+  m_characterMenu->setCursorVisible(false);
+}
+
+void MainMenu::open()
+{
+  setVisible(true);
+  resetChoice();
+
+  m_characterMenu->refresh();
+  m_characterMenu->setVisible(true);
 }
 
 void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  Menu::draw(target, x, y);
+//  Menu::draw(target, x, y);
+  State currentState = m_stateStack.top();
 
-  if (m_characterMenu)
+  if (currentState == STATE_ITEM_MENU)
   {
-    m_characterMenu->draw(target, x, y + getHeight() + 8);
+
   }
-
-  if (m_itemMenu)
+  else if (currentState == STATE_SPELL_MENU)
   {
-    m_itemMenu->draw(target, x + getWidth() + 16, y);
+
   }
-
-  if (m_spellMenu)
+  else if (currentState == STATE_EQUIP_MENU)
   {
-    m_spellMenu->draw(target, x + getWidth() + 16, y);
+
+  }
+  else
+  {
+    draw_frame(target, x, y, config::GAME_RES_X, config::GAME_RES_Y);
+
+    draw_frame(target, x, y, 80, 96);
+    draw_frame(target, x, y + 208, 80, 32);
+
+    draw_text_bmp(target, x + 8, y + 13*16+7, "GP");
+    draw_text_bmp(target, x + 8, y + 13*16+19, "%d", 0);
+
+    for (int i = 0; i < getNumberOfChoice(); i++)
+    {
+      draw_text_bmp(target, x + 18, y + 10 + i * 14, "%s", getChoice(i).c_str());
+      if (i == getCurrentChoiceIndex())
+      {
+        drawSelectArrow(target, x + 8, y + 10 + i * 14);
+      }
+    }
+
+    if (m_characterMenu && m_characterMenu->isVisible())
+    {
+      m_characterMenu->draw(target, x, y);
+    }
+
+    if (currentState == STATE_STATUS_MENU)
+    {
+      int offX = x + 24;
+      int offY = y + 24;
+    }
   }
 }
 
@@ -390,12 +433,7 @@ const Spell* SpellMenu::getSelectedSpell() const
 CharacterMenu::CharacterMenu()
  : m_spellToUse(0)
 {
-  const std::vector<Character*>& party = Game::instance().getPlayer()->getParty();
-
-  for (auto it = party.begin(); it != party.end(); ++it)
-  {
-    addEntry((*it)->getName());
-  }
+  m_cursorVisible = false;
 }
 
 void CharacterMenu::handleConfirm()
@@ -413,31 +451,48 @@ int CharacterMenu::getHeight() const
   return (4 + 32) * getNumberOfChoice();
 }
 
+void CharacterMenu::refresh()
+{
+  clear();
+
+  const std::vector<Character*>& party = Game::instance().getPlayer()->getParty();
+
+  for (auto it = party.begin(); it != party.end(); ++it)
+  {
+    addEntry((*it)->getName());
+  }
+}
+
 void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-//  Menu::draw(target, x, y);
-
-  int w = getWidth();
-  int h = getHeight();
-
-  draw_frame(target, x, y, w, h);
+  draw_frame(target, x + 72, y, 184, 240);
 
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
-    const sf::Texture* face = Game::instance().getPlayer()->getCharacter(getChoice(i))->getTexture();
+    const Character* character = Game::instance().getPlayer()->getCharacter(getChoice(i));
+    const sf::Texture* face = character->getTexture();
+
+    int offX = x + 8 + 5 * 16;
+    int offY = y + 8;
 
     sf::Sprite sprite;
     sprite.setTexture(*face);
-    sprite.setPosition(x + 16, y + 8 + i * 32);
+    sprite.setPosition(offX, offY + i * 48);
     target.draw(sprite);
 
-    draw_text_bmp(target, x + 52, y + 8 + i * 32, "%s", getChoice(i).c_str());
-    draw_text_bmp(target, x + 52, y + 8 + i * 32 + 8, "HP%d", 999);
-    draw_text_bmp(target, x + 52, y + 8 + i * 32 + 16, "MP%d", 999);
+    draw_text_bmp(target, offX + 40, offY + i * 48, "%s (%s)", character->getName().c_str(), "Normal");
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", 999, 999);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", 999, 999);
 
-    if (getCurrentChoiceIndex() == i)
+    if (cursorVisible() && getCurrentChoiceIndex() == i)
     {
-      drawSelectArrow(target, x + 8, y + 8 + i * 32 + 12);
+      sf::RectangleShape rect;
+      rect.setFillColor(sf::Color::Transparent);
+      rect.setOutlineThickness(1.0f);
+      rect.setOutlineColor(sf::Color::Red);
+      rect.setSize(sf::Vector2f(164, 36));
+      rect.setPosition(offX - 2, offY + i * 48 - 2);
+      target.draw(rect);
     }
   }
 }

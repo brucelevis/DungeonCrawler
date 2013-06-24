@@ -38,6 +38,11 @@ public:
   virtual int getHeight() const;
 
   int getNumberOfChoice() const { return m_menuChoices.size(); }
+
+  void setCursorVisible(bool visible) { m_cursorVisible = visible; }
+  bool cursorVisible() const { return m_cursorVisible; }
+
+  void resetChoice() { m_currentMenuChoice = 0; }
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
   int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
@@ -50,6 +55,8 @@ private:
 
   int m_maxVisible;
   int m_scroll;
+
+  bool m_cursorVisible;
 };
 
 class MainMenu;
@@ -66,7 +73,8 @@ class MainMenu : public Menu
     STATE_CHARACTER_MENU,
     STATE_EQUIP_MENU,
     STATE_SPELL_MENU,
-    STATE_STATUS_MENU
+    STATE_STATUS_MENU,
+    STATE_SAVE_MENU
   };
 public:
   MainMenu();
@@ -75,6 +83,8 @@ public:
   void handleEscape();
 
   void moveArrow(Direction dir);
+
+  void open();
 
   void draw(sf::RenderTarget& target, int x, int y);
 private:
@@ -125,6 +135,8 @@ public:
 
   int getWidth() const;
   int getHeight() const;
+
+  void refresh();
 
   void draw(sf::RenderTarget& target, int x, int y);
 

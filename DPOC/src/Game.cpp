@@ -132,7 +132,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   {
     if (!m_player->player()->isWalking() && !Message::instance().isVisible() && !m_menu.isVisible())
     {
-      m_menu.setVisible(true);
+      m_menu.open();
     }
     else
     {
@@ -161,7 +161,7 @@ void Game::draw()
 
   if (m_menu.isVisible())
   {
-    m_menu.draw(m_window, 8, 8);
+    m_menu.draw(m_window, 0, 0);
   }
 
   if (Message::instance().isVisible())
