@@ -15,6 +15,7 @@ enum ItemType
 struct Item
 {
   std::string name;
+  std::string description;
   int cost;
   ItemType type;
 

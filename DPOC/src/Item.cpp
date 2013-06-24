@@ -4,7 +4,7 @@
 static std::vector<Item> itemDefinitions =
 {
   {
-    "Herb",
+    "Herb", "A medicin herb",
     25,
     ITEM_USE
   }
