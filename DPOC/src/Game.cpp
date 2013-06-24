@@ -130,17 +130,20 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   }
   else if (key == sf::Keyboard::Escape)
   {
-    if (!m_player->player()->isWalking() && !Message::instance().isVisible() && !m_menu.isVisible())
+    if (!Message::instance().isVisible())
     {
-      m_menu.open();
-    }
-    else
-    {
-      m_menu.handleEscape();
+      if (!m_player->player()->isWalking() && !Message::instance().isVisible() && !m_menu.isVisible())
+      {
+        m_menu.open();
+      }
+      else
+      {
+        m_menu.handleEscape();
+      }
     }
   }
 
-  if (m_menu.isVisible())
+  if (m_menu.isVisible() && !Message::instance().isVisible())
   {
     if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
     else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
