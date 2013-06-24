@@ -8,13 +8,15 @@
 static std::vector<Spell> spells =
 {
   {
-    "Hurt", 4,
+    "Hurt", "Brings great hurt to an enemy",
+    4,
     Spell::TARGET_SINGLE_ENEMY,
     true
   },
 
   {
-    "Heal", 4,
+    "Heal", "Heals a single ally",
+    4,
     Spell::TARGET_SINGLE_ALLY,
     false
   }

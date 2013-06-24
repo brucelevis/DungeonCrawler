@@ -8,6 +8,7 @@ class Character;
 struct Spell
 {
   std::string name;
+  std::string description;
   int mpCost;
 
   enum
