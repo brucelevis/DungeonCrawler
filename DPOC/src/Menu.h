@@ -96,6 +96,8 @@ private:
 
   void openCharacterMenu();
   void closeCharacterMenu();
+
+  void drawStatus(sf::RenderTarget& target, int x, int y);
 private:
   ItemMenu* m_itemMenu;
   SpellMenu* m_spellMenu;

@@ -357,9 +357,45 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 
     if (currentState == STATE_STATUS_MENU)
     {
-      int offX = x + 24;
-      int offY = y + 24;
+      drawStatus(target, x + 24, y + 24);
     }
+  }
+}
+
+void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
+{
+  const Character* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice());
+
+  draw_frame(target, 16, 16, 14*16, 13*16);
+
+  sf::Sprite faceSprite;
+  faceSprite.setTexture(*character->getTexture());
+  faceSprite.setPosition(x, y);
+  target.draw(faceSprite);
+
+  draw_text_bmp(target, x + 40, y, "%s (%s)", character->getName().c_str(), "Normal");
+  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", 999, 999);
+  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", 999, 999);
+
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", 99);
+  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", 1234);
+
+  y += 40;
+
+  draw_text_bmp(target, x, y,      "Strength: %d", 255);
+  draw_text_bmp(target, x, y + 12, "Power:    %d", 255);
+  draw_text_bmp(target, x, y + 24, "Defense:  %d", 255);
+  draw_text_bmp(target, x, y + 36, "Magic:    %d", 255);
+  draw_text_bmp(target, x, y + 48, "Mag.Def:  %d", 255);
+  draw_text_bmp(target, x, y + 60, "Speed:    %d", 255);
+
+  for (int i = 0; i < 5; i++)
+  {
+    static const std::vector<std::string> tmpEq =
+    {
+      "Weapon", "Shield", "Armour", "Helmet", "Others", "Others"
+    };
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", tmpEq[i].c_str(), "None");
   }
 }
 
@@ -433,7 +469,7 @@ const Spell* SpellMenu::getSelectedSpell() const
 CharacterMenu::CharacterMenu()
  : m_spellToUse(0)
 {
-  m_cursorVisible = false;
+  setCursorVisible(false);
 }
 
 void CharacterMenu::handleConfirm()
