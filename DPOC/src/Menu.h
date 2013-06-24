@@ -11,6 +11,7 @@
 
 class Item;
 class Spell;
+class Character;
 
 class Menu
 {
@@ -132,6 +133,11 @@ public:
   void handleConfirm();
 
   const Spell* getSelectedSpell() const;
+
+  void draw(sf::RenderTarget& target, int x, int y);
+
+  int getWidth() const;
+  int getHeight() const;
 private:
 };
 
@@ -151,8 +157,17 @@ public:
 
   void setSpellToUse(const Spell* spell) { m_spellToUse = spell; }
   const Spell* getSpellToUse() const { return m_spellToUse; }
+
+  Character* getUser() const { return m_user; }
+  Character* getTarget() const { return m_target; }
+
+  void setUserToCurrentChoice();
+  void setTargetToCurrentChoice();
 private:
   const Spell* m_spellToUse;
+
+  Character* m_user;
+  Character* m_target;
 };
 
 #endif

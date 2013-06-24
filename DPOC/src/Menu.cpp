@@ -177,10 +177,12 @@ void MainMenu::handleConfirm()
     }
     else if (currentMenuChoice() == "Spell")
     {
+      m_characterMenu->resetChoice();
       openCharacterMenu();
     }
     else if (currentMenuChoice() == "Status")
     {
+      m_characterMenu->resetChoice();
       openCharacterMenu();
     }
   }
@@ -190,17 +192,21 @@ void MainMenu::handleConfirm()
     {
       if (m_characterMenu->getSpellToUse())
       {
+        m_characterMenu->setTargetToCurrentChoice();
+
         cast_spell(m_characterMenu->getSpellToUse(),
-            Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice()),
-            Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice()));
-        closeCharacterMenu();
-        m_stateStack.pop();
+            m_characterMenu->getUser(),
+            m_characterMenu->getTarget());
+
+        //Do not close so we can cast spell again.
+        //closeCharacterMenu();
+        //m_stateStack.pop();
       }
       else
       {
         m_stateStack.pop();
+        m_characterMenu->setUserToCurrentChoice();
         openSpellMenu(m_characterMenu->currentMenuChoice());
-        closeCharacterMenu();
       }
     }
     else if (currentMenuChoice() == "Status")
@@ -213,6 +219,7 @@ void MainMenu::handleConfirm()
     const Spell* spell = m_spellMenu->getSelectedSpell();
     if (!spell->battleOnly)
     {
+      m_characterMenu->setSpellToUse(spell);
       openCharacterMenu();
     }
   }
@@ -297,7 +304,6 @@ void MainMenu::closeSpellMenu()
 
 void MainMenu::openCharacterMenu()
 {
-  m_characterMenu->resetChoice();
   m_characterMenu->setCursorVisible(true);
   m_stateStack.push(STATE_CHARACTER_MENU);
 }
@@ -305,6 +311,7 @@ void MainMenu::openCharacterMenu()
 void MainMenu::closeCharacterMenu()
 {
   m_characterMenu->setCursorVisible(false);
+  m_characterMenu->setSpellToUse(0);
 }
 
 void MainMenu::open()
@@ -321,11 +328,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 //  Menu::draw(target, x, y);
   State currentState = m_stateStack.top();
 
-  if (currentState == STATE_SPELL_MENU)
-  {
-
-  }
-  else if (currentState == STATE_EQUIP_MENU)
+  if (currentState == STATE_EQUIP_MENU)
   {
 
   }
@@ -360,6 +363,15 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     else if (currentState == STATE_ITEM_MENU)
     {
       m_itemMenu->draw(target, x + 16, y + 16);
+    }
+    else if (currentState == STATE_SPELL_MENU || m_characterMenu->getSpellToUse())
+    {
+      m_spellMenu->draw(target, x + 16, y + 16);
+
+      if (m_characterMenu->getSpellToUse())
+      {
+        m_characterMenu->draw(target, x, y);
+      }
     }
   }
 }
@@ -467,7 +479,15 @@ SpellMenu::SpellMenu(const std::string& characterName)
 
     if (spell)
     {
-      addEntry(toString(spell->mpCost) + " " + spell->name);
+      std::string costString = toString(spell->mpCost);
+
+      // Add some padding
+      if (costString.size() == 1)
+      {
+        costString += " ";
+      }
+
+      addEntry(costString + " " + spell->name);
     }
   }
 
@@ -491,10 +511,31 @@ const Spell* SpellMenu::getSelectedSpell() const
   return get_spell(spellName);
 }
 
+void SpellMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  draw_frame(target, x, y, getWidth(), 3*16);
+
+  Menu::draw(target, x, y + 24);
+
+  draw_text_bmp(target, x + 8, y + 8, "%s", getSelectedSpell()->description.c_str());
+}
+
+int SpellMenu::getWidth() const
+{
+  return 14*16;
+}
+
+int SpellMenu::getHeight() const
+{
+  return 12*16;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 CharacterMenu::CharacterMenu()
- : m_spellToUse(0)
+ : m_spellToUse(0),
+   m_user(0),
+   m_target(0)
 {
   setCursorVisible(false);
 }
@@ -558,4 +599,14 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
       target.draw(rect);
     }
   }
+}
+
+void CharacterMenu::setUserToCurrentChoice()
+{
+  m_user = Game::instance().getPlayer()->getCharacter(currentMenuChoice());
+}
+
+void CharacterMenu::setTargetToCurrentChoice()
+{
+  m_target = Game::instance().getPlayer()->getCharacter(currentMenuChoice());
 }
