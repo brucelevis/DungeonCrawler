@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 #include <SFML/Graphics.hpp>
 
@@ -24,7 +25,7 @@ public:
 
   const sf::Texture* getTexture() const { return m_faceTexture; }
 
-  Attribute getAttribute(const std::string& attribName);
+  Attribute& getAttribute(const std::string& attribName);
 private:
   std::string m_name;
   std::vector<std::string> m_spells;

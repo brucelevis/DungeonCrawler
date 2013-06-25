@@ -6,7 +6,7 @@ Character::~Character()
   cache::releaseTexture("Resources/Faces/Face.png");
 }
 
-Attribute Character::getAttribute(const std::string& attribName)
+Attribute& Character::getAttribute(const std::string& attribName)
 {
   auto it = m_attributes.find(attribName);
   if (it != m_attributes.end())
@@ -14,7 +14,7 @@ Attribute Character::getAttribute(const std::string& attribName)
     return it->second;
   }
 
-  return Attribute();
+  throw std::runtime_error("Attribute " + attribName + " does not exist on character " + getName());
 }
 
 Character* Character::create(const std::string& name)
