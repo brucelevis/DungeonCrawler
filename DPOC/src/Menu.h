@@ -121,6 +121,8 @@ public:
 
   int getWidth() const;
   int getHeight() const;
+
+  std::string getSelectedItemName() const;
 private:
   std::vector<const Item*> m_items;
 };
@@ -158,6 +160,9 @@ public:
   void setSpellToUse(const Spell* spell) { m_spellToUse = spell; }
   const Spell* getSpellToUse() const { return m_spellToUse; }
 
+  void setItemToUse(const std::string& itemToUse) { m_itemToUse = itemToUse; }
+  std::string getItemToUse() const { return m_itemToUse; }
+
   Character* getUser() const { return m_user; }
   Character* getTarget() const { return m_target; }
 
@@ -165,6 +170,7 @@ public:
   void setTargetToCurrentChoice();
 private:
   const Spell* m_spellToUse;
+  std::string m_itemToUse;
 
   Character* m_user;
   Character* m_target;

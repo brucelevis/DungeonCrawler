@@ -1,6 +1,8 @@
 #include <vector>
 
+#include "Character.h"
 #include "Utility.h"
+#include "Message.h"
 #include "Item.h"
 
 static std::vector<Item> itemDefinitions =
@@ -40,4 +42,9 @@ Item create_item(const std::string& name, int stackSize)
   }
 
   return Item();
+}
+
+void use_item(Item* item, Character* user, Character* target)
+{
+  Message::instance().show(user->getName() + " uses " + item->name + " on " + target->getName() + "!");
 }

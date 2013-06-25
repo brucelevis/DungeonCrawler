@@ -23,6 +23,9 @@ public:
   const std::vector<Item>& getInventory() const { return m_inventory; }
   const std::vector<Character*>& getParty() const { return m_party; }
 
+  void removeItemFromInventory(const std::string& itemName, int number);
+  Item* getItem(const std::string& itemName);
+
   Character* getCharacter(const std::string& name);
 
   static Player* create(int x, int y);
@@ -31,5 +34,7 @@ private:
   std::vector<Item> m_inventory;
   std::vector<Character*> m_party;
 };
+
+Player* get_player();
 
 #endif

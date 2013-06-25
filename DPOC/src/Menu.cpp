@@ -212,6 +212,27 @@ void MainMenu::handleConfirm()
         openSpellMenu(m_characterMenu->currentMenuChoice());
       }
     }
+    else if (currentMenuChoice() == "Item")
+    {
+      if (m_characterMenu->getItemToUse().size() > 0)
+      {
+        m_characterMenu->setUserToCurrentChoice();
+        m_characterMenu->setTargetToCurrentChoice();
+
+        use_item(get_player()->getItem(m_characterMenu->getItemToUse()),
+            m_characterMenu->getUser(), m_characterMenu->getTarget());
+        get_player()->removeItemFromInventory(m_characterMenu->getItemToUse(), 1);
+
+        m_itemMenu->refresh();
+
+        // Close if no more items.
+        if (get_player()->getItem(m_characterMenu->getItemToUse()) == 0)
+        {
+          closeCharacterMenu();
+          m_stateStack.pop();
+        }
+      }
+    }
     else if (currentMenuChoice() == "Status")
     {
       m_stateStack.push(STATE_STATUS_MENU);
@@ -223,6 +244,16 @@ void MainMenu::handleConfirm()
     if (!spell->battleOnly && can_cast_spell(spell, m_characterMenu->getUser()))
     {
       m_characterMenu->setSpellToUse(spell);
+      openCharacterMenu();
+    }
+  }
+  else if (currentState == STATE_ITEM_MENU)
+  {
+    std::string itemName = m_itemMenu->getSelectedItemName();
+    Item* item = get_player()->getItem(itemName);
+    if (item && item->type == ITEM_USE)
+    {
+      m_characterMenu->setItemToUse(itemName);
       openCharacterMenu();
     }
   }
@@ -328,7 +359,6 @@ void MainMenu::open()
 
 void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-//  Menu::draw(target, x, y);
   State currentState = m_stateStack.top();
 
   if (currentState == STATE_EQUIP_MENU)
@@ -450,6 +480,11 @@ void ItemMenu::refresh()
     m_items.push_back(&(*it));
   }
 
+  if (getCurrentChoiceIndex() >= getNumberOfChoice())
+  {
+    resetChoice();
+  }
+
   setMaxVisible(10);
 }
 
@@ -470,6 +505,18 @@ int ItemMenu::getWidth() const
 int ItemMenu::getHeight() const
 {
   return 12*16;
+}
+
+std::string ItemMenu::getSelectedItemName() const
+{
+  std::istringstream ss(currentMenuChoice());
+
+  std::string name;
+  int stack;
+
+  ss >> stack >> name;
+
+  return name;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

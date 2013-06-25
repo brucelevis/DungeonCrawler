@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+class Character;
+
 enum ItemType
 {
   ITEM_USE,
@@ -28,5 +30,6 @@ struct Item
 };
 
 Item create_item(const std::string& name, int stackSize = 1);
+void use_item(Item* item, Character* user, Character* target);
 
 #endif

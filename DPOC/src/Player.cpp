@@ -1,7 +1,10 @@
 #include <SFML/Window.hpp>
 
+#include <algorithm>
+
 #include "Direction.h"
 #include "Entity.h"
+#include "Game.h"
 #include "Player.h"
 
 Player::~Player()
@@ -66,6 +69,35 @@ Character* Player::getCharacter(const std::string& name)
   return 0;
 }
 
+void Player::removeItemFromInventory(const std::string& itemName, int number)
+{
+  for (auto it = m_inventory.begin(); it != m_inventory.end(); ++it)
+  {
+    if (it->name == itemName)
+    {
+      it->stackSize -= number;
+      if (it->stackSize <= 0)
+      {
+        m_inventory.erase(it);
+      }
+      break;
+    }
+  }
+}
+
+Item* Player::getItem(const std::string& itemName)
+{
+  for (auto it = m_inventory.begin(); it != m_inventory.end(); ++it)
+  {
+    if (it->name == itemName)
+    {
+      return &(*it);
+    }
+  }
+
+  return 0;
+}
+
 Player* Player::create(int x, int y)
 {
   Player* player = new Player;
@@ -77,9 +109,14 @@ Player* Player::create(int x, int y)
   player->m_party.push_back(Character::create("Char3"));
   player->m_party.push_back(Character::create("Char4"));
 
-  player->m_inventory.push_back(create_item("Herb", 99));
+  player->m_inventory.push_back(create_item("Herb", 3));
   player->m_inventory.push_back(create_item("Rusty Knife", 3));
   player->m_inventory.push_back(create_item("Wood Shield", 21));
 
   return player;
+}
+
+Player* get_player()
+{
+  return Game::instance().getPlayer();
 }
