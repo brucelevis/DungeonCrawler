@@ -2,6 +2,7 @@
 #define ITEM_H
 
 #include <string>
+#include <map>
 
 enum ItemType
 {
@@ -18,6 +19,10 @@ struct Item
   std::string description;
   int cost;
   ItemType type;
+
+  std::map<std::string, int> attributeGain;
+
+  // Put members that should not be initialized after this comment.
 
   int stackSize;
 };

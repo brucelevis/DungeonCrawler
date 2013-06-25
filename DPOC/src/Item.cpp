@@ -6,19 +6,22 @@ static std::vector<Item> itemDefinitions =
   {
     "Herb", "A medicin herb",
     25,
-    ITEM_USE
+    ITEM_USE,
+    { "hp", 25 }
   },
 
   {
     "Rusty Knife", "An old rusty knife",
     10,
-    ITEM_WEAPON
+    ITEM_WEAPON,
+    { "power", 4 }
   },
 
   {
     "Wood Shield", "A wooden shield",
     25,
-    ITEM_SHIELD
+    ITEM_SHIELD,
+    { "defense", 4 }
   }
 };
 
