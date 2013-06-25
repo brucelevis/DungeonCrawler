@@ -65,6 +65,8 @@ Character* Character::create(const std::string& name)
   character->m_spells.push_back("Heal");
   character->m_faceTexture = cache::loadTexture("Resources/Faces/Face.png");
 
+  character->m_status = "Normal";
+
   character->m_attributes["hp"] = make_attribute(30);
   character->m_attributes["mp"] = make_attribute(15);
 

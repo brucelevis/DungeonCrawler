@@ -387,7 +387,7 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   faceSprite.setPosition(x, y);
   target.draw(faceSprite);
 
-  draw_text_bmp(target, x + 40, y, "%s (%s)", character->getName().c_str(), "Normal");
+  draw_text_bmp(target, x + 40, y, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
   draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
   draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
@@ -586,7 +586,7 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
     sprite.setPosition(offX, offY + i * 48);
     target.draw(sprite);
 
-    draw_text_bmp(target, offX + 40, offY + i * 48, "%s (%s)", character->getName().c_str(), "Normal");
+    draw_text_bmp(target, offX + 40, offY + i * 48, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
     draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", 999, 999);
     draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", 999, 999);
 

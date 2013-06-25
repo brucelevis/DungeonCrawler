@@ -32,6 +32,8 @@ public:
   int computeCurrentAttribute(const std::string& attribName);
 
   Item* getEquipment(const std::string& equipmentSlot);
+
+  std::string getStatus() const { return m_status; }
 private:
   std::string m_name;
   std::vector<std::string> m_spells;
@@ -41,6 +43,8 @@ private:
   std::map<std::string, Attribute> m_attributes;
 
   std::map<std::string, Item> m_equipment;
+
+  std::string m_status;
 };
 
 #endif
