@@ -6,6 +6,12 @@
 
 #include <SFML/Graphics.hpp>
 
+struct Attribute
+{
+  int current;
+  int max;
+};
+
 class Character
 {
 public:
@@ -17,11 +23,15 @@ public:
   static Character* create(const std::string& name);
 
   const sf::Texture* getTexture() const { return m_faceTexture; }
+
+  Attribute getAttribute(const std::string& attribName);
 private:
   std::string m_name;
   std::vector<std::string> m_spells;
 
   sf::Texture* m_faceTexture;
+
+  std::map<std::string, Attribute> m_attributes;
 };
 
 #endif
