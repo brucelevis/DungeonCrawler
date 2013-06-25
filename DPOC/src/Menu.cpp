@@ -575,7 +575,7 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
-    const Character* character = Game::instance().getPlayer()->getCharacter(getChoice(i));
+    Character* character = Game::instance().getPlayer()->getCharacter(getChoice(i));
     const sf::Texture* face = character->getTexture();
 
     int offX = x + 8 + 5 * 16;
@@ -587,8 +587,8 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
     target.draw(sprite);
 
     draw_text_bmp(target, offX + 40, offY + i * 48, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-    draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", 999, 999);
-    draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", 999, 999);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
     if (cursorVisible() && getCurrentChoiceIndex() == i)
     {
