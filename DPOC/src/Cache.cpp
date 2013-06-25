@@ -1,4 +1,5 @@
 #include <map>
+#include <stdexcept>
 
 #include "logger.h"
 #include "Cache.h"
@@ -13,6 +14,7 @@ namespace cache
   };
 
   static std::map< std::string, Entry<sf::Texture> > textures;
+  static std::map< std::string, sf::SoundBuffer > soundBuffers;
 
   sf::Texture* loadTexture(const std::string& textureName)
   {
@@ -68,5 +70,25 @@ namespace cache
     {
       TRACE("Attempting to release texture %s that has not been previously loaded.", textureName.c_str());
     }
+  }
+
+  sf::SoundBuffer& loadSound(const std::string& sndFile)
+  {
+    auto it = soundBuffers.find(sndFile);
+    if (it == soundBuffers.end())
+    {
+      if (soundBuffers[sndFile].loadFromFile(sndFile))
+      {
+        return soundBuffers[sndFile];
+      }
+      else
+      {
+        TRACE("Unable to load sound %s", sndFile.c_str());
+
+        throw std::runtime_error("Unable to load sound " + sndFile);
+      }
+    }
+
+    return soundBuffers[sndFile];
   }
 }

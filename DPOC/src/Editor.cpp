@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include "Sound.h"
 #include "logger.h"
 #include "floodfill.h"
 #include "draw_text.h"
@@ -1084,18 +1085,7 @@ void Editor::saveMap(const std::string& name)
   m_currentMapName = map->getName();
   delete map;
 
-  // :-)
-  sf::Sound sound;
-  sf::SoundBuffer buffer;
-  if (buffer.loadFromFile("Resources/Success2.wav"))
-  {
-    sound.setBuffer(buffer);
-    sound.play();
-  }
-  else
-  {
-    TRACE("Unable to load sound to play");
-  }
+  play_sound(config::SOUND_SUCCESS);
 }
 
 Map* Editor::createMap() const

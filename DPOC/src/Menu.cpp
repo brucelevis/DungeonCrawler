@@ -4,6 +4,7 @@
 #include "Frame.h"
 #include "draw_text.h"
 #include "Utility.h"
+#include "Sound.h"
 
 #include "Player.h"
 #include "Character.h"
@@ -219,6 +220,8 @@ void MainMenu::handleConfirm()
         m_characterMenu->setUserToCurrentChoice();
         m_characterMenu->setTargetToCurrentChoice();
 
+        play_sound(config::SOUND_USE_ITEM);
+
         use_item(get_player()->getItem(m_characterMenu->getItemToUse()),
             m_characterMenu->getUser(), m_characterMenu->getTarget());
         get_player()->removeItemFromInventory(m_characterMenu->getItemToUse(), 1);
@@ -246,6 +249,10 @@ void MainMenu::handleConfirm()
       m_characterMenu->setSpellToUse(spell);
       openCharacterMenu();
     }
+    else
+    {
+      play_sound(config::SOUND_CANCEL);
+    }
   }
   else if (currentState == STATE_ITEM_MENU)
   {
@@ -255,6 +262,10 @@ void MainMenu::handleConfirm()
     {
       m_characterMenu->setItemToUse(itemName);
       openCharacterMenu();
+    }
+    else
+    {
+      play_sound(config::SOUND_CANCEL);
     }
   }
 }
