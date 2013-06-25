@@ -1,4 +1,7 @@
 #include <sstream>
+#include <algorithm>
+#include <ctype.h>
+
 #include "Utility.h"
 
 std::vector<std::string> split_string(const std::string& str, char delim)
@@ -30,4 +33,13 @@ std::vector<std::string> get_lines(std::ifstream& infile)
 std::string limitString(const std::string& str, int limit)
 {
   return str.substr(0, limit);
+}
+
+std::string toLower(const std::string& str)
+{
+  std::string cpy = str;
+
+  std::transform(cpy.begin(), cpy.end(), cpy.begin(), ::tolower);
+
+  return cpy;
 }

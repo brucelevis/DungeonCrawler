@@ -378,7 +378,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 {
-  const Character* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice());
+  Character* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice());
 
   draw_frame(target, 16, 16, 14*16, 13*16);
 
@@ -388,28 +388,30 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   target.draw(faceSprite);
 
   draw_text_bmp(target, x + 40, y, "%s (%s)", character->getName().c_str(), "Normal");
-  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", 999, 999);
-  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", 999, 999);
+  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
-  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", 99);
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
   draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", 1234);
 
   y += 40;
 
-  draw_text_bmp(target, x, y,      "Strength: %d", 255);
-  draw_text_bmp(target, x, y + 12, "Power:    %d", 255);
-  draw_text_bmp(target, x, y + 24, "Defense:  %d", 255);
-  draw_text_bmp(target, x, y + 36, "Magic:    %d", 255);
-  draw_text_bmp(target, x, y + 48, "Mag.Def:  %d", 255);
-  draw_text_bmp(target, x, y + 60, "Speed:    %d", 255);
+  draw_text_bmp(target, x, y,      "Strength: %d", character->computeCurrentAttribute("strength"));
+  draw_text_bmp(target, x, y + 12, "Power:    %d", character->computeCurrentAttribute("power"));
+  draw_text_bmp(target, x, y + 24, "Defense:  %d", character->computeCurrentAttribute("defense"));
+  draw_text_bmp(target, x, y + 36, "Magic:    %d", character->computeCurrentAttribute("magic"));
+  draw_text_bmp(target, x, y + 48, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
+  draw_text_bmp(target, x, y + 60, "Speed:    %d", character->computeCurrentAttribute("speed"));
 
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 6; i++)
   {
     static const std::vector<std::string> tmpEq =
     {
       "Weapon", "Shield", "Armour", "Helmet", "Others", "Others"
     };
-    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", tmpEq[i].c_str(), "None");
+
+    Item* item = character->getEquipment(tmpEq[i]);
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", tmpEq[i].c_str(), item ? item->name.c_str(): "");
   }
 }
 

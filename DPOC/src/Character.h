@@ -7,6 +7,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Item.h"
+
 struct Attribute
 {
   int current;
@@ -26,6 +28,10 @@ public:
   const sf::Texture* getTexture() const { return m_faceTexture; }
 
   Attribute& getAttribute(const std::string& attribName);
+
+  int computeCurrentAttribute(const std::string& attribName);
+
+  Item* getEquipment(const std::string& equipmentSlot);
 private:
   std::string m_name;
   std::vector<std::string> m_spells;
@@ -33,6 +39,8 @@ private:
   sf::Texture* m_faceTexture;
 
   std::map<std::string, Attribute> m_attributes;
+
+  std::map<std::string, Item> m_equipment;
 };
 
 #endif

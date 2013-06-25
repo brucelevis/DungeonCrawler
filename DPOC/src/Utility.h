@@ -19,4 +19,6 @@ std::string toString(T val)
 
 std::string limitString(const std::string& str, int limit);
 
+std::string toLower(const std::string& str);
+
 #endif
