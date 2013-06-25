@@ -198,9 +198,12 @@ void MainMenu::handleConfirm()
             m_characterMenu->getUser(),
             m_characterMenu->getTarget());
 
-        //Do not close so we can cast spell again.
-        //closeCharacterMenu();
-        //m_stateStack.pop();
+        // If we can't cast the selected spell, clsoe the char menu.
+        if (!can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()))
+        {
+          closeCharacterMenu();
+          m_stateStack.pop();
+        }
       }
       else
       {
@@ -217,7 +220,7 @@ void MainMenu::handleConfirm()
   else if (currentState == STATE_SPELL_MENU)
   {
     const Spell* spell = m_spellMenu->getSelectedSpell();
-    if (!spell->battleOnly)
+    if (!spell->battleOnly && can_cast_spell(spell, m_characterMenu->getUser()))
     {
       m_characterMenu->setSpellToUse(spell);
       openCharacterMenu();

@@ -26,5 +26,6 @@ struct Spell
 
 const Spell* get_spell(const std::string& spell);
 void cast_spell(const Spell* spell, Character* caster, Character* target);
+bool can_cast_spell(const Spell* spell, Character* caster);
 
 #endif

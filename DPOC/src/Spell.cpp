@@ -40,4 +40,11 @@ const Spell* get_spell(const std::string& spell)
 void cast_spell(const Spell* spell, Character* caster, Character* target)
 {
   Message::instance().show(caster->getName() + " casts " + spell->name + " on " + target->getName() + "!");
+
+  caster->getAttribute("mp").current -= spell->mpCost;
+}
+
+bool can_cast_spell(const Spell* spell, Character* caster)
+{
+  return spell->mpCost < caster->getAttribute("mp").current;
 }
