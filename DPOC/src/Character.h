@@ -18,6 +18,8 @@ struct Attribute
 class Character
 {
 public:
+  static std::vector<std::string> equipNames;
+
   ~Character();
 
   std::string getName() const { return m_name; }
@@ -31,6 +33,7 @@ public:
 
   int computeCurrentAttribute(const std::string& attribName);
 
+  void equip(const std::string& equipmentSlot, const std::string& itemName);
   Item* getEquipment(const std::string& equipmentSlot);
 
   std::string getStatus() const { return m_status; }

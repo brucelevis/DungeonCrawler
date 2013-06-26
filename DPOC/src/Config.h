@@ -21,6 +21,7 @@ namespace config
   static const std::string SOUND_CANCEL = "Resources/Audio/Cancel1.wav";
   static const std::string SOUND_USE_ITEM = "Resources/Audio/Item2.wav";
   static const std::string SOUND_SUCCESS = "Resources/Audio/Sucess2.wav";
+  static const std::string SOUND_EQUIP = "Resources/Audio/Equip1.ogg";
 }
 
 #endif

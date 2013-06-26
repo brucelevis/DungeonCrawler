@@ -8,6 +8,11 @@ Attribute make_attribute(int val)
   return { val, val };
 }
 
+std::vector<std::string> Character::equipNames =
+{
+  "Weapon", "Shield", "Armour", "Helmet", "Others", "Others"
+};
+
 Character::~Character()
 {
   cache::releaseTexture("Resources/Faces/Face.png");
@@ -15,7 +20,7 @@ Character::~Character()
 
 Attribute& Character::getAttribute(const std::string& attribName)
 {
-  std::string lowerCase = toLower(attribName);
+  std::string lowerCase = to_lower(attribName);
 
   auto it = m_attributes.find(lowerCase);
   if (it != m_attributes.end())
@@ -44,9 +49,21 @@ int Character::computeCurrentAttribute(const std::string& attribName)
   return sum;
 }
 
+void Character::equip(const std::string& equipmentSlot, const std::string& itemName)
+{
+  if (itemName.empty())
+  {
+    m_equipment.erase(to_lower(equipmentSlot));
+  }
+  else
+  {
+    m_equipment[to_lower(equipmentSlot)] = create_item(itemName, 1);
+  }
+}
+
 Item* Character::getEquipment(const std::string& equipmentSlot)
 {
-  auto it = m_equipment.find(toLower(equipmentSlot));
+  auto it = m_equipment.find(to_lower(equipmentSlot));
 
   if (it != m_equipment.end())
   {
@@ -79,8 +96,8 @@ Character* Character::create(const std::string& name)
   character->m_attributes["mag.def"] = make_attribute(10);
   character->m_attributes["speed"] = make_attribute(15);
 
-  character->m_equipment["weapon"] = create_item("Rusty Knife");
-  character->m_equipment["shield"] = create_item("Wood Shield");
+  // character->m_equipment["weapon"] = create_item("Rusty Knife");
+  // character->m_equipment["shield"] = create_item("Wood Shield");
 
   return character;
 }

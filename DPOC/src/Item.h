@@ -12,7 +12,8 @@ enum ItemType
   ITEM_WEAPON,
   ITEM_SHIELD,
   ITEM_ARMOR,
-  ITEM_HELMET
+  ITEM_HELMET,
+  ITEM_MISC
 };
 
 struct Item
@@ -31,5 +32,7 @@ struct Item
 
 Item create_item(const std::string& name, int stackSize = 1);
 void use_item(Item* item, Character* user, Character* target);
+
+std::string equip_type_string(ItemType itemType);
 
 #endif

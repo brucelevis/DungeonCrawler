@@ -65,6 +65,7 @@ class MainMenu;
 class ItemMenu;
 class SpellMenu;
 class CharacterMenu;
+class EquipMenu;
 
 class MainMenu : public Menu
 {
@@ -99,11 +100,15 @@ private:
   void openCharacterMenu();
   void closeCharacterMenu();
 
+  void openEquipMenu();
+  void closeEquipMenu();
+
   void drawStatus(sf::RenderTarget& target, int x, int y);
 private:
   ItemMenu* m_itemMenu;
   SpellMenu* m_spellMenu;
   CharacterMenu* m_characterMenu;
+  EquipMenu* m_equipMenu;
 
   std::stack<State> m_stateStack;
 };
@@ -112,6 +117,8 @@ class ItemMenu : public Menu
 {
 public:
   ItemMenu();
+  ItemMenu(int width, int height);
+  virtual ~ItemMenu() {}
 
   void handleConfirm();
 
@@ -124,7 +131,21 @@ public:
 
   std::string getSelectedItemName() const;
 private:
+  bool hasItem(const std::string& name) const;
+  const Item* getItem(const std::string& name) const;
+protected:
   std::vector<const Item*> m_items;
+
+  int m_width, m_height;
+};
+
+class EquipItemMenu : public ItemMenu
+{
+public:
+  EquipItemMenu(int width, int height);
+  void refresh(const std::string& equipmentType);
+
+  bool validChoice() const { return currentMenuChoice() != "* Remove *"; }
 };
 
 class SpellMenu : public Menu
@@ -174,6 +195,34 @@ private:
 
   Character* m_user;
   Character* m_target;
+};
+
+class EquipMenu : public Menu
+{
+  enum State
+  {
+    STATE_SELECT_EQUIPMENT_TYPE,
+    STATE_EQUIP_ITEM
+  };
+public:
+  EquipMenu(Character* character);
+
+  void handleConfirm();
+  void handleEscape();
+
+  void moveArrow(Direction dir);
+
+  void draw(sf::RenderTarget& target, int x, int y);
+private:
+  void doEquip();
+  void doUnEquip();
+
+  void drawDeltas(sf::RenderTarget& target, int x, int y);
+private:
+  Character* m_character;
+  EquipItemMenu* m_itemMenu;
+
+  State m_state;
 };
 
 #endif

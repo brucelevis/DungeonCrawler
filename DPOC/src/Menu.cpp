@@ -27,6 +27,18 @@ static std::string get_longest_menu_choice(const std::vector<std::string>& menuC
   return longest;
 }
 
+static sf::RectangleShape make_select_rect(int x, int y, int w, int h)
+{
+  sf::RectangleShape rect;
+  rect.setFillColor(sf::Color::Transparent);
+  rect.setOutlineThickness(1.0f);
+  rect.setOutlineColor(sf::Color::Red);
+  rect.setSize(sf::Vector2f(w, h));
+  rect.setPosition(x, y);
+
+  return rect;
+}
+
 Menu::Menu()
  : m_arrowTexture(cache::loadTexture("Resources/Arrow.png")),
    m_visible(false),
@@ -110,7 +122,7 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
       draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_menuChoices[index].c_str());
     }
 
-    if (m_currentMenuChoice == index)
+    if (m_currentMenuChoice == index && cursorVisible())
     {
       drawSelectArrow(target, x + 8, y + 8 + i * ENTRY_OFFSET);
     }
@@ -150,7 +162,8 @@ void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
 MainMenu::MainMenu()
  : m_itemMenu(0),
    m_spellMenu(0),
-   m_characterMenu(new CharacterMenu)
+   m_characterMenu(new CharacterMenu),
+   m_equipMenu(0)
 {
   addEntry("Item");
   addEntry("Spell");
@@ -186,6 +199,11 @@ void MainMenu::handleConfirm()
       m_characterMenu->resetChoice();
       openCharacterMenu();
     }
+    else if (currentMenuChoice() == "Equip")
+    {
+      m_characterMenu->resetChoice();
+      openCharacterMenu();
+    }
   }
   else if (currentState == STATE_CHARACTER_MENU)
   {
@@ -203,7 +221,6 @@ void MainMenu::handleConfirm()
         if (!can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()))
         {
           closeCharacterMenu();
-          m_stateStack.pop();
         }
       }
       else
@@ -232,13 +249,17 @@ void MainMenu::handleConfirm()
         if (get_player()->getItem(m_characterMenu->getItemToUse()) == 0)
         {
           closeCharacterMenu();
-          m_stateStack.pop();
         }
       }
     }
     else if (currentMenuChoice() == "Status")
     {
       m_stateStack.push(STATE_STATUS_MENU);
+    }
+    else if (currentMenuChoice() == "Equip")
+    {
+      m_characterMenu->setUserToCurrentChoice();
+      openEquipMenu();
     }
   }
   else if (currentState == STATE_SPELL_MENU)
@@ -268,6 +289,10 @@ void MainMenu::handleConfirm()
       play_sound(config::SOUND_CANCEL);
     }
   }
+  else if (currentState == STATE_EQUIP_MENU)
+  {
+    m_equipMenu->handleConfirm();
+  }
 }
 
 void MainMenu::handleEscape()
@@ -288,8 +313,14 @@ void MainMenu::handleEscape()
     {
       closeCharacterMenu();
     }
-
-    m_stateStack.pop();
+    else if (currentState == STATE_EQUIP_MENU)
+    {
+      m_equipMenu->handleEscape();
+      if (!m_equipMenu->isVisible())
+      {
+        closeEquipMenu();
+      }
+    }
   }
   else
   {
@@ -317,6 +348,10 @@ void MainMenu::moveArrow(Direction dir)
   {
     Menu::moveArrow(dir);
   }
+  else if (currentState == STATE_EQUIP_MENU)
+  {
+    m_equipMenu->moveArrow(dir);
+  }
 }
 
 void MainMenu::openItemMenu()
@@ -331,6 +366,8 @@ void MainMenu::closeItemMenu()
 {
   delete m_itemMenu;
   m_itemMenu = 0;
+
+  m_stateStack.pop();
 }
 
 void MainMenu::openSpellMenu(const std::string& characterName)
@@ -345,6 +382,8 @@ void MainMenu::closeSpellMenu()
 {
   delete m_spellMenu;
   m_spellMenu = 0;
+
+  m_stateStack.pop();
 }
 
 void MainMenu::openCharacterMenu()
@@ -357,6 +396,24 @@ void MainMenu::closeCharacterMenu()
 {
   m_characterMenu->setCursorVisible(false);
   m_characterMenu->setSpellToUse(0);
+
+  m_stateStack.pop();
+}
+
+void MainMenu::openEquipMenu()
+{
+  m_equipMenu = new EquipMenu(m_characterMenu->getUser());
+  m_equipMenu->setVisible(true);
+
+  m_stateStack.push(STATE_EQUIP_MENU);
+}
+
+void MainMenu::closeEquipMenu()
+{
+  delete m_equipMenu;
+  m_equipMenu = 0;
+
+  m_stateStack.pop();
 }
 
 void MainMenu::open()
@@ -374,7 +431,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 
   if (currentState == STATE_EQUIP_MENU)
   {
-
+    m_equipMenu->draw(target, 0, 0);
   }
   else
   {
@@ -447,21 +504,25 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, x, y + 48, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
   draw_text_bmp(target, x, y + 60, "Speed:    %d", character->computeCurrentAttribute("speed"));
 
-  for (int i = 0; i < 6; i++)
+  for (size_t i = 0; i < Character::equipNames.size(); i++)
   {
-    static const std::vector<std::string> tmpEq =
-    {
-      "Weapon", "Shield", "Armour", "Helmet", "Others", "Others"
-    };
-
-    Item* item = character->getEquipment(tmpEq[i]);
-    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", tmpEq[i].c_str(), item ? item->name.c_str(): "");
+    Item* item = character->getEquipment(Character::equipNames[i]);
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", Character::equipNames[i].c_str(), item ? item->name.c_str(): "");
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ItemMenu::ItemMenu()
+ : m_width(14*16),
+   m_height(12*16)
+{
+  refresh();
+}
+
+ItemMenu::ItemMenu(int width, int height)
+ : m_width(width),
+   m_height(height)
 {
   refresh();
 }
@@ -496,7 +557,9 @@ void ItemMenu::refresh()
     resetChoice();
   }
 
-  setMaxVisible(10);
+  int visible = m_height / 8 - 2;
+
+  setMaxVisible(visible);
 }
 
 void ItemMenu::draw(sf::RenderTarget& target, int x, int y)
@@ -505,29 +568,90 @@ void ItemMenu::draw(sf::RenderTarget& target, int x, int y)
 
   Menu::draw(target, x, y + 24);
 
-  draw_text_bmp(target, x + 8, y + 8, "%s", m_items[getCurrentChoiceIndex()]->description.c_str());
+  if (cursorVisible() && hasItem(getSelectedItemName()))
+  {
+    draw_text_bmp(target, x + 8, y + 8, "%s", getItem(getSelectedItemName())->description.c_str());
+  }
+}
+
+bool ItemMenu::hasItem(const std::string& name) const
+{
+  for (auto it = m_items.begin(); it != m_items.end(); ++it)
+  {
+    if ((*it)->name == name)
+      return true;
+  }
+  return false;
+}
+
+const Item* ItemMenu::getItem(const std::string& name) const
+{
+  for (auto it = m_items.begin(); it != m_items.end(); ++it)
+  {
+    if ((*it)->name == name)
+    {
+      return *it;
+    }
+  }
+  return 0;
 }
 
 int ItemMenu::getWidth() const
 {
-  return 14*16;
+  return m_width;
 }
 
 int ItemMenu::getHeight() const
 {
-  return 12*16;
+  return m_height;
 }
 
 std::string ItemMenu::getSelectedItemName() const
 {
-  std::istringstream ss(currentMenuChoice());
+  return get_string_after_first_space(currentMenuChoice());
+}
 
-  std::string name;
-  int stack;
+///////////////////////////////////////////////////////////////////////////////
 
-  ss >> stack >> name;
+EquipItemMenu::EquipItemMenu(int width, int height)
+ : ItemMenu(width, height)
+{
 
-  return name;
+}
+
+void EquipItemMenu::refresh(const std::string& equipmentType)
+{
+  clear();
+
+  const std::vector<Item>& items = Game::instance().getPlayer()->getInventory();
+
+  addEntry("* Remove *");
+
+  for (auto it = items.begin(); it != items.end(); ++it)
+  {
+    if (equip_type_string(it->type) == equipmentType)
+    {
+      std::string stack = toString(it->stackSize);
+      std::string name = it->name;
+
+      // Add some padding.
+      if (stack.size() == 1)
+        stack += " ";
+
+      addEntry(stack + " " + name);
+
+      m_items.push_back(&(*it));
+    }
+  }
+
+  if (getCurrentChoiceIndex() >= getNumberOfChoice())
+  {
+    resetChoice();
+  }
+
+  int visible = m_height / 8 - 2;
+
+  setMaxVisible(visible);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -564,12 +688,7 @@ void SpellMenu::handleConfirm()
 
 const Spell* SpellMenu::getSelectedSpell() const
 {
-  std::istringstream ss(currentMenuChoice());
-
-  std::string spellName;
-  int mpCost;
-
-  ss >> mpCost >> spellName;
+  std::string spellName = get_string_after_first_space(currentMenuChoice());
 
   return get_spell(spellName);
 }
@@ -653,12 +772,7 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 
     if (cursorVisible() && getCurrentChoiceIndex() == i)
     {
-      sf::RectangleShape rect;
-      rect.setFillColor(sf::Color::Transparent);
-      rect.setOutlineThickness(1.0f);
-      rect.setOutlineColor(sf::Color::Red);
-      rect.setSize(sf::Vector2f(164, 36));
-      rect.setPosition(offX - 2, offY + i * 48 - 2);
+      sf::RectangleShape rect = make_select_rect(offX - 2, offY + i * 48 - 2, 164, 36);
       target.draw(rect);
     }
   }
@@ -672,4 +786,188 @@ void CharacterMenu::setUserToCurrentChoice()
 void CharacterMenu::setTargetToCurrentChoice()
 {
   m_target = Game::instance().getPlayer()->getCharacter(currentMenuChoice());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+EquipMenu::EquipMenu(Character* character)
+ : m_character(character),
+   m_itemMenu(new EquipItemMenu(16*16, 8*16)),
+   m_state(STATE_SELECT_EQUIPMENT_TYPE)
+{
+  for (auto it = Character::equipNames.begin(); it != Character::equipNames.end(); ++it)
+  {
+    addEntry(*it);
+  }
+
+  m_itemMenu->setCursorVisible(false);
+  m_itemMenu->refresh(currentMenuChoice());
+}
+
+void EquipMenu::handleConfirm()
+{
+  if (m_state == STATE_SELECT_EQUIPMENT_TYPE)
+  {
+    m_state = STATE_EQUIP_ITEM;
+    m_itemMenu->setCursorVisible(true);
+    m_itemMenu->resetChoice();
+  }
+  else if (m_state == STATE_EQUIP_ITEM)
+  {
+    m_itemMenu->handleConfirm();
+
+    if (m_itemMenu->validChoice())
+    {
+      doEquip();
+    }
+    else
+    {
+      doUnEquip();
+    }
+  }
+}
+
+void EquipMenu::doEquip()
+{
+  std::string currentItemName = m_itemMenu->getSelectedItemName();
+  Item* currentItem = get_player()->getItem(currentItemName);
+  Item* currentEquip = m_character->getEquipment(currentMenuChoice());
+
+  if (currentItem && currentMenuChoice() == equip_type_string(currentItem->type))
+  {
+    if (currentEquip)
+    {
+      get_player()->addItemToInventory(currentEquip->name, 1);
+    }
+
+    m_character->equip(currentMenuChoice(), currentItem->name);
+    get_player()->removeItemFromInventory(currentItem->name, 1);
+
+    m_itemMenu->refresh(currentMenuChoice());
+    m_itemMenu->setCursorVisible(false);
+
+    m_state = STATE_SELECT_EQUIPMENT_TYPE;
+
+    play_sound(config::SOUND_EQUIP);
+  }
+  else
+  {
+    play_sound(config::SOUND_CANCEL);
+  }
+}
+
+void EquipMenu::doUnEquip()
+{
+  Item* currentEquip = m_character->getEquipment(currentMenuChoice());
+
+  if (currentEquip)
+  {
+    get_player()->addItemToInventory(currentEquip->name, 1);
+    m_character->equip(currentMenuChoice(), "");
+
+    m_itemMenu->refresh(currentMenuChoice());
+    m_itemMenu->setCursorVisible(false);
+
+    m_state = STATE_SELECT_EQUIPMENT_TYPE;
+
+    play_sound(config::SOUND_EQUIP);
+  }
+  else
+  {
+    play_sound(config::SOUND_CANCEL);
+  }
+}
+
+void EquipMenu::handleEscape()
+{
+  if (m_state == STATE_SELECT_EQUIPMENT_TYPE)
+  {
+    Menu::handleEscape();
+  }
+  else if (m_state == STATE_EQUIP_ITEM)
+  {
+    m_state = STATE_SELECT_EQUIPMENT_TYPE;
+    m_itemMenu->setCursorVisible(false);
+  }
+}
+
+void EquipMenu::moveArrow(Direction dir)
+{
+  if (m_state == STATE_SELECT_EQUIPMENT_TYPE)
+  {
+    Menu::moveArrow(dir);
+    m_itemMenu->refresh(currentMenuChoice());
+  }
+  else
+  {
+    m_itemMenu->moveArrow(dir);
+  }
+}
+
+void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  draw_frame(target, x, y, 8*16, 7*16);
+  draw_frame(target, x + 8*16, y, 8*16, 7*16);
+
+  // Top.
+  draw_frame(target, x, y, 16 * 16, 2 * 16);
+  const sf::Texture* faceTexture = m_character->getTexture();
+  sf::Sprite sprite(*faceTexture);
+  sprite.setPosition(x, y);
+  target.draw(sprite);
+  draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
+
+  m_itemMenu->draw(target, 0, 7 * 16);
+
+  int offX = x + 8;
+  int offY = y + 38;
+
+  drawDeltas(target, offX, offY);
+
+  offX = x + 136;
+
+  for (int i = 0; i < getNumberOfChoice(); i++)
+  {
+    Item* equipment = m_character->getEquipment(getChoice(i));
+
+    std::string typeShortName = get_equip_short_name(getChoice(i));
+    std::string itemShortName = equipment ?
+        limit_string(equipment->name, 8) :
+        "";
+
+    draw_text_bmp(target, offX, offY + 12 * i, "%s: %s", typeShortName.c_str(), itemShortName.c_str());
+  }
+
+  sf::RectangleShape rect = make_select_rect(offX - 1, offY - 1 + getCurrentChoiceIndex() * 12, 114, 10);
+  target.draw(rect);
+}
+
+void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
+{
+  Item* currentEquip = m_character->getEquipment(currentMenuChoice());
+
+  if (m_itemMenu->validChoice())
+  {
+    m_character->equip(currentMenuChoice(), m_itemMenu->getSelectedItemName());
+  }
+  else
+  {
+    m_character->equip(currentMenuChoice(), "");
+  }
+
+  int newStr = m_character->computeCurrentAttribute("strength");
+  int newPow = m_character->computeCurrentAttribute("power");
+  int newDef = m_character->computeCurrentAttribute("defense");
+  int newMag = m_character->computeCurrentAttribute("magic");
+  int newMdf = m_character->computeCurrentAttribute("mag.def");
+  int newSpd = m_character->computeCurrentAttribute("speed");
+
+  m_character->equip(currentMenuChoice(), currentEquip ? currentEquip->name : "");
+
+  draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
+  draw_text_bmp(target, x, y + 12, "Pow: %d (%d)", m_character->computeCurrentAttribute("power"), newPow);
+  draw_text_bmp(target, x, y + 24, "Def: %d (%d)", m_character->computeCurrentAttribute("defense"), newDef);
+  draw_text_bmp(target, x, y + 36, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
+  draw_text_bmp(target, x, y + 48, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
+  draw_text_bmp(target, x, y + 60, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
 }

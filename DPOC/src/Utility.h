@@ -17,8 +17,12 @@ std::string toString(T val)
   return ss.str();
 }
 
-std::string limitString(const std::string& str, int limit);
+std::string limit_string(const std::string& str, int limit);
 
-std::string toLower(const std::string& str);
+std::string to_lower(const std::string& str);
+
+std::string get_equip_short_name(const std::string& equipName);
+
+std::string get_string_after_first_space(const std::string& str);
 
 #endif

@@ -30,16 +30,65 @@ std::vector<std::string> get_lines(std::ifstream& infile)
   return lines;
 }
 
-std::string limitString(const std::string& str, int limit)
+std::string limit_string(const std::string& str, int limit)
 {
   return str.substr(0, limit);
 }
 
-std::string toLower(const std::string& str)
+std::string to_lower(const std::string& str)
 {
   std::string cpy = str;
 
   std::transform(cpy.begin(), cpy.end(), cpy.begin(), ::tolower);
 
   return cpy;
+}
+
+std::string get_equip_short_name(const std::string& equipName)
+{
+  if (equipName == "Weapon")
+  {
+    return "Weap";
+  }
+  else if (equipName == "Shield")
+  {
+    return "Shld";
+  }
+  else if (equipName == "Armour")
+  {
+    return "Armr";
+  }
+  else if (equipName == "Helmet")
+  {
+    return "Helm";
+  }
+  else if (equipName == "Others")
+  {
+    return "Misc";
+  }
+
+  return "";
+}
+
+std::string get_string_after_first_space(const std::string& str)
+{
+  std::string buff;
+
+  bool foundSpace = false;
+  bool foundNonSpace = false;
+
+  for (size_t i = 0; i < str.size(); i++)
+  {
+    if (!foundSpace && str[i] == ' ')
+    {
+      foundSpace = true;
+    }
+    else if (foundSpace && (str[i] != ' ' || foundNonSpace))
+    {
+      foundNonSpace = true;
+      buff += str[i];
+    }
+  }
+
+  return buff;
 }

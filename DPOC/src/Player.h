@@ -23,6 +23,7 @@ public:
   const std::vector<Item>& getInventory() const { return m_inventory; }
   const std::vector<Character*>& getParty() const { return m_party; }
 
+  void addItemToInventory(const std::string& itemName, int number);
   void removeItemFromInventory(const std::string& itemName, int number);
   Item* getItem(const std::string& itemName);
 

@@ -69,6 +69,18 @@ Character* Player::getCharacter(const std::string& name)
   return 0;
 }
 
+void Player::addItemToInventory(const std::string& itemName, int number)
+{
+  if (Item* item = getItem(itemName))
+  {
+    item->stackSize += number;
+  }
+  else
+  {
+    m_inventory.push_back(create_item(itemName, number));
+  }
+}
+
 void Player::removeItemFromInventory(const std::string& itemName, int number)
 {
   for (auto it = m_inventory.begin(); it != m_inventory.end(); ++it)
