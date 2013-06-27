@@ -81,6 +81,7 @@ class MainMenu : public Menu
   };
 public:
   MainMenu();
+  ~MainMenu();
 
   void handleConfirm();
   void handleEscape();
@@ -206,6 +207,7 @@ class EquipMenu : public Menu
   };
 public:
   EquipMenu(Character* character);
+  ~EquipMenu();
 
   void handleConfirm();
   void handleEscape();
@@ -238,6 +240,7 @@ class BattleMenu : public Menu
   };
 public:
   BattleMenu();
+  ~BattleMenu();
 
   void handleConfirm();
 

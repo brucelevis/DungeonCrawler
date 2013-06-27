@@ -101,7 +101,7 @@ int Menu::getWidth() const
 int Menu::getHeight() const
 {
   int end = m_maxVisible == -1 ? m_menuChoices.size() : m_maxVisible;
-  return (2 + end) * 8;
+  return 2 * 8 + end * 12;
 }
 
 void Menu::draw(sf::RenderTarget& target, int x, int y)
@@ -173,6 +173,14 @@ MainMenu::MainMenu()
   addEntry("Close");
 
   m_stateStack.push(STATE_MAIN_MENU);
+}
+
+MainMenu::~MainMenu()
+{
+  delete m_itemMenu;
+  delete m_spellMenu;
+  delete m_characterMenu;
+  delete m_equipMenu;
 }
 
 void MainMenu::handleConfirm()
@@ -320,6 +328,10 @@ void MainMenu::handleEscape()
       {
         closeEquipMenu();
       }
+    }
+    else if (currentState == STATE_STATUS_MENU)
+    {
+      m_stateStack.pop();
     }
   }
   else
@@ -804,6 +816,11 @@ EquipMenu::EquipMenu(Character* character)
   m_itemMenu->refresh(currentMenuChoice());
 }
 
+EquipMenu::~EquipMenu()
+{
+  delete m_itemMenu;
+}
+
 void EquipMenu::handleConfirm()
 {
   if (m_state == STATE_SELECT_EQUIPMENT_TYPE)
@@ -975,11 +992,17 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 ///////////////////////////////////////////////////////////////////////////////
 
 BattleMenu::BattleMenu()
- : m_actionMenu(0),
-   m_statusMenu(0),
+ : m_actionMenu(new BattleActionMenu),
+   m_statusMenu(new BattleStatusMenu),
    m_state(STATE_SELECT_ACTION)
 {
 
+}
+
+BattleMenu::~BattleMenu()
+{
+  delete m_actionMenu;
+  delete m_statusMenu;
 }
 
 void BattleMenu::handleConfirm()
@@ -997,8 +1020,8 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, x + 180, y + 8, "HP");
   draw_text_bmp(target, x + 216, y + 8, "MP");
 
-  m_actionMenu->draw(target, x, y + 16);
-  m_statusMenu->draw(target, x, y + 16);
+  m_actionMenu->draw(target, x, y + 24);
+  m_statusMenu->draw(target, x, y + 24);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1040,14 +1063,13 @@ void BattleStatusMenu::handleConfirm()
 
 void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, getWidth(), getHeight());
+  draw_frame(target, x + 80, y, getWidth(), getHeight());
 
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
     std::string name = getChoice(i);
     Character* character = get_player()->getCharacter(name);
 
-    int offX = x + 8;
     int offY = y + 8 + i * ENTRY_OFFSET;
 
     draw_text_bmp(target, x + 88,  offY, "%s", limit_string(name, 5).c_str());
@@ -1059,5 +1081,5 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 
 int BattleStatusMenu::getWidth() const
 {
-  return config::GAME_RES_X - 64;
+  return config::GAME_RES_X - 80;
 }

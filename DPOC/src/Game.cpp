@@ -9,6 +9,8 @@
 #include "Message.h"
 #include "Game.h"
 
+#include "Battle.h"
+
 Game& Game::instance()
 {
   static Game game;
@@ -149,6 +151,12 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
     else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
     else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
+  }
+
+  if (key == sf::Keyboard::B)
+  {
+    Battle battle(m_window);
+    battle.start();
   }
 }
 
