@@ -225,4 +225,52 @@ private:
   State m_state;
 };
 
+class BattleActionMenu;
+class BattleStatusMenu;
+
+class BattleMenu : public Menu
+{
+  enum State
+  {
+    STATE_SELECT_ACTION,
+    STATE_SELECT_CHARACTER,
+
+  };
+public:
+  BattleMenu();
+
+  void handleConfirm();
+
+  void draw(sf::RenderTarget& target, int x, int y);
+private:
+  BattleActionMenu* m_actionMenu;
+  BattleStatusMenu* m_statusMenu;
+
+  State m_state;
+};
+
+class BattleActionMenu : public Menu
+{
+public:
+  BattleActionMenu();
+
+  void handleConfirm();
+
+//  void draw(sf::RenderTarget& target, int x, int y);
+private:
+};
+
+class BattleStatusMenu : public Menu
+{
+public:
+  BattleStatusMenu();
+
+  void handleConfirm();
+
+  void draw(sf::RenderTarget& target, int x, int y);
+
+  int getWidth() const;
+private:
+};
+
 #endif

@@ -14,6 +14,8 @@
 
 #include "Menu.h"
 
+static const int ENTRY_OFFSET = 12;
+
 static std::string get_longest_menu_choice(const std::vector<std::string>& menuChoices)
 {
   std::string longest;
@@ -27,7 +29,7 @@ static std::string get_longest_menu_choice(const std::vector<std::string>& menuC
   return longest;
 }
 
-static sf::RectangleShape make_select_rect(int x, int y, int w, int h)
+static sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color color = sf::Color::Red)
 {
   sf::RectangleShape rect;
   rect.setFillColor(sf::Color::Transparent);
@@ -104,8 +106,6 @@ int Menu::getHeight() const
 
 void Menu::draw(sf::RenderTarget& target, int x, int y)
 {
-  static const int ENTRY_OFFSET = 12;
-
   int start = m_maxVisible == -1 ? 0 : m_scroll;
   int end = m_maxVisible == -1 ? m_menuChoices.size() : (m_maxVisible + m_scroll);
 
@@ -970,4 +970,94 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, x, y + 36, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
   draw_text_bmp(target, x, y + 48, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
   draw_text_bmp(target, x, y + 60, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BattleMenu::BattleMenu()
+ : m_actionMenu(0),
+   m_statusMenu(0),
+   m_state(STATE_SELECT_ACTION)
+{
+
+}
+
+void BattleMenu::handleConfirm()
+{
+
+}
+
+void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
+
+  draw_text_bmp(target, x + 8, y + 8, "Action");
+  draw_text_bmp(target, x + 88, y + 8, "Name");
+  draw_text_bmp(target, x + 136, y + 8, "Cond");
+  draw_text_bmp(target, x + 180, y + 8, "HP");
+  draw_text_bmp(target, x + 216, y + 8, "MP");
+
+  m_actionMenu->draw(target, x, y + 16);
+  m_statusMenu->draw(target, x, y + 16);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BattleActionMenu::BattleActionMenu()
+{
+  addEntry("Attack");
+  addEntry("Spell");
+  addEntry("Item");
+  addEntry("Run");
+}
+
+void BattleActionMenu::handleConfirm()
+{
+
+}
+
+//void BattleActionMenu::draw(sf::RenderTarget& target, int x, int y)
+//{
+//
+//}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BattleStatusMenu::BattleStatusMenu()
+{
+  const std::vector<Character*>& party = get_player()->getParty();
+
+  for (auto it = party.begin(); it != party.end(); ++it)
+  {
+    addEntry((*it)->getName());
+  }
+}
+
+void BattleStatusMenu::handleConfirm()
+{
+
+}
+
+void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  draw_frame(target, x, y, getWidth(), getHeight());
+
+  for (int i = 0; i < getNumberOfChoice(); i++)
+  {
+    std::string name = getChoice(i);
+    Character* character = get_player()->getCharacter(name);
+
+    int offX = x + 8;
+    int offY = y + 8 + i * ENTRY_OFFSET;
+
+    draw_text_bmp(target, x + 88,  offY, "%s", limit_string(name, 5).c_str());
+    draw_text_bmp(target, x + 136, offY, "%s", limit_string(character->getStatus(), 4).c_str());
+    draw_text_bmp(target, x + 180, offY, "%d", character->getAttribute("hp").current);
+    draw_text_bmp(target, x + 216, offY, "%d", character->getAttribute("mp").current);
+  }
+}
+
+int BattleStatusMenu::getWidth() const
+{
+  return config::GAME_RES_X - 64;
 }
