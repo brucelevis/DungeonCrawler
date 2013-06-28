@@ -27,26 +27,58 @@ Entity* Player::player()
 
 void Player::update()
 {
+  bool wasMoving = player()->isWalking();
+
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
   {
+    //if (!player()->isWalking())
+      moveTrain();
     player()->step(DIR_RIGHT);
   }
   else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
   {
+    //if (!player()->isWalking())
+      moveTrain();
     player()->step(DIR_LEFT);
   }
   else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
   {
+    //if (!player()->isWalking())
+      moveTrain();
     player()->step(DIR_DOWN);
   }
   else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
   {
+    //if (!player()->isWalking())
+      moveTrain();
     player()->step(DIR_UP);
   }
+
+  //if (!wasMoving && player()->isWalking())
+  //{
+    //moveTrain();
+  //}
 
   for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
   {
     (*it)->update();
+  }
+}
+
+void Player::moveTrain()
+{
+  for (size_t i = 1; i < m_playerTrain.size(); i++)
+  {
+    Entity* prev = m_playerTrain[i - 1];
+    Entity* curr = m_playerTrain[i];
+
+    if ((int)prev->x != (int)curr->x || (int)prev->y != (int)curr->y)
+    {
+      if ((int)prev->x < (int)curr->x) curr->step(DIR_LEFT);
+      else if ((int)prev->x > (int)curr->x) curr->step(DIR_RIGHT);
+      else if ((int)prev->y < (int)curr->y) curr->step(DIR_UP);
+      else if ((int)prev->y > (int)curr->y) curr->step(DIR_DOWN);
+    }
   }
 }
 
@@ -113,8 +145,15 @@ Item* Player::getItem(const std::string& itemName)
 Player* Player::create(int x, int y)
 {
   Player* player = new Player;
-  player->m_playerTrain.push_back(new Entity("player"));
-  player->player()->setPosition(x, y);
+
+  for (size_t i = 0; i < 4; i++)
+  {
+    player->m_playerTrain.push_back(new Entity("player"));
+    player->m_playerTrain[i]->setPosition(x, y);
+
+    if (i > 0)
+      player->m_playerTrain[i]->setWalkThrough(true);
+  }
 
   player->m_party.push_back(Character::create("Char1"));
   player->m_party.push_back(Character::create("Char2"));

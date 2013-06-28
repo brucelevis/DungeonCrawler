@@ -39,6 +39,7 @@ public:
   Sprite* sprite() { return m_sprite; }
 
   void setDirection(Direction dir);
+  Direction getDirection() const { return m_direction; }
   void step(Direction dir);
 
   void draw(sf::RenderTarget& target, const coord_t& view);
@@ -67,6 +68,8 @@ public:
 
   void setTag(const std::string& tag) { m_tag = tag; }
   std::string getTag() const { return m_tag; }
+
+  void setWalkThrough(bool walkthrough) { m_walkThrough = walkthrough; }
 public:
   float x, y;
 private:
@@ -98,6 +101,8 @@ private:
   int m_waitCounter;
 
   std::string m_tag;
+
+  bool m_walkThrough;
 };
 
 #endif

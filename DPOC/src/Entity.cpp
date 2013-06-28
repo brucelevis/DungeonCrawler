@@ -34,7 +34,8 @@ Entity::Entity(const std::string& name)
    m_speed(0.1),
    m_targetX(0), m_targetY(0),
    m_state(STATE_NORMAL),
-   m_waitCounter(0)
+   m_waitCounter(0),
+   m_walkThrough(false)
 {
   auto it = std::find_if(ENTITY_DEF.begin(), ENTITY_DEF.end(),
       [=](const EntityDef& entity)
@@ -148,7 +149,7 @@ void Entity::step(Direction dir)
     else if (m_direction == DIR_UP)
       m_targetY = y - 1;
 
-    if (Game::instance().getCurrentMap()->blocking(m_targetX, m_targetY) || checkPlayerCollision() || checkEntityCollision())
+    if (!m_walkThrough && (Game::instance().getCurrentMap()->blocking(m_targetX, m_targetY) || checkPlayerCollision() || checkEntityCollision()))
     {
       m_targetX = x;
       m_targetY = y;
@@ -412,9 +413,12 @@ void Entity::getIfValue(const std::string& input, const std::string& key, int& v
 
 bool Entity::checkPlayerCollision() const
 {
+  if (m_walkThrough)
+    return false;
+
   Entity* player = Game::instance().getPlayer()->player();
 
-  if (player == this)
+  if (player == this || player->m_walkThrough)
     return false;
 
   return (((int)player->x == x && (int)player->y == y) ||
@@ -423,11 +427,14 @@ bool Entity::checkPlayerCollision() const
 
 bool Entity::checkEntityCollision() const
 {
+  if (m_walkThrough)
+    return false;
+
   Map* map = Game::instance().getCurrentMap();
 
   for (auto it = map->getEntities().begin(); it != map->getEntities().end(); ++it)
   {
-    if ((*it) == this)
+    if ((*it) == this || (*it)->m_walkThrough)
       continue;
 
     int px = (*it)->x;

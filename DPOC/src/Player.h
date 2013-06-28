@@ -31,6 +31,8 @@ public:
 
   static Player* create(int x, int y);
 private:
+  void moveTrain();
+private:
   std::vector<Entity*> m_playerTrain;
   std::vector<Item> m_inventory;
   std::vector<Character*> m_party;
