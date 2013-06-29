@@ -26,9 +26,10 @@ public:
   const std::vector<std::string>& getSpells() const { return m_spells; }
 
   static Character* create(const std::string& name);
+  static Character* createMonster(const std::string& name);
 
   const sf::Texture* getTexture() const { return m_faceTexture; }
-  void draw(sf::RenderTarget& target, int x, int y);
+  void draw(sf::RenderTarget& target, int x, int y) const;
 
   Attribute& getAttribute(const std::string& attribName);
 
@@ -38,6 +39,9 @@ public:
   Item* getEquipment(const std::string& equipmentSlot);
 
   std::string getStatus() const { return m_status; }
+
+  int spriteWidth() const { return m_textureRect.width; }
+  int spriteHeight() const { return m_textureRect.height; }
 private:
   std::string m_name;
   std::vector<std::string> m_spells;

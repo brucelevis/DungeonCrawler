@@ -988,9 +988,10 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BattleMenu::BattleMenu()
+BattleMenu::BattleMenu(const std::vector<Character*>& monsters)
  : m_actionMenu(new BattleActionMenu),
    m_statusMenu(new BattleStatusMenu),
+   m_monsterMenu(new BattleMonsterMenu(monsters)),
    m_state(STATE_SELECT_ACTION)
 {
 
@@ -1000,6 +1001,7 @@ BattleMenu::~BattleMenu()
 {
   delete m_actionMenu;
   delete m_statusMenu;
+  delete m_monsterMenu;
 }
 
 void BattleMenu::handleConfirm()
@@ -1012,6 +1014,14 @@ void BattleMenu::moveArrow(Direction dir)
   if (m_state == STATE_SELECT_ACTION)
   {
     m_actionMenu->moveArrow(dir);
+  }
+  else if (m_state == STATE_SELECT_CHARACTER)
+  {
+    m_statusMenu->moveArrow(dir);
+  }
+  else if (m_state == STATE_SELECT_MONSTER)
+  {
+    m_monsterMenu->moveArrow(dir);
   }
 }
 
@@ -1027,6 +1037,7 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
 
   m_actionMenu->draw(target, x, y + 24);
   m_statusMenu->draw(target, x + 80, y + 24);
+  m_monsterMenu->draw(target, 0, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1094,4 +1105,70 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 int BattleStatusMenu::getWidth() const
 {
   return config::GAME_RES_X - 80;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BattleMonsterMenu::BattleMonsterMenu(const std::vector<Character*>& monsters)
+ : m_monsters(monsters)
+{
+  setCursorVisible(false);
+
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    addEntry((*it)->getName());
+  }
+}
+
+void BattleMonsterMenu::handleConfirm()
+{
+
+}
+
+void BattleMonsterMenu::moveArrow(Direction dir)
+{
+  // Just map left/right to up/down
+
+  if (dir == DIR_LEFT)
+  {
+    Menu::moveArrow(DIR_UP);
+  }
+  else if (dir == DIR_RIGHT)
+  {
+    Menu::moveArrow(DIR_DOWN);
+  }
+}
+
+void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+//  var posX = Math.floor(canvas.width / 2);
+//  var posY = Math.floor(canvas.height / 2);
+//  posX -= Math.floor(enemy.sprite.width / 2);
+//  posY -= Math.floor(enemy.sprite.height / 2);
+//
+//  posX -= ( Math.floor((this.enemies.length / 2)) - i) *
+//      (enemy.sprite.width + 12);
+
+  for (size_t i = 0; i < m_monsters.size(); i++)
+  {
+    const Character* monster = m_monsters[i];
+
+    if (monster->getStatus() == "Dead")
+      continue;
+
+    int posX = config::GAME_RES_X / 2;
+    int posY = config::GAME_RES_Y / 2;
+
+    posX -= monster->spriteWidth() / 2;
+    posY -= monster->spriteHeight() / 2;
+
+    posX -= (m_monsters.size() / 2 - i) * (monster->spriteWidth() + 12);
+
+    monster->draw(target, posX, posY);
+
+    if (cursorVisible() && getCurrentChoiceIndex() == i)
+    {
+
+    }
+  }
 }

@@ -229,6 +229,7 @@ private:
 
 class BattleActionMenu;
 class BattleStatusMenu;
+class BattleMonsterMenu;
 
 class BattleMenu : public Menu
 {
@@ -236,10 +237,10 @@ class BattleMenu : public Menu
   {
     STATE_SELECT_ACTION,
     STATE_SELECT_CHARACTER,
-
+    STATE_SELECT_MONSTER
   };
 public:
-  BattleMenu();
+  BattleMenu(const std::vector<Character*>& monsters);
   ~BattleMenu();
 
   void handleConfirm();
@@ -249,6 +250,7 @@ public:
 private:
   BattleActionMenu* m_actionMenu;
   BattleStatusMenu* m_statusMenu;
+  BattleMonsterMenu* m_monsterMenu;
 
   State m_state;
 };
@@ -276,6 +278,19 @@ public:
   int getWidth() const;
 private:
   int m_currentActor;
+};
+
+class BattleMonsterMenu : public Menu
+{
+public:
+  BattleMonsterMenu(const std::vector<Character*>& monsters);
+
+  void handleConfirm();
+  void moveArrow(Direction dir);
+
+  void draw(sf::RenderTarget& target, int x, int y);
+private:
+  std::vector<Character*> m_monsters;
 };
 
 #endif

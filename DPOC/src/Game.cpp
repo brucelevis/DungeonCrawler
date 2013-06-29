@@ -155,7 +155,12 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
   if (key == sf::Keyboard::B)
   {
-    Battle battle(m_window);
+    Battle battle(m_window,
+      {
+        Character::createMonster("Skelington"),
+        Character::createMonster("Skelington"),
+        Character::createMonster("Skelington")
+      });
     battle.start();
   }
 }

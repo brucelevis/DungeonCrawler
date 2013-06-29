@@ -1,6 +1,7 @@
 #include "logger.h"
 #include "Cache.h"
 #include "Utility.h"
+#include "Monster.h"
 #include "Character.h"
 
 Attribute make_attribute(int val)
@@ -73,7 +74,7 @@ Item* Character::getEquipment(const std::string& equipmentSlot)
   return 0;
 }
 
-void Character::draw(sf::RenderTarget& target, int x, int y)
+void Character::draw(sf::RenderTarget& target, int x, int y) const
 {
   sf::Sprite sprite;
   sprite.setTexture(*m_faceTexture);
@@ -108,6 +109,28 @@ Character* Character::create(const std::string& name)
 
   // character->m_equipment["weapon"] = create_item("Rusty Knife");
   // character->m_equipment["shield"] = create_item("Wood Shield");
+
+  return character;
+}
+
+Character* Character::createMonster(const std::string& name)
+{
+  MonsterDef def = get_monster_definition(name);
+
+  if (def.name == BUG_MONSTER)
+    return 0;
+
+  Character* character = new Character;
+
+  character->m_name = def.name;
+  character->m_faceTexture = cache::loadTexture(def.texture);
+  character->m_textureRect = def.textureRect;
+  character->m_status = "Normal";
+
+  for (auto it = def.attributeMap.begin(); it != def.attributeMap.end(); ++it)
+  {
+    character->m_attributes[it->first] = make_attribute(it->second);
+  }
 
   return character;
 }

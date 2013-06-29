@@ -1,8 +1,9 @@
 #include "Config.h"
 #include "Battle.h"
 
-Battle::Battle(sf::RenderWindow& window)
+Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters)
  : m_battleOngoing(false),
+   m_battleMenu(monsters),
    m_window(window)
 {
 
