@@ -243,6 +243,7 @@ public:
   ~BattleMenu();
 
   void handleConfirm();
+  void moveArrow(Direction dir);
 
   void draw(sf::RenderTarget& target, int x, int y);
 private:
@@ -274,6 +275,7 @@ public:
 
   int getWidth() const;
 private:
+  int m_currentActor;
 };
 
 #endif

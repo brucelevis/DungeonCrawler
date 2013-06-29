@@ -34,7 +34,7 @@ static sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color
   sf::RectangleShape rect;
   rect.setFillColor(sf::Color::Transparent);
   rect.setOutlineThickness(1.0f);
-  rect.setOutlineColor(sf::Color::Red);
+  rect.setOutlineColor(color);
   rect.setSize(sf::Vector2f(w, h));
   rect.setPosition(x, y);
 
@@ -1010,6 +1010,14 @@ void BattleMenu::handleConfirm()
 
 }
 
+void BattleMenu::moveArrow(Direction dir)
+{
+  if (m_state == STATE_SELECT_ACTION)
+  {
+    m_actionMenu->moveArrow(dir);
+  }
+}
+
 void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
 {
   draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
@@ -1021,7 +1029,7 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, x + 216, y + 8, "MP");
 
   m_actionMenu->draw(target, x, y + 24);
-  m_statusMenu->draw(target, x, y + 24);
+  m_statusMenu->draw(target, x + 80, y + 24);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1047,6 +1055,7 @@ void BattleActionMenu::handleConfirm()
 ///////////////////////////////////////////////////////////////////////////////
 
 BattleStatusMenu::BattleStatusMenu()
+ : m_currentActor(0)
 {
   const std::vector<Character*>& party = get_player()->getParty();
 
@@ -1063,7 +1072,7 @@ void BattleStatusMenu::handleConfirm()
 
 void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x + 80, y, getWidth(), getHeight());
+  draw_frame(target, x, y, getWidth(), getHeight());
 
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
@@ -1072,10 +1081,16 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 
     int offY = y + 8 + i * ENTRY_OFFSET;
 
-    draw_text_bmp(target, x + 88,  offY, "%s", limit_string(name, 5).c_str());
-    draw_text_bmp(target, x + 136, offY, "%s", limit_string(character->getStatus(), 4).c_str());
-    draw_text_bmp(target, x + 180, offY, "%d", character->getAttribute("hp").current);
-    draw_text_bmp(target, x + 216, offY, "%d", character->getAttribute("mp").current);
+    draw_text_bmp(target, x + 8,  offY, "%s", limit_string(name, 5).c_str());
+    draw_text_bmp(target, x + 56, offY, "%s", limit_string(character->getStatus(), 4).c_str());
+    draw_text_bmp(target, x + 100, offY, "%d", character->getAttribute("hp").current);
+    draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
+
+    if (i == m_currentActor)
+    {
+      sf::RectangleShape rect = make_select_rect(x + 6, offY - 1, getWidth() - 12, 11, sf::Color::White);
+      target.draw(rect);
+    }
   }
 }
 
