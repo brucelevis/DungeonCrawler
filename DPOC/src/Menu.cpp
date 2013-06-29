@@ -408,6 +408,7 @@ void MainMenu::closeCharacterMenu()
 {
   m_characterMenu->setCursorVisible(false);
   m_characterMenu->setSpellToUse(0);
+  m_characterMenu->setItemToUse("");
 
   m_stateStack.pop();
 }
@@ -473,9 +474,14 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     {
       drawStatus(target, x + 24, y + 24);
     }
-    else if (currentState == STATE_ITEM_MENU)
+    else if (currentState == STATE_ITEM_MENU || !m_characterMenu->getItemToUse().empty())
     {
       m_itemMenu->draw(target, x + 16, y + 16);
+
+      if (m_characterMenu->getItemToUse().size() > 0)
+      {
+        m_characterMenu->draw(target, x, y);
+      }
     }
     else if (currentState == STATE_SPELL_MENU || m_characterMenu->getSpellToUse())
     {
