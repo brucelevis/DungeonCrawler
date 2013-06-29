@@ -29,6 +29,8 @@ public:
 
   Character* getCharacter(const std::string& name);
 
+  void transfer(int x, int y);
+
   static Player* create(int x, int y);
 private:
   void moveTrain();

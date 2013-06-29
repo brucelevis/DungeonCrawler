@@ -27,7 +27,7 @@ Entity* Player::player()
 
 void Player::update()
 {
-  bool wasMoving = player()->isWalking();
+//  bool wasMoving = player()->isWalking();
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
   {
@@ -140,6 +140,14 @@ Item* Player::getItem(const std::string& itemName)
   }
 
   return 0;
+}
+
+void Player::transfer(int x, int y)
+{
+  for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
+  {
+    (*it)->setPosition(x, y);
+  }
 }
 
 Player* Player::create(int x, int y)
