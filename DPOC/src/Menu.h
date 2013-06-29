@@ -244,6 +244,7 @@ public:
   ~BattleMenu();
 
   void handleConfirm();
+  void handleEscape();
   void moveArrow(Direction dir);
 
   void draw(sf::RenderTarget& target, int x, int y);
@@ -252,7 +253,7 @@ private:
   BattleStatusMenu* m_statusMenu;
   BattleMonsterMenu* m_monsterMenu;
 
-  State m_state;
+  std::stack<State> m_stateStack;
 };
 
 class BattleActionMenu : public Menu
@@ -276,6 +277,9 @@ public:
   void draw(sf::RenderTarget& target, int x, int y);
 
   int getWidth() const;
+
+  void prevActor();
+  void nextActor();
 private:
   int m_currentActor;
 };

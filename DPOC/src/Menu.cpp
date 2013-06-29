@@ -991,10 +991,9 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 BattleMenu::BattleMenu(const std::vector<Character*>& monsters)
  : m_actionMenu(new BattleActionMenu),
    m_statusMenu(new BattleStatusMenu),
-   m_monsterMenu(new BattleMonsterMenu(monsters)),
-   m_state(STATE_SELECT_ACTION)
+   m_monsterMenu(new BattleMonsterMenu(monsters))
 {
-
+  m_stateStack.push(STATE_SELECT_ACTION);
 }
 
 BattleMenu::~BattleMenu()
@@ -1006,23 +1005,60 @@ BattleMenu::~BattleMenu()
 
 void BattleMenu::handleConfirm()
 {
-  if (m_state == STATE_SELECT_ACTION)
+  State currentState = m_stateStack.top();
+
+  if (currentState == STATE_SELECT_ACTION)
   {
     std::string action = m_actionMenu->getCurrentMenuChoice();
+
+    if (action == "Attack")
+    {
+      m_monsterMenu->setCursorVisible(true);
+      m_stateStack.push(STATE_SELECT_MONSTER);
+    }
+  }
+  else if (currentState == STATE_SELECT_MONSTER)
+  {
+    m_monsterMenu->setCursorVisible(false);
+    m_stateStack.pop();
+
+    m_statusMenu->nextActor();
+  }
+}
+
+void BattleMenu::handleEscape()
+{
+  State currentState = m_stateStack.top();
+
+  if (currentState == STATE_SELECT_MONSTER)
+  {
+    m_monsterMenu->setCursorVisible(false);
+  }
+
+  if (m_stateStack.size() > 1)
+  {
+    m_stateStack.pop();
+  }
+  else
+  {
+    // Redo actions for previous actor.
+    m_statusMenu->prevActor();
   }
 }
 
 void BattleMenu::moveArrow(Direction dir)
 {
-  if (m_state == STATE_SELECT_ACTION)
+  State currentState = m_stateStack.top();
+
+  if (currentState == STATE_SELECT_ACTION)
   {
     m_actionMenu->moveArrow(dir);
   }
-  else if (m_state == STATE_SELECT_CHARACTER)
+  else if (currentState == STATE_SELECT_CHARACTER)
   {
     m_statusMenu->moveArrow(dir);
   }
-  else if (m_state == STATE_SELECT_MONSTER)
+  else if (currentState == STATE_SELECT_MONSTER)
   {
     m_monsterMenu->moveArrow(dir);
   }
@@ -1057,11 +1093,6 @@ void BattleActionMenu::handleConfirm()
 {
 
 }
-
-//void BattleActionMenu::draw(sf::RenderTarget& target, int x, int y)
-//{
-//
-//}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1108,6 +1139,20 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 int BattleStatusMenu::getWidth() const
 {
   return config::GAME_RES_X - 80;
+}
+
+void BattleStatusMenu::prevActor()
+{
+  m_currentActor--;
+  if (m_currentActor < 0)
+    m_currentActor = 0;
+}
+
+void BattleStatusMenu::nextActor()
+{
+  m_currentActor++;
+  if (m_currentActor >= getNumberOfChoice())
+    m_currentActor = getNumberOfChoice() - 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
