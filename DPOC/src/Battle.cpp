@@ -50,6 +50,13 @@ void Battle::start()
       {
         executeActions();
       }
+      else if (m_state == STATE_ACTION_EFFECT)
+      {
+        // TODO: Flash sprites etc.
+
+        m_state = STATE_EFFECT_MESSAGE;
+        Message::instance().show(m_battleActions[m_currentActor].target->getName() + " takes 1 damage!", true);
+      }
 
       if (Message::instance().isVisible())
       {
@@ -113,10 +120,8 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
       if (m_state == STATE_SHOW_ACTION)
       {
         m_state = STATE_ACTION_EFFECT;
-
-        Message::instance().show(m_battleActions[m_currentActor].target->getName() + " takes 1 damage!", true);
       }
-      else if (m_state == STATE_ACTION_EFFECT)
+      else if (m_state == STATE_EFFECT_MESSAGE)
       {
         if (m_battleOrder.empty())
         {

@@ -17,13 +17,14 @@ class Battle
     STATE_SELECT_ACTIONS,
     STATE_EXECUTE_ACTIONS,
     STATE_SHOW_ACTION,
-    STATE_ACTION_EFFECT
+    STATE_ACTION_EFFECT,
+    STATE_EFFECT_MESSAGE
   };
 public:
   struct Action
   {
     std::string actionName;
-    Character* target;
+    Character* target;  // TODO: Vector
 
     // Item or spell.
     std::string objectName;
