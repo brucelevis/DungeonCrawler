@@ -3,6 +3,7 @@
 
 class Entity;
 
+#include <map>
 #include <vector>
 #include <SFML/Graphics.hpp>
 
@@ -38,6 +39,8 @@ private:
   std::vector<Entity*> m_playerTrain;
   std::vector<Item> m_inventory;
   std::vector<Character*> m_party;
+
+  std::map<Entity*, coord_t> m_trainCoords;
 };
 
 Player* get_player();

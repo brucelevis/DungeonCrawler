@@ -27,37 +27,39 @@ Entity* Player::player()
 
 void Player::update()
 {
-//  bool wasMoving = player()->isWalking();
+  for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
+  {
+    if (!(*it)->isWalking())
+    {
+      m_trainCoords[*it].x = (*it)->x;
+      m_trainCoords[*it].y = (*it)->y;
+    }
+  }
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
   {
-    //if (!player()->isWalking())
-      moveTrain();
     player()->step(DIR_RIGHT);
+    if (player()->isWalking())
+      moveTrain();
   }
   else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
   {
-    //if (!player()->isWalking())
-      moveTrain();
     player()->step(DIR_LEFT);
+    if (player()->isWalking())
+      moveTrain();
   }
   else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
   {
-    //if (!player()->isWalking())
-      moveTrain();
     player()->step(DIR_DOWN);
+    if (player()->isWalking())
+      moveTrain();
   }
   else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
   {
-    //if (!player()->isWalking())
-      moveTrain();
     player()->step(DIR_UP);
+    if (player()->isWalking())
+      moveTrain();
   }
-
-  //if (!wasMoving && player()->isWalking())
-  //{
-    //moveTrain();
-  //}
 
   for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
   {
@@ -74,10 +76,15 @@ void Player::moveTrain()
 
     if ((int)prev->x != (int)curr->x || (int)prev->y != (int)curr->y)
     {
-      if ((int)prev->x < (int)curr->x) curr->step(DIR_LEFT);
-      else if ((int)prev->x > (int)curr->x) curr->step(DIR_RIGHT);
-      else if ((int)prev->y < (int)curr->y) curr->step(DIR_UP);
-      else if ((int)prev->y > (int)curr->y) curr->step(DIR_DOWN);
+      if (m_trainCoords.count(prev) > 0)
+      {
+        coord_t coordToFollow = m_trainCoords[prev];
+
+        if (coordToFollow.x < (int)curr->x) curr->step(DIR_LEFT);
+        else if (coordToFollow.x > (int)curr->x) curr->step(DIR_RIGHT);
+        else if (coordToFollow.y < (int)curr->y) curr->step(DIR_UP);
+        else if (coordToFollow.y > (int)curr->y) curr->step(DIR_DOWN);
+      }
     }
   }
 }
