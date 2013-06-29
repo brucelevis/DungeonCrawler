@@ -15,9 +15,22 @@ Message& Message::instance()
   return message;
 }
 
-void Message::show(const std::string& msg)
+void Message::show(const std::string& msg, bool append)
 {
-  std::vector<std::string> strings = split_string(msg, ' ');
+  std::vector<std::string> strings;
+
+  if (m_pages.empty() && append)
+    append = false;
+
+  if (!append)
+  {
+    strings = split_string(msg, ' ');
+  }
+  else
+  {
+    strings = split_string(m_pages.front() + "\n" + msg, ' ');
+    m_pages.front().clear();
+  }
 
   std::string buffer;
   std::string complete;
@@ -40,7 +53,8 @@ void Message::show(const std::string& msg)
       if (lines >= 4)
       {
         lines = 0;
-        m_pages.push(complete);
+        if (!append) m_pages.push(complete);
+        else m_pages.front() = complete;
         complete.clear();
       }
     }
@@ -55,7 +69,11 @@ void Message::show(const std::string& msg)
     complete += buffer;
 
   if (!complete.empty())
-    m_pages.push(complete);
+  {
+    if (!append) m_pages.push(complete);
+    else m_pages.front() = complete;
+  }
+
 }
 
 void Message::nextPage()
@@ -74,6 +92,12 @@ void Message::flush()
   {
     update();
   }
+}
+
+void Message::clear()
+{
+  while (!m_pages.empty())
+    nextPage();
 }
 
 void Message::update()

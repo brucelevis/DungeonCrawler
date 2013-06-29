@@ -10,9 +10,11 @@ class Message
 {
 public:
   static Message& instance();
-  void show(const std::string& msg);
+  void show(const std::string& msg, bool append = false);
   void nextPage();
   void flush();
+
+  void clear();
 
   bool isVisible() const
   {

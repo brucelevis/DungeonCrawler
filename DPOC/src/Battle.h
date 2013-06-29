@@ -15,7 +15,9 @@ class Battle
   enum State
   {
     STATE_SELECT_ACTIONS,
-    STATE_EXECUTE_ACTIONS
+    STATE_EXECUTE_ACTIONS,
+    STATE_SHOW_ACTION,
+    STATE_ACTION_EFFECT
   };
 public:
   struct Action
@@ -52,6 +54,7 @@ private:
   std::vector<Character*> m_monsters;
   std::vector<Character*> m_battleOrder;
   std::map<Character*, Action> m_battleActions;
+  Character* m_currentActor;
 
   sf::RenderWindow& m_window;
 };

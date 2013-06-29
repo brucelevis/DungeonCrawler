@@ -25,6 +25,7 @@ Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters
    m_state(STATE_SELECT_ACTIONS),
    m_battleMenu(this, monsters),
    m_monsters(monsters),
+   m_currentActor(0),
    m_window(window)
 {
 
@@ -45,7 +46,7 @@ void Battle::start()
     {
       pollEvents();
 
-      if (!Message::instance().isVisible() && m_state == STATE_EXECUTE_ACTIONS)
+      if (m_state == STATE_EXECUTE_ACTIONS)
       {
         executeActions();
       }
@@ -66,21 +67,18 @@ void Battle::start()
 
 void Battle::executeActions()
 {
-  Character* current = m_battleOrder.back();
+  m_currentActor = m_battleOrder.back();
   m_battleOrder.pop_back();
 
-  Action action = m_battleActions[current];
+  Action action = m_battleActions[m_currentActor];
 
   if (action.actionName == "Attack")
   {
-    Message::instance().show(current->getName() + " attacks " + action.target->getName() + "!");
+    Message::instance().clear();
+    Message::instance().show(m_currentActor->getName() + " attacks " + action.target->getName() + "!");
   }
 
-  if (m_battleOrder.empty())
-  {
-    m_state = STATE_SELECT_ACTIONS;
-    m_battleMenu.setCursorVisible(true);
-  }
+  m_state = STATE_SHOW_ACTION;
 }
 
 void Battle::pollEvents()
@@ -112,7 +110,26 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
   {
     if (message.isWaitingForKey())
     {
-      message.nextPage();
+      if (m_state == STATE_SHOW_ACTION)
+      {
+        m_state = STATE_ACTION_EFFECT;
+
+        Message::instance().show(m_battleActions[m_currentActor].target->getName() + " takes 1 damage!", true);
+      }
+      else if (m_state == STATE_ACTION_EFFECT)
+      {
+        if (m_battleOrder.empty())
+        {
+          m_state = STATE_SELECT_ACTIONS;
+          m_battleMenu.setCursorVisible(true);
+
+          Message::instance().clear();
+        }
+        else
+        {
+          m_state = STATE_EXECUTE_ACTIONS;
+        }
+      }
     }
     else
     {
