@@ -29,7 +29,7 @@ public:
 
   virtual void draw(sf::RenderTarget& target, int x, int y);
 
-  std::string currentMenuChoice() const { return m_menuChoices[m_currentMenuChoice]; }
+  std::string getCurrentMenuChoice() const { return m_menuChoices[m_currentMenuChoice]; }
   std::string getChoice(size_t index) const { return m_menuChoices[index]; }
 
   void addEntry(const std::string& choice) { m_menuChoices.push_back(choice); }
@@ -146,7 +146,7 @@ public:
   EquipItemMenu(int width, int height);
   void refresh(const std::string& equipmentType);
 
-  bool validChoice() const { return currentMenuChoice() != "* Remove *"; }
+  bool validChoice() const { return getCurrentMenuChoice() != "* Remove *"; }
 };
 
 class SpellMenu : public Menu

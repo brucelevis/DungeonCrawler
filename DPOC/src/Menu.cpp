@@ -190,25 +190,25 @@ void MainMenu::handleConfirm()
 
   if (currentState == STATE_MAIN_MENU)
   {
-    if (currentMenuChoice() == "Close")
+    if (getCurrentMenuChoice() == "Close")
     {
       setVisible(false);
     }
-    else if (currentMenuChoice() == "Item")
+    else if (getCurrentMenuChoice() == "Item")
     {
       openItemMenu();
     }
-    else if (currentMenuChoice() == "Spell")
+    else if (getCurrentMenuChoice() == "Spell")
     {
       m_characterMenu->resetChoice();
       openCharacterMenu();
     }
-    else if (currentMenuChoice() == "Status")
+    else if (getCurrentMenuChoice() == "Status")
     {
       m_characterMenu->resetChoice();
       openCharacterMenu();
     }
-    else if (currentMenuChoice() == "Equip")
+    else if (getCurrentMenuChoice() == "Equip")
     {
       m_characterMenu->resetChoice();
       openCharacterMenu();
@@ -216,7 +216,7 @@ void MainMenu::handleConfirm()
   }
   else if (currentState == STATE_CHARACTER_MENU)
   {
-    if (currentMenuChoice() == "Spell")
+    if (getCurrentMenuChoice() == "Spell")
     {
       if (m_characterMenu->getSpellToUse())
       {
@@ -236,10 +236,10 @@ void MainMenu::handleConfirm()
       {
         m_stateStack.pop();
         m_characterMenu->setUserToCurrentChoice();
-        openSpellMenu(m_characterMenu->currentMenuChoice());
+        openSpellMenu(m_characterMenu->getCurrentMenuChoice());
       }
     }
-    else if (currentMenuChoice() == "Item")
+    else if (getCurrentMenuChoice() == "Item")
     {
       if (m_characterMenu->getItemToUse().size() > 0)
       {
@@ -261,11 +261,11 @@ void MainMenu::handleConfirm()
         }
       }
     }
-    else if (currentMenuChoice() == "Status")
+    else if (getCurrentMenuChoice() == "Status")
     {
       m_stateStack.push(STATE_STATUS_MENU);
     }
-    else if (currentMenuChoice() == "Equip")
+    else if (getCurrentMenuChoice() == "Equip")
     {
       m_characterMenu->setUserToCurrentChoice();
       openEquipMenu();
@@ -498,7 +498,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 {
-  Character* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->currentMenuChoice());
+  Character* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->getCurrentMenuChoice());
 
   draw_frame(target, 16, 16, 14*16, 13*16);
 
@@ -624,7 +624,7 @@ int ItemMenu::getHeight() const
 
 std::string ItemMenu::getSelectedItemName() const
 {
-  return get_string_after_first_space(currentMenuChoice());
+  return get_string_after_first_space(getCurrentMenuChoice());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -704,7 +704,7 @@ void SpellMenu::handleConfirm()
 
 const Spell* SpellMenu::getSelectedSpell() const
 {
-  std::string spellName = get_string_after_first_space(currentMenuChoice());
+  std::string spellName = get_string_after_first_space(getCurrentMenuChoice());
 
   return get_spell(spellName);
 }
@@ -792,12 +792,12 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void CharacterMenu::setUserToCurrentChoice()
 {
-  m_user = Game::instance().getPlayer()->getCharacter(currentMenuChoice());
+  m_user = Game::instance().getPlayer()->getCharacter(getCurrentMenuChoice());
 }
 
 void CharacterMenu::setTargetToCurrentChoice()
 {
-  m_target = Game::instance().getPlayer()->getCharacter(currentMenuChoice());
+  m_target = Game::instance().getPlayer()->getCharacter(getCurrentMenuChoice());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -813,7 +813,7 @@ EquipMenu::EquipMenu(Character* character)
   }
 
   m_itemMenu->setCursorVisible(false);
-  m_itemMenu->refresh(currentMenuChoice());
+  m_itemMenu->refresh(getCurrentMenuChoice());
 }
 
 EquipMenu::~EquipMenu()
@@ -848,19 +848,19 @@ void EquipMenu::doEquip()
 {
   std::string currentItemName = m_itemMenu->getSelectedItemName();
   Item* currentItem = get_player()->getItem(currentItemName);
-  Item* currentEquip = m_character->getEquipment(currentMenuChoice());
+  Item* currentEquip = m_character->getEquipment(getCurrentMenuChoice());
 
-  if (currentItem && currentMenuChoice() == equip_type_string(currentItem->type))
+  if (currentItem && getCurrentMenuChoice() == equip_type_string(currentItem->type))
   {
     if (currentEquip)
     {
       get_player()->addItemToInventory(currentEquip->name, 1);
     }
 
-    m_character->equip(currentMenuChoice(), currentItem->name);
+    m_character->equip(getCurrentMenuChoice(), currentItem->name);
     get_player()->removeItemFromInventory(currentItem->name, 1);
 
-    m_itemMenu->refresh(currentMenuChoice());
+    m_itemMenu->refresh(getCurrentMenuChoice());
     m_itemMenu->setCursorVisible(false);
 
     m_state = STATE_SELECT_EQUIPMENT_TYPE;
@@ -875,14 +875,14 @@ void EquipMenu::doEquip()
 
 void EquipMenu::doUnEquip()
 {
-  Item* currentEquip = m_character->getEquipment(currentMenuChoice());
+  Item* currentEquip = m_character->getEquipment(getCurrentMenuChoice());
 
   if (currentEquip)
   {
     get_player()->addItemToInventory(currentEquip->name, 1);
-    m_character->equip(currentMenuChoice(), "");
+    m_character->equip(getCurrentMenuChoice(), "");
 
-    m_itemMenu->refresh(currentMenuChoice());
+    m_itemMenu->refresh(getCurrentMenuChoice());
     m_itemMenu->setCursorVisible(false);
 
     m_state = STATE_SELECT_EQUIPMENT_TYPE;
@@ -913,7 +913,7 @@ void EquipMenu::moveArrow(Direction dir)
   if (m_state == STATE_SELECT_EQUIPMENT_TYPE)
   {
     Menu::moveArrow(dir);
-    m_itemMenu->refresh(currentMenuChoice());
+    m_itemMenu->refresh(getCurrentMenuChoice());
   }
   else
   {
@@ -958,15 +958,15 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 {
-  Item* currentEquip = m_character->getEquipment(currentMenuChoice());
+  Item* currentEquip = m_character->getEquipment(getCurrentMenuChoice());
 
   if (m_itemMenu->validChoice())
   {
-    m_character->equip(currentMenuChoice(), m_itemMenu->getSelectedItemName());
+    m_character->equip(getCurrentMenuChoice(), m_itemMenu->getSelectedItemName());
   }
   else
   {
-    m_character->equip(currentMenuChoice(), "");
+    m_character->equip(getCurrentMenuChoice(), "");
   }
 
   int newStr = m_character->computeCurrentAttribute("strength");
@@ -976,7 +976,7 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
   int newMdf = m_character->computeCurrentAttribute("mag.def");
   int newSpd = m_character->computeCurrentAttribute("speed");
 
-  m_character->equip(currentMenuChoice(), currentEquip ? currentEquip->name : "");
+  m_character->equip(getCurrentMenuChoice(), currentEquip ? currentEquip->name : "");
 
   draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
   draw_text_bmp(target, x, y + 12, "Pow: %d (%d)", m_character->computeCurrentAttribute("power"), newPow);
@@ -1006,7 +1006,10 @@ BattleMenu::~BattleMenu()
 
 void BattleMenu::handleConfirm()
 {
-
+  if (m_state == STATE_SELECT_ACTION)
+  {
+    std::string action = m_actionMenu->getCurrentMenuChoice();
+  }
 }
 
 void BattleMenu::moveArrow(Direction dir)
