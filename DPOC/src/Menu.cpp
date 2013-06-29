@@ -12,6 +12,7 @@
 #include "Item.h"
 #include "Spell.h"
 #include "Monster.h"
+#include "Battle.h"
 
 #include "Menu.h"
 
@@ -988,11 +989,13 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BattleMenu::BattleMenu(const std::vector<Character*>& monsters)
+BattleMenu::BattleMenu(Battle* battle, const std::vector<Character*>& monsters)
  : m_actionMenu(new BattleActionMenu),
    m_statusMenu(new BattleStatusMenu),
-   m_monsterMenu(new BattleMonsterMenu(monsters))
+   m_monsterMenu(new BattleMonsterMenu(monsters)),
+   m_battle(battle)
 {
+  setCursorVisible(true);
   m_stateStack.push(STATE_SELECT_ACTION);
 }
 
@@ -1019,10 +1022,26 @@ void BattleMenu::handleConfirm()
   }
   else if (currentState == STATE_SELECT_MONSTER)
   {
+    std::string action = m_actionMenu->getCurrentMenuChoice();
+    if (action == "Attack")
+    {
+      Battle::Action battleAction;
+      battleAction.actionName = action;
+      battleAction.target = m_monsterMenu->getCurrentMonster();
+
+      m_battle->setAction(m_statusMenu->getCurrentActor(), battleAction);
+    }
+
     m_monsterMenu->setCursorVisible(false);
     m_stateStack.pop();
 
-    m_statusMenu->nextActor();
+    if (!m_statusMenu->nextActor())
+    {
+      // If no more actors, we are done.
+      m_battle->doneSelectingActions();
+    }
+
+    m_actionMenu->resetChoice();
   }
 }
 
@@ -1066,17 +1085,29 @@ void BattleMenu::moveArrow(Direction dir)
 
 void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
+  if (cursorVisible())
+  {
+    draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
 
-  draw_text_bmp(target, x + 8, y + 8, "Action");
-  draw_text_bmp(target, x + 88, y + 8, "Name");
-  draw_text_bmp(target, x + 136, y + 8, "Cond");
-  draw_text_bmp(target, x + 180, y + 8, "HP");
-  draw_text_bmp(target, x + 216, y + 8, "MP");
+    draw_text_bmp(target, x + 8, y + 8, "Action");
+    draw_text_bmp(target, x + 88, y + 8, "Name");
+    draw_text_bmp(target, x + 136, y + 8, "Cond");
+    draw_text_bmp(target, x + 180, y + 8, "HP");
+    draw_text_bmp(target, x + 216, y + 8, "MP");
 
-  m_actionMenu->draw(target, x, y + 24);
-  m_statusMenu->draw(target, x + 80, y + 24);
+    m_actionMenu->draw(target, x, y + 24);
+    m_statusMenu->draw(target, x + 80, y + 24);
+  }
+
   m_monsterMenu->draw(target, 0, 0);
+}
+
+void BattleMenu::resetChoice()
+{
+  Menu::resetChoice();
+
+  m_actionMenu->resetChoice();
+  m_statusMenu->resetActor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1141,18 +1172,33 @@ int BattleStatusMenu::getWidth() const
   return config::GAME_RES_X - 80;
 }
 
-void BattleStatusMenu::prevActor()
+bool BattleStatusMenu::prevActor()
 {
   m_currentActor--;
   if (m_currentActor < 0)
+  {
     m_currentActor = 0;
+    return false;
+  }
+
+  return true;
 }
 
-void BattleStatusMenu::nextActor()
+bool BattleStatusMenu::nextActor()
 {
   m_currentActor++;
   if (m_currentActor >= getNumberOfChoice())
+  {
     m_currentActor = getNumberOfChoice() - 1;
+    return false;
+  }
+
+  return true;
+}
+
+Character* BattleStatusMenu::getCurrentActor()
+{
+  return get_player()->getParty().at(m_currentActor);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1223,4 +1269,9 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
       draw_text_bmp(target, 8, 8, "%s", get_monster_description(monster->getName()).c_str());
     }
   }
+}
+
+Character* BattleMonsterMenu::getCurrentMonster()
+{
+  return m_monsters[getCurrentChoiceIndex()];
 }

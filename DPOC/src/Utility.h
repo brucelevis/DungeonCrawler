@@ -25,4 +25,6 @@ std::string get_equip_short_name(const std::string& equipName);
 
 std::string get_string_after_first_space(const std::string& str);
 
+bool coinflip();
+
 #endif

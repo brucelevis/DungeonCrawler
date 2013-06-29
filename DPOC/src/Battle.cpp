@@ -1,9 +1,30 @@
 #include "Config.h"
+#include "Utility.h"
+
+#include "Player.h"
+#include "Character.h"
+#include "Message.h"
+
 #include "Battle.h"
+
+static bool speed_comparator(Character* left, Character* right)
+{
+  int left_speed = left->computeCurrentAttribute("speed");
+  int right_speed = right->computeCurrentAttribute("speed");
+
+  if (left_speed < right_speed)
+    return true;
+  else if (left_speed > right_speed)
+    return false;
+
+  return coinflip();
+}
 
 Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters)
  : m_battleOngoing(false),
-   m_battleMenu(monsters),
+   m_state(STATE_SELECT_ACTIONS),
+   m_battleMenu(this, monsters),
+   m_monsters(monsters),
    m_window(window)
 {
 
@@ -24,12 +45,41 @@ void Battle::start()
     {
       pollEvents();
 
+      if (!Message::instance().isVisible() && m_state == STATE_EXECUTE_ACTIONS)
+      {
+        executeActions();
+      }
+
+      if (Message::instance().isVisible())
+      {
+        Message::instance().update();
+      }
+
       timerThen += 1000 / config::FPS;
     }
 
     draw();
 
     sf::sleep(sf::milliseconds(timerThen - timerNow));
+  }
+}
+
+void Battle::executeActions()
+{
+  Character* current = m_battleOrder.back();
+  m_battleOrder.pop_back();
+
+  Action action = m_battleActions[current];
+
+  if (action.actionName == "Attack")
+  {
+    Message::instance().show(current->getName() + " attacks " + action.target->getName() + "!");
+  }
+
+  if (m_battleOrder.empty())
+  {
+    m_state = STATE_SELECT_ACTIONS;
+    m_battleMenu.setCursorVisible(true);
   }
 }
 
@@ -56,12 +106,28 @@ void Battle::pollEvents()
 
 void Battle::handleKeyPress(sf::Keyboard::Key key)
 {
-  if (key == sf::Keyboard::Up) m_battleMenu.moveArrow(DIR_UP);
-  else if (key == sf::Keyboard::Down) m_battleMenu.moveArrow(DIR_DOWN);
-  else if (key == sf::Keyboard::Left) m_battleMenu.moveArrow(DIR_LEFT);
-  else if (key == sf::Keyboard::Right) m_battleMenu.moveArrow(DIR_RIGHT);
-  else if (key == sf::Keyboard::Space) m_battleMenu.handleConfirm();
-  else if (key == sf::Keyboard::Escape) m_battleMenu.handleEscape();
+  Message& message = Message::instance();
+
+  if (message.isVisible())
+  {
+    if (message.isWaitingForKey())
+    {
+      message.nextPage();
+    }
+    else
+    {
+      message.flush();
+    }
+  }
+  else if (m_state == STATE_SELECT_ACTIONS)
+  {
+    if (key == sf::Keyboard::Up) m_battleMenu.moveArrow(DIR_UP);
+    else if (key == sf::Keyboard::Down) m_battleMenu.moveArrow(DIR_DOWN);
+    else if (key == sf::Keyboard::Left) m_battleMenu.moveArrow(DIR_LEFT);
+    else if (key == sf::Keyboard::Right) m_battleMenu.moveArrow(DIR_RIGHT);
+    else if (key == sf::Keyboard::Space) m_battleMenu.handleConfirm();
+    else if (key == sf::Keyboard::Escape) m_battleMenu.handleEscape();
+  }
 }
 
 void Battle::draw()
@@ -70,5 +136,49 @@ void Battle::draw()
 
   m_battleMenu.draw(m_window, 0, 152);
 
+  if (Message::instance().isVisible())
+  {
+    Message::instance().draw(m_window);
+  }
+
   m_window.display();
+}
+
+void Battle::setAction(Character* user, Action action)
+{
+  m_battleActions[user] = action;
+}
+
+void Battle::doneSelectingActions()
+{
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+  {
+    addToBattleOrder(*it);
+  }
+
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    Action action;
+    action.actionName = "Attack";
+    action.target = get_player()->getParty().at(rand()%(get_player()->getParty().size()));
+
+    setAction(*it, action);
+
+    addToBattleOrder(*it);
+  }
+
+  std::sort(m_battleOrder.begin(), m_battleOrder.end(), speed_comparator);
+
+  m_battleMenu.resetChoice();
+  m_battleMenu.setCursorVisible(false);
+
+  m_state = STATE_EXECUTE_ACTIONS;
+}
+
+void Battle::addToBattleOrder(Character* character)
+{
+  if (character->getStatus() != "Dead")
+  {
+    m_battleOrder.push_back(character);
+  }
 }

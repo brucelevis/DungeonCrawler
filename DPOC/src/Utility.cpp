@@ -92,3 +92,8 @@ std::string get_string_after_first_space(const std::string& str)
 
   return buff;
 }
+
+bool coinflip()
+{
+  return (bool)(rand()%2);
+}

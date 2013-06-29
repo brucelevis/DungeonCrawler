@@ -12,6 +12,7 @@
 class Item;
 class Spell;
 class Character;
+class Battle;
 
 class Menu
 {
@@ -44,7 +45,7 @@ public:
   void setCursorVisible(bool visible) { m_cursorVisible = visible; }
   bool cursorVisible() const { return m_cursorVisible; }
 
-  void resetChoice() { m_currentMenuChoice = 0; }
+  virtual void resetChoice() { m_currentMenuChoice = 0; }
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
   int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
@@ -240,7 +241,7 @@ class BattleMenu : public Menu
     STATE_SELECT_MONSTER
   };
 public:
-  BattleMenu(const std::vector<Character*>& monsters);
+  BattleMenu(Battle* battle, const std::vector<Character*>& monsters);
   ~BattleMenu();
 
   void handleConfirm();
@@ -248,12 +249,16 @@ public:
   void moveArrow(Direction dir);
 
   void draw(sf::RenderTarget& target, int x, int y);
+
+  void resetChoice();
 private:
   BattleActionMenu* m_actionMenu;
   BattleStatusMenu* m_statusMenu;
   BattleMonsterMenu* m_monsterMenu;
 
   std::stack<State> m_stateStack;
+
+  Battle* m_battle;
 };
 
 class BattleActionMenu : public Menu
@@ -278,8 +283,23 @@ public:
 
   int getWidth() const;
 
-  void prevActor();
-  void nextActor();
+  /////////////////////////////////////////////////////////////////////////////
+  ///
+  /// @return  False if no previous actor available.
+  ///
+  /////////////////////////////////////////////////////////////////////////////
+  bool prevActor();
+
+  /////////////////////////////////////////////////////////////////////////////
+  ///
+  /// @return  False if no next actor available.
+  ///
+  /////////////////////////////////////////////////////////////////////////////
+  bool nextActor();
+
+  Character* getCurrentActor();
+
+  void resetActor() { m_currentActor = 0; }
 private:
   int m_currentActor;
 };
@@ -293,6 +313,8 @@ public:
   void moveArrow(Direction dir);
 
   void draw(sf::RenderTarget& target, int x, int y);
+
+  Character* getCurrentMonster();
 private:
   std::vector<Character*> m_monsters;
 };
