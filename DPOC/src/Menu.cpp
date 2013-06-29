@@ -11,6 +11,7 @@
 #include "Game.h"
 #include "Item.h"
 #include "Spell.h"
+#include "Monster.h"
 
 #include "Menu.h"
 
@@ -771,7 +772,6 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
     Character* character = Game::instance().getPlayer()->getCharacter(getChoice(i));
-    const sf::Texture* face = character->getTexture();
 
     int offX = x + 8 + 5 * 16;
     int offY = y + 8;
@@ -1166,9 +1166,13 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
 
     monster->draw(target, posX, posY);
 
-    if (cursorVisible() && getCurrentChoiceIndex() == i)
+    if (cursorVisible() && getCurrentChoiceIndex() == (int)i)
     {
+      sf::RectangleShape rect = make_select_rect(posX - 2, posY - 2, monster->spriteWidth() + 2, monster->spriteHeight() + 2);
+      target.draw(rect);
 
+      draw_frame(target, 0, 0, config::GAME_RES_X, 24);
+      draw_text_bmp(target, 8, 8, "%s", get_monster_description(monster->getName()).c_str());
     }
   }
 }

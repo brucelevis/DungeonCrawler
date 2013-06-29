@@ -40,3 +40,8 @@ MonsterDef get_monster_definition(const std::string& name)
 
   return monsters[0];
 }
+
+std::string get_monster_description(const std::string& name)
+{
+  return get_monster_definition(name).description;
+}

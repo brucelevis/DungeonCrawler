@@ -20,5 +20,6 @@ struct MonsterDef
 };
 
 MonsterDef get_monster_definition(const std::string& name);
+std::string get_monster_description(const std::string& name);
 
 #endif
