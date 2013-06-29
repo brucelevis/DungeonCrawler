@@ -501,10 +501,7 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 
   draw_frame(target, 16, 16, 14*16, 13*16);
 
-  sf::Sprite faceSprite;
-  faceSprite.setTexture(*character->getTexture());
-  faceSprite.setPosition(x, y);
-  target.draw(faceSprite);
+  character->draw(target, x, y);
 
   draw_text_bmp(target, x + 40, y, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
   draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
@@ -779,10 +776,7 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
     int offX = x + 8 + 5 * 16;
     int offY = y + 8;
 
-    sf::Sprite sprite;
-    sprite.setTexture(*face);
-    sprite.setPosition(offX, offY + i * 48);
-    target.draw(sprite);
+    character->draw(target, offX, offY + i * 48);
 
     draw_text_bmp(target, offX + 40, offY + i * 48, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
     draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
@@ -934,10 +928,7 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 
   // Top.
   draw_frame(target, x, y, 16 * 16, 2 * 16);
-  const sf::Texture* faceTexture = m_character->getTexture();
-  sf::Sprite sprite(*faceTexture);
-  sprite.setPosition(x, y);
-  target.draw(sprite);
+  m_character->draw(target, x, y);
   draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
 
   m_itemMenu->draw(target, 0, 7 * 16);

@@ -28,6 +28,7 @@ public:
   static Character* create(const std::string& name);
 
   const sf::Texture* getTexture() const { return m_faceTexture; }
+  void draw(sf::RenderTarget& target, int x, int y);
 
   Attribute& getAttribute(const std::string& attribName);
 
@@ -42,6 +43,7 @@ private:
   std::vector<std::string> m_spells;
 
   sf::Texture* m_faceTexture;
+  sf::IntRect m_textureRect;
 
   std::map<std::string, Attribute> m_attributes;
 

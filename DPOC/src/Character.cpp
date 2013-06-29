@@ -73,6 +73,15 @@ Item* Character::getEquipment(const std::string& equipmentSlot)
   return 0;
 }
 
+void Character::draw(sf::RenderTarget& target, int x, int y)
+{
+  sf::Sprite sprite;
+  sprite.setTexture(*m_faceTexture);
+  sprite.setTextureRect(m_textureRect);
+  sprite.setPosition(x, y);
+  target.draw(sprite);
+}
+
 Character* Character::create(const std::string& name)
 {
   Character* character = new Character;
@@ -81,6 +90,7 @@ Character* Character::create(const std::string& name)
   character->m_spells.push_back("Hurt");
   character->m_spells.push_back("Heal");
   character->m_faceTexture = cache::loadTexture("Resources/Faces/Face.png");
+  character->m_textureRect = sf::IntRect(0, 0, character->m_faceTexture->getSize().x, character->m_faceTexture->getSize().y);
 
   character->m_status = "Normal";
 
