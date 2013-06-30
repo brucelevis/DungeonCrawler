@@ -4,6 +4,8 @@
 class Flash
 {
 public:
+  Flash();
+
   void start(int number, int speed);
 
   bool isFlashing() const { return m_currentFlash < m_numberOfFlashes; }
