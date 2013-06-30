@@ -1,6 +1,8 @@
 #include "Config.h"
 #include "Utility.h"
 
+#include "Item.h"
+#include "Spell.h"
 #include "Attack.h"
 #include "Player.h"
 #include "Character.h"
@@ -73,24 +75,41 @@ void Battle::start()
         if (!effectInProgress())
         {
           m_state = STATE_ACTION_EFFECT;
+
+          if (m_battleActions[m_currentActor].target)
+          {
+            m_currentTargets.push_back(m_battleActions[m_currentActor].target);
+          }
+          else
+          {
+            if (m_battleActions[m_currentActor].actionName == "Spell")
+            {
+              const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
+
+              if (spell->target == Spell::TARGET_ALL_ENEMY)
+                m_currentTargets = getAliveActors(m_monsters);
+              else if (spell->target == Spell::TARGET_ALL_ALLY)
+                m_currentTargets = getAliveActors(get_player()->getParty());
+            }
+          }
+
         }
       }
       else if (m_state == STATE_ACTION_EFFECT)
       {
-        if (!effectInProgress())
+        if (!effectInProgress() && m_turnDelay == 0)
         {
-          Character* currentTarget = m_battleActions[m_currentActor].target;
+          Character* currentTarget = m_currentTargets.front();
+          m_currentTargets.erase(m_currentTargets.begin());
+
           if (isMonster(currentTarget))
           {
             currentTarget->flash().start(6, 3);
           }
 
-          play_sound(config::SOUND_HIT);
-
           int damage = calculate_physical_damage(m_currentActor, currentTarget);
 
-          m_state = STATE_EFFECT_MESSAGE;
-          battle_message("%s takes %d damage!", m_battleActions[m_currentActor].target->getName().c_str(), damage);
+          battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
 
           currentTarget->getAttribute("hp").current -= damage;
           if (currentTarget->getAttribute("hp").current <= 0)
@@ -99,12 +118,19 @@ void Battle::start()
             battle_message("%s has fallen!", currentTarget->getName().c_str());
           }
 
+          play_sound(config::SOUND_HIT);
+
           if (allDead(m_monsters) || allDead(get_player()->getParty()))
           {
             m_battleOngoing = false;
           }
 
           m_turnDelay = TURN_DELAY_TIME;
+
+          if (m_currentTargets.empty())
+          {
+            m_state = STATE_EFFECT_MESSAGE;
+          }
         }
       }
       else if (m_state == STATE_EFFECT_MESSAGE)
@@ -132,7 +158,7 @@ void Battle::executeActions()
 
   Action& action = m_battleActions[m_currentActor];
 
-  if (action.target->getStatus() == "Dead")
+  if (action.target && action.target->getStatus() == "Dead")
   {
     action.target = selectRandomTarget(m_currentActor);
   }
@@ -149,6 +175,35 @@ void Battle::executeActions()
     play_sound(config::SOUND_ATTACK);
 
     battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+  }
+  else if (action.actionName == "Spell")
+  {
+    clear_message();
+
+    if (isMonster(m_currentActor))
+    {
+      m_currentActor->flash().start(2, 3);
+    }
+
+    play_sound(config::SOUND_SPELL);
+
+    const Spell* spell = get_spell(action.objectName);
+
+    m_currentActor->getAttribute("mp").current -= spell->mpCost;
+
+    if (action.target)
+    {
+      battle_message("%s casts the %s spell at %s!",
+          m_currentActor->getName().c_str(),
+          action.objectName.c_str(),
+          action.target->getName().c_str());
+    }
+    else
+    {
+      battle_message("%s casts the %s spell!",
+          m_currentActor->getName().c_str(),
+          action.objectName.c_str());
+    }
   }
 
   m_state = STATE_SHOW_ACTION;
@@ -184,22 +239,22 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
 
   if (message.isVisible())
   {
-    if (message.isWaitingForKey())
+    if (key == sf::Keyboard::Space)
     {
-      /*if (m_state == STATE_SHOW_ACTION)
-      {
-        m_state = STATE_ACTION_EFFECT;
-      }
-      else */
-      if (m_state == STATE_EFFECT_MESSAGE)
-      {
-        nextActor();
-      }
+      m_turnDelay = 0;
     }
-    else
-    {
-      message.flush();
-    }
+//    m_turnDelay = 0;
+//    if (message.isWaitingForKey())
+//    {
+//      if (m_state == STATE_EFFECT_MESSAGE)
+//      {
+//        nextActor();
+//      }
+//    }
+//    else
+//    {
+//      message.flush();
+//    }
   }
   else if (m_state == STATE_SELECT_ACTIONS)
   {
@@ -350,4 +405,17 @@ bool Battle::allDead(const std::vector<Character*>& actors) const
   }
 
   return true;
+}
+
+std::vector<Character*> Battle::getAliveActors(const std::vector<Character*>& actors)
+{
+  std::vector<Character*> result;
+
+  for (auto it = actors.begin(); it != actors.end(); ++it)
+  {
+    if ((*it)->getStatus() != "Dead")
+      result.push_back(*it);
+  }
+
+  return result;
 }

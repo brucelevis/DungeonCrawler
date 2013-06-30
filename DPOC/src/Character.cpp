@@ -105,6 +105,7 @@ Character* Character::create(const std::string& name)
   character->m_name = name;
   character->m_spells.push_back("Hurt");
   character->m_spells.push_back("Heal");
+  character->m_spells.push_back("Hurt All");
   character->m_faceTexture = cache::loadTexture("Resources/Faces/Face.png");
   character->m_textureRect = sf::IntRect(0, 0, character->m_faceTexture->getSize().x, character->m_faceTexture->getSize().y);
 

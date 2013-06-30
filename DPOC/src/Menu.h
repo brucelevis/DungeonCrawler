@@ -239,7 +239,9 @@ class BattleMenu : public Menu
   {
     STATE_SELECT_ACTION,
     STATE_SELECT_CHARACTER,
-    STATE_SELECT_MONSTER
+    STATE_SELECT_MONSTER,
+    STATE_SELECT_SPELL,
+    STATE_SELECT_ITEM
   };
 public:
   BattleMenu(Battle* battle, const std::vector<Character*>& monsters);
@@ -253,9 +255,22 @@ public:
 
   void resetChoice();
 private:
+  void nextActor();
+
+  void prepareAction();
+
+  void selectMonster();
+  void selectCharacter();
+
+  void closeSpellMenu();
+  void closeItemMenu();
+private:
   BattleActionMenu* m_actionMenu;
   BattleStatusMenu* m_statusMenu;
   BattleMonsterMenu* m_monsterMenu;
+
+  SpellMenu* m_spellMenu;
+  ItemMenu* m_itemMenu;
 
   std::stack<State> m_stateStack;
 
@@ -299,6 +314,7 @@ public:
   bool nextActor();
 
   Character* getCurrentActor();
+  Character* getCurrentSelectedActor();
 
   void resetActor();
 private:

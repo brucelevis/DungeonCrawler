@@ -993,6 +993,8 @@ BattleMenu::BattleMenu(Battle* battle, const std::vector<Character*>& monsters)
  : m_actionMenu(new BattleActionMenu),
    m_statusMenu(new BattleStatusMenu),
    m_monsterMenu(new BattleMonsterMenu(monsters)),
+   m_spellMenu(0),
+   m_itemMenu(0),
    m_battle(battle)
 {
   setCursorVisible(true);
@@ -1004,6 +1006,9 @@ BattleMenu::~BattleMenu()
   delete m_actionMenu;
   delete m_statusMenu;
   delete m_monsterMenu;
+
+  delete m_spellMenu;
+  delete m_itemMenu;
 }
 
 void BattleMenu::handleConfirm()
@@ -1016,34 +1021,150 @@ void BattleMenu::handleConfirm()
 
     if (action == "Attack")
     {
-      m_monsterMenu->setCursorVisible(true);
-      m_monsterMenu->fixSelection();
-      m_stateStack.push(STATE_SELECT_MONSTER);
+      selectMonster();
+    }
+    else if (action == "Spell")
+    {
+      m_spellMenu = new SpellMenu(m_statusMenu->getCurrentActor()->getName());
+      m_spellMenu->setVisible(true);
+      m_stateStack.push(STATE_SELECT_SPELL);
+    }
+    else if (action == "Item")
+    {
+      m_itemMenu = new ItemMenu;
+      m_itemMenu->setVisible(true);
+      m_stateStack.push(STATE_SELECT_ITEM);
     }
   }
   else if (currentState == STATE_SELECT_MONSTER)
   {
-    std::string action = m_actionMenu->getCurrentMenuChoice();
-    if (action == "Attack")
-    {
-      Battle::Action battleAction;
-      battleAction.actionName = action;
-      battleAction.target = m_monsterMenu->getCurrentMonster();
+    prepareAction();
 
-      m_battle->setAction(m_statusMenu->getCurrentActor(), battleAction);
-    }
-
-    m_monsterMenu->setCursorVisible(false);
-    m_stateStack.pop();
-
-    if (!m_statusMenu->nextActor())
-    {
-      // If no more actors, we are done.
-      m_battle->doneSelectingActions();
-    }
-
-    m_actionMenu->resetChoice();
+    nextActor();
   }
+  else if (currentState == STATE_SELECT_CHARACTER)
+  {
+    // TODO: Spells/items that can target dead
+    if (m_statusMenu->getCurrentSelectedActor()->getStatus() == "Dead")
+    {
+      play_sound(config::SOUND_CANCEL);
+    }
+    else
+    {
+      prepareAction();
+
+      nextActor();
+    }
+  }
+  else if (currentState == STATE_SELECT_SPELL)
+  {
+    const Spell* spell = m_spellMenu->getSelectedSpell();
+
+    if (spell->target == Spell::TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
+    {
+      play_sound(config::SOUND_CANCEL);
+    }
+    else if (spell->target == Spell::TARGET_SINGLE_ENEMY)
+    {
+      m_spellMenu->setVisible(false);
+      selectMonster();
+    }
+    else if (spell->target == Spell::TARGET_SINGLE_ALLY)
+    {
+      m_spellMenu->setVisible(false);
+      selectCharacter();
+    }
+    else if (spell->target == Spell::TARGET_ALL_ENEMY ||
+             spell->target == Spell::TARGET_ALL_ALLY ||
+             spell->target == Spell::TARGET_SELF)
+    {
+      prepareAction();
+
+      nextActor();
+    }
+  }
+  else if (currentState == STATE_SELECT_ITEM)
+  {
+
+  }
+}
+
+void BattleMenu::nextActor()
+{
+  closeSpellMenu();
+  closeItemMenu();
+
+  m_monsterMenu->setCursorVisible(false);
+  m_statusMenu->setCursorVisible(false);
+
+  while (m_stateStack.top() != STATE_SELECT_ACTION)
+  {
+    m_stateStack.pop();
+  }
+
+  if (!m_statusMenu->nextActor())
+  {
+    // If no more actors, we are done.
+    m_battle->doneSelectingActions();
+  }
+
+  m_actionMenu->resetChoice();
+}
+
+void BattleMenu::prepareAction()
+{
+  std::string action = m_actionMenu->getCurrentMenuChoice();
+
+  Battle::Action battleAction;
+  battleAction.actionName = action;
+
+  if (action == "Attack")
+  {
+    battleAction.target = m_monsterMenu->getCurrentMonster();
+  }
+  else if (action == "Spell")
+  {
+    const Spell* spell = m_spellMenu->getSelectedSpell();
+
+    battleAction.objectName = spell->name;
+
+    if (spell->target == Spell::TARGET_SINGLE_ENEMY)
+    {
+      battleAction.target = m_monsterMenu->getCurrentMonster();
+    }
+    else if (spell->target == Spell::TARGET_SINGLE_ALLY)
+    {
+      battleAction.target = m_statusMenu->getCurrentSelectedActor();
+    }
+    else if (spell->target == Spell::TARGET_ALL_ENEMY || spell->target == Spell::TARGET_ALL_ALLY)
+    {
+      battleAction.target = 0;
+    }
+    else if (spell->target == Spell::TARGET_SELF)
+    {
+      battleAction.target = m_statusMenu->getCurrentActor();
+    }
+  }
+  else if (action == "Item")
+  {
+
+  }
+
+  m_battle->setAction(m_statusMenu->getCurrentActor(), battleAction);
+}
+
+void BattleMenu::selectMonster()
+{
+  m_monsterMenu->setCursorVisible(true);
+  m_monsterMenu->fixSelection();
+  m_stateStack.push(STATE_SELECT_MONSTER);
+}
+
+void BattleMenu::selectCharacter()
+{
+  m_statusMenu->setCursorVisible(true);
+  m_statusMenu->resetChoice();
+  m_stateStack.push(STATE_SELECT_CHARACTER);
 }
 
 void BattleMenu::handleEscape()
@@ -1054,10 +1175,32 @@ void BattleMenu::handleEscape()
   {
     m_monsterMenu->setCursorVisible(false);
   }
+  else if (currentState == STATE_SELECT_ITEM)
+  {
+    closeItemMenu();
+  }
+  else if (currentState == STATE_SELECT_SPELL)
+  {
+    closeSpellMenu();
+  }
+  else if (currentState == STATE_SELECT_CHARACTER)
+  {
+    m_statusMenu->setCursorVisible(false);
+  }
 
   if (m_stateStack.size() > 1)
   {
     m_stateStack.pop();
+
+    currentState = m_stateStack.top();
+    if (currentState == STATE_SELECT_SPELL)
+    {
+      m_spellMenu->setVisible(true);
+    }
+    else if (currentState == STATE_SELECT_ITEM)
+    {
+      m_itemMenu->setVisible(true);
+    }
   }
   else
   {
@@ -1082,25 +1225,60 @@ void BattleMenu::moveArrow(Direction dir)
   {
     m_monsterMenu->moveArrow(dir);
   }
+  else if (currentState == STATE_SELECT_SPELL)
+  {
+    m_spellMenu->moveArrow(dir);
+  }
+  else if (currentState == STATE_SELECT_ITEM)
+  {
+    m_itemMenu->moveArrow(dir);
+  }
 }
 
 void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
 {
+  State currentState = m_stateStack.top();
+
   if (cursorVisible())
   {
     draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
 
-    draw_text_bmp(target, x + 8, y + 8, "Action");
-    draw_text_bmp(target, x + 88, y + 8, "Name");
-    draw_text_bmp(target, x + 136, y + 8, "Cond");
-    draw_text_bmp(target, x + 180, y + 8, "HP");
-    draw_text_bmp(target, x + 216, y + 8, "MP");
+    if (currentState == STATE_SELECT_MONSTER &&
+        (m_actionMenu->getCurrentMenuChoice() == "Spell" ||
+         m_actionMenu->getCurrentMenuChoice() == "Item"))
+    {
+      if (m_actionMenu->getCurrentMenuChoice() == "Spell")
+      {
+        draw_text_bmp(target, x + 8, y + 8, "Casting: %s", m_spellMenu->getSelectedSpell()->name.c_str());
+      }
+      else if (m_actionMenu->getCurrentMenuChoice() == "Item")
+      {
+        draw_text_bmp(target, x + 8, y + 8, "Using: %s", m_itemMenu->getSelectedItemName().c_str());
+      }
+    }
+    else
+    {
+      draw_text_bmp(target, x + 8, y + 8, "Action");
+      draw_text_bmp(target, x + 88, y + 8, "Name");
+      draw_text_bmp(target, x + 136, y + 8, "Cond");
+      draw_text_bmp(target, x + 180, y + 8, "HP");
+      draw_text_bmp(target, x + 216, y + 8, "MP");
+    }
 
     m_actionMenu->draw(target, x, y + 24);
     m_statusMenu->draw(target, x + 80, y + 24);
   }
 
   m_monsterMenu->draw(target, 0, 0);
+
+  if (currentState == STATE_SELECT_SPELL && m_spellMenu->isVisible())
+  {
+    m_spellMenu->draw(target, 0, 0);
+  }
+  else if (currentState == STATE_SELECT_ITEM && m_itemMenu->isVisible())
+  {
+    m_itemMenu->draw(target, 0, 0);
+  }
 }
 
 void BattleMenu::resetChoice()
@@ -1116,6 +1294,18 @@ void BattleMenu::resetChoice()
   {
     m_battle->doneSelectingActions();
   }
+}
+
+void BattleMenu::closeSpellMenu()
+{
+  delete m_spellMenu;
+  m_spellMenu = 0;
+}
+
+void BattleMenu::closeItemMenu()
+{
+  delete m_itemMenu;
+  m_itemMenu = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1147,6 +1337,8 @@ BattleStatusMenu::BattleStatusMenu()
   {
     addEntry((*it)->getName());
   }
+
+  setCursorVisible(false);
 }
 
 void BattleStatusMenu::handleConfirm()
@@ -1174,6 +1366,15 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
     {
       sf::RectangleShape rect = make_select_rect(x + 6, offY - 1, getWidth() - 12, 11, sf::Color::White);
       target.draw(rect);
+    }
+
+    if (cursorVisible())
+    {
+      if (i == getCurrentChoiceIndex())
+      {
+        sf::RectangleShape rect = make_select_rect(x + 6, offY - 1, getWidth() - 12, 11, sf::Color::Red);
+        target.draw(rect);
+      }
     }
   }
 }
@@ -1242,6 +1443,11 @@ bool BattleStatusMenu::nextActor()
 Character* BattleStatusMenu::getCurrentActor()
 {
   return get_player()->getParty().at(m_currentActor);
+}
+
+Character* BattleStatusMenu::getCurrentSelectedActor()
+{
+  return get_player()->getParty().at(getCurrentChoiceIndex());
 }
 
 void BattleStatusMenu::resetActor()

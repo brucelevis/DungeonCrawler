@@ -61,6 +61,8 @@ private:
   Character* selectRandomTarget(Character* actor);
 
   bool allDead(const std::vector<Character*>& actors) const;
+
+  std::vector<Character*> getAliveActors(const std::vector<Character*>& actors);
 private:
   bool m_battleOngoing;
   State m_state;
@@ -70,6 +72,8 @@ private:
   std::vector<Character*> m_battleOrder;
   std::map<Character*, Action> m_battleActions;
   Character* m_currentActor;
+
+  std::vector<Character*> m_currentTargets;
 
   sf::RenderWindow& m_window;
 

@@ -15,6 +15,13 @@ static std::vector<Spell> spells =
   },
 
   {
+    "Hurt All", "Low damage to all enemies",
+    7,
+    Spell::TARGET_ALL_ENEMY,
+    true
+  },
+
+  {
     "Heal", "Heals a single ally",
     4,
     Spell::TARGET_SINGLE_ALLY,
