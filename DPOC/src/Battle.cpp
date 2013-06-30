@@ -4,8 +4,11 @@
 #include "Player.h"
 #include "Character.h"
 #include "Message.h"
+#include "Sound.h"
 
 #include "Battle.h"
+
+static const int TURN_DELAY_TIME = 32;
 
 static bool speed_comparator(Character* left, Character* right)
 {
@@ -17,7 +20,7 @@ static bool speed_comparator(Character* left, Character* right)
   else if (left_speed > right_speed)
     return false;
 
-  return coinflip();
+  return true;
 }
 
 Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters)
@@ -26,7 +29,8 @@ Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters
    m_battleMenu(this, monsters),
    m_monsters(monsters),
    m_currentActor(0),
-   m_window(window)
+   m_window(window),
+   m_turnDelay(0)
 {
 
 }
@@ -46,22 +50,49 @@ void Battle::start()
     {
       pollEvents();
 
+      if (m_turnDelay > 0)
+        m_turnDelay--;
+
+      updateEffects();
+
       if (m_state == STATE_EXECUTE_ACTIONS)
       {
         executeActions();
       }
+      else if (m_state == STATE_SHOW_ACTION)
+      {
+        if (!effectInProgress())
+        {
+          m_state = STATE_ACTION_EFFECT;
+        }
+      }
       else if (m_state == STATE_ACTION_EFFECT)
       {
-        // TODO: Flash sprites etc.
+        if (!effectInProgress())
+        {
+          Character* currentTarget = m_battleActions[m_currentActor].target;
+          if (isMonster(currentTarget))
+          {
+            currentTarget->flash().start(6, 3);
+          }
 
-        m_state = STATE_EFFECT_MESSAGE;
-        Message::instance().show(m_battleActions[m_currentActor].target->getName() + " takes 1 damage!", true);
+          play_sound(config::SOUND_HIT);
+
+          m_state = STATE_EFFECT_MESSAGE;
+          battle_message("%s takes 1 damage!", m_battleActions[m_currentActor].target->getName().c_str());
+
+          m_turnDelay = TURN_DELAY_TIME;
+        }
       }
-
-      if (Message::instance().isVisible())
+      else if (m_state == STATE_EFFECT_MESSAGE)
       {
-        Message::instance().update();
+        if (m_turnDelay == 0)
+        {
+          nextActor();
+        }
       }
+
+      update_message();
 
       timerThen += 1000 / config::FPS;
     }
@@ -81,8 +112,16 @@ void Battle::executeActions()
 
   if (action.actionName == "Attack")
   {
-    Message::instance().clear();
-    Message::instance().show(m_currentActor->getName() + " attacks " + action.target->getName() + "!");
+    clear_message();
+
+    if (isMonster(m_currentActor))
+    {
+      m_currentActor->flash().start(2, 3);
+    }
+
+    play_sound(config::SOUND_ATTACK);
+
+    battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
   }
 
   m_state = STATE_SHOW_ACTION;
@@ -111,29 +150,23 @@ void Battle::pollEvents()
 
 void Battle::handleKeyPress(sf::Keyboard::Key key)
 {
+  if (effectInProgress())
+    return;
+
   Message& message = Message::instance();
 
   if (message.isVisible())
   {
     if (message.isWaitingForKey())
     {
-      if (m_state == STATE_SHOW_ACTION)
+      /*if (m_state == STATE_SHOW_ACTION)
       {
         m_state = STATE_ACTION_EFFECT;
       }
-      else if (m_state == STATE_EFFECT_MESSAGE)
+      else */
+      if (m_state == STATE_EFFECT_MESSAGE)
       {
-        if (m_battleOrder.empty())
-        {
-          m_state = STATE_SELECT_ACTIONS;
-          m_battleMenu.setCursorVisible(true);
-
-          Message::instance().clear();
-        }
-        else
-        {
-          m_state = STATE_EXECUTE_ACTIONS;
-        }
+        nextActor();
       }
     }
     else
@@ -202,5 +235,53 @@ void Battle::addToBattleOrder(Character* character)
   if (character->getStatus() != "Dead")
   {
     m_battleOrder.push_back(character);
+  }
+}
+
+void Battle::updateEffects()
+{
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    (*it)->flash().update();
+  }
+}
+
+bool Battle::effectInProgress() const
+{
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    if ((*it)->flash().isFlashing())
+      return true;
+  }
+
+  if (sound_is_playing())
+    return true;
+
+  return false;
+}
+
+bool Battle::isMonster(Character* actor)
+{
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    if (actor == *it)
+      return true;
+  }
+
+  return false;
+}
+
+void Battle::nextActor()
+{
+  if (m_battleOrder.empty())
+  {
+    m_state = STATE_SELECT_ACTIONS;
+    m_battleMenu.setCursorVisible(true);
+
+    clear_message();
+  }
+  else
+  {
+    m_state = STATE_EXECUTE_ACTIONS;
   }
 }

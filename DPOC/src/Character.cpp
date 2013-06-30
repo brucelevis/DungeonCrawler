@@ -76,11 +76,21 @@ Item* Character::getEquipment(const std::string& equipmentSlot)
 
 void Character::draw(sf::RenderTarget& target, int x, int y) const
 {
-  sf::Sprite sprite;
-  sprite.setTexture(*m_faceTexture);
-  sprite.setTextureRect(m_textureRect);
-  sprite.setPosition(x, y);
-  target.draw(sprite);
+  bool shouldDraw = true;
+
+  if (m_flash.isFlashing())
+  {
+    shouldDraw = m_flash.odd();
+  }
+
+  if (shouldDraw)
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*m_faceTexture);
+    sprite.setTextureRect(m_textureRect);
+    sprite.setPosition(x, y);
+    target.draw(sprite);
+  }
 }
 
 Character* Character::create(const std::string& name)

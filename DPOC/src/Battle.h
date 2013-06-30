@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Menu.h"
+#include "Flash.h"
 
 class Character;
 
@@ -47,6 +48,13 @@ private:
   void draw();
 
   void addToBattleOrder(Character* character);
+
+  void updateEffects();
+  bool effectInProgress() const;
+
+  bool isMonster(Character* actor);
+
+  void nextActor();
 private:
   bool m_battleOngoing;
   State m_state;
@@ -58,6 +66,9 @@ private:
   Character* m_currentActor;
 
   sf::RenderWindow& m_window;
+
+  // A short delay between "damage" and "next actor".
+  int m_turnDelay;
 };
 
 #endif

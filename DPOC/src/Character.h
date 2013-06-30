@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Item.h"
+#include "Flash.h"
 
 struct Attribute
 {
@@ -42,6 +43,8 @@ public:
 
   int spriteWidth() const { return m_textureRect.width; }
   int spriteHeight() const { return m_textureRect.height; }
+
+  Flash& flash() { return m_flash; }
 private:
   std::string m_name;
   std::vector<std::string> m_spells;
@@ -54,6 +57,9 @@ private:
   std::map<std::string, Item> m_equipment;
 
   std::string m_status;
+
+  // Flash data
+  Flash m_flash;
 };
 
 #endif

@@ -22,6 +22,8 @@ namespace config
   static const std::string SOUND_USE_ITEM = "Resources/Audio/Item2.wav";
   static const std::string SOUND_SUCCESS = "Resources/Audio/Sucess2.wav";
   static const std::string SOUND_EQUIP = "Resources/Audio/Equip1.ogg";
+  static const std::string SOUND_ATTACK = "Resources/Audio/attack.wav";
+  static const std::string SOUND_HIT = "Resources/Audio/hit.wav";
 }
 
 #endif
