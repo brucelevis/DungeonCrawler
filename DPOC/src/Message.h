@@ -41,6 +41,7 @@ private:
 // Thin wrappers around singleton.
 void show_message(const char* fmt, ...);
 void update_message();
+void clear_message();
 void battle_message(const char* fmt, ...);
 
 #endif

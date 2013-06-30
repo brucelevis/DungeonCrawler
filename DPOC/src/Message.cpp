@@ -32,6 +32,11 @@ void update_message()
   }
 }
 
+void clear_message()
+{
+  Message::instance().clear();
+}
+
 void battle_message(const char* fmt, ...)
 {
   char buffer[512];
