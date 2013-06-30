@@ -1,5 +1,6 @@
 #include <sstream>
 #include <vector>
+#include <cstdarg>
 
 #include "Config.h"
 #include "draw_text.h"
@@ -8,6 +9,43 @@
 #include "Message.h"
 
 static const size_t CHARS_PER_LINE = 30;
+
+void show_message(const char* fmt, ...)
+{
+  char buffer[512];
+
+  va_list args;
+  va_start(args, fmt);
+
+  vsprintf(buffer, fmt, args);
+
+  va_end(args);
+
+  Message::instance().show(buffer);
+}
+
+void update_message()
+{
+  if (Message::instance().isVisible())
+  {
+    Message::instance().update();
+  }
+}
+
+void battle_message(const char* fmt, ...)
+{
+  char buffer[512];
+
+  va_list args;
+  va_start(args, fmt);
+
+  vsprintf(buffer, fmt, args);
+
+  va_end(args);
+
+  Message::instance().show(buffer, true);
+  Message::instance().flush();
+}
 
 Message& Message::instance()
 {

@@ -38,4 +38,9 @@ private:
   size_t m_currentIndex;
 };
 
+// Thin wrappers around singleton.
+void show_message(const char* fmt, ...);
+void update_message();
+void battle_message(const char* fmt, ...);
+
 #endif
