@@ -22,6 +22,7 @@ Game::Game()
    m_player(Player::create(4, 4))
 {
   m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
+  m_window.setKeyRepeatEnabled(false);
   loadNewMap("Resources/test.map");
 }
 
