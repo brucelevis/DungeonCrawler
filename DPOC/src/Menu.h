@@ -50,6 +50,7 @@ protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
   int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
   void drawSelectArrow(sf::RenderTarget& target, int x, int y);
+  void setCurrentChoice(int choice) { m_currentMenuChoice = choice; }
 private:
   sf::Texture* m_arrowTexture;
   bool m_visible;
@@ -315,6 +316,9 @@ public:
   void draw(sf::RenderTarget& target, int x, int y);
 
   Character* getCurrentMonster();
+
+  /// Find first non-dead target.
+  void fixSelection();
 private:
   std::vector<Character*> m_monsters;
 };

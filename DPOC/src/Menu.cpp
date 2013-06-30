@@ -1017,6 +1017,7 @@ void BattleMenu::handleConfirm()
     if (action == "Attack")
     {
       m_monsterMenu->setCursorVisible(true);
+      m_monsterMenu->fixSelection();
       m_stateStack.push(STATE_SELECT_MONSTER);
     }
   }
@@ -1226,13 +1227,33 @@ void BattleMonsterMenu::moveArrow(Direction dir)
 {
   // Just map left/right to up/down
 
+  int prev = getCurrentChoiceIndex();
+
   if (dir == DIR_LEFT)
   {
     Menu::moveArrow(DIR_UP);
+
+    while (getCurrentMonster()->getStatus() == "Dead")
+    {
+      setCurrentChoice(getCurrentChoiceIndex() - 1);
+      if (getCurrentChoiceIndex() < 0)
+      {
+        setCurrentChoice(prev);
+      }
+    }
   }
   else if (dir == DIR_RIGHT)
   {
     Menu::moveArrow(DIR_DOWN);
+
+    while (getCurrentMonster()->getStatus() == "Dead")
+    {
+      setCurrentChoice(getCurrentChoiceIndex() + 1);
+      if (getCurrentChoiceIndex() >= getNumberOfChoice())
+      {
+        setCurrentChoice(prev);
+      }
+    }
   }
 }
 
@@ -1270,6 +1291,11 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
 
       draw_frame(target, 0, 0, config::GAME_RES_X, 24);
       draw_text_bmp(target, 8, 8, "%s", get_monster_description(monster->getName()).c_str());
+
+      draw_text_bmp(target,
+          posX + monster->spriteWidth() / 2 - 8*(monster->getName().size() / 2),
+          posY + monster->spriteHeight() + 4,
+          "%s", monster->getName().c_str());
     }
   }
 }
@@ -1277,4 +1303,19 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
 Character* BattleMonsterMenu::getCurrentMonster()
 {
   return m_monsters[getCurrentChoiceIndex()];
+}
+
+void BattleMonsterMenu::fixSelection()
+{
+  if (getCurrentMonster()->getStatus() == "Dead")
+  {
+    for (size_t i = 0; i < m_monsters.size(); i++)
+    {
+      if (m_monsters[i]->getStatus() != "Dead")
+      {
+        setCurrentChoice(i);
+        break;
+      }
+    }
+  }
 }
