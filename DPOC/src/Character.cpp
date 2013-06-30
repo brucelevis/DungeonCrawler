@@ -93,6 +93,11 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
   }
 }
 
+bool Character::incapacitated() const
+{
+  return getStatus() == "Dead";
+}
+
 Character* Character::create(const std::string& name)
 {
   Character* character = new Character;

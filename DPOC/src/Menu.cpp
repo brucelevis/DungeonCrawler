@@ -1109,6 +1109,13 @@ void BattleMenu::resetChoice()
 
   m_actionMenu->resetChoice();
   m_statusMenu->resetActor();
+
+  // If this happens, no actors are in condition to act so skip
+  // selecting actions!
+  if (m_statusMenu->getCurrentActor()->incapacitated())
+  {
+    m_battle->doneSelectingActions();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1178,7 +1185,23 @@ int BattleStatusMenu::getWidth() const
 
 bool BattleStatusMenu::prevActor()
 {
+  int tmpIndex = m_currentActor;
+
   m_currentActor--;
+
+  if (m_currentActor >= 0)
+  {
+    while (getCurrentActor()->incapacitated())
+    {
+      m_currentActor--;
+      if (m_currentActor < 0)
+      {
+        m_currentActor = tmpIndex;
+        return false;
+      }
+    }
+  }
+
   if (m_currentActor < 0)
   {
     m_currentActor = 0;
@@ -1190,7 +1213,23 @@ bool BattleStatusMenu::prevActor()
 
 bool BattleStatusMenu::nextActor()
 {
+  int tmpIndex = m_currentActor;
+
   m_currentActor++;
+
+  if (m_currentActor < getNumberOfChoice())
+  {
+    while (getCurrentActor()->incapacitated())
+    {
+      m_currentActor++;
+      if (m_currentActor >= getNumberOfChoice())
+      {
+        m_currentActor = tmpIndex;
+        return false;
+      }
+    }
+  }
+
   if (m_currentActor >= getNumberOfChoice())
   {
     m_currentActor = getNumberOfChoice() - 1;
@@ -1203,6 +1242,21 @@ bool BattleStatusMenu::nextActor()
 Character* BattleStatusMenu::getCurrentActor()
 {
   return get_player()->getParty().at(m_currentActor);
+}
+
+void BattleStatusMenu::resetActor()
+{
+  m_currentActor = 0;
+
+  while (getCurrentActor()->incapacitated())
+  {
+    m_currentActor++;
+    if (m_currentActor >= getNumberOfChoice())
+    {
+      m_currentActor = getNumberOfChoice() - 1;
+      break;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

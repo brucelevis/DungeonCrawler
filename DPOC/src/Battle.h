@@ -60,7 +60,7 @@ private:
 
   Character* selectRandomTarget(Character* actor);
 
-  bool allMonstersDead() const;
+  bool allDead(const std::vector<Character*>& actors) const;
 private:
   bool m_battleOngoing;
   State m_state;

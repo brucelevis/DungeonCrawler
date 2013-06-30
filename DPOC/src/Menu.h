@@ -300,7 +300,7 @@ public:
 
   Character* getCurrentActor();
 
-  void resetActor() { m_currentActor = 0; }
+  void resetActor();
 private:
   int m_currentActor;
 };

@@ -99,7 +99,7 @@ void Battle::start()
             battle_message("%s has fallen!", currentTarget->getName().c_str());
           }
 
-          if (allMonstersDead())
+          if (allDead(m_monsters) || allDead(get_player()->getParty()))
           {
             m_battleOngoing = false;
           }
@@ -251,7 +251,6 @@ void Battle::doneSelectingActions()
 
   std::sort(m_battleOrder.begin(), m_battleOrder.end(), speed_comparator);
 
-  m_battleMenu.resetChoice();
   m_battleMenu.setCursorVisible(false);
 
   m_state = STATE_EXECUTE_ACTIONS;
@@ -311,6 +310,7 @@ void Battle::nextActor()
   {
     m_state = STATE_SELECT_ACTIONS;
     m_battleMenu.setCursorVisible(true);
+    m_battleMenu.resetChoice();
 
     clear_message();
   }
@@ -329,6 +329,9 @@ Character* Battle::selectRandomTarget(Character* actor)
 
   Character* target = 0;
 
+  if (allDead(actors))
+    return 0;
+
   do
   {
     int targetIndex = random_range(0, actors.size());
@@ -338,9 +341,9 @@ Character* Battle::selectRandomTarget(Character* actor)
   return target;
 }
 
-bool Battle::allMonstersDead() const
+bool Battle::allDead(const std::vector<Character*>& actors) const
 {
-  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  for (auto it = actors.begin(); it != actors.end(); ++it)
   {
     if ((*it)->getStatus() != "Dead")
       return false;

@@ -46,6 +46,8 @@ public:
   int spriteHeight() const { return m_textureRect.height; }
 
   Flash& flash() { return m_flash; }
+
+  bool incapacitated() const;
 private:
   std::string m_name;
   std::vector<std::string> m_spells;
