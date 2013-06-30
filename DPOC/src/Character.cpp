@@ -98,6 +98,51 @@ bool Character::incapacitated() const
   return getStatus() == "Dead";
 }
 
+//toNextLevel: function() {
+//    return this.level.max * this.level.max * 10;
+//},
+//
+//expForLevel: function() {
+//    return this.toNextLevel() - this.exp;
+//},
+//
+//checkLevelUp: function() {
+//    var levelReached = 0;
+//    while (this.exp > this.toNextLevel()) {
+//        this.level.max++;
+//        this.level.cur = this.level.max;
+//        levelReached = this.level.cur;
+//    }
+//    return levelReached;
+//}
+
+int Character::toNextLevel()
+{
+  return expForLevel() - getAttribute("exp").max;
+}
+
+int Character::expForLevel()
+{
+  int level = getAttribute("level").max;
+
+  return level * level * 10;
+}
+
+int Character::checkLevelUp()
+{
+  int levelReached = 0;
+  int exp = getAttribute("exp").max;
+
+  while (exp > expForLevel())
+  {
+    getAttribute("level").max++;
+    clamp_attribute(getAttribute("level"));
+    levelReached = getAttribute("level").max;
+  }
+
+  return levelReached;
+}
+
 Character* Character::create(const std::string& name)
 {
   Character* character = new Character;
@@ -115,6 +160,7 @@ Character* Character::create(const std::string& name)
   character->m_attributes["mp"] = make_attribute(15);
 
   character->m_attributes["level"] = make_attribute(1);
+  character->m_attributes["exp"] = make_attribute(0);
 
   character->m_attributes["strength"] = make_attribute(20);
   character->m_attributes["power"] = make_attribute(15);

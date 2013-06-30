@@ -16,6 +16,8 @@ struct Attribute
   int max;
 };
 
+static inline void clamp_attribute(Attribute& attr) { attr.current = attr.max; }
+
 class Character
 {
 public:
@@ -48,6 +50,10 @@ public:
   Flash& flash() { return m_flash; }
 
   bool incapacitated() const;
+
+  int toNextLevel();
+  int expForLevel();
+  int checkLevelUp();
 private:
   std::string m_name;
   std::vector<std::string> m_spells;

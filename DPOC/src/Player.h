@@ -32,6 +32,11 @@ public:
 
   void transfer(int x, int y);
 
+  int getGold() const { return m_gold; }
+  void gainGold(int sum) { m_gold += sum; }
+
+  void gainExperience(int sum);
+
   static Player* create(int x, int y);
 private:
   void moveTrain();
@@ -41,6 +46,8 @@ private:
   std::vector<Character*> m_party;
 
   std::map<Entity*, coord_t> m_trainCoords;
+
+  int m_gold;
 };
 
 Player* get_player();

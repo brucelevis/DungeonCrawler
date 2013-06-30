@@ -456,7 +456,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     draw_frame(target, x, y + 208, 80, 32);
 
     draw_text_bmp(target, x + 8, y + 13*16+7, "GP");
-    draw_text_bmp(target, x + 8, y + 13*16+19, "%d", 0);
+    draw_text_bmp(target, x + 8, y + 13*16+19, "%d", get_player()->getGold());
 
     for (int i = 0; i < getNumberOfChoice(); i++)
     {
@@ -510,7 +510,7 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
   draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
-  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", 1234);
+  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
 
   y += 40;
 

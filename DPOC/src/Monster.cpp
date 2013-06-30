@@ -21,7 +21,8 @@ static std::vector<MonsterDef> monsters =
       { "mag.def",  8   },
       { "speed",    12  },
       { "level",    1   },
-      { "exp",      8   }
+      { "exp",      8   },
+      { "gold",     4   }
     },
     "Resources/rpg_monster_set.png",
     { 12, 32, 32, 36 }

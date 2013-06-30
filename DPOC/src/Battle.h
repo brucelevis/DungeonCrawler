@@ -19,7 +19,10 @@ class Battle
     STATE_EXECUTE_ACTIONS,
     STATE_SHOW_ACTION,
     STATE_ACTION_EFFECT,
-    STATE_EFFECT_MESSAGE
+    STATE_EFFECT_MESSAGE,
+    STATE_VICTORY_PRE,
+    STATE_VICTORY_POST,
+    STATE_DEFEAT
   };
 public:
   struct Action
@@ -40,8 +43,13 @@ public:
   void setAction(Character* user, Action action);
 
   void doneSelectingActions();
+
+  void endBattle();
 private:
   void executeActions();
+  void showAction();
+  void actionEffect();
+  void doVictory();
 
   void pollEvents();
 
@@ -64,6 +72,9 @@ private:
 
   std::vector<Character*> getAliveActors(const std::vector<Character*>& actors);
   void setCurrentTargets(Target targetType);
+
+  int getExperience() const;
+  int getGold() const;
 private:
   bool m_battleOngoing;
   State m_state;

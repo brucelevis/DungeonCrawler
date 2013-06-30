@@ -157,6 +157,15 @@ void Player::transfer(int x, int y)
   }
 }
 
+void Player::gainExperience(int sum)
+{
+  for (auto it = m_party.begin(); it != m_party.end(); ++it)
+  {
+    (*it)->getAttribute("exp").max += sum;
+    clamp_attribute((*it)->getAttribute("exp"));
+  }
+}
+
 Player* Player::create(int x, int y)
 {
   Player* player = new Player;
@@ -178,6 +187,8 @@ Player* Player::create(int x, int y)
   player->m_inventory.push_back(create_item("Herb", 3));
   player->m_inventory.push_back(create_item("Rusty Knife", 3));
   player->m_inventory.push_back(create_item("Wood Shield", 21));
+
+  player->m_gold = 0;
 
   return player;
 }

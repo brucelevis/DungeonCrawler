@@ -72,70 +72,11 @@ void Battle::start()
       }
       else if (m_state == STATE_SHOW_ACTION)
       {
-        if (!effectInProgress())
-        {
-          m_state = STATE_ACTION_EFFECT;
-
-          if (m_battleActions[m_currentActor].target)
-          {
-            m_currentTargets.push_back(m_battleActions[m_currentActor].target);
-          }
-          else
-          {
-            if (m_battleActions[m_currentActor].actionName == "Spell")
-            {
-              const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
-
-              setCurrentTargets(spell->target);
-            }
-            else if (m_battleActions[m_currentActor].actionName == "Item")
-            {
-              Item& item = item_ref(m_battleActions[m_currentActor].objectName);
-
-              setCurrentTargets(item.target);
-            }
-          }
-
-        }
+        showAction();
       }
       else if (m_state == STATE_ACTION_EFFECT)
       {
-        if (!effectInProgress() && m_turnDelay == 0)
-        {
-          Character* currentTarget = m_currentTargets.front();
-          m_currentTargets.erase(m_currentTargets.begin());
-
-          if (isMonster(currentTarget))
-          {
-            currentTarget->flash().start(6, 3);
-          }
-
-          int damage = calculate_physical_damage(m_currentActor, currentTarget);
-
-          battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
-
-          currentTarget->getAttribute("hp").current -= damage;
-          if (currentTarget->getAttribute("hp").current <= 0)
-          {
-            currentTarget->setStatus("Dead");
-            battle_message("%s has fallen!", currentTarget->getName().c_str());
-          }
-
-          play_sound(config::SOUND_HIT);
-
-          if (allDead(m_monsters) || allDead(get_player()->getParty()))
-          {
-            m_battleOngoing = false;
-            clear_message();
-          }
-
-          m_turnDelay = TURN_DELAY_TIME;
-
-          if (m_currentTargets.empty())
-          {
-            m_state = STATE_EFFECT_MESSAGE;
-          }
-        }
+        actionEffect();
       }
       else if (m_state == STATE_EFFECT_MESSAGE)
       {
@@ -143,6 +84,14 @@ void Battle::start()
         {
           nextActor();
         }
+      }
+      else if (m_state == STATE_VICTORY_PRE)
+      {
+        doVictory();
+      }
+      else if (m_state == STATE_DEFEAT)
+      {
+
       }
 
       update_message();
@@ -154,6 +103,11 @@ void Battle::start()
 
     sf::sleep(sf::milliseconds(timerThen - timerNow));
   }
+}
+
+void Battle::endBattle()
+{
+  m_battleOngoing = false;
 }
 
 void Battle::executeActions()
@@ -226,6 +180,109 @@ void Battle::executeActions()
   m_state = STATE_SHOW_ACTION;
 }
 
+void Battle::showAction()
+{
+  if (!effectInProgress())
+  {
+    m_state = STATE_ACTION_EFFECT;
+
+    if (m_battleActions[m_currentActor].target)
+    {
+      m_currentTargets.push_back(m_battleActions[m_currentActor].target);
+    }
+    else
+    {
+      if (m_battleActions[m_currentActor].actionName == "Spell")
+      {
+        const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
+
+        setCurrentTargets(spell->target);
+      }
+      else if (m_battleActions[m_currentActor].actionName == "Item")
+      {
+        Item& item = item_ref(m_battleActions[m_currentActor].objectName);
+
+        setCurrentTargets(item.target);
+      }
+    }
+
+  }
+}
+
+void Battle::actionEffect()
+{
+  if (!effectInProgress() && m_turnDelay == 0)
+  {
+    Character* currentTarget = m_currentTargets.front();
+    m_currentTargets.erase(m_currentTargets.begin());
+
+    if (isMonster(currentTarget))
+    {
+      currentTarget->flash().start(6, 3);
+    }
+
+    int damage = calculate_physical_damage(m_currentActor, currentTarget);
+
+    battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
+
+    currentTarget->getAttribute("hp").current -= damage;
+    if (currentTarget->getAttribute("hp").current <= 0)
+    {
+      currentTarget->setStatus("Dead");
+      battle_message("%s has fallen!", currentTarget->getName().c_str());
+    }
+
+    play_sound(config::SOUND_HIT);
+
+    m_turnDelay = TURN_DELAY_TIME;
+
+    if (allDead(m_monsters))
+    {
+      m_state = STATE_VICTORY_PRE;
+    }
+    else if (allDead(get_player()->getParty()))
+    {
+      m_state = STATE_DEFEAT;
+    }
+    else if (m_currentTargets.empty())
+    {
+      m_state = STATE_EFFECT_MESSAGE;
+    }
+  }
+}
+
+void Battle::doVictory()
+{
+  if (!effectInProgress() && m_turnDelay == 0)
+  {
+    clear_message();
+    show_message("Victory!");
+    show_message("The party gains %d experience and %d gold!", getExperience(), getGold());
+
+    get_player()->gainExperience(getExperience());
+    get_player()->gainGold(getGold());
+
+    // reset attributes that might have been affected by buffs. check for level up.
+    for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+    {
+      clamp_attribute((*it)->getAttribute("strength"));
+      clamp_attribute((*it)->getAttribute("power"));
+      clamp_attribute((*it)->getAttribute("defense"));
+      clamp_attribute((*it)->getAttribute("magic"));
+      clamp_attribute((*it)->getAttribute("mag.def"));
+      clamp_attribute((*it)->getAttribute("speed"));
+
+      int newLevel = (*it)->checkLevelUp();
+      if (newLevel > 0)
+      {
+        show_message("%s has reached level %d!", (*it)->getName().c_str(), newLevel);
+      }
+    }
+
+    m_state = STATE_VICTORY_POST;
+  }
+}
+
 void Battle::pollEvents()
 {
   sf::Event event;
@@ -259,6 +316,20 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
     if (key == sf::Keyboard::Space)
     {
       m_turnDelay = 0;
+
+      if (m_state == STATE_VICTORY_POST && message.isWaitingForKey())
+      {
+        message.nextPage();
+
+        if (!message.isVisible())
+        {
+          endBattle();
+        }
+      }
+      else if (m_state == STATE_VICTORY_POST)
+      {
+        message.flush();
+      }
     }
   }
   else if (m_state == STATE_SELECT_ACTIONS)
@@ -431,4 +502,28 @@ void Battle::setCurrentTargets(Target targetType)
     m_currentTargets = getAliveActors(m_monsters);
   else if (targetType == TARGET_ALL_ALLY)
     m_currentTargets = getAliveActors(get_player()->getParty());
+}
+
+int Battle::getExperience() const
+{
+  int sum = 0;
+
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    sum += (*it)->getAttribute("exp").current;
+  }
+
+  return sum;
+}
+
+int Battle::getGold() const
+{
+  int sum = 0;
+
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    sum += (*it)->getAttribute("gold").current;
+  }
+
+  return sum;
 }
