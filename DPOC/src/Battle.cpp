@@ -260,18 +260,6 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
     {
       m_turnDelay = 0;
     }
-//    m_turnDelay = 0;
-//    if (message.isWaitingForKey())
-//    {
-//      if (m_state == STATE_EFFECT_MESSAGE)
-//      {
-//        nextActor();
-//      }
-//    }
-//    else
-//    {
-//      message.flush();
-//    }
   }
   else if (m_state == STATE_SELECT_ACTIONS)
   {
