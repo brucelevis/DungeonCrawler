@@ -86,10 +86,13 @@ void Battle::start()
             {
               const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
 
-              if (spell->target == Spell::TARGET_ALL_ENEMY)
-                m_currentTargets = getAliveActors(m_monsters);
-              else if (spell->target == Spell::TARGET_ALL_ALLY)
-                m_currentTargets = getAliveActors(get_player()->getParty());
+              setCurrentTargets(spell->target);
+            }
+            else if (m_battleActions[m_currentActor].actionName == "Item")
+            {
+              Item& item = item_ref(m_battleActions[m_currentActor].objectName);
+
+              setCurrentTargets(item.target);
             }
           }
 
@@ -164,28 +167,20 @@ void Battle::executeActions()
     action.target = selectRandomTarget(m_currentActor);
   }
 
+  clear_message();
+  if (isMonster(m_currentActor))
+  {
+    m_currentActor->flash().start(2, 3);
+  }
+
   if (action.actionName == "Attack")
   {
-    clear_message();
-
-    if (isMonster(m_currentActor))
-    {
-      m_currentActor->flash().start(2, 3);
-    }
-
     play_sound(config::SOUND_ATTACK);
 
     battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
   }
   else if (action.actionName == "Spell")
   {
-    clear_message();
-
-    if (isMonster(m_currentActor))
-    {
-      m_currentActor->flash().start(2, 3);
-    }
-
     play_sound(config::SOUND_SPELL);
 
     const Spell* spell = get_spell(action.objectName);
@@ -204,6 +199,27 @@ void Battle::executeActions()
       battle_message("%s casts the %s spell!",
           m_currentActor->getName().c_str(),
           action.objectName.c_str());
+    }
+  }
+  else if (action.actionName == "Item")
+  {
+    play_sound(config::SOUND_USE_ITEM);
+
+    Item& item = item_ref(action.objectName);
+    get_player()->removeItemFromInventory(action.objectName, 1);
+
+    if (action.target)
+    {
+      battle_message("%s uses %s on %s!",
+          m_currentActor->getName().c_str(),
+          item.name.c_str(),
+          action.target->getName().c_str());
+    }
+    else
+    {
+      battle_message("%s uses %s!",
+          m_currentActor->getName().c_str(),
+          item.name.c_str());
     }
   }
 
@@ -419,4 +435,12 @@ std::vector<Character*> Battle::getAliveActors(const std::vector<Character*>& ac
   }
 
   return result;
+}
+
+void Battle::setCurrentTargets(Target targetType)
+{
+  if (targetType == TARGET_ALL_ENEMY)
+    m_currentTargets = getAliveActors(m_monsters);
+  else if (targetType == TARGET_ALL_ALLY)
+    m_currentTargets = getAliveActors(get_player()->getParty());
 }

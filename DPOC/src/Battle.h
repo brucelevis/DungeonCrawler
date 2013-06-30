@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Menu.h"
-#include "Flash.h"
+#include "Target.h"
 
 class Character;
 
@@ -63,6 +63,7 @@ private:
   bool allDead(const std::vector<Character*>& actors) const;
 
   std::vector<Character*> getAliveActors(const std::vector<Character*>& actors);
+  void setCurrentTargets(Target targetType);
 private:
   bool m_battleOngoing;
   State m_state;

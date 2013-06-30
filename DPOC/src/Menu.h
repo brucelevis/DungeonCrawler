@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Target.h"
 #include "Direction.h"
 
 class Item;
@@ -264,6 +265,8 @@ private:
 
   void closeSpellMenu();
   void closeItemMenu();
+
+  Character* getTarget(Target targetType) const;
 private:
   BattleActionMenu* m_actionMenu;
   BattleStatusMenu* m_statusMenu;

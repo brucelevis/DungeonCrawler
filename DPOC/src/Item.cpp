@@ -1,5 +1,7 @@
 #include <vector>
+#include <stdexcept>
 
+#include "logger.h"
 #include "Character.h"
 #include "Utility.h"
 #include "Message.h"
@@ -11,6 +13,7 @@ static std::vector<Item> itemDefinitions =
     "Herb", "A medicin herb",
     25,
     ITEM_USE,
+    TARGET_SINGLE_ALLY,
     { { "hp", 25 } }
   },
 
@@ -18,6 +21,7 @@ static std::vector<Item> itemDefinitions =
     "Rusty Knife", "An old rusty knife",
     10,
     ITEM_WEAPON,
+    TARGET_NONE,
     { { "power", 4 } }
   },
 
@@ -25,6 +29,7 @@ static std::vector<Item> itemDefinitions =
     "Wood Shield", "A wooden shield",
     25,
     ITEM_SHIELD,
+    TARGET_NONE,
     { { "defense", 4 } }
   }
 };
@@ -42,6 +47,19 @@ Item create_item(const std::string& name, int stackSize)
   }
 
   return Item();
+}
+
+Item& item_ref(const std::string& name)
+{
+  for (auto it = itemDefinitions.begin(); it != itemDefinitions.end(); ++it)
+  {
+    if (to_lower(it->name) == to_lower(name))
+      return *it;
+  }
+
+  TRACE("No item %s defined!", name.c_str());
+
+  throw std::runtime_error("No item " + name + " defined!");
 }
 
 void use_item(Item* item, Character* user, Character* target)

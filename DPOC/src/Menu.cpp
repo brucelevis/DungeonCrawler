@@ -1060,23 +1060,23 @@ void BattleMenu::handleConfirm()
   {
     const Spell* spell = m_spellMenu->getSelectedSpell();
 
-    if (spell->target == Spell::TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
+    if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
     {
       play_sound(config::SOUND_CANCEL);
     }
-    else if (spell->target == Spell::TARGET_SINGLE_ENEMY)
+    else if (spell->target == TARGET_SINGLE_ENEMY)
     {
       m_spellMenu->setVisible(false);
       selectMonster();
     }
-    else if (spell->target == Spell::TARGET_SINGLE_ALLY)
+    else if (spell->target == TARGET_SINGLE_ALLY)
     {
       m_spellMenu->setVisible(false);
       selectCharacter();
     }
-    else if (spell->target == Spell::TARGET_ALL_ENEMY ||
-             spell->target == Spell::TARGET_ALL_ALLY ||
-             spell->target == Spell::TARGET_SELF)
+    else if (spell->target == TARGET_ALL_ENEMY ||
+             spell->target == TARGET_ALL_ALLY ||
+             spell->target == TARGET_SELF)
     {
       prepareAction();
 
@@ -1085,7 +1085,30 @@ void BattleMenu::handleConfirm()
   }
   else if (currentState == STATE_SELECT_ITEM)
   {
+    const Item* item = get_player()->getItem(m_itemMenu->getSelectedItemName());
 
+    if (item->target == TARGET_NONE || item->type != ITEM_USE)
+    {
+      play_sound(config::SOUND_CANCEL);
+    }
+    else if (item->target == TARGET_SINGLE_ENEMY)
+    {
+      m_itemMenu->setVisible(false);
+      selectMonster();
+    }
+    else if (item->target == TARGET_SINGLE_ALLY)
+    {
+      m_itemMenu->setVisible(false);
+      selectCharacter();
+    }
+    else if (item->target == TARGET_ALL_ENEMY ||
+             item->target == TARGET_ALL_ALLY ||
+             item->target == TARGET_SELF)
+    {
+      prepareAction();
+
+      nextActor();
+    }
   }
 }
 
@@ -1127,27 +1150,14 @@ void BattleMenu::prepareAction()
     const Spell* spell = m_spellMenu->getSelectedSpell();
 
     battleAction.objectName = spell->name;
-
-    if (spell->target == Spell::TARGET_SINGLE_ENEMY)
-    {
-      battleAction.target = m_monsterMenu->getCurrentMonster();
-    }
-    else if (spell->target == Spell::TARGET_SINGLE_ALLY)
-    {
-      battleAction.target = m_statusMenu->getCurrentSelectedActor();
-    }
-    else if (spell->target == Spell::TARGET_ALL_ENEMY || spell->target == Spell::TARGET_ALL_ALLY)
-    {
-      battleAction.target = 0;
-    }
-    else if (spell->target == Spell::TARGET_SELF)
-    {
-      battleAction.target = m_statusMenu->getCurrentActor();
-    }
+    battleAction.target = getTarget(spell->target);
   }
   else if (action == "Item")
   {
+    const Item* item = get_player()->getItem(m_itemMenu->getSelectedItemName());
 
+    battleAction.objectName = item->name;
+    battleAction.target = getTarget(item->target);
   }
 
   m_battle->setAction(m_statusMenu->getCurrentActor(), battleAction);
@@ -1273,11 +1283,11 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
 
   if (currentState == STATE_SELECT_SPELL && m_spellMenu->isVisible())
   {
-    m_spellMenu->draw(target, 0, 0);
+    m_spellMenu->draw(target, 16, 16);
   }
   else if (currentState == STATE_SELECT_ITEM && m_itemMenu->isVisible())
   {
-    m_itemMenu->draw(target, 0, 0);
+    m_itemMenu->draw(target, 16, 16);
   }
 }
 
@@ -1306,6 +1316,30 @@ void BattleMenu::closeItemMenu()
 {
   delete m_itemMenu;
   m_itemMenu = 0;
+}
+
+Character* BattleMenu::getTarget(Target targetType) const
+{
+  Character* result = 0;
+
+  if (targetType == TARGET_SINGLE_ENEMY)
+  {
+    result = m_monsterMenu->getCurrentMonster();
+  }
+  else if (targetType == TARGET_SINGLE_ALLY)
+  {
+    result = m_statusMenu->getCurrentSelectedActor();
+  }
+  else if (targetType == TARGET_ALL_ENEMY || targetType == TARGET_ALL_ALLY)
+  {
+    result = 0;
+  }
+  else if (targetType == TARGET_SELF)
+  {
+    result = m_statusMenu->getCurrentActor();
+  }
+
+  return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
