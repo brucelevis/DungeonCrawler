@@ -123,6 +123,7 @@ void Battle::start()
           if (allDead(m_monsters) || allDead(get_player()->getParty()))
           {
             m_battleOngoing = false;
+            clear_message();
           }
 
           m_turnDelay = TURN_DELAY_TIME;
