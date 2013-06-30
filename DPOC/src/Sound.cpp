@@ -40,3 +40,10 @@ void play_sound(const std::string& sndFile)
     TRACE("play_sound: std::runtime_error(%s)", e.what());
   }
 }
+
+bool sound_is_playing()
+{
+  clear_stopped_sounds();
+
+  return !activeSounds.empty();
+}

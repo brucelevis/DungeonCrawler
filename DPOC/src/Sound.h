@@ -6,5 +6,6 @@
 #include <string>
 
 void play_sound(const std::string& sndFile);
+bool sound_is_playing();
 
 #endif
