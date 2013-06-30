@@ -97,3 +97,8 @@ bool coinflip()
 {
   return (bool)(rand()%2);
 }
+
+int random_range(int low, int high)
+{
+  return low + ((rand()%high) - low);
+}

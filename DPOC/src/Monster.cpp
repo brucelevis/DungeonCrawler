@@ -12,7 +12,7 @@ static std::vector<MonsterDef> monsters =
   {
     "Skelington", "A spooky skeleton",
     {
-      { "hp",       24  },
+      { "hp",       3  },
       { "mp",       0   },
       { "strength", 14  },
       { "power",    18  },

@@ -33,6 +33,8 @@ public:
 
   Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters);
 
+  ~Battle();
+
   void start();
 
   void setAction(Character* user, Action action);
@@ -55,6 +57,10 @@ private:
   bool isMonster(Character* actor);
 
   void nextActor();
+
+  Character* selectRandomTarget(Character* actor);
+
+  bool allMonstersDead() const;
 private:
   bool m_battleOngoing;
   State m_state;

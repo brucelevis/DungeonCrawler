@@ -1,6 +1,7 @@
 #include "Config.h"
 #include "Utility.h"
 
+#include "Attack.h"
 #include "Player.h"
 #include "Character.h"
 #include "Message.h"
@@ -33,6 +34,14 @@ Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters
    m_turnDelay(0)
 {
 
+}
+
+Battle::~Battle()
+{
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    delete *it;
+  }
 }
 
 void Battle::start()
@@ -78,8 +87,22 @@ void Battle::start()
 
           play_sound(config::SOUND_HIT);
 
+          int damage = calculate_physical_damage(m_currentActor, currentTarget);
+
           m_state = STATE_EFFECT_MESSAGE;
-          battle_message("%s takes 1 damage!", m_battleActions[m_currentActor].target->getName().c_str());
+          battle_message("%s takes %d damage!", m_battleActions[m_currentActor].target->getName().c_str(), damage);
+
+          currentTarget->getAttribute("hp").current -= damage;
+          if (currentTarget->getAttribute("hp").current <= 0)
+          {
+            currentTarget->setStatus("Dead");
+            battle_message("%s has fallen!", currentTarget->getName().c_str());
+          }
+
+          if (allMonstersDead())
+          {
+            m_battleOngoing = false;
+          }
 
           m_turnDelay = TURN_DELAY_TIME;
         }
@@ -106,9 +129,13 @@ void Battle::start()
 void Battle::executeActions()
 {
   m_currentActor = m_battleOrder.back();
-  m_battleOrder.pop_back();
 
-  Action action = m_battleActions[m_currentActor];
+  Action& action = m_battleActions[m_currentActor];
+
+  if (action.target->getStatus() == "Dead")
+  {
+    action.target = selectRandomTarget(m_currentActor);
+  }
 
   if (action.actionName == "Attack")
   {
@@ -215,7 +242,7 @@ void Battle::doneSelectingActions()
   {
     Action action;
     action.actionName = "Attack";
-    action.target = get_player()->getParty().at(rand()%(get_player()->getParty().size()));
+    action.target = selectRandomTarget(*it);
 
     setAction(*it, action);
 
@@ -273,6 +300,13 @@ bool Battle::isMonster(Character* actor)
 
 void Battle::nextActor()
 {
+  m_battleOrder.pop_back();
+
+  while (m_battleOrder.size() > 0 && m_battleOrder.back()->getStatus() == "Dead")
+  {
+    m_battleOrder.pop_back();
+  }
+
   if (m_battleOrder.empty())
   {
     m_state = STATE_SELECT_ACTIONS;
@@ -284,4 +318,33 @@ void Battle::nextActor()
   {
     m_state = STATE_EXECUTE_ACTIONS;
   }
+}
+
+Character* Battle::selectRandomTarget(Character* actor)
+{
+  const std::vector<Character*>& actors =
+      isMonster(actor) ?
+          get_player()->getParty() :
+          m_monsters;
+
+  Character* target = 0;
+
+  do
+  {
+    int targetIndex = random_range(0, actors.size());
+    target = actors[targetIndex];
+  } while (target->getStatus() == "Dead");
+
+  return target;
+}
+
+bool Battle::allMonstersDead() const
+{
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    if ((*it)->getStatus() != "Dead")
+      return false;
+  }
+
+  return true;
 }

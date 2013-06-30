@@ -39,6 +39,7 @@ public:
   void equip(const std::string& equipmentSlot, const std::string& itemName);
   Item* getEquipment(const std::string& equipmentSlot);
 
+  void setStatus(const std::string& status) { m_status = status; }
   std::string getStatus() const { return m_status; }
 
   int spriteWidth() const { return m_textureRect.width; }

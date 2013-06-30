@@ -27,4 +27,6 @@ std::string get_string_after_first_space(const std::string& str);
 
 bool coinflip();
 
+int random_range(int low, int high);
+
 #endif
