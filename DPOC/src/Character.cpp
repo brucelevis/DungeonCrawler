@@ -16,7 +16,7 @@ std::vector<std::string> Character::equipNames =
 
 Character::~Character()
 {
-  cache::releaseTexture("Resources/Faces/Face.png");
+  cache::releaseTexture(m_faceTexture);
 }
 
 Attribute& Character::getAttribute(const std::string& attribName)
@@ -98,23 +98,6 @@ bool Character::incapacitated() const
   return getStatus() == "Dead";
 }
 
-//toNextLevel: function() {
-//    return this.level.max * this.level.max * 10;
-//},
-//
-//expForLevel: function() {
-//    return this.toNextLevel() - this.exp;
-//},
-//
-//checkLevelUp: function() {
-//    var levelReached = 0;
-//    while (this.exp > this.toNextLevel()) {
-//        this.level.max++;
-//        this.level.cur = this.level.max;
-//        levelReached = this.level.cur;
-//    }
-//    return levelReached;
-//}
 
 int Character::toNextLevel()
 {
