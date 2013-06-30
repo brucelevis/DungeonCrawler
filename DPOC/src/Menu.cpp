@@ -1117,7 +1117,10 @@ BattleActionMenu::BattleActionMenu()
   addEntry("Attack");
   addEntry("Spell");
   addEntry("Item");
+  addEntry("Guard");
   addEntry("Run");
+
+  setMaxVisible(4);
 }
 
 void BattleActionMenu::handleConfirm()
