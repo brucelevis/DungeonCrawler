@@ -206,6 +206,7 @@ void Battle::showAction()
       }
     }
 
+    m_turnDelay = 24;
   }
 }
 
@@ -213,6 +214,8 @@ void Battle::actionEffect()
 {
   if (!effectInProgress() && m_turnDelay == 0)
   {
+    clear_message();
+
     Character* currentTarget = m_currentTargets.front();
     m_currentTargets.erase(m_currentTargets.begin());
 
