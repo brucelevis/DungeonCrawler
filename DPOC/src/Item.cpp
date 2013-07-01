@@ -22,7 +22,8 @@ static std::vector<Item> itemDefinitions =
     10,
     ITEM_WEAPON,
     TARGET_NONE,
-    { { "power", 4 } }
+    { { "power", 4 } },
+    "Effect_Slash"
   },
 
   {

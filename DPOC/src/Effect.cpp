@@ -4,7 +4,7 @@
 #include "Sound.h"
 #include "Effect.h"
 
-static std::map<std::string, EffectDef> frames =
+static const std::map<std::string, EffectDef> frames =
 {
   {
     "Effect_Flame",
@@ -18,6 +18,32 @@ static std::map<std::string, EffectDef> frames =
         { 0, 6, 0, 0, "", 2.5, 0, {255, 255, 255, 150 } },
         { 1, 6, 0, 0, "", 3.0, 0, {255, 255, 255, 100 } },
         { 2, 6, 0, 0, "", 3.0, 0, {255, 255, 255, 50 } }
+      }
+    }
+  },
+  {
+    "Effect_Slash",
+    {
+      "Resources/Animations/effect_Slash.png",
+      24,
+      {
+        { 0, 6, 0, 0, "Resources/Audio/Sword1.wav", 1, 0, sf::Color::White },
+        { 1, 4, 0, 0, "", 1, 0, sf::Color::White },
+        { 2, 3, 0, 0, "", 1, 0, sf::Color::White },
+        { 3, 4, 0, 0, "", 1, 0, sf::Color::White },
+        { 4, 6, 0, 0, "", 1, 0, sf::Color::White }
+      }
+    }
+  },
+  {
+    "Effect_Hit",
+    {
+      "Resources/Animations/effect_Hit.png",
+      64,
+      {
+        { 0, 6, 0, 0, "Resources/Audio/Blow2.wav", 1, 0, sf::Color::White },
+        { 1, 6, 0, 0, "", 1, 0, sf::Color::White },
+        { 2, 6, 0, 0, "", 1, 0, sf::Color::White }
       }
     }
   }
@@ -113,8 +139,8 @@ void Effect::initSprite()
   m_drawSprite.setScale(currentFrame->scale, currentFrame->scale);
   m_drawSprite.setRotation(currentFrame->rotate);
 
-  float origX = m_originX - (m_spriteSize * currentFrame->scale) / 2;
-  float origY = m_originY - (m_spriteSize * currentFrame->scale) / 2;
+  float origX = m_originX - (m_spriteSize * (currentFrame->scale - 1)) / 2;
+  float origY = m_originY - (m_spriteSize * (currentFrame->scale - 1)) / 2;
 
   m_drawSprite.setPosition(origX + currentFrame->displaceX, origY + currentFrame->displaceY);
 }

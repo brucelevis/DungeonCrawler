@@ -129,7 +129,10 @@ void Battle::executeActions()
 
   if (action.actionName == "Attack")
   {
-    play_sound(config::SOUND_ATTACK);
+    if (isMonster(m_currentActor))
+    {
+      play_sound(config::SOUND_ATTACK);
+    }
 
     battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
   }
@@ -548,7 +551,18 @@ void Battle::createEffects()
 
   if (action.actionName == "Attack")
   {
-
+    if (!isMonster(m_currentActor))
+    {
+      Item* weapon = m_currentActor->getEquipment("Weapon");
+      if (weapon)
+      {
+        effectName = weapon->effect;
+      }
+      else
+      {
+        effectName = "Effect_Hit";
+      }
+    }
   }
   else if (action.actionName == "Spell")
   {

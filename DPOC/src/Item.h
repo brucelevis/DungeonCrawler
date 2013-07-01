@@ -29,6 +29,8 @@ struct Item
 
   std::map<std::string, int> attributeGain;
 
+  std::string effect;
+
   // Put members that should not be initialized after this comment.
 
   int stackSize;
