@@ -8,6 +8,13 @@
 
 static const std::string BUG_MONSTER = "BUG_MONSTER";
 
+struct MonsterActionEntry
+{
+  std::string action;
+  std::string objectName;
+  int weight;
+};
+
 struct MonsterDef
 {
   std::string name;
@@ -17,6 +24,8 @@ struct MonsterDef
 
   std::string texture;
   sf::IntRect textureRect;
+
+  std::vector<MonsterActionEntry> actions;
 };
 
 MonsterDef get_monster_definition(const std::string& name);

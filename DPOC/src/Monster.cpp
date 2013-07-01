@@ -25,7 +25,13 @@ static std::vector<MonsterDef> monsters =
       { "gold",     4   }
     },
     "Resources/rpg_monster_set.png",
-    { 12, 32, 32, 36 }
+    { 12, 32, 32, 36 },
+
+    {
+      { "Attack", "", 3 },
+      { "Spell", "Hurt All", 3 },
+      { "Spell", "Heal", 3 }
+    }
   }
 };
 

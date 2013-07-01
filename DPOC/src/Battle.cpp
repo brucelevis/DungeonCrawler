@@ -1,6 +1,7 @@
 #include "Config.h"
 #include "Utility.h"
 
+#include "Monster.h"
 #include "Item.h"
 #include "Spell.h"
 #include "Attack.h"
@@ -118,7 +119,26 @@ void Battle::executeActions()
 
   if (action.target && action.target->getStatus() == "Dead")
   {
-    action.target = selectRandomTarget(m_currentActor);
+    if (action.actionName == "Spell")
+    {
+      const Spell* spell = get_spell(action.objectName);
+      if (spell->target == TARGET_SINGLE_ALLY)
+        action.target = selectRandomFriendlyTarget(m_currentActor);
+      else if (spell->target == TARGET_SINGLE_ENEMY)
+        action.target = selectRandomTarget(m_currentActor);
+    }
+    else if (action.actionName == "Item")
+    {
+      Item& item = item_ref(action.objectName);
+      if (item.target == TARGET_SINGLE_ALLY)
+        action.target = selectRandomFriendlyTarget(m_currentActor);
+      else if (item.target == TARGET_SINGLE_ENEMY)
+        action.target = selectRandomTarget(m_currentActor);
+    }
+    else
+    {
+      action.target = selectRandomTarget(m_currentActor);
+    }
   }
 
   clear_message();
@@ -240,7 +260,14 @@ void Battle::actionEffect()
       battle_message("%s has fallen!", currentTarget->getName().c_str());
     }
 
-    play_sound(config::SOUND_HIT);
+    if (isMonster(m_currentActor))
+    {
+      play_sound(config::SOUND_ENEMY_HIT);
+    }
+    else
+    {
+      play_sound(config::SOUND_HIT);
+    }
 
     m_turnDelay = TURN_DELAY_TIME;
 
@@ -384,9 +411,39 @@ void Battle::doneSelectingActions()
 
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
+    MonsterDef def = get_monster_definition((*it)->getName());
+
     Action action;
-    action.actionName = "Attack";
-    action.target = selectRandomTarget(*it);
+
+    if (def.actions.empty())
+    {
+      action.actionName = "Attack";
+      action.target = selectRandomTarget(*it);
+    }
+    else
+    {
+      // TODO: Random pick based on weight from roguelike.
+      int what = random_range(0, def.actions.size());
+      action.actionName = def.actions[what].action;
+      action.objectName = def.actions[what].objectName;
+
+			if (action.actionName == "Attack")
+			{
+			  action.target = selectRandomTarget(*it);
+			}
+      else if (action.actionName == "Spell")
+      {
+        const Spell* spell = get_spell(action.objectName);
+        if (spell->target == TARGET_SINGLE_ENEMY)
+          action.target = selectRandomTarget(*it);
+        else if (spell->target == TARGET_ALL_ENEMY || spell->target == TARGET_ALL_ALLY)
+          action.target = 0;
+        else if (spell->target == TARGET_SINGLE_ALLY)
+          action.target = selectRandomFriendlyTarget(*it);
+        else if (spell->target == TARGET_SELF)
+          action.target = *it;
+      }
+    }
 
     setAction(*it, action);
 
@@ -420,6 +477,7 @@ void Battle::updateEffects()
     (*it)->update();
     if ((*it)->complete())
     {
+    	delete *it;
       it = m_activeEffects.erase(it);
     }
     else
@@ -486,6 +544,27 @@ Character* Battle::selectRandomTarget(Character* actor)
       isMonster(actor) ?
           get_player()->getParty() :
           m_monsters;
+
+  Character* target = 0;
+
+  if (allDead(actors))
+    return 0;
+
+  do
+  {
+    int targetIndex = random_range(0, actors.size());
+    target = actors[targetIndex];
+  } while (target->getStatus() == "Dead");
+
+  return target;
+}
+
+Character* Battle::selectRandomFriendlyTarget(Character* actor)
+{
+  const std::vector<Character*>& actors =
+      isMonster(actor) ?
+          m_monsters :
+          get_player()->getParty();
 
   Character* target = 0;
 
@@ -580,6 +659,11 @@ void Battle::createEffects()
     if (isMonster(*it) && !effectName.empty())
     {
       (*it)->flash().startEffect(effectName);
+    }
+    else if (!effectName.empty())
+    {
+      // This effect will be heard but not seen.
+      m_activeEffects.push_back(Effect::createEffect(effectName, -100, -100));
     }
   }
 }

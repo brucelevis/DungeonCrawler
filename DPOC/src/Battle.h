@@ -68,6 +68,7 @@ private:
   void nextActor();
 
   Character* selectRandomTarget(Character* actor);
+  Character* selectRandomFriendlyTarget(Character* actor);
 
   bool allDead(const std::vector<Character*>& actors) const;
 
