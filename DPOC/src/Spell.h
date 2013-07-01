@@ -16,6 +16,8 @@ struct Spell
   Target target;
 
   bool battleOnly;
+
+  std::string effect;
 };
 
 const Spell* get_spell(const std::string& spell);

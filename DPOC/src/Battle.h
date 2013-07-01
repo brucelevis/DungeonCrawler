@@ -8,6 +8,7 @@
 
 #include "Menu.h"
 #include "Target.h"
+#include "Effect.h"
 
 class Character;
 
@@ -72,6 +73,7 @@ private:
 
   std::vector<Character*> getAliveActors(const std::vector<Character*>& actors);
   void setCurrentTargets(Target targetType);
+  void createEffects();
 
   int getExperience() const;
   int getGold() const;
@@ -86,6 +88,7 @@ private:
   Character* m_currentActor;
 
   std::vector<Character*> m_currentTargets;
+  std::vector<Effect*> m_activeEffects;
 
   sf::RenderWindow& m_window;
 

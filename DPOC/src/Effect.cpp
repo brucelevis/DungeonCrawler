@@ -12,9 +12,12 @@ static std::map<std::string, EffectDef> frames =
       "Resources/Animations/effect_Flame.png",
       16,
       {
-        { 0, 6, 0, 0, "Resources/Audio/boom.wav" },
-        { 1, 6 },
-        { 2, 6 }
+        { 0, 6, 0, 0, "Resources/Audio/boom.wav", 1, 0, sf::Color::White },
+        { 1, 6, 0, 0, "", 1.5, 0, sf::Color::White },
+        { 2, 6, 0, 0, "", 2.0, 0, {255, 255, 255, 200 } },
+        { 0, 6, 0, 0, "", 2.5, 0, {255, 255, 255, 150 } },
+        { 1, 6, 0, 0, "", 3.0, 0, {255, 255, 255, 100 } },
+        { 2, 6, 0, 0, "", 3.0, 0, {255, 255, 255, 50 } }
       }
     }
   }
@@ -50,6 +53,15 @@ void Effect::update()
     return;
   }
 
+  if (m_currentTime == 0)
+  {
+    std::string sound = getCurrentFrame()->sound;
+    if (!sound.empty())
+    {
+      play_sound(sound);
+    }
+  }
+
   m_currentTime++;
 
   Frame* currentFrame = getCurrentFrame();
@@ -61,12 +73,6 @@ void Effect::update()
     if (!complete())
     {
       initSprite();
-
-      std::string sound = getCurrentFrame()->sound;
-      if (!sound.empty())
-      {
-        play_sound(sound);
-      }
     }
   }
 }
@@ -75,6 +81,8 @@ void Effect::setOrigin(float x, float y)
 {
   m_originX = x;
   m_originY = y;
+
+  initSprite();
 }
 
 void Effect::render(sf::RenderTarget& target)

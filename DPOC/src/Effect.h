@@ -37,7 +37,9 @@ public:
     return m_currentFrameIndex >= m_frames.size();
   }
 
-  static Effect* createEffect(const std::string& effectName, int x, int y);
+  int spriteSize() const { return m_spriteSize; }
+
+  static Effect* createEffect(const std::string& effectName, int x = 0, int y = 0);
 private:
   Frame* getCurrentFrame();
 

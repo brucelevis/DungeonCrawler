@@ -91,6 +91,15 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
     sprite.setPosition(x, y);
     target.draw(sprite);
   }
+
+  if (m_flash.activeEffect())
+  {
+    int posX = x + spriteWidth() / 2 - m_flash.activeEffect()->spriteSize() / 2;
+    int posY = y + spriteHeight() / 2 - m_flash.activeEffect()->spriteSize() / 2;
+
+    m_flash.activeEffect()->setOrigin(posX, posY);
+    m_flash.activeEffect()->render(target);
+  }
 }
 
 bool Character::incapacitated() const

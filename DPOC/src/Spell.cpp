@@ -11,14 +11,16 @@ static std::vector<Spell> spells =
     "Hurt", "Low damage to single enemy",
     4,
     TARGET_SINGLE_ENEMY,
-    true
+    true,
+    "Effect_Flame"
   },
 
   {
     "Hurt All", "Low damage to all enemies",
     7,
     TARGET_ALL_ENEMY,
-    true
+    true,
+    "Effect_Flame"
   },
 
   {

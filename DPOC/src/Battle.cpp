@@ -206,7 +206,9 @@ void Battle::showAction()
       }
     }
 
-    m_turnDelay = 24;
+    createEffects();
+
+    m_turnDelay = 16;
   }
 }
 
@@ -357,6 +359,11 @@ void Battle::draw()
     Message::instance().draw(m_window);
   }
 
+  for (auto it = m_activeEffects.begin(); it != m_activeEffects.end(); ++it)
+  {
+    (*it)->render(m_window);
+  }
+
   m_window.display();
 }
 
@@ -404,17 +411,33 @@ void Battle::updateEffects()
   {
     (*it)->flash().update();
   }
+
+  for (auto it = m_activeEffects.begin(); it != m_activeEffects.end();)
+  {
+    (*it)->update();
+    if ((*it)->complete())
+    {
+      it = m_activeEffects.erase(it);
+    }
+    else
+    {
+      ++it;
+    }
+  }
 }
 
 bool Battle::effectInProgress() const
 {
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
-    if ((*it)->flash().isFlashing())
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect())
       return true;
   }
 
   if (sound_is_playing())
+    return true;
+
+  if (m_activeEffects.size() > 0)
     return true;
 
   return false;
@@ -501,10 +524,50 @@ std::vector<Character*> Battle::getAliveActors(const std::vector<Character*>& ac
 
 void Battle::setCurrentTargets(Target targetType)
 {
-  if (targetType == TARGET_ALL_ENEMY)
-    m_currentTargets = getAliveActors(m_monsters);
-  else if (targetType == TARGET_ALL_ALLY)
-    m_currentTargets = getAliveActors(get_player()->getParty());
+  if (!isMonster(m_currentActor))
+  {
+    if (targetType == TARGET_ALL_ENEMY)
+      m_currentTargets = getAliveActors(m_monsters);
+    else if (targetType == TARGET_ALL_ALLY)
+      m_currentTargets = getAliveActors(get_player()->getParty());
+  }
+  else
+  {
+    if (targetType == TARGET_ALL_ENEMY)
+      m_currentTargets = getAliveActors(get_player()->getParty());
+    else if (targetType == TARGET_ALL_ALLY)
+      m_currentTargets = getAliveActors(m_monsters);
+  }
+}
+
+void Battle::createEffects()
+{
+  Action& action = m_battleActions[m_currentActor];
+
+  std::string effectName;
+
+  if (action.actionName == "Attack")
+  {
+
+  }
+  else if (action.actionName == "Spell")
+  {
+    const Spell* spell = get_spell(action.objectName);
+
+    effectName = spell->effect;
+  }
+  else if (action.actionName == "Item")
+  {
+    Item& item = item_ref(action.objectName);
+  }
+
+  for (auto it = m_currentTargets.begin(); it != m_currentTargets.end(); ++it)
+  {
+    if (isMonster(*it) && !effectName.empty())
+    {
+      (*it)->flash().startEffect(effectName);
+    }
+  }
 }
 
 int Battle::getExperience() const
