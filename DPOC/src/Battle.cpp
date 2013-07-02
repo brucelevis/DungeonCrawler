@@ -1,3 +1,5 @@
+#include <iterator>
+
 #include "Config.h"
 #include "Utility.h"
 
@@ -7,6 +9,7 @@
 #include "Attack.h"
 #include "Player.h"
 #include "Character.h"
+#include "PlayerCharacter.h"
 #include "Message.h"
 #include "Sound.h"
 
@@ -25,6 +28,32 @@ static bool speed_comparator(Character* left, Character* right)
     return false;
 
   return true;
+}
+
+template <typename T>
+static bool all_dead(const T& actors)
+{
+  for (auto it = actors.begin(); it != actors.end(); ++it)
+  {
+    if ((*it)->getStatus() != "Dead")
+      return false;
+  }
+
+  return true;
+}
+
+template <typename T>
+std::vector<Character*> get_alive_actors(const T& actors)
+{
+  std::vector<Character*> result;
+
+  for (auto it = actors.begin(); it != actors.end(); ++it)
+  {
+    if ((*it)->getStatus() != "Dead")
+      result.push_back(*it);
+  }
+
+  return result;
 }
 
 Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters)
@@ -271,11 +300,11 @@ void Battle::actionEffect()
 
     m_turnDelay = TURN_DELAY_TIME;
 
-    if (allDead(m_monsters))
+    if (all_dead(m_monsters))
     {
       m_state = STATE_VICTORY_PRE;
     }
-    else if (allDead(get_player()->getParty()))
+    else if (all_dead(get_player()->getParty()))
     {
       m_state = STATE_DEFEAT;
     }
@@ -540,14 +569,20 @@ void Battle::nextActor()
 
 Character* Battle::selectRandomTarget(Character* actor)
 {
-  const std::vector<Character*>& actors =
-      isMonster(actor) ?
-          get_player()->getParty() :
-          m_monsters;
+  std::vector<Character*> actors;
+
+  if (isMonster(actor))
+  {
+    std::copy(get_player()->getParty().begin(), get_player()->getParty().end(), std::back_inserter(actors));
+  }
+  else
+  {
+    std::copy(m_monsters.begin(), m_monsters.end(), std::back_inserter(actors));
+  }
 
   Character* target = 0;
 
-  if (allDead(actors))
+  if (all_dead(actors))
     return 0;
 
   do
@@ -561,14 +596,20 @@ Character* Battle::selectRandomTarget(Character* actor)
 
 Character* Battle::selectRandomFriendlyTarget(Character* actor)
 {
-  const std::vector<Character*>& actors =
-      isMonster(actor) ?
-          m_monsters :
-          get_player()->getParty();
+  std::vector<Character*> actors;
+
+  if (isMonster(actor))
+  {
+    std::copy(m_monsters.begin(), m_monsters.end(), std::back_inserter(actors));
+  }
+  else
+  {
+    std::copy(get_player()->getParty().begin(), get_player()->getParty().end(), std::back_inserter(actors));
+  }
 
   Character* target = 0;
 
-  if (allDead(actors))
+  if (all_dead(actors))
     return 0;
 
   do
@@ -580,45 +621,21 @@ Character* Battle::selectRandomFriendlyTarget(Character* actor)
   return target;
 }
 
-bool Battle::allDead(const std::vector<Character*>& actors) const
-{
-  for (auto it = actors.begin(); it != actors.end(); ++it)
-  {
-    if ((*it)->getStatus() != "Dead")
-      return false;
-  }
-
-  return true;
-}
-
-std::vector<Character*> Battle::getAliveActors(const std::vector<Character*>& actors)
-{
-  std::vector<Character*> result;
-
-  for (auto it = actors.begin(); it != actors.end(); ++it)
-  {
-    if ((*it)->getStatus() != "Dead")
-      result.push_back(*it);
-  }
-
-  return result;
-}
-
 void Battle::setCurrentTargets(Target targetType)
 {
   if (!isMonster(m_currentActor))
   {
     if (targetType == TARGET_ALL_ENEMY)
-      m_currentTargets = getAliveActors(m_monsters);
+      m_currentTargets = get_alive_actors(m_monsters);
     else if (targetType == TARGET_ALL_ALLY)
-      m_currentTargets = getAliveActors(get_player()->getParty());
+      m_currentTargets = get_alive_actors(get_player()->getParty());
   }
   else
   {
     if (targetType == TARGET_ALL_ENEMY)
-      m_currentTargets = getAliveActors(get_player()->getParty());
+      m_currentTargets = get_alive_actors(get_player()->getParty());
     else if (targetType == TARGET_ALL_ALLY)
-      m_currentTargets = getAliveActors(m_monsters);
+      m_currentTargets = get_alive_actors(m_monsters);
   }
 }
 
@@ -632,7 +649,7 @@ void Battle::createEffects()
   {
     if (!isMonster(m_currentActor))
     {
-      Item* weapon = m_currentActor->getEquipment("Weapon");
+      Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("Weapon");
       if (weapon)
       {
         effectName = weapon->effect;

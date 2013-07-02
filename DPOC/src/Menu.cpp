@@ -8,6 +8,7 @@
 
 #include "Player.h"
 #include "Character.h"
+#include "PlayerCharacter.h"
 #include "Game.h"
 #include "Item.h"
 #include "Spell.h"
@@ -499,7 +500,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 {
-  Character* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->getCurrentMenuChoice());
+  PlayerCharacter* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->getCurrentMenuChoice());
 
   draw_frame(target, 16, 16, 14*16, 13*16);
 
@@ -521,10 +522,10 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, x, y + 48, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
   draw_text_bmp(target, x, y + 60, "Speed:    %d", character->computeCurrentAttribute("speed"));
 
-  for (size_t i = 0; i < Character::equipNames.size(); i++)
+  for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
   {
-    Item* item = character->getEquipment(Character::equipNames[i]);
-    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", Character::equipNames[i].c_str(), item ? item->name.c_str(): "");
+    Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
   }
 }
 
@@ -758,7 +759,7 @@ void CharacterMenu::refresh()
 {
   clear();
 
-  const std::vector<Character*>& party = Game::instance().getPlayer()->getParty();
+  const std::vector<PlayerCharacter*>& party = get_player()->getParty();
 
   for (auto it = party.begin(); it != party.end(); ++it)
   {
@@ -772,7 +773,7 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
-    Character* character = Game::instance().getPlayer()->getCharacter(getChoice(i));
+    PlayerCharacter* character = get_player()->getCharacter(getChoice(i));
 
     int offX = x + 8 + 5 * 16;
     int offY = y + 8;
@@ -803,12 +804,12 @@ void CharacterMenu::setTargetToCurrentChoice()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EquipMenu::EquipMenu(Character* character)
+EquipMenu::EquipMenu(PlayerCharacter* character)
  : m_character(character),
    m_itemMenu(new EquipItemMenu(16*16, 8*16)),
    m_state(STATE_SELECT_EQUIPMENT_TYPE)
 {
-  for (auto it = Character::equipNames.begin(); it != Character::equipNames.end(); ++it)
+  for (auto it = PlayerCharacter::equipNames.begin(); it != PlayerCharacter::equipNames.end(); ++it)
   {
     addEntry(*it);
   }
@@ -1365,7 +1366,7 @@ void BattleActionMenu::handleConfirm()
 BattleStatusMenu::BattleStatusMenu()
  : m_currentActor(0)
 {
-  const std::vector<Character*>& party = get_player()->getParty();
+  const std::vector<PlayerCharacter*>& party = get_player()->getParty();
 
   for (auto it = party.begin(); it != party.end(); ++it)
   {
@@ -1387,7 +1388,7 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
     std::string name = getChoice(i);
-    Character* character = get_player()->getCharacter(name);
+    PlayerCharacter* character = get_player()->getCharacter(name);
 
     int offY = y + 8 + i * ENTRY_OFFSET;
 

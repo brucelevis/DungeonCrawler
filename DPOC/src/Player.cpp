@@ -97,7 +97,7 @@ void Player::draw(sf::RenderTarget& target, const coord_t& view)
   }
 }
 
-Character* Player::getCharacter(const std::string& name)
+PlayerCharacter* Player::getCharacter(const std::string& name)
 {
   for (auto it = m_party.begin(); it != m_party.end(); ++it)
   {
@@ -179,10 +179,10 @@ Player* Player::create(int x, int y)
       player->m_playerTrain[i]->setWalkThrough(true);
   }
 
-  player->m_party.push_back(Character::create("Char1"));
-  player->m_party.push_back(Character::create("Char2"));
-  player->m_party.push_back(Character::create("Char3"));
-  player->m_party.push_back(Character::create("Char4"));
+  player->m_party.push_back(PlayerCharacter::create("Char1"));
+  player->m_party.push_back(PlayerCharacter::create("Char2"));
+  player->m_party.push_back(PlayerCharacter::create("Char3"));
+  player->m_party.push_back(PlayerCharacter::create("Char4"));
 
   player->m_inventory.push_back(create_item("Herb", 3));
   player->m_inventory.push_back(create_item("Rusty Knife", 3));

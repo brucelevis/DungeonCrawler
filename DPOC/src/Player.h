@@ -10,6 +10,7 @@ class Entity;
 #include "coord.h"
 #include "Item.h"
 #include "Character.h"
+#include "PlayerCharacter.h"
 
 class Player
 {
@@ -22,13 +23,13 @@ public:
   void draw(sf::RenderTarget& target, const coord_t& view);
 
   const std::vector<Item>& getInventory() const { return m_inventory; }
-  const std::vector<Character*>& getParty() const { return m_party; }
+  const std::vector<PlayerCharacter*>& getParty() const { return m_party; }
 
   void addItemToInventory(const std::string& itemName, int number);
   void removeItemFromInventory(const std::string& itemName, int number);
   Item* getItem(const std::string& itemName);
 
-  Character* getCharacter(const std::string& name);
+  PlayerCharacter* getCharacter(const std::string& name);
 
   void transfer(int x, int y);
 
@@ -43,7 +44,7 @@ private:
 private:
   std::vector<Entity*> m_playerTrain;
   std::vector<Item> m_inventory;
-  std::vector<Character*> m_party;
+  std::vector<PlayerCharacter*> m_party;
 
   std::map<Entity*, coord_t> m_trainCoords;
 

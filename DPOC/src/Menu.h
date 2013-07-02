@@ -13,6 +13,7 @@
 class Item;
 class Spell;
 class Character;
+class PlayerCharacter;
 class Battle;
 
 class Menu
@@ -188,8 +189,8 @@ public:
   void setItemToUse(const std::string& itemToUse) { m_itemToUse = itemToUse; }
   std::string getItemToUse() const { return m_itemToUse; }
 
-  Character* getUser() const { return m_user; }
-  Character* getTarget() const { return m_target; }
+  PlayerCharacter* getUser() const { return m_user; }
+  PlayerCharacter* getTarget() const { return m_target; }
 
   void setUserToCurrentChoice();
   void setTargetToCurrentChoice();
@@ -197,8 +198,8 @@ private:
   const Spell* m_spellToUse;
   std::string m_itemToUse;
 
-  Character* m_user;
-  Character* m_target;
+  PlayerCharacter* m_user;
+  PlayerCharacter* m_target;
 };
 
 class EquipMenu : public Menu
@@ -209,7 +210,7 @@ class EquipMenu : public Menu
     STATE_EQUIP_ITEM
   };
 public:
-  EquipMenu(Character* character);
+  EquipMenu(PlayerCharacter* character);
   ~EquipMenu();
 
   void handleConfirm();
@@ -224,7 +225,7 @@ private:
 
   void drawDeltas(sf::RenderTarget& target, int x, int y);
 private:
-  Character* m_character;
+  PlayerCharacter* m_character;
   EquipItemMenu* m_itemMenu;
 
   State m_state;

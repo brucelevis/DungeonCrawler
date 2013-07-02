@@ -17,18 +17,16 @@ struct Attribute
 };
 
 static inline void clamp_attribute(Attribute& attr) { attr.current = attr.max; }
+static inline Attribute make_attribute(int val) { return { val, val }; }
 
 class Character
 {
 public:
-  static std::vector<std::string> equipNames;
 
-  ~Character();
+  virtual ~Character();
 
   std::string getName() const { return m_name; }
-  const std::vector<std::string>& getSpells() const { return m_spells; }
 
-  static Character* create(const std::string& name);
   static Character* createMonster(const std::string& name);
 
   const sf::Texture* getTexture() const { return m_faceTexture; }
@@ -36,10 +34,7 @@ public:
 
   Attribute& getAttribute(const std::string& attribName);
 
-  int computeCurrentAttribute(const std::string& attribName);
-
-  void equip(const std::string& equipmentSlot, const std::string& itemName);
-  Item* getEquipment(const std::string& equipmentSlot);
+  virtual int computeCurrentAttribute(const std::string& attribName);
 
   void setStatus(const std::string& status) { m_status = status; }
   std::string getStatus() const { return m_status; }
@@ -50,20 +45,13 @@ public:
   Flash& flash() { return m_flash; }
 
   bool incapacitated() const;
-
-  int toNextLevel();
-  int expForLevel();
-  int checkLevelUp();
-private:
+protected:
   std::string m_name;
-  std::vector<std::string> m_spells;
 
   sf::Texture* m_faceTexture;
   sf::IntRect m_textureRect;
 
   std::map<std::string, Attribute> m_attributes;
-
-  std::map<std::string, Item> m_equipment;
 
   std::string m_status;
 

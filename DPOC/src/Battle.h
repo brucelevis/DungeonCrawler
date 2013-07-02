@@ -11,6 +11,7 @@
 #include "Effect.h"
 
 class Character;
+class PlayerCharacter;
 
 class Battle
 {
@@ -70,9 +71,6 @@ private:
   Character* selectRandomTarget(Character* actor);
   Character* selectRandomFriendlyTarget(Character* actor);
 
-  bool allDead(const std::vector<Character*>& actors) const;
-
-  std::vector<Character*> getAliveActors(const std::vector<Character*>& actors);
   void setCurrentTargets(Target targetType);
   void createEffects();
 
