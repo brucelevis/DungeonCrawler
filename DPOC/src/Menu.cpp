@@ -84,6 +84,8 @@ void Menu::moveArrow(Direction dir)
     if (m_currentMenuChoice >= (int)m_menuChoices.size())
     {
       m_currentMenuChoice = m_menuChoices.size() - 1;
+      if (m_currentMenuChoice < 0)
+        m_currentMenuChoice = 0;
     }
 
     if (m_maxVisible != -1)
@@ -276,7 +278,7 @@ void MainMenu::handleConfirm()
   else if (currentState == STATE_SPELL_MENU)
   {
     const Spell* spell = m_spellMenu->getSelectedSpell();
-    if (!spell->battleOnly && can_cast_spell(spell, m_characterMenu->getUser()))
+    if (spell && !spell->battleOnly && can_cast_spell(spell, m_characterMenu->getUser()))
     {
       m_characterMenu->setSpellToUse(spell);
       openCharacterMenu();
@@ -641,7 +643,7 @@ void EquipItemMenu::refresh(const std::string& equipmentType)
 {
   clear();
 
-  const std::vector<Item>& items = Game::instance().getPlayer()->getInventory();
+  const std::vector<Item>& items = get_player()->getInventory();
 
   addEntry("* Remove *");
 
@@ -706,6 +708,9 @@ void SpellMenu::handleConfirm()
 
 const Spell* SpellMenu::getSelectedSpell() const
 {
+  if (getNumberOfChoice() == 0)
+    return 0;
+
   std::string spellName = get_string_after_first_space(getCurrentMenuChoice());
 
   return get_spell(spellName);
@@ -717,7 +722,7 @@ void SpellMenu::draw(sf::RenderTarget& target, int x, int y)
 
   Menu::draw(target, x, y + 24);
 
-  draw_text_bmp(target, x + 8, y + 8, "%s", getSelectedSpell()->description.c_str());
+  draw_text_bmp(target, x + 8, y + 8, "%s", getSelectedSpell() ? getSelectedSpell()->description.c_str() : "");
 }
 
 int SpellMenu::getWidth() const
@@ -852,7 +857,7 @@ void EquipMenu::doEquip()
   Item* currentItem = get_player()->getItem(currentItemName);
   Item* currentEquip = m_character->getEquipment(getCurrentMenuChoice());
 
-  if (currentItem && getCurrentMenuChoice() == equip_type_string(currentItem->type))
+  if (currentItem && getCurrentMenuChoice() == equip_type_string(currentItem->type) && m_character->canEquip(currentItemName))
   {
     if (currentEquip)
     {

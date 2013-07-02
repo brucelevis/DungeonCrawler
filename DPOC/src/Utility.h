@@ -29,4 +29,7 @@ bool coinflip();
 
 int random_range(int low, int high);
 
+char upcase(char c);
+std::string capitalize(std::string str);
+
 #endif

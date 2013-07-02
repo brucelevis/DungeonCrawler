@@ -338,10 +338,6 @@ void Battle::doVictory()
       clamp_attribute((*it)->getAttribute("speed"));
 
       int newLevel = (*it)->checkLevelUp();
-      if (newLevel > 0)
-      {
-        show_message("%s has reached level %d!", (*it)->getName().c_str(), newLevel);
-      }
     }
 
     m_state = STATE_VICTORY_POST;

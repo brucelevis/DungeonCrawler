@@ -32,7 +32,13 @@ public:
 
   virtual void draw(sf::RenderTarget& target, int x, int y);
 
-  std::string getCurrentMenuChoice() const { return m_menuChoices[m_currentMenuChoice]; }
+  std::string getCurrentMenuChoice() const
+  {
+    if (m_menuChoices.empty())
+      return "";
+
+    return m_menuChoices[m_currentMenuChoice];
+  }
   std::string getChoice(size_t index) const { return m_menuChoices[index]; }
 
   void addEntry(const std::string& choice) { m_menuChoices.push_back(choice); }

@@ -102,3 +102,17 @@ int random_range(int low, int high)
 {
   return low + ((rand()%high) - low);
 }
+
+char upcase(char c)
+{
+  if (c >= 'a' && c <= 'z')
+    return c - 32;
+
+  return c;
+}
+
+std::string capitalize(std::string str)
+{
+  str[0] = upcase(str[0]);
+  return str;
+}
