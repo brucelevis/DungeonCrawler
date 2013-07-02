@@ -28,7 +28,7 @@ static std::vector<MonsterDef> monsters =
     { 12, 32, 32, 36 },
 
     {
-      { "Attack", "", 3 },
+      { "Attack", "", 6 },
       { "Spell", "Hurt All", 3 },
       { "Spell", "Heal", 3 }
     }

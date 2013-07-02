@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "Utility.h"
+#include "random_pick.h"
 
 #include "Monster.h"
 #include "Item.h"
@@ -451,10 +452,17 @@ void Battle::doneSelectingActions()
     }
     else
     {
-      // TODO: Random pick based on weight from roguelike.
-      int what = random_range(0, def.actions.size());
-      action.actionName = def.actions[what].action;
-      action.objectName = def.actions[what].objectName;
+      std::vector< rnd::random_pick_entry_t<size_t> > actionEntries;
+      for (size_t i = 0; i < def.actions.size(); i++)
+      {
+        rnd::random_pick_entry_t<size_t> entry = { i, def.actions[i].weight };
+
+        actionEntries.push_back(entry);
+      }
+      size_t actionIndex = rnd::random_pick(actionEntries);
+
+      action.actionName = def.actions[actionIndex].action;
+      action.objectName = def.actions[actionIndex].objectName;
 
 			if (action.actionName == "Attack")
 			{
