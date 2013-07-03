@@ -229,6 +229,10 @@ void Battle::executeActions()
           item.name.c_str());
     }
   }
+  else if (action.actionName == "Guard")
+  {
+    battle_message("%s guards.", m_currentActor->getName().c_str());
+  }
 
   m_state = STATE_SHOW_ACTION;
 }
@@ -269,34 +273,45 @@ void Battle::actionEffect()
 {
   if (!effectInProgress() && m_turnDelay == 0)
   {
-    clear_message();
+    std::string actionName = m_battleActions[m_currentActor].actionName;
 
-    Character* currentTarget = m_currentTargets.front();
-    m_currentTargets.erase(m_currentTargets.begin());
-
-    if (isMonster(currentTarget))
+    if (actionName == "Attack" || actionName == "Spell" || actionName == "Item")
     {
-      currentTarget->flash().start(6, 3);
-    }
+      clear_message();
 
-    int damage = calculate_physical_damage(m_currentActor, currentTarget);
+      Character* currentTarget = m_currentTargets.front();
+      m_currentTargets.erase(m_currentTargets.begin());
 
-    battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
+      if (isMonster(currentTarget))
+      {
+        currentTarget->flash().start(6, 3);
+      }
 
-    currentTarget->getAttribute("hp").current -= damage;
-    if (currentTarget->getAttribute("hp").current <= 0)
-    {
-      currentTarget->setStatus("Dead");
-      battle_message("%s has fallen!", currentTarget->getName().c_str());
-    }
+      int damage = calculate_physical_damage(m_currentActor, currentTarget);
 
-    if (isMonster(m_currentActor))
-    {
-      play_sound(config::SOUND_ENEMY_HIT);
-    }
-    else
-    {
-      play_sound(config::SOUND_HIT);
+      if (m_battleActions.count(currentTarget) > 0 && m_battleActions[currentTarget].actionName == "Guard")
+      {
+        damage /= 2;
+      }
+
+      battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
+
+      currentTarget->getAttribute("hp").current -= damage;
+      if (currentTarget->getAttribute("hp").current <= 0)
+      {
+        currentTarget->setStatus("Dead");
+        battle_message("%s has fallen!", currentTarget->getName().c_str());
+      }
+
+      if (isMonster(m_currentActor))
+      {
+        play_sound(config::SOUND_ENEMY_HIT);
+      }
+      else
+      {
+        play_sound(config::SOUND_HIT);
+      }
+
     }
 
     m_turnDelay = TURN_DELAY_TIME;

@@ -1041,6 +1041,12 @@ void BattleMenu::handleConfirm()
       m_itemMenu->setVisible(true);
       m_stateStack.push(STATE_SELECT_ITEM);
     }
+    else if (action == "Guard")
+    {
+      prepareAction();
+
+      nextActor();
+    }
   }
   else if (currentState == STATE_SELECT_MONSTER)
   {
@@ -1164,6 +1170,10 @@ void BattleMenu::prepareAction()
 
     battleAction.objectName = item->name;
     battleAction.target = getTarget(item->target);
+  }
+  else if (action == "Guard")
+  {
+    battleAction.target = 0;
   }
 
   m_battle->setAction(m_statusMenu->getCurrentActor(), battleAction);
