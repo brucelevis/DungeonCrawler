@@ -65,6 +65,19 @@ void Menu::moveArrow(Direction dir)
   if (dir == DIR_UP)
   {
     m_currentMenuChoice--;
+  }
+  else if (dir == DIR_DOWN)
+  {
+    m_currentMenuChoice++;
+  }
+
+  fixScroll(dir);
+}
+
+void Menu::fixScroll(Direction dir)
+{
+  if (dir == DIR_UP)
+  {
     if (m_currentMenuChoice < 0)
     {
       m_currentMenuChoice = 0;
@@ -80,7 +93,6 @@ void Menu::moveArrow(Direction dir)
   }
   else if (dir == DIR_DOWN)
   {
-    m_currentMenuChoice++;
     if (m_currentMenuChoice >= (int)m_menuChoices.size())
     {
       m_currentMenuChoice = m_menuChoices.size() - 1;

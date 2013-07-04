@@ -53,12 +53,14 @@ public:
   void setCursorVisible(bool visible) { m_cursorVisible = visible; }
   bool cursorVisible() const { return m_cursorVisible; }
 
-  virtual void resetChoice() { m_currentMenuChoice = 0; }
+  virtual void resetChoice() { m_currentMenuChoice = 0; fixScroll(DIR_UP); }
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
   int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
   void drawSelectArrow(sf::RenderTarget& target, int x, int y);
   void setCurrentChoice(int choice) { m_currentMenuChoice = choice; }
+private:
+  void fixScroll(Direction dir);
 private:
   sf::Texture* m_arrowTexture;
   bool m_visible;
