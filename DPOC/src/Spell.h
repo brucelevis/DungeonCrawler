@@ -18,6 +18,20 @@ struct Spell
   bool battleOnly;
 
   std::string effect;
+
+  enum
+  {
+    SPELL_DAMAGE,
+    SPELL_HEAL,
+    SPELL_BUFF,
+    SPELL_STATUS,
+    SPELL_CUSTOM
+  } spellType;
+
+  int power;
+
+  // Status name/attribute name for buffs.
+  std::string extra;
 };
 
 const Spell* get_spell(const std::string& spell);

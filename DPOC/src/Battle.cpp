@@ -292,29 +292,69 @@ void Battle::actionEffect()
         currentTarget->flash().start(6, 3);
       }
 
-      int damage = calculate_physical_damage(m_currentActor, currentTarget);
+      int damage = 0;
 
-      if (m_battleActions.count(currentTarget) > 0 && m_battleActions[currentTarget].actionName == "Guard")
+      if (actionName == "Attack")
       {
-        damage /= 2;
+        damage = calculate_physical_damage(m_currentActor, currentTarget);
+
+        if (m_battleActions.count(currentTarget) > 0 &&
+            m_battleActions[currentTarget].actionName == "Guard")
+        {
+          damage /= 2;
+        }
+      }
+      else if (actionName == "Spell")
+      {
+        const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
+
+        if (spell->spellType == Spell::SPELL_DAMAGE || spell->spellType == Spell::SPELL_HEAL)
+        {
+          damage = calculate_magical_damage(m_currentActor, currentTarget, spell);
+        }
+      }
+      else if (actionName == "Item")
+      {
+        // TODO: Item usage.
       }
 
-      battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
+      if (damage > 0)
+      {
+        battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
+
+        if (isMonster(m_currentActor))
+        {
+          play_sound(config::SOUND_ENEMY_HIT);
+        }
+        else
+        {
+          play_sound(config::SOUND_HIT);
+        }
+      }
+      else if (damage == 0)
+      {
+        battle_message("Miss! %s takes no damage!", currentTarget->getName().c_str(), damage);
+
+        play_sound(config::SOUND_MISS);
+      }
+      else
+      {
+        battle_message("%s is healed %s HP!", currentTarget->getName().c_str(), damage);
+
+        play_sound(config::SOUND_HEAL);
+      }
 
       currentTarget->getAttribute("hp").current -= damage;
+
+      if (currentTarget->getAttribute("hp").current >= currentTarget->getAttribute("hp").max)
+      {
+        clamp_attribute(currentTarget->getAttribute("hp"));
+      }
+
       if (currentTarget->getAttribute("hp").current <= 0)
       {
         currentTarget->setStatus("Dead");
         battle_message("%s has fallen!", currentTarget->getName().c_str());
-      }
-
-      if (isMonster(m_currentActor))
-      {
-        play_sound(config::SOUND_ENEMY_HIT);
-      }
-      else
-      {
-        play_sound(config::SOUND_HIT);
       }
 
     }

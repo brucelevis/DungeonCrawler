@@ -27,6 +27,8 @@ namespace config
   static const std::string SOUND_ENEMY_HIT = "Resources/Audio/enemy-hit.wav";
   static const std::string SOUND_SPELL = "Resources/Audio/spell.wav";
   static const std::string SOUND_ESCAPE = "Resources/Audio/Run.ogg";
+  static const std::string SOUND_MISS = "Resources/Audio/Evasion.wav";
+  static const std::string SOUND_HEAL = "Resources/Audio/blipp.wav";
 }
 
 #endif

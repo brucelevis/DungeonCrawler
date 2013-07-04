@@ -12,7 +12,11 @@ static std::vector<Spell> spells =
     4,
     TARGET_SINGLE_ENEMY,
     true,
-    "Effect_Flame"
+
+    "Effect_Flame",
+
+    Spell::SPELL_DAMAGE,
+    80
   },
 
   {
@@ -20,14 +24,23 @@ static std::vector<Spell> spells =
     7,
     TARGET_ALL_ENEMY,
     true,
-    "Effect_Flame"
+
+    "Effect_Flame",
+
+    Spell::SPELL_DAMAGE,
+    60
   },
 
   {
     "Heal", "Heals a single ally",
     4,
     TARGET_SINGLE_ALLY,
-    false
+    false,
+
+    "",
+
+    Spell::SPELL_HEAL,
+    80
   }
 };
 
