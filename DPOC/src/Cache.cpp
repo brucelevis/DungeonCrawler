@@ -56,7 +56,7 @@ namespace cache
     {
       it->second.ref--;
 
-      TRACE("releaseTexture %s: refCount = %d", textureName.c_str(), it->second.ref);
+      // TRACE("releaseTexture %s: refCount = %d", textureName.c_str(), it->second.ref);
 
       if (it->second.ref <= 0)
       {
