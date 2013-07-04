@@ -711,6 +711,8 @@ void Battle::createEffects()
   else if (action.actionName == "Item")
   {
     Item& item = item_ref(action.objectName);
+
+    effectName = item.effect;
   }
 
   for (auto it = m_currentTargets.begin(); it != m_currentTargets.end(); ++it)
