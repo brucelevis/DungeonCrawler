@@ -31,7 +31,7 @@ namespace cache
         return 0;
       }
 
-      TRACE("Loaded texture: %s", textureName.c_str());
+      // TRACE("Loaded texture: %s", textureName.c_str());
 
       newEntry.ref = 1;
       textures[textureName] = newEntry;
@@ -43,7 +43,7 @@ namespace cache
       sf::Texture* texture = it->second.resource;
       it->second.ref++;
 
-      TRACE("Upping texture %s refCount, new refCount = %d", textureName.c_str(), it->second.ref);
+      // TRACE("Upping texture %s refCount, new refCount = %d", textureName.c_str(), it->second.ref);
 
       return texture;
     }
@@ -60,7 +60,7 @@ namespace cache
 
       if (it->second.ref <= 0)
       {
-        TRACE("Deleting texture: %s", textureName.c_str());
+        // TRACE("Deleting texture: %s", textureName.c_str());
 
         delete it->second.resource;
         textures.erase(it);
