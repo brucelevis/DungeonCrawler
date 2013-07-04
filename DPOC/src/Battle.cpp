@@ -339,7 +339,7 @@ void Battle::actionEffect()
       }
       else
       {
-        battle_message("%s is healed %s HP!", currentTarget->getName().c_str(), damage);
+        battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
 
         play_sound(config::SOUND_HEAL);
       }
