@@ -1047,6 +1047,12 @@ void BattleMenu::handleConfirm()
 
       nextActor();
     }
+    else if (action == "Run")
+    {
+      prepareAction();
+
+      nextActor();
+    }
   }
   else if (currentState == STATE_SELECT_MONSTER)
   {
@@ -1172,6 +1178,10 @@ void BattleMenu::prepareAction()
     battleAction.target = getTarget(item->target);
   }
   else if (action == "Guard")
+  {
+    battleAction.target = 0;
+  }
+  else if (action == "Run")
   {
     battleAction.target = 0;
   }

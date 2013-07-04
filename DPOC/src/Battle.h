@@ -24,7 +24,8 @@ class Battle
     STATE_EFFECT_MESSAGE,
     STATE_VICTORY_PRE,
     STATE_VICTORY_POST,
-    STATE_DEFEAT
+    STATE_DEFEAT,
+    STATE_ESCAPE
   };
 public:
   struct Action

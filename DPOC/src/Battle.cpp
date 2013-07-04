@@ -233,6 +233,11 @@ void Battle::executeActions()
   {
     battle_message("%s guards.", m_currentActor->getName().c_str());
   }
+  else if (action.actionName == "Run")
+  {
+    play_sound(config::SOUND_ESCAPE);
+    show_message("You run away.");
+  }
 
   m_state = STATE_SHOW_ACTION;
 }
@@ -326,7 +331,14 @@ void Battle::actionEffect()
     }
     else if (m_currentTargets.empty())
     {
-      m_state = STATE_EFFECT_MESSAGE;
+      if (actionName == "Run")
+      {
+        m_state = STATE_ESCAPE;
+      }
+      else
+      {
+        m_state = STATE_EFFECT_MESSAGE;
+      }
     }
   }
 }
@@ -352,7 +364,7 @@ void Battle::doVictory()
       clamp_attribute((*it)->getAttribute("mag.def"));
       clamp_attribute((*it)->getAttribute("speed"));
 
-      int newLevel = (*it)->checkLevelUp();
+      (*it)->checkLevelUp();
     }
 
     m_state = STATE_VICTORY_POST;
@@ -393,7 +405,7 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
     {
       m_turnDelay = 0;
 
-      if (m_state == STATE_VICTORY_POST && message.isWaitingForKey())
+      if ((m_state == STATE_ESCAPE || m_state == STATE_VICTORY_POST) && message.isWaitingForKey())
       {
         message.nextPage();
 
