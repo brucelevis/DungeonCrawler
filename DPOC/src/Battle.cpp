@@ -367,6 +367,17 @@ void Battle::doVictory()
       (*it)->checkLevelUp();
     }
 
+    for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+    {
+      std::vector<std::string> items = monster_drop_items(get_monster_definition((*it)->getName()));
+
+      for (auto itemIt = items.begin(); itemIt != items.end(); ++itemIt)
+      {
+        get_player()->addItemToInventory(*itemIt, 1);
+        show_message("%s dropped %s!", (*it)->getName().c_str(), itemIt->c_str());
+      }
+    }
+
     m_state = STATE_VICTORY_POST;
   }
 }

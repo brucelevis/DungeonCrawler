@@ -15,6 +15,12 @@ struct MonsterActionEntry
   int weight;
 };
 
+struct MonsterDropItem
+{
+  std::string itemName;
+  int chance;
+};
+
 struct MonsterDef
 {
   std::string name;
@@ -26,9 +32,11 @@ struct MonsterDef
   sf::IntRect textureRect;
 
   std::vector<MonsterActionEntry> actions;
+  std::vector<MonsterDropItem> itemDrop;
 };
 
 MonsterDef get_monster_definition(const std::string& name);
 std::string get_monster_description(const std::string& name);
+std::vector<std::string> monster_drop_items(const MonsterDef& monster);
 
 #endif

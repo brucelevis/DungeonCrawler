@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "Utility.h"
 #include "logger.h"
 #include "Monster.h"
 
@@ -31,6 +32,10 @@ static std::vector<MonsterDef> monsters =
       { "Attack", "", 6 },
       { "Spell", "Hurt All", 3 },
       { "Spell", "Heal", 3 }
+    },
+
+    {
+      { "Herb", 50 }
     }
   }
 };
@@ -51,4 +56,20 @@ MonsterDef get_monster_definition(const std::string& name)
 std::string get_monster_description(const std::string& name)
 {
   return get_monster_definition(name).description;
+}
+
+std::vector<std::string> monster_drop_items(const MonsterDef& monster)
+{
+  std::vector<std::string> items;
+
+  for (auto it = monster.itemDrop.begin(); it != monster.itemDrop.end(); ++it)
+  {
+    int rnd = random_range(0, 100);
+    if (rnd <= it->chance)
+    {
+      items.push_back(it->itemName);
+    }
+  }
+
+  return items;
 }
