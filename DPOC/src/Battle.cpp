@@ -575,7 +575,7 @@ void Battle::doneSelectingActions()
 
 void Battle::addToBattleOrder(Character* character)
 {
-  if (character->getStatus() != "Dead")
+  if (!character->incapacitated())
   {
     m_battleOrder.push_back(character);
   }
@@ -635,7 +635,7 @@ void Battle::nextActor()
 {
   m_battleOrder.pop_back();
 
-  while (m_battleOrder.size() > 0 && m_battleOrder.back()->getStatus() == "Dead")
+  while (m_battleOrder.size() > 0 && m_battleOrder.back()->incapacitated())
   {
     m_battleOrder.pop_back();
   }
