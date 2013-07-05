@@ -187,6 +187,7 @@ Player* Player::create(int x, int y)
   player->m_inventory.push_back(create_item("Herb", 3));
   player->m_inventory.push_back(create_item("Rusty Knife", 3));
   player->m_inventory.push_back(create_item("Wood Shield", 21));
+  player->m_inventory.push_back(create_item("Firebomb", 99));
 
   player->m_gold = 0;
 
