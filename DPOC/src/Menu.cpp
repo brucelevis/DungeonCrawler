@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include "Sound.h"
 
+#include "Attack.h"
 #include "Player.h"
 #include "Character.h"
 #include "PlayerCharacter.h"
@@ -238,6 +239,8 @@ void MainMenu::handleConfirm()
       {
         m_characterMenu->setTargetToCurrentChoice();
 
+        play_sound(config::SOUND_USE_ITEM);
+
         cast_spell(m_characterMenu->getSpellToUse(),
             m_characterMenu->getUser(),
             m_characterMenu->getTarget());
@@ -257,24 +260,25 @@ void MainMenu::handleConfirm()
     }
     else if (getCurrentMenuChoice() == "Item")
     {
-      if (m_characterMenu->getItemToUse().size() > 0)
+      if (m_characterMenu->getItemToUse().size() > 0 && get_player()->getItem(m_characterMenu->getItemToUse()))
       {
         m_characterMenu->setUserToCurrentChoice();
         m_characterMenu->setTargetToCurrentChoice();
 
         play_sound(config::SOUND_USE_ITEM);
 
-        use_item(get_player()->getItem(m_characterMenu->getItemToUse()),
-            m_characterMenu->getUser(), m_characterMenu->getTarget());
+        Item* item = get_player()->getItem(m_characterMenu->getItemToUse());
+        use_item(item, m_characterMenu->getUser(), m_characterMenu->getTarget());
+
         get_player()->removeItemFromInventory(m_characterMenu->getItemToUse(), 1);
 
         m_itemMenu->refresh();
 
         // Close if no more items.
-        if (get_player()->getItem(m_characterMenu->getItemToUse()) == 0)
-        {
-          closeCharacterMenu();
-        }
+//        if (get_player()->getItem(m_characterMenu->getItemToUse()) == 0)
+//        {
+//          closeCharacterMenu();
+//        }
       }
     }
     else if (getCurrentMenuChoice() == "Status")
@@ -304,7 +308,7 @@ void MainMenu::handleConfirm()
   {
     std::string itemName = m_itemMenu->getSelectedItemName();
     Item* item = get_player()->getItem(itemName);
-    if (item && item->type == ITEM_USE)
+    if (item && item->type == ITEM_USE && item->target == TARGET_SINGLE_ALLY)
     {
       m_characterMenu->setItemToUse(itemName);
       openCharacterMenu();

@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Attack.h"
 #include "logger.h"
 #include "Character.h"
 #include "Utility.h"
@@ -19,6 +20,18 @@ static std::vector<Item> itemDefinitions =
     },
     "",
     Item::ITEM_HEAL_FIXED
+  },
+
+  {
+    "Ether", "Delicious",
+    150,
+    ITEM_USE,
+    TARGET_SINGLE_ALLY,
+    {
+      { "mp", 25 }
+    },
+    "",
+    Item::ITEM_RESTORE_MP_FIXED
   },
 
   {
@@ -84,9 +97,25 @@ Item& item_ref(const std::string& name)
   throw std::runtime_error("No item " + name + " defined!");
 }
 
-void use_item(Item* item, Character* user, Character* target)
+int use_item(Item* item, Character* user, Character* target)
 {
-  Message::instance().show(user->getName() + " uses " + item->name + " on " + target->getName() + "!");
+  int damage = calculate_physical_damage_item(user, target, item);
+
+  for (auto it = item->attributeGain.begin(); it != item->attributeGain.end(); ++it)
+  {
+    target->getAttribute(it->first).current += it->second;
+    if (target->getAttribute(it->first).current > target->getAttribute(it->first).max)
+    {
+      clamp_attribute(target->getAttribute(it->first));
+    }
+  }
+
+  if (item->itemUseType == Item::ITEM_REMOVE_STATUS)
+  {
+
+  }
+
+  return damage;
 }
 
 std::string equip_type_string(ItemType itemType)

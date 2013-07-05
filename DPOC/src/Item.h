@@ -35,6 +35,8 @@ struct Item
   {
     ITEM_HEAL,
     ITEM_HEAL_FIXED,
+    ITEM_RESTORE_MP,
+    ITEM_RESTORE_MP_FIXED,
     ITEM_DAMAGE,
     ITEM_BUFF,
     ITEM_REMOVE_STATUS,
@@ -49,7 +51,7 @@ struct Item
 
 Item create_item(const std::string& name, int stackSize = 1);
 Item& item_ref(const std::string& name);
-void use_item(Item* item, Character* user, Character* target);
+int use_item(Item* item, Character* user, Character* target);
 
 std::string equip_type_string(ItemType itemType);
 

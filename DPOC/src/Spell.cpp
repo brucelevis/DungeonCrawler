@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "Attack.h"
 #include "logger.h"
 #include "Message.h"
 #include "Character.h"
@@ -59,14 +60,27 @@ const Spell* get_spell(const std::string& spell)
   return 0;
 }
 
-void cast_spell(const Spell* spell, Character* caster, Character* target)
+int cast_spell(const Spell* spell, Character* caster, Character* target)
 {
-  Message::instance().show(caster->getName() + " casts " + spell->name + " on " + target->getName() + "!");
+  int damage = 0;
+
+  if (spell->spellType == Spell::SPELL_DAMAGE || spell->spellType == Spell::SPELL_HEAL)
+  {
+    damage = calculate_magical_damage(caster, target, spell);
+  }
+
+  target->getAttribute("hp").current -= damage;
+  if (target->getAttribute("hp").current >= target->getAttribute("hp").max)
+  {
+    clamp_attribute(target->getAttribute("hp"));
+  }
 
   caster->getAttribute("mp").current -= spell->mpCost;
+
+  return damage;
 }
 
 bool can_cast_spell(const Spell* spell, Character* caster)
 {
-  return spell->mpCost < caster->getAttribute("mp").current;
+  return spell->mpCost <= caster->getAttribute("mp").current;
 }

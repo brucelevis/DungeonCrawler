@@ -1,6 +1,24 @@
 #include "Utility.h"
 #include "Attack.h"
 
+int attack(Character* attacker, Character* target, bool guard, Item* weapon)
+{
+  int damage = calculate_physical_damage(attacker, target, weapon);
+
+  if (guard)
+  {
+    damage /= 2;
+  }
+
+  target->getAttribute("hp").current -= damage;
+  if (target->getAttribute("hp").current >= target->getAttribute("hp").max)
+  {
+    clamp_attribute(target->getAttribute("hp"));
+  }
+
+  return damage;
+}
+
 int calculate_physical_damage(Character* attacker, Character* target, Item* weapon)
 {
   int level = attacker->computeCurrentAttribute("level");
@@ -44,6 +62,10 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
     }
 
     return damage;
+  }
+  else if (usedItem->itemUseType == Item::ITEM_RESTORE_MP_FIXED)
+  {
+    return -usedItem->attributeGain["mp"];
   }
 
   return 0;

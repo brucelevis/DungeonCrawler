@@ -190,10 +190,6 @@ void Battle::executeActions()
   {
     play_sound(config::SOUND_SPELL);
 
-    const Spell* spell = get_spell(action.objectName);
-
-    m_currentActor->getAttribute("mp").current -= spell->mpCost;
-
     if (action.target)
     {
       battle_message("%s casts the %s spell at %s!",
@@ -311,28 +307,27 @@ void Battle::actionEffect()
 
       if (actionName == "Attack")
       {
-        damage = calculate_physical_damage(m_currentActor, currentTarget);
+        bool guard = false;
 
         if (m_battleActions.count(currentTarget) > 0 &&
             m_battleActions[currentTarget].actionName == "Guard")
         {
-          damage /= 2;
+          guard = true;
         }
+
+        damage = attack(m_currentActor, currentTarget, guard);
       }
       else if (actionName == "Spell")
       {
         const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
 
-        if (spell->spellType == Spell::SPELL_DAMAGE || spell->spellType == Spell::SPELL_HEAL)
-        {
-          damage = calculate_magical_damage(m_currentActor, currentTarget, spell);
-        }
+        damage = cast_spell(spell, m_currentActor, currentTarget);
       }
       else if (actionName == "Item")
       {
         Item& item = item_ref(m_battleActions[m_currentActor].objectName);
 
-        damage = calculate_physical_damage_item(m_currentActor, currentTarget, &item);
+        damage = use_item(&item, m_currentActor, currentTarget);
       }
 
       if (damage > 0)
@@ -359,13 +354,6 @@ void Battle::actionEffect()
         battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
 
         play_sound(config::SOUND_HEAL);
-      }
-
-      currentTarget->getAttribute("hp").current -= damage;
-
-      if (currentTarget->getAttribute("hp").current >= currentTarget->getAttribute("hp").max)
-      {
-        clamp_attribute(currentTarget->getAttribute("hp"));
       }
 
       if (currentTarget->getAttribute("hp").current <= 0)
