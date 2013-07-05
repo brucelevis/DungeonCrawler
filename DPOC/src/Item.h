@@ -31,6 +31,17 @@ struct Item
 
   std::string effect;
 
+  enum
+  {
+    ITEM_HEAL,
+    ITEM_HEAL_FIXED,
+    ITEM_DAMAGE,
+    ITEM_BUFF,
+    ITEM_REMOVE_STATUS,
+    ITEM_CAUSE_STATUS,
+    ITEM_CUSTOM
+  } itemUseType;
+
   // Put members that should not be initialized after this comment.
 
   int stackSize;

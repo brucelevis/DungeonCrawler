@@ -14,7 +14,24 @@ static std::vector<Item> itemDefinitions =
     25,
     ITEM_USE,
     TARGET_SINGLE_ALLY,
-    { { "hp", 25 } }
+    {
+      { "hp", 25 }
+    },
+    "",
+    Item::ITEM_HEAL_FIXED
+  },
+
+  {
+    "Firebomb", "Explodes in flames",
+    100,
+    ITEM_USE,
+    TARGET_SINGLE_ENEMY,
+    {
+      { "strength", 120 },
+      { "power", 120 }
+    },
+    "Effect_Flame",
+    Item::ITEM_DAMAGE
   },
 
   {
@@ -22,7 +39,9 @@ static std::vector<Item> itemDefinitions =
     10,
     ITEM_WEAPON,
     TARGET_NONE,
-    { { "power", 4 } },
+    {
+      { "power", 4 }
+    },
     "Effect_Slash"
   },
 
@@ -31,7 +50,9 @@ static std::vector<Item> itemDefinitions =
     25,
     ITEM_SHIELD,
     TARGET_NONE,
-    { { "defense", 4 } }
+    {
+      { "defense", 4 }
+    }
   }
 };
 

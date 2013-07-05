@@ -210,23 +210,38 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Item")
   {
-    play_sound(config::SOUND_USE_ITEM);
-
-    Item& item = item_ref(action.objectName);
-    get_player()->removeItemFromInventory(action.objectName, 1);
-
-    if (action.target)
+    if (get_player()->getItem(action.objectName))
     {
-      battle_message("%s uses %s on %s!",
-          m_currentActor->getName().c_str(),
-          item.name.c_str(),
-          action.target->getName().c_str());
+      play_sound(config::SOUND_USE_ITEM);
+
+      Item& item = item_ref(action.objectName);
+
+      get_player()->removeItemFromInventory(action.objectName, 1);
+
+      if (action.target)
+      {
+        battle_message("%s uses %s on %s!",
+            m_currentActor->getName().c_str(),
+            item.name.c_str(),
+            action.target->getName().c_str());
+      }
+      else
+      {
+        battle_message("%s uses %s!",
+            m_currentActor->getName().c_str(),
+            item.name.c_str());
+      }
     }
     else
     {
-      battle_message("%s uses %s!",
-          m_currentActor->getName().c_str(),
-          item.name.c_str());
+      play_sound(config::SOUND_CANCEL);
+
+      battle_message("%s tries to use %s... But there are none left!",
+          m_currentActor->getName().c_str(), action.objectName.c_str());
+
+      m_battleActions[m_currentActor].actionName = "";
+
+      m_turnDelay = 16;
     }
   }
   else if (action.actionName == "Guard")
@@ -244,7 +259,7 @@ void Battle::executeActions()
 
 void Battle::showAction()
 {
-  if (!effectInProgress())
+  if (!effectInProgress() && m_turnDelay == 0)
   {
     m_state = STATE_ACTION_EFFECT;
 
@@ -315,7 +330,9 @@ void Battle::actionEffect()
       }
       else if (actionName == "Item")
       {
-        // TODO: Item usage.
+        Item& item = item_ref(m_battleActions[m_currentActor].objectName);
+
+        damage = calculate_physical_damage_item(m_currentActor, currentTarget, &item);
       }
 
       if (damage > 0)
