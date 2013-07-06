@@ -1017,9 +1017,11 @@ BattleMenu::BattleMenu(Battle* battle, const std::vector<Character*>& monsters)
    m_monsterMenu(new BattleMonsterMenu(monsters)),
    m_spellMenu(0),
    m_itemMenu(0),
-   m_battle(battle)
+   m_battle(battle),
+   m_actionMenuHidden(false)
 {
   setCursorVisible(true);
+  setVisible(true);
   m_stateStack.push(STATE_SELECT_ACTION);
 }
 
@@ -1291,9 +1293,12 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
 {
   State currentState = m_stateStack.top();
 
-  if (cursorVisible())
+  if (isVisible())
   {
-    draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
+    if (!m_actionMenuHidden)
+    {
+      draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
+    }
 
     if (currentState == STATE_SELECT_MONSTER &&
         (m_actionMenu->getCurrentMenuChoice() == "Spell" ||
@@ -1310,14 +1315,21 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
     }
     else
     {
-      draw_text_bmp(target, x + 8, y + 8, "Action");
-      draw_text_bmp(target, x + 88, y + 8, "Name");
-      draw_text_bmp(target, x + 136, y + 8, "Cond");
-      draw_text_bmp(target, x + 180, y + 8, "HP");
-      draw_text_bmp(target, x + 216, y + 8, "MP");
+      if (!m_actionMenuHidden)
+      {
+        draw_text_bmp(target, x + 8, y + 8, "Action");
+        draw_text_bmp(target, x + 88, y + 8, "Name");
+        draw_text_bmp(target, x + 136, y + 8, "Cond");
+        draw_text_bmp(target, x + 180, y + 8, "HP");
+        draw_text_bmp(target, x + 216, y + 8, "MP");
+      }
     }
 
-    m_actionMenu->draw(target, x, y + 24);
+    if (!m_actionMenuHidden)
+    {
+      m_actionMenu->draw(target, x, y + 24);
+    }
+
     m_statusMenu->draw(target, x + 80, y + 24);
   }
 
@@ -1384,6 +1396,12 @@ Character* BattleMenu::getTarget(Target targetType) const
   return result;
 }
 
+void BattleMenu::setActionMenuHidden(bool hidden)
+{
+  m_actionMenuHidden = hidden;
+  m_statusMenu->setCurrentActorRectHidden(hidden);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BattleActionMenu::BattleActionMenu()
@@ -1405,7 +1423,8 @@ void BattleActionMenu::handleConfirm()
 ///////////////////////////////////////////////////////////////////////////////
 
 BattleStatusMenu::BattleStatusMenu()
- : m_currentActor(0)
+ : m_currentActor(0),
+   m_currenActorRectHidden(false)
 {
   const std::vector<PlayerCharacter*>& party = get_player()->getParty();
 
@@ -1438,7 +1457,7 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
     draw_text_bmp(target, x + 100, offY, "%d", character->getAttribute("hp").current);
     draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
 
-    if (i == m_currentActor)
+    if (i == m_currentActor && !m_currenActorRectHidden)
     {
       sf::RectangleShape rect = make_select_rect(x + 6, offY - 1, getWidth() - 12, 11, sf::Color::White);
       target.draw(rect);

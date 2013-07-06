@@ -43,5 +43,6 @@ void show_message(const char* fmt, ...);
 void update_message();
 void clear_message();
 void battle_message(const char* fmt, ...);
+void draw_battle_message(sf::RenderTarget& target);
 
 #endif

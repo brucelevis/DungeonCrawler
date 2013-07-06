@@ -264,6 +264,8 @@ public:
   void draw(sf::RenderTarget& target, int x, int y);
 
   void resetChoice();
+
+  void setActionMenuHidden(bool hidden);
 private:
   void nextActor();
 
@@ -287,6 +289,8 @@ private:
   std::stack<State> m_stateStack;
 
   Battle* m_battle;
+
+  bool m_actionMenuHidden;
 };
 
 class BattleActionMenu : public Menu
@@ -329,8 +333,12 @@ public:
   Character* getCurrentSelectedActor();
 
   void resetActor();
+
+  void setCurrentActorRectHidden(bool hidden) { m_currenActorRectHidden = hidden; }
 private:
   int m_currentActor;
+
+  bool m_currenActorRectHidden;
 };
 
 class BattleMonsterMenu : public Menu

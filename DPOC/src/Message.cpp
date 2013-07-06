@@ -10,6 +10,8 @@
 
 static const size_t CHARS_PER_LINE = 30;
 
+static std::vector<std::string> battleMessage;
+
 void show_message(const char* fmt, ...)
 {
   char buffer[512];
@@ -35,6 +37,7 @@ void update_message()
 void clear_message()
 {
   Message::instance().clear();
+  battleMessage.clear();
 }
 
 void battle_message(const char* fmt, ...)
@@ -48,8 +51,37 @@ void battle_message(const char* fmt, ...)
 
   va_end(args);
 
-  Message::instance().show(buffer, true);
-  Message::instance().flush();
+  std::vector<std::string> strings = split_string(buffer, ' ');
+
+  static const size_t WORDS = 256 / 8 - 2;
+
+  std::string tmp = strings[0];
+  for (size_t i = 1; i < strings.size(); i++)
+  {
+    std::string s = tmp + " " + strings[i];
+    if (s.size() >= WORDS)
+    {
+      battleMessage.push_back(tmp);
+      tmp = strings[i];
+    }
+    else
+    {
+      tmp = s;
+    }
+  }
+
+  if (tmp.size() > 0)
+  {
+    battleMessage.push_back(tmp);
+  }
+}
+
+void draw_battle_message(sf::RenderTarget& target)
+{
+  for (size_t i = 0; i < battleMessage.size(); i++)
+  {
+    draw_text_bmp(target, 8, 8 + i * 12, "%s", battleMessage[i].c_str());
+  }
 }
 
 Message& Message::instance()

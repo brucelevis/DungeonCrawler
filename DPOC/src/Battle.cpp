@@ -293,8 +293,6 @@ void Battle::actionEffect()
 
     if (actionName == "Attack" || actionName == "Spell" || actionName == "Item")
     {
-      clear_message();
-
       Character* currentTarget = m_currentTargets.front();
       m_currentTargets.erase(m_currentTargets.begin());
 
@@ -393,6 +391,8 @@ void Battle::doVictory()
   if (!effectInProgress() && m_turnDelay == 0)
   {
     clear_message();
+    m_battleMenu.setVisible(false);
+
     show_message("Victory!");
     show_message("The party gains %d experience and %d gold!", getExperience(), getGold());
 
@@ -491,12 +491,21 @@ void Battle::draw()
 {
   m_window.clear();
 
-  m_battleMenu.draw(m_window, 0, 152);
+  int battleMenuX = 0;
+
+  if (m_state != STATE_SELECT_ACTIONS)
+  {
+    battleMenuX = -40;
+  }
+
+  m_battleMenu.draw(m_window, battleMenuX, 152);
 
   if (Message::instance().isVisible())
   {
     Message::instance().draw(m_window);
   }
+
+  draw_battle_message(m_window);
 
   for (auto it = m_activeEffects.begin(); it != m_activeEffects.end(); ++it)
   {
@@ -568,7 +577,7 @@ void Battle::doneSelectingActions()
 
   std::sort(m_battleOrder.begin(), m_battleOrder.end(), speed_comparator);
 
-  m_battleMenu.setCursorVisible(false);
+  m_battleMenu.setActionMenuHidden(true);
 
   m_state = STATE_EXECUTE_ACTIONS;
 }
@@ -643,7 +652,7 @@ void Battle::nextActor()
   if (m_battleOrder.empty())
   {
     m_state = STATE_SELECT_ACTIONS;
-    m_battleMenu.setCursorVisible(true);
+    m_battleMenu.setActionMenuHidden(false);
     m_battleMenu.resetChoice();
 
     clear_message();
