@@ -188,8 +188,8 @@ void TiledLoader::parseObjectGroup(const tinyxml2::XMLElement* element)
     const XMLAttribute* gidAttrib = objectElement->FindAttribute("gid");
 
     Object object;
-    object.name = nameAttrib->Value();
-    object.type = typeAttrib->Value();
+    object.name = nameAttrib ? nameAttrib->Value() : "";
+    object.type = typeAttrib ? typeAttrib->Value() : "";
     object.x = xAttrib->IntValue();
     object.y = yAttrib->IntValue();
     object.width = widthAttrib ? widthAttrib->IntValue() : -1;
