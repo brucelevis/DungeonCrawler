@@ -61,7 +61,20 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
 
 bool Character::incapacitated() const
 {
-  return getStatus() == "Dead";
+  return getStatus() == "Dead" ||
+         getStatus() == "Paralyze" ||
+         getStatus() == "Sleep";
+}
+
+void Character::resetStatus()
+{
+  setStatus("Normal");
+}
+
+void Character::takeDamage(const std::string& attr, int amount)
+{
+  getAttribute(attr).current -= amount;
+  clamp_attribute(getAttribute(attr));
 }
 
 Character* Character::createMonster(const std::string& name)

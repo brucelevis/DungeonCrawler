@@ -44,6 +44,8 @@ struct Item
     ITEM_CUSTOM
   } itemUseType;
 
+  std::string status;
+
   // Put members that should not be initialized after this comment.
 
   int stackSize;

@@ -79,7 +79,7 @@ int PlayerCharacter::checkLevelUp(bool display)
   while (exp > expForLevel())
   {
     getAttribute("level").max++;
-    clamp_attribute(getAttribute("level"));
+    reset_attribute(getAttribute("level"));
     levelReached = getAttribute("level").max;
   }
 
@@ -174,8 +174,8 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name)
   character->m_attributes["exp"] = make_attribute(0);
 
   character->setLevel(1, false);
-  clamp_attribute(character->m_attributes["hp"]);
-  clamp_attribute(character->m_attributes["mp"]);
+  reset_attribute(character->m_attributes["hp"]);
+  reset_attribute(character->m_attributes["mp"]);
 
   // character->m_equipment["weapon"] = create_item("Rusty Knife");
   // character->m_equipment["shield"] = create_item("Wood Shield");

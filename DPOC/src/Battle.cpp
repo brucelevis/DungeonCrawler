@@ -402,12 +402,12 @@ void Battle::doVictory()
     // reset attributes that might have been affected by buffs. check for level up.
     for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
     {
-      clamp_attribute((*it)->getAttribute("strength"));
-      clamp_attribute((*it)->getAttribute("power"));
-      clamp_attribute((*it)->getAttribute("defense"));
-      clamp_attribute((*it)->getAttribute("magic"));
-      clamp_attribute((*it)->getAttribute("mag.def"));
-      clamp_attribute((*it)->getAttribute("speed"));
+      reset_attribute((*it)->getAttribute("strength"));
+      reset_attribute((*it)->getAttribute("power"));
+      reset_attribute((*it)->getAttribute("defense"));
+      reset_attribute((*it)->getAttribute("magic"));
+      reset_attribute((*it)->getAttribute("mag.def"));
+      reset_attribute((*it)->getAttribute("speed"));
 
       (*it)->checkLevelUp();
     }

@@ -69,11 +69,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     damage = calculate_magical_damage(caster, target, spell);
   }
 
-  target->getAttribute("hp").current -= damage;
-  if (target->getAttribute("hp").current >= target->getAttribute("hp").max)
-  {
-    clamp_attribute(target->getAttribute("hp"));
-  }
+  target->takeDamage("hp", damage);
 
   caster->getAttribute("mp").current -= spell->mpCost;
 

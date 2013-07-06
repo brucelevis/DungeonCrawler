@@ -162,7 +162,7 @@ void Player::gainExperience(int sum)
   for (auto it = m_party.begin(); it != m_party.end(); ++it)
   {
     (*it)->getAttribute("exp").max += sum;
-    clamp_attribute((*it)->getAttribute("exp"));
+    reset_attribute((*it)->getAttribute("exp"));
   }
 }
 

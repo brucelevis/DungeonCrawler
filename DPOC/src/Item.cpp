@@ -35,6 +35,17 @@ static std::vector<Item> itemDefinitions =
   },
 
   {
+    "Antidote", "Cures poison",
+    50,
+    ITEM_USE,
+    TARGET_SINGLE_ALLY,
+    {},
+    "",
+    Item::ITEM_REMOVE_STATUS,
+    "Poison"
+  },
+
+  {
     "Firebomb", "Explodes in flames",
     100,
     ITEM_USE,
@@ -103,16 +114,15 @@ int use_item(Item* item, Character* user, Character* target)
 
   for (auto it = item->attributeGain.begin(); it != item->attributeGain.end(); ++it)
   {
-    target->getAttribute(it->first).current += it->second;
-    if (target->getAttribute(it->first).current > target->getAttribute(it->first).max)
-    {
-      clamp_attribute(target->getAttribute(it->first));
-    }
+    target->takeDamage(it->first, it->second);
   }
 
   if (item->itemUseType == Item::ITEM_REMOVE_STATUS)
   {
-
+    if (target->getStatus() == item->status)
+    {
+      target->resetStatus();
+    }
   }
 
   return damage;

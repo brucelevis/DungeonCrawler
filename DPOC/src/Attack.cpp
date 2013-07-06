@@ -10,11 +10,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
     damage /= 2;
   }
 
-  target->getAttribute("hp").current -= damage;
-  if (target->getAttribute("hp").current >= target->getAttribute("hp").max)
-  {
-    clamp_attribute(target->getAttribute("hp"));
-  }
+  target->takeDamage("hp", damage);
 
   return damage;
 }

@@ -16,7 +16,14 @@ struct Attribute
   int max;
 };
 
-static inline void clamp_attribute(Attribute& attr) { attr.current = attr.max; }
+static inline void reset_attribute(Attribute& attr) { attr.current = attr.max; }
+static inline void clamp_attribute(Attribute& attr)
+{
+  if (attr.current < 0)
+    attr.current = 0;
+  if (attr.current > attr.max)
+    attr.current = attr.max;
+}
 static inline Attribute make_attribute(int val) { return { val, val }; }
 
 class Character
@@ -38,6 +45,7 @@ public:
 
   void setStatus(const std::string& status) { m_status = status; }
   std::string getStatus() const { return m_status; }
+  void resetStatus();
 
   int spriteWidth() const { return m_textureRect.width; }
   int spriteHeight() const { return m_textureRect.height; }
@@ -45,6 +53,8 @@ public:
   Flash& flash() { return m_flash; }
 
   bool incapacitated() const;
+
+  void takeDamage(const std::string& attr, int amount);
 protected:
   std::string m_name;
 
