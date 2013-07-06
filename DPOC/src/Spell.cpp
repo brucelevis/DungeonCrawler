@@ -92,30 +92,11 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
   }
   else if (spell->spellType == Spell::SPELL_CAUSE_STATUS)
   {
-    if (target->getStatus() == "Normal")
-    {
-      target->setStatus(spell->extra);
-
-      battle_message("%s status is now %s!", spell->extra.c_str());
-    }
-    else
-    {
-      battle_message("No effect...");
-    }
+    cause_status(target, spell->extra);
   }
   else if (spell->spellType == Spell::SPELL_REMOVE_STATUS)
   {
-    if (target->getStatus() == spell->extra)
-    {
-      target->resetStatus();
-
-      battle_message("%s's %s status was removed.",
-          target->getName().c_str(), spell->extra.c_str());
-    }
-    else
-    {
-      battle_message("No effect...");
-    }
+    cure_status(target, spell->extra);
   }
 
   target->takeDamage("hp", damage);

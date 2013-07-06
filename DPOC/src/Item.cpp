@@ -119,13 +119,11 @@ int use_item(Item* item, Character* user, Character* target)
 
   if (item->itemUseType == Item::ITEM_REMOVE_STATUS)
   {
-    if (target->getStatus() == item->status)
-    {
-      target->resetStatus();
-
-      battle_message("%s's %s status was removed.",
-          target->getName().c_str(), item->status.c_str());
-    }
+    cure_status(target, item->status);
+  }
+  else if (item->itemUseType == Item::ITEM_CAUSE_STATUS)
+  {
+    cause_status(target, item->status);
   }
 
   return damage;

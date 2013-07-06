@@ -1,4 +1,6 @@
 #include "Utility.h"
+#include "Message.h"
+
 #include "Attack.h"
 
 int attack(Character* attacker, Character* target, bool guard, Item* weapon)
@@ -87,4 +89,33 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
   }
 
   return damage;
+}
+
+void cause_status(Character* target, const std::string& status)
+{
+  if (target->getStatus() == "Normal")
+  {
+    target->setStatus(status);
+
+    battle_message("%s is now %s!", status.c_str());
+  }
+  else
+  {
+    battle_message("No effect...");
+  }
+}
+
+void cure_status(Character* target, const std::string& status)
+{
+  if (target->getStatus() == status)
+  {
+    target->resetStatus();
+
+    battle_message("%s is no longer %s!",
+        target->getName().c_str(), status.c_str());
+  }
+  else
+  {
+    battle_message("No effect...");
+  }
 }
