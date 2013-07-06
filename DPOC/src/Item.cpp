@@ -59,6 +59,19 @@ static std::vector<Item> itemDefinitions =
   },
 
   {
+    "Steroids", "Makes you mighty",
+    500,
+    ITEM_USE,
+    TARGET_SINGLE_ALLY,
+    {
+      { "strength", 120 },
+      { "power", 120 }
+    },
+    "",
+    Item::ITEM_BUFF
+  },
+
+  {
     "Rusty Knife", "An old rusty knife",
     10,
     ITEM_WEAPON,
@@ -114,7 +127,24 @@ int use_item(Item* item, Character* user, Character* target)
 
   for (auto it = item->attributeGain.begin(); it != item->attributeGain.end(); ++it)
   {
-    target->takeDamage(it->first, damage);
+    if (item->itemUseType == Item::ITEM_HEAL || item->itemUseType == Item::ITEM_HEAL_FIXED ||
+        item->itemUseType == Item::ITEM_DAMAGE)
+    {
+      target->takeDamage(it->first, damage);
+    }
+    else if (item->itemUseType == Item::ITEM_RESTORE_MP || item->itemUseType == Item::ITEM_RESTORE_MP_FIXED)
+    {
+      target->takeDamage(it->first, damage);
+
+      battle_message("%s's MP restored by %d!",
+          target->getName().c_str(), damage);
+
+      damage = 0;
+    }
+    else if (item->itemUseType == Item::ITEM_BUFF)
+    {
+      buff(target, it->first, it->second);
+    }
   }
 
   if (item->itemUseType == Item::ITEM_REMOVE_STATUS)

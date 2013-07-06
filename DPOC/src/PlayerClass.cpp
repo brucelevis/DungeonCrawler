@@ -20,7 +20,7 @@ static std::vector<PlayerClass> classes =
     },
 
     {
-      { 1, { "Hurt", "Heal", "Paralyze", "Poison" } },
+      { 1, { "Hurt", "Heal", "Paralyze", "Poison", "Buff" } },
       { 2, { "Hurt All" } }
     },
 

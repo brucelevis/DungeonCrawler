@@ -64,6 +64,17 @@ static std::vector<Spell> spells =
     Spell::SPELL_CAUSE_STATUS,
     0,
     "Poisoned"
+  },
+
+  {
+    "Buff", "Increase power",
+    4,
+    TARGET_SINGLE_ALLY,
+    true,
+    "",
+    Spell::SPELL_BUFF,
+    100,
+    "strength"
   }
 };
 
@@ -97,6 +108,10 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
   else if (spell->spellType == Spell::SPELL_REMOVE_STATUS)
   {
     cure_status(target, spell->extra);
+  }
+  else if (spell->spellType == Spell::SPELL_BUFF)
+  {
+    buff(target, spell->extra, spell->power);
   }
 
   target->takeDamage("hp", damage);

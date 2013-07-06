@@ -120,3 +120,29 @@ void cure_status(Character* target, const std::string& status)
     battle_message("No effect...");
   }
 }
+
+void buff(Character* target, const std::string& attr, int buffPower)
+{
+  int baseAttr = target->getAttribute(attr).max;
+  float power = 1.0f + (float)buffPower / 100.0f;
+  int newAttr = (float)baseAttr * power;
+
+  target->getAttribute(attr).current = newAttr;
+
+  int delta = newAttr - baseAttr;
+
+  if (delta > 0)
+  {
+    battle_message("%s's %s increased by %d",
+        target->getName().c_str(), attr.c_str(), delta);
+  }
+  else if (delta < 0)
+  {
+    battle_message("%s's %s decreased by %d",
+        target->getName().c_str(), attr.c_str(), delta);
+  }
+  else
+  {
+    battle_message("No effect...");
+  }
+}

@@ -14,4 +14,6 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
 void cause_status(Character* target, const std::string& status);
 void cure_status(Character* target, const std::string& status);
 
+void buff(Character* target, const std::string& attr, int buffPower);
+
 #endif
