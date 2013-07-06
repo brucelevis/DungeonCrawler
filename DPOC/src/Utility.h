@@ -20,6 +20,9 @@ std::string toString(T val)
 template <typename T>
 T fromString(const std::string& val)
 {
+  if (val.empty())
+    return T();
+
   T result;
   std::istringstream ss(val);
   ss >> result;
