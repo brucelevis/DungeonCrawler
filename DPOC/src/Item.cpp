@@ -114,7 +114,7 @@ int use_item(Item* item, Character* user, Character* target)
 
   for (auto it = item->attributeGain.begin(); it != item->attributeGain.end(); ++it)
   {
-    target->takeDamage(it->first, it->second);
+    target->takeDamage(it->first, damage);
   }
 
   if (item->itemUseType == Item::ITEM_REMOVE_STATUS)
