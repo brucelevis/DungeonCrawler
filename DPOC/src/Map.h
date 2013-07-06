@@ -25,7 +25,7 @@ struct Warp
 
 static inline std::string getWarpTargetName(const Warp& warp)
 {
-  return "Resources/" + warp.destMap + ".map";
+  return "Resources/Maps/" + warp.destMap;
 }
 
 class Map
@@ -48,6 +48,7 @@ public:
 
   bool saveToFile(const std::string& filename);
   static Map* loadFromFile(const std::string& filename);
+  static Map* loadTiledFile(const std::string& filename);
 
   const std::vector<Entity*>& getEntities() const { return m_entities; }
 
@@ -62,7 +63,7 @@ private:
     return m_width * m_height;
   }
 private:
-  Tile* m_tiles[config::MAX_LAYERS];
+  std::vector<Tile*> m_tiles;
   int m_width, m_height;
   std::vector<Entity*> m_entities;
   std::string m_music;

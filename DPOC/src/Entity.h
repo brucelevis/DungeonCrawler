@@ -30,6 +30,7 @@ class Entity
     STATE_WALKING
   };
 public:
+  Entity();
   Entity(const std::string& name);
   ~Entity();
 
@@ -37,6 +38,7 @@ public:
 
   std::string getName() const { return m_name; }
   Sprite* sprite() { return m_sprite; }
+  void setSprite(Sprite* sprite) { m_sprite = sprite; }
 
   void setDirection(Direction dir);
   Direction getDirection() const { return m_direction; }
@@ -70,10 +72,12 @@ public:
   std::string getTag() const { return m_tag; }
 
   void setWalkThrough(bool walkthrough) { m_walkThrough = walkthrough; }
+  void setWalkSpeed(float speed) { m_speed = speed; }
+
+  void loadScripts(const std::string& talkScript, const std::string& stepScript);
 public:
   float x, y;
 private:
-  Entity();
   Entity(const Entity&);
   Entity& operator=(const Entity&);
 

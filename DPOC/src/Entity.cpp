@@ -1,5 +1,7 @@
 #include <algorithm>
+#include <sstream>
 
+#include "Utility.h"
 #include "Map.h"
 #include "Player.h"
 #include "Game.h"
@@ -24,6 +26,19 @@ static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
   TRACE("Unknown operation '%s'", operation.c_str());
 
   return false;
+}
+
+Entity::Entity()
+: x(0),
+  y(0),
+  m_sprite(0),
+  m_direction(DIR_DOWN),
+  m_speed(0.1),
+  m_targetX(0), m_targetY(0),
+  m_state(STATE_NORMAL),
+  m_waitCounter(0),
+  m_walkThrough(false)
+{
 }
 
 Entity::Entity(const std::string& name)
@@ -76,6 +91,24 @@ Entity::Entity(const std::string& name)
 Entity::~Entity()
 {
   delete m_sprite;
+}
+
+void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript)
+{
+  TRACE("Entity[%s]::loadScripts(%s, %s)", getTag().c_str(), talkScript.c_str(), stepScript.c_str());
+
+  if (!talkScript.empty())
+  {
+    std::istringstream ss(talkScript);
+    m_script.loadFromLines(get_lines(ss));
+  }
+
+  if (!stepScript.empty())
+  {
+    std::istringstream ss(stepScript);
+    m_stepScript.loadFromLines(get_lines(ss));
+    m_stepScript.execute();
+  }
 }
 
 void Entity::update()
@@ -332,7 +365,8 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     int lhsValue, rhsValue;
 
-    TRACE("lhs=%s rhs=%s lhsKey=%s rhsKey=%s operation=%s", lhs.c_str(), rhs.c_str(), lhsKey.c_str(), rhsKey.c_str(), operation.c_str());
+    TRACE("Entity[%s]: lhs=%s rhs=%s lhsKey=%s rhsKey=%s operation=%s",
+        getTag().c_str(), lhs.c_str(), rhs.c_str(), lhsKey.c_str(), rhsKey.c_str(), operation.c_str());
 
     getIfValue(lhs, lhsKey, lhsValue);
     getIfValue(rhs, rhsKey, rhsValue);
@@ -407,7 +441,7 @@ void Entity::getIfValue(const std::string& input, const std::string& key, int& v
   }
   else
   {
-    TRACE("%s: Unknown input value %s from script.", getTag().c_str(), input.c_str());
+    TRACE("Entity[%s]: Unknown input value %s from script.", getTag().c_str(), input.c_str());
   }
 }
 

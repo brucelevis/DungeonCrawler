@@ -30,6 +30,17 @@ std::vector<std::string> get_lines(std::ifstream& infile)
   return lines;
 }
 
+std::vector<std::string> get_lines(std::istringstream& infile)
+{
+  std::vector<std::string> lines;
+  std::string line;
+  while (std::getline(infile, line, '\n'))
+  {
+    lines.push_back(line);
+  }
+  return lines;
+}
+
 std::string limit_string(const std::string& str, int limit)
 {
   return str.substr(0, limit);

@@ -121,14 +121,7 @@ bool Script::loadFromFile(const std::string& file)
   {
     std::vector<std::string> lines = get_lines(infile);
 
-    strip_comments(lines);
-
-    for (auto it = lines.begin(); it != lines.end(); ++it)
-    {
-      TRACE("Current Line = %s", it->c_str());
-      ScriptData data = parseLine(*it);
-      m_data.push_back(data);
-    }
+    loadFromLines(lines);
 
     infile.close();
 
@@ -140,6 +133,20 @@ bool Script::loadFromFile(const std::string& file)
   }
 
   return false;
+}
+
+void Script::loadFromLines(std::vector<std::string> lines)
+{
+  strip_comments(lines);
+
+  for (auto it = lines.begin(); it != lines.end(); ++it)
+  {
+    TRACE("Current Line = %s", it->c_str());
+    ScriptData data = parseLine(*it);
+    m_data.push_back(data);
+  }
+
+  m_loaded = true;
 }
 
 void Script::execute()

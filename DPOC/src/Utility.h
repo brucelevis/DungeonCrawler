@@ -8,6 +8,7 @@
 
 std::vector<std::string> split_string(const std::string& str, char delim);
 std::vector<std::string> get_lines(std::ifstream& infile);
+std::vector<std::string> get_lines(std::istringstream& infile);
 
 template <typename T>
 std::string toString(T val)

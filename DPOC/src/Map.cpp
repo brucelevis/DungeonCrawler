@@ -1,6 +1,9 @@
 #include <sstream>
 #include <fstream>
 
+#include "Direction.h"
+#include "Utility.h"
+#include "TiledLoader.h"
 #include "Cache.h"
 #include "logger.h"
 #include "Map.h"
@@ -16,10 +19,10 @@ Map::Map()
  : m_width(0),
    m_height(0)
 {
-  for (int i = 0; i < config::MAX_LAYERS; i++)
-  {
-    m_tiles[i] = 0;
-  }
+//  for (int i = 0; i < config::MAX_LAYERS; i++)
+//  {
+//    m_tiles[i] = 0;
+//  }
 
   m_tileset = cache::loadTexture("Resources/DqTileset.png");
 }
@@ -53,7 +56,7 @@ void Map::draw(sf::RenderTarget& target, const coord_t& view)
   {
     for (int x = 0; x < m_width; x++)
     {
-      for (int layer = 0; layer < config::MAX_LAYERS; layer++)
+      for (size_t layer = 0; layer < m_tiles.size(); layer++)
       {
         Tile* tile = getTileAt(x, y, layer);
 
@@ -144,6 +147,11 @@ Map* Map::loadFromFile(const std::string& filename)
     Map* map = new Map;
     map->m_name = filename;
 
+    for (size_t i = 0; i < config::MAX_LAYERS; i++)
+    {
+      map->m_tiles.push_back(0);
+    }
+
     int layers;
 
     ifile >> map->m_width >> map->m_height;
@@ -205,6 +213,197 @@ Map* Map::loadFromFile(const std::string& filename)
   return 0;
 }
 
+Map* Map::loadTiledFile(const std::string& filename)
+{
+  Map* map = 0;
+
+  TRACE("Loading map %s", filename.c_str());
+
+  TiledLoader loader;
+  if (loader.loadFromFile(filename))
+  {
+    map = new Map;
+    map->m_name = filename;
+    map->m_music = loader.getProperty("music");
+
+    TRACE("Map: Loading tilesets");
+
+    std::vector<std::string> tilesets = loader.getTilesets();
+    for (auto it = tilesets.begin(); it != tilesets.end(); ++it)
+    {
+      const TiledLoader::Tileset* tileset = loader.getTileset(*it);
+      if (tileset->startTileIndex == 1)
+      {
+        TRACE("Map: loading tileset %s", ("Resources/Maps/" + tileset->tilesetSource).c_str());
+
+        map->m_tileset = cache::loadTexture("Resources/Maps/" + tileset->tilesetSource);
+
+        if (!map->m_tileset)
+        {
+          TRACE("Map: Unable to load tileset");
+
+          delete map;
+          return 0;
+        }
+      }
+    }
+
+    TRACE("Map: Loading layers");
+
+    std::vector<std::string> layers = loader.getLayers();
+    for (size_t i = 0; i < layers.size(); i++)
+    {
+      // Blocking layer is special.
+      if (to_lower(layers[i]) == "blocking")
+        continue;
+
+      const TiledLoader::Layer* layer = loader.getLayer(layers[i]);
+
+      map->m_width = layer->width;
+      map->m_height = layer->height;
+
+      map->m_tiles.push_back(0);
+      map->m_tiles.back() = new Tile[map->m_width * map->m_height]();
+
+      for (size_t j = 0; j < layer->tiles.size(); j++)
+      {
+        int tileId = layer->tiles[j];
+
+        Tile tile;
+        tile.solid = false;
+        tile.zone = 0;
+        tile.tileX = 0;
+        tile.tileY = 0;
+
+        if (tileId > 0)
+        {
+          tile.tileX = (tileId - 1) % (map->m_tileset->getSize().x / config::TILE_W);
+          tile.tileY = (tileId - 1) / (map->m_tileset->getSize().x / config::TILE_H);
+        }
+
+        map->m_tiles.back()[j] = tile;
+      }
+    }
+
+    // Blocking layer
+    for (auto it = layers.begin(); it != layers.end(); ++it)
+    {
+      if (to_lower(*it) == "blocking")
+      {
+        const TiledLoader::Layer* layer = loader.getLayer(*it);
+
+        for (size_t i = 0; i < layer->tiles.size(); i++)
+        {
+          int tileId = layer->tiles[i];
+          if (tileId != 0)
+            map->m_tiles.front()[i].solid = true;
+        }
+      }
+    }
+
+    for (size_t objectIndex = 0; objectIndex < loader.getNumberOfObjects(); objectIndex++)
+    {
+      const TiledLoader::Object* object = loader.getObject(objectIndex);
+      if (object->tileId > 0)
+      {
+        const TiledLoader::Tileset* tileset = loader.findTilesetMatchingTileIndex(object->tileId);
+        int tileId = object->tileId - 1;
+
+        if (tileset)
+        {
+          std::string spriteSheet = "Resources/Maps/" + tileset->tilesetSource;
+          sf::Texture* texture = cache::loadTexture(spriteSheet);
+
+          int numberOfTilesX = texture->getSize().x / config::TILE_W;
+          int numberOfTilesY = texture->getSize().y / config::TILE_H;
+
+          int numberOfBlocksX = (texture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X));
+          int numberOfBlocksY = (texture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y));
+
+          int tileX = tileId % (texture->getSize().x / config::TILE_W);
+          int tileY = tileId / (texture->getSize().x / config::TILE_H);
+
+          int spriteSheetX = 0;
+          int spriteSheetY = 0;
+
+          int objX = object->x / config::TILE_W;
+          int objY = object->y / config::TILE_H;
+
+          Direction startDirection = DIR_DOWN;
+
+          // haha.
+          for (int blockY = 0; blockY < numberOfBlocksY; blockY++)
+          {
+            for (int blockX = 0; blockX < numberOfBlocksX; blockX++)
+            {
+              for (int y = blockY; y < blockY + config::NUM_SPRITES_Y; y++)
+              {
+                for (int x = blockX; x < blockX + config::NUM_SPRITES_X; x++)
+                {
+                  if (tileX == blockX && tileY == blockY)
+                  {
+                    spriteSheetX = blockX;
+                    spriteSheetY = blockY;
+                    startDirection = (Direction)(tileY - blockY * numberOfTilesY);
+
+                    goto break_out;
+                  }
+                }
+              }
+            }
+          }
+break_out:
+          std::string name = object->name;
+          float walkSpeed = fromString<float>(loader.getObjectProperty(objectIndex, "walkSpeed"));
+
+          Entity* entity = new Entity;
+          entity->setPosition(objX, objY);
+          entity->setTag(name + "@@" + map->m_name);
+          entity->setWalkSpeed(walkSpeed);
+
+          Sprite* entitySprite = new Sprite;
+          entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY);
+          entitySprite->setDirection(startDirection);
+          entity->setSprite(entitySprite);
+
+          entity->loadScripts(
+              loader.getObjectProperty(objectIndex, "talkScript"),
+              loader.getObjectProperty(objectIndex, "stepScript"));
+
+          map->m_entities.push_back(entity);
+
+          cache::releaseTexture(texture);
+        }
+      }
+      else
+      {
+        std::string name = object->name;
+        if (to_lower(name) == "warp")
+        {
+          Warp warp;
+          warp.srcX = object->x / config::TILE_W;
+          warp.srcY = object->y / config::TILE_H;
+          warp.dstX = fromString<int>(loader.getObjectProperty(objectIndex, "destX"));
+          warp.dstY = fromString<int>(loader.getObjectProperty(objectIndex, "destY"));
+          warp.destMap = loader.getObjectProperty(objectIndex, "destMap");
+          map->m_warps.push_back(warp);
+
+          TRACE("New warp: srcX=%d, srcY=%d, dstX=%d, dstY=%d, dstMap=%s",
+              warp.srcX, warp.srcY, warp.dstX, warp.dstY, warp.destMap.c_str());
+        }
+      }
+    }
+
+    TRACE("Map loading completed!");
+  }
+  else
+  {
+    TRACE("Unable to open tiled file %s", filename.c_str());
+  }
+
+  return map;
+}
+
 Tile* Map::getTileAt(int x, int y, int layer)
 {
   if (x < 0 || y < 0 || x >= m_width || y >= m_height)
@@ -244,8 +443,6 @@ const Warp* Map::getWarpAt(int x, int y) const
 
 bool Map::blocking(int x, int y)
 {
-  // TODO: Draw solids in editor instead?
-
   for (int i = 0; i < config::MAX_LAYERS; i++)
   {
     Tile* tile = getTileAt(x, y, i);

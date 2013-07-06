@@ -73,6 +73,7 @@ public:
   Script();
 
   bool loadFromFile(const std::string& file);
+  void loadFromLines(std::vector<std::string> lines);
 
   bool isLoaded() const { return m_loaded; }
 

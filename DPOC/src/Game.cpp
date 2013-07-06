@@ -3,6 +3,7 @@
 
 #include <SFML/System.hpp>
 
+#include "logger.h"
 #include "Map.h"
 #include "Config.h"
 #include "Player.h"
@@ -23,7 +24,7 @@ Game::Game()
 {
   m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
   m_window.setKeyRepeatEnabled(false);
-  loadNewMap("Resources/test.map");
+  loadNewMap("Resources/Maps/Test.tmx");
 }
 
 Game::~Game()
@@ -235,8 +236,9 @@ void Game::playMusic(const std::string& music)
     m_currentMusicName = music;
 
     m_currentMusic.stop();
-    m_currentMusic.openFromFile("Resources/" + music);
+    m_currentMusic.openFromFile("Resources/Music/" + music);
     m_currentMusic.setLoop(true);
+    m_currentMusic.setVolume(75);
     m_currentMusic.play();
   }
 }
@@ -244,9 +246,15 @@ void Game::playMusic(const std::string& music)
 void Game::loadNewMap(const std::string& file)
 {
   delete m_currentMap;
-  m_currentMap = Map::loadFromFile(file);
+  m_currentMap = Map::loadTiledFile(file);
 
-  if (m_currentMap->getMusic() != "<none>")
+  if (!m_currentMap)
+  {
+    TRACE("Loading map failed! Quitting game...");
+    m_window.close();
+  }
+
+  if (!m_currentMap->getMusic().empty())
   {
     playMusic(m_currentMap->getMusic());
   }
