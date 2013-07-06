@@ -62,8 +62,8 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
 bool Character::incapacitated() const
 {
   return getStatus() == "Dead" ||
-         getStatus() == "Paralyze" ||
-         getStatus() == "Sleep";
+         getStatus() == "Paralyzed" ||
+         getStatus() == "Sleeping";
 }
 
 void Character::resetStatus()

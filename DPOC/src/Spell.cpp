@@ -48,11 +48,22 @@ static std::vector<Spell> spells =
     "Paralyze", "Paralyzes an enemy",
     4,
     TARGET_SINGLE_ENEMY,
-    false,
+    true,
     "",
     Spell::SPELL_CAUSE_STATUS,
     0,
-    "Paralyze"
+    "Paralyzed"
+  },
+
+  {
+    "Poison", "Poisons an enemy",
+    4,
+    TARGET_SINGLE_ENEMY,
+    true,
+    "",
+    Spell::SPELL_CAUSE_STATUS,
+    0,
+    "Poisoned"
   }
 };
 
