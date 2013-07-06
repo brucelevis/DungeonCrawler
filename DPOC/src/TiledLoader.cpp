@@ -88,11 +88,21 @@ void TiledLoader::parseProperties(const tinyxml2::XMLElement* element, std::map<
     const XMLAttribute* nameAttrib = propElement->FindAttribute("name");
     const XMLAttribute* valueAttrib = propElement->FindAttribute("value");
 
-    std::ostringstream ss;
-    ss << "* Reading property " << nameAttrib->Value() << " = " << valueAttrib->Value();
-    TRACE("%s", ss.str().c_str());
+    if (valueAttrib)
+    {
+      std::ostringstream ss;
+      ss << "* Reading property " << nameAttrib->Value() << " = " << valueAttrib->Value();
+      TRACE("%s", ss.str().c_str());
 
-    properties[nameAttrib->Value()] = valueAttrib->Value();
+      properties[nameAttrib->Value()] = valueAttrib->Value();
+    }
+    else
+    {
+      // If no value attribute exist on the the property, get the containing text.
+      properties[nameAttrib->Value()] = propElement->GetText();
+
+      TRACE("* Reading property: %s. Text=%s", nameAttrib->Value(), propElement->GetText());
+    }
   }
 }
 
