@@ -20,11 +20,11 @@ static std::vector<PlayerClass> classes =
     },
 
     {
-      { 1, { "Hurt", "Heal" } },
+      { 1, { "Hurt", "Heal", "Paralyze" } },
       { 2, { "Hurt All" } }
     },
 
-    { "Rusty Knife" }
+    { "Rusty Knife", "Wood Shield" }
   }
 };
 

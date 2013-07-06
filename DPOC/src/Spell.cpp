@@ -42,6 +42,17 @@ static std::vector<Spell> spells =
 
     Spell::SPELL_HEAL,
     80
+  },
+
+  {
+    "Paralyze", "Paralyzes an enemy",
+    4,
+    TARGET_SINGLE_ENEMY,
+    false,
+    "",
+    Spell::SPELL_CAUSE_STATUS,
+    0,
+    "Paralyze"
   }
 };
 
@@ -67,6 +78,33 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
   if (spell->spellType == Spell::SPELL_DAMAGE || spell->spellType == Spell::SPELL_HEAL)
   {
     damage = calculate_magical_damage(caster, target, spell);
+  }
+  else if (spell->spellType == Spell::SPELL_CAUSE_STATUS)
+  {
+    if (target->getStatus() == "Normal")
+    {
+      target->setStatus(spell->extra);
+
+      battle_message("%s status is now %s!", spell->extra.c_str());
+    }
+    else
+    {
+      battle_message("No effect...");
+    }
+  }
+  else if (spell->spellType == Spell::SPELL_REMOVE_STATUS)
+  {
+    if (target->getStatus() == spell->extra)
+    {
+      target->resetStatus();
+
+      battle_message("%s's %s status was removed.",
+          target->getName().c_str(), spell->extra.c_str());
+    }
+    else
+    {
+      battle_message("No effect...");
+    }
   }
 
   target->takeDamage("hp", damage);

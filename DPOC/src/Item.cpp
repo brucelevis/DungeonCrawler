@@ -122,6 +122,9 @@ int use_item(Item* item, Character* user, Character* target)
     if (target->getStatus() == item->status)
     {
       target->resetStatus();
+
+      battle_message("%s's %s status was removed.",
+          target->getName().c_str(), item->status.c_str());
     }
   }
 

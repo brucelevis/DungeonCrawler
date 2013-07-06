@@ -24,7 +24,8 @@ struct Spell
     SPELL_DAMAGE,
     SPELL_HEAL,
     SPELL_BUFF,
-    SPELL_STATUS,
+    SPELL_REMOVE_STATUS,
+    SPELL_CAUSE_STATUS,
     SPELL_CUSTOM
   } spellType;
 
