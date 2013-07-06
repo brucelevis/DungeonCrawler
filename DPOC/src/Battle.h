@@ -25,7 +25,8 @@ class Battle
     STATE_VICTORY_PRE,
     STATE_VICTORY_POST,
     STATE_DEFEAT,
-    STATE_ESCAPE
+    STATE_ESCAPE,
+    STATE_PROCESS_STATUS_EFFECTS
   };
 public:
   struct Action
@@ -53,6 +54,9 @@ private:
   void showAction();
   void actionEffect();
   void doVictory();
+  void processStatusEffects();
+
+  bool processStatusEffectForCharacter(Character* actor);
 
   void pollEvents();
 
@@ -77,6 +81,10 @@ private:
 
   int getExperience() const;
   int getGold() const;
+
+  std::vector<Character*> getAllActors() const;
+
+  bool checkVictoryOrDefeat();
 private:
   bool m_battleOngoing;
   State m_state;

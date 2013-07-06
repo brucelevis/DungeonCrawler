@@ -57,6 +57,15 @@ std::vector<Character*> get_alive_actors(const T& actors)
   return result;
 }
 
+static void check_death(Character* actor)
+{
+  if (actor->getAttribute("hp").current <= 0)
+  {
+    actor->setStatus("Dead");
+    battle_message("%s has fallen!", actor->getName().c_str());
+  }
+}
+
 Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters)
  : m_battleOngoing(false),
    m_state(STATE_SELECT_ACTIONS),
@@ -123,6 +132,10 @@ void Battle::start()
       else if (m_state == STATE_DEFEAT)
       {
 
+      }
+      else if (m_state == STATE_PROCESS_STATUS_EFFECTS)
+      {
+        processStatusEffects();
       }
 
       update_message();
@@ -354,23 +367,15 @@ void Battle::actionEffect()
         play_sound(config::SOUND_HEAL);
       }
 
-      if (currentTarget->getAttribute("hp").current <= 0)
-      {
-        currentTarget->setStatus("Dead");
-        battle_message("%s has fallen!", currentTarget->getName().c_str());
-      }
+      check_death(currentTarget);
 
     }
 
     m_turnDelay = TURN_DELAY_TIME;
 
-    if (all_dead(m_monsters))
+    if (checkVictoryOrDefeat())
     {
-      m_state = STATE_VICTORY_PRE;
-    }
-    else if (all_dead(get_player()->getParty()))
-    {
-      m_state = STATE_DEFEAT;
+
     }
     else if (m_currentTargets.empty())
     {
@@ -425,6 +430,68 @@ void Battle::doVictory()
 
     m_state = STATE_VICTORY_POST;
   }
+}
+
+void Battle::processStatusEffects()
+{
+  if (m_turnDelay == 0 && !effectInProgress())
+  {
+    if (m_currentTargets.size() > 0)
+    {
+      clear_message();
+
+      Character* current = m_currentTargets.back();
+      m_currentTargets.pop_back();
+
+      bool handledEffect = false;
+
+      if (processStatusEffectForCharacter(current))
+        handledEffect = true;
+
+      if (handledEffect)
+      {
+        m_turnDelay = TURN_DELAY_TIME;
+      }
+    }
+    else
+    {
+      m_state = STATE_SELECT_ACTIONS;
+      m_battleMenu.setActionMenuHidden(false);
+      m_battleMenu.resetChoice();
+
+      clear_message();
+    }
+  }
+}
+
+bool Battle::processStatusEffectForCharacter(Character* actor)
+{
+  bool didProcess = false;
+
+  if (actor->getStatus() == "Poisoned")
+  {
+    int damage = 1;
+
+    actor->takeDamage("hp", damage);
+
+    battle_message("%s takes %d damage from poison.",
+        actor->getName().c_str(), damage);
+
+    if (isMonster(actor))
+    {
+      actor->flash().start(6, 3);
+    }
+
+    play_sound(config::SOUND_POISON);
+
+    didProcess = true;
+  }
+
+  check_death(actor);
+
+  checkVictoryOrDefeat();
+
+  return didProcess;
 }
 
 void Battle::pollEvents()
@@ -651,11 +718,10 @@ void Battle::nextActor()
 
   if (m_battleOrder.empty())
   {
-    m_state = STATE_SELECT_ACTIONS;
-    m_battleMenu.setActionMenuHidden(false);
-    m_battleMenu.resetChoice();
-
     clear_message();
+
+    m_currentTargets = getAllActors();
+    m_state = STATE_PROCESS_STATUS_EFFECTS;
   }
   else
   {
@@ -805,4 +871,39 @@ int Battle::getGold() const
   }
 
   return sum;
+}
+
+std::vector<Character*> Battle::getAllActors() const
+{
+  std::vector<Character*> result;
+
+  for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    result.push_back(*it);
+  }
+
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+  {
+    result.push_back(*it);
+  }
+
+  return result;
+}
+
+bool Battle::checkVictoryOrDefeat()
+{
+  if (all_dead(m_monsters))
+  {
+    m_state = STATE_VICTORY_PRE;
+
+    return true;
+  }
+  else if (all_dead(get_player()->getParty()))
+  {
+    m_state = STATE_DEFEAT;
+
+    return true;
+  }
+
+  return false;
 }
