@@ -341,13 +341,13 @@ void Battle::actionEffect()
           play_sound(config::SOUND_HIT);
         }
       }
-      else if (damage == 0)
+      else if (damage == 0 && actionName == "Attack")
       {
         battle_message("Miss! %s takes no damage!", currentTarget->getName().c_str(), damage);
 
         play_sound(config::SOUND_MISS);
       }
-      else
+      else if (damage < 0)
       {
         battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
 
