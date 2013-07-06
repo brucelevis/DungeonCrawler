@@ -369,7 +369,7 @@ void MainMenu::moveArrow(Direction dir)
   {
     m_itemMenu->moveArrow(dir);
   }
-  else if (currentState == STATE_CHARACTER_MENU)
+  else if (currentState == STATE_CHARACTER_MENU || currentState == STATE_STATUS_MENU)
   {
     m_characterMenu->moveArrow(dir);
   }
