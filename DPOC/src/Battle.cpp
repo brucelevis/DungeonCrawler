@@ -73,9 +73,10 @@ Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters
    m_monsters(monsters),
    m_currentActor(0),
    m_window(window),
-   m_turnDelay(0)
+   m_turnDelay(0),
+   m_shakeCounter(0)
 {
-
+  m_targetTexture.create(window.getSize().x, window.getSize().y);
 }
 
 Battle::~Battle()
@@ -103,6 +104,9 @@ void Battle::start()
 
       if (m_turnDelay > 0)
         m_turnDelay--;
+
+      if (m_shakeCounter > 0)
+        m_shakeCounter--;
 
       updateEffects();
 
@@ -348,6 +352,8 @@ void Battle::actionEffect()
         if (isMonster(m_currentActor))
         {
           play_sound(config::SOUND_ENEMY_HIT);
+
+          shakeScreen();
         }
         else
         {
@@ -486,6 +492,10 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
 
     didProcess = true;
   }
+  else if (actor->getStatus() == "Dead")
+  {
+    return false;
+  }
 
   check_death(actor);
 
@@ -557,6 +567,13 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
 void Battle::draw()
 {
   m_window.clear();
+  m_targetTexture.clear();
+
+  // Because "clear" doesn't clear...
+  sf::RectangleShape clearRect;
+  clearRect.setFillColor(sf::Color::Black);
+  clearRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
+  m_targetTexture.draw(clearRect);
 
   int battleMenuX = 0;
 
@@ -565,20 +582,34 @@ void Battle::draw()
     battleMenuX = -40;
   }
 
-  m_battleMenu.draw(m_window, battleMenuX, 152);
+  m_battleMenu.draw(m_targetTexture, battleMenuX, 152);
 
   if (Message::instance().isVisible())
   {
-    Message::instance().draw(m_window);
+    Message::instance().draw(m_targetTexture);
   }
 
-  draw_battle_message(m_window);
+  draw_battle_message(m_targetTexture);
 
   for (auto it = m_activeEffects.begin(); it != m_activeEffects.end(); ++it)
   {
-    (*it)->render(m_window);
+    (*it)->render(m_targetTexture);
   }
 
+  m_targetTexture.display();
+
+  sf::Sprite sprite;
+  sprite.setTexture(m_targetTexture.getTexture());
+  sprite.setPosition(0, 0);
+
+  if (m_shakeCounter > 0)
+  {
+    sprite.setPosition(random_range(-4, 4), 0);
+    // SHake in y-axis as well?!
+    //sprite.setPosition(random_range(-4, 4), random_range(-4, 4));
+  }
+
+  m_window.draw(sprite);
   m_window.display();
 }
 
@@ -691,6 +722,9 @@ bool Battle::effectInProgress() const
     return true;
 
   if (m_activeEffects.size() > 0)
+    return true;
+
+  if (m_shakeCounter > 0)
     return true;
 
   return false;
@@ -906,4 +940,9 @@ bool Battle::checkVictoryOrDefeat()
   }
 
   return false;
+}
+
+void Battle::shakeScreen()
+{
+  m_shakeCounter = 16;
 }

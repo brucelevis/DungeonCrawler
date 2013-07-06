@@ -85,6 +85,8 @@ private:
   std::vector<Character*> getAllActors() const;
 
   bool checkVictoryOrDefeat();
+
+  void shakeScreen();
 private:
   bool m_battleOngoing;
   State m_state;
@@ -98,10 +100,13 @@ private:
   std::vector<Character*> m_currentTargets;
   std::vector<Effect*> m_activeEffects;
 
+  sf::RenderTexture m_targetTexture;
   sf::RenderWindow& m_window;
 
   // A short delay between "damage" and "next actor".
   int m_turnDelay;
+
+  int m_shakeCounter;
 };
 
 #endif
