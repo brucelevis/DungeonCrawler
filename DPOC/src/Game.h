@@ -1,6 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <vector>
+#include <string>
+
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "coord.h"
@@ -21,6 +24,8 @@ public:
 
   void transferPlayer(const std::string& targetMap, int x, int y);
   void playMusic(const std::string& music);
+
+  void openChoiceMenu(const std::vector<std::string>& choices);
 private:
   Game();
   ~Game();
@@ -33,6 +38,8 @@ private:
   void handleKeyPress(sf::Keyboard::Key key);
 
   void loadNewMap(const std::string& file);
+
+  void closeChoiceMenu();
 private:
   sf::RenderWindow m_window;
   Map* m_currentMap;
@@ -43,6 +50,7 @@ private:
   sf::Music m_currentMusic;
 
   MainMenu m_menu;
+  ChoiceMenu* m_choiceMenu;
 };
 
 #endif

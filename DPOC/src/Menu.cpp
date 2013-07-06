@@ -1,3 +1,4 @@
+#include "Persistent.h"
 #include "Config.h"
 #include "logger.h"
 #include "Cache.h"
@@ -173,6 +174,13 @@ void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
   sprite.setTextureRect(sf::IntRect(0, 0, 8, 8));
   sprite.setPosition(x, y);
   target.draw(sprite);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ChoiceMenu::handleConfirm()
+{
+  Persistent<int>::instance().set("sys:choice", getCurrentChoiceIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

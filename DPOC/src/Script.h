@@ -7,6 +7,7 @@
 
 static const int MAX_SCRIPT_MESSAGE_BUFFER_SIZE = 512;
 static const int MAX_SCRIPT_KEY_SIZE = 32;
+static const int MAX_CHOICES = 4;
 
 class Script
 {
@@ -21,7 +22,8 @@ public:
     OP_SET_LOCAL,
     OP_IF,
     OP_END_IF,
-    OP_ELSE
+    OP_ELSE,
+    OP_CHOICE
   };
 
   struct ScriptData
@@ -67,6 +69,12 @@ public:
 
         char boolOperation[MAX_SCRIPT_KEY_SIZE];
       } ifData;
+
+      struct
+      {
+        int numberOfChoices;
+        char choices[MAX_CHOICES][MAX_SCRIPT_KEY_SIZE];
+      } choiceData;
     } data;
   };
 

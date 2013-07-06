@@ -73,6 +73,12 @@ private:
   bool m_cursorVisible;
 };
 
+class ChoiceMenu : public Menu
+{
+public:
+  void handleConfirm();
+};
+
 class MainMenu;
 class ItemMenu;
 class SpellMenu;

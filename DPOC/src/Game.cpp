@@ -20,7 +20,8 @@ Game& Game::instance()
 
 Game::Game()
  : m_currentMap(0),
-   m_player(Player::create(4, 4))
+   m_player(Player::create(4, 4)),
+   m_choiceMenu(0)
 {
   m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
   m_window.setKeyRepeatEnabled(false);
@@ -33,6 +34,7 @@ Game::~Game()
 
   delete m_currentMap;
   delete m_player;
+  delete m_choiceMenu;
 }
 
 void Game::run()
@@ -108,6 +110,14 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   {
     if (Message::instance().isVisible() && Message::instance().isWaitingForKey())
     {
+      // CHoice menu when message box open: handle confirm and close message box.
+      if (m_choiceMenu)
+      {
+        m_choiceMenu->handleConfirm();
+
+        closeChoiceMenu();
+      }
+
       Message::instance().nextPage();
     }
     else if (Message::instance().isVisible())
@@ -119,6 +129,14 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
       if (m_menu.isVisible())
       {
         m_menu.handleConfirm();
+      }
+      else if (m_choiceMenu)
+      {
+        // ChoiceMenu when no message box is open.
+
+        m_choiceMenu->handleConfirm();
+
+        closeChoiceMenu();
       }
       else
       {
@@ -154,6 +172,13 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
     else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
   }
+  else if (m_choiceMenu && m_choiceMenu->isVisible())
+  {
+    if (key == sf::Keyboard::Down) m_choiceMenu->moveArrow(DIR_DOWN);
+    else if (key == sf::Keyboard::Up) m_choiceMenu->moveArrow(DIR_UP);
+    else if (key == sf::Keyboard::Right) m_choiceMenu->moveArrow(DIR_RIGHT);
+    else if (key == sf::Keyboard::Down) m_choiceMenu->moveArrow(DIR_DOWN);
+  }
 
   if (key == sf::Keyboard::B)
   {
@@ -185,6 +210,11 @@ void Game::draw()
   if (Message::instance().isVisible())
   {
     Message::instance().draw(m_window);
+  }
+
+  if (m_choiceMenu && m_choiceMenu->isVisible())
+  {
+    m_choiceMenu->draw(m_window, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
   }
 
   m_window.display();
@@ -241,6 +271,22 @@ void Game::playMusic(const std::string& music)
     m_currentMusic.setVolume(75);
     m_currentMusic.play();
   }
+}
+
+void Game::openChoiceMenu(const std::vector<std::string>& choices)
+{
+  m_choiceMenu = new ChoiceMenu;
+  m_choiceMenu->setVisible(true);
+  for (auto it = choices.begin(); it != choices.end(); ++it)
+  {
+    m_choiceMenu->addEntry(*it);
+  }
+}
+
+void Game::closeChoiceMenu()
+{
+  delete m_choiceMenu;
+  m_choiceMenu = 0;
 }
 
 void Game::loadNewMap(const std::string& file)

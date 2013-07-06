@@ -343,7 +343,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     Script::ScriptData next;
     if (executingScript.peekNext(next))
     {
-      if (next.opcode == Script::OP_MESSAGE)
+      if (next.opcode == Script::OP_MESSAGE || next.opcode == Script::OP_CHOICE)
       {
         executingScript.advance();
         executeScriptLine(next, executingScript);
@@ -424,6 +424,17 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
         ifCount--;
       }
     }
+  }
+  else if (data.opcode == Script::OP_CHOICE)
+  {
+    std::vector<std::string> choices;
+
+    for (int i = 0; i < data.data.choiceData.numberOfChoices; i++)
+    {
+      choices.push_back(data.data.choiceData.choices[i]);
+    }
+
+    Game::instance().openChoiceMenu(choices);
   }
 }
 

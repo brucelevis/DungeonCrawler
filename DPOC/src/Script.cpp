@@ -195,6 +195,8 @@ bool Script::peekNext(ScriptData& out) const
   if (m_currentIndex < (m_data.size() - 1))
   {
     out = m_data[m_currentIndex + 1];
+
+    return true;
   }
 
   return false;
@@ -312,6 +314,19 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     // Nothing
   }
+  else if (opcode == OP_CHOICE)
+  {
+    for (int i = 0; i < MAX_CHOICES; i++)
+    {
+      memset(data.data.choiceData.choices[i], '\0', MAX_SCRIPT_KEY_SIZE);
+    }
+
+    data.data.choiceData.numberOfChoices = strings.size() - 1;
+    for (size_t i = 1; i < strings.size(); i++)
+    {
+      strcpy(data.data.choiceData.choices[i - 1], strings[i].c_str());
+    }
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -331,7 +346,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "set_local", OP_SET_LOCAL },
     { "if", OP_IF },
     { "endif", OP_END_IF },
-    { "else", OP_ELSE }
+    { "else", OP_ELSE },
+    { "choice", OP_CHOICE }
   };
 
   auto it = OP_MAP.find(opStr);
