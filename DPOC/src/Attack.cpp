@@ -97,7 +97,8 @@ void cause_status(Character* target, const std::string& status)
   {
     target->setStatus(status);
 
-    battle_message("%s is now %s!", status.c_str());
+    battle_message("%s is now %s!",
+        target->getName().c_str(), status.c_str());
   }
   else
   {
