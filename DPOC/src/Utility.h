@@ -17,6 +17,15 @@ std::string toString(T val)
   return ss.str();
 }
 
+template <typename T>
+T fromString(const std::string& val)
+{
+  T result;
+  std::istringstream ss(val);
+  ss >> result;
+  return result;
+}
+
 std::string limit_string(const std::string& str, int limit);
 
 std::string to_lower(const std::string& str);
