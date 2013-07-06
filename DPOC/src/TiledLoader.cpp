@@ -433,3 +433,19 @@ std::string TiledLoader::getLayerProperty(const std::string& ident, const std::s
   }
   return "";
 }
+
+const TiledLoader::Tileset* TiledLoader::findTilesetMatchingTileIndex(int tileIndex) const
+{
+  std::vector<std::string> tilesets = getTilesets();
+
+  const Tileset* potential = 0;
+  for (auto it = tilesets.begin(); it != tilesets.end(); ++it)
+  {
+    const Tileset* tileset = getTileset(*it);
+
+    if (tileIndex >= tileset->startTileIndex)
+      potential = tileset;
+  }
+
+  return potential;
+}
