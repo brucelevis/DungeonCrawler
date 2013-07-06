@@ -130,16 +130,27 @@ void Entity::update()
       m_state = STATE_NORMAL;
     }
   }
-  else
+
+  if (m_scriptWaitMap[&m_script] > 0)
   {
-    if (m_script.active())
+    m_scriptWaitMap[&m_script]--;
+  }
+
+  if (m_scriptWaitMap[&m_stepScript] > 0)
+  {
+    m_scriptWaitMap[&m_stepScript]--;
+  }
+
+  if (m_state != STATE_WALKING)
+  {
+    if (m_script.active() && m_scriptWaitMap[&m_script] == 0)
     {
       executeScriptLine(m_script.getCurrentData(), m_script);
 
       m_script.advance();
     }
 
-    if (!m_script.active() && m_stepScript.active())
+    if (!m_script.active() && m_stepScript.active() && m_scriptWaitMap[&m_stepScript] == 0)
     {
       executeScriptLine(m_stepScript.getCurrentData(), m_stepScript);
 
@@ -345,7 +356,8 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   }
   else if (data.opcode == Script::OP_WAIT)
   {
-    wait(data.data.waitData.duration);
+    // wait(data.data.waitData.duration);
+    m_scriptWaitMap[&executingScript] = data.data.waitData.duration;
   }
   else if (data.opcode == Script::OP_SET_GLOBAL)
   {

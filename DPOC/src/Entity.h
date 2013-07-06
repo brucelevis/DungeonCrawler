@@ -103,6 +103,7 @@ private:
 
   State m_state;
   int m_waitCounter;
+  std::map<Script*, int> m_scriptWaitMap;
 
   std::string m_tag;
 
