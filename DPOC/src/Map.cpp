@@ -15,6 +15,42 @@ static std::string make_tag(int index, const std::string& name)
   return ss.str();
 }
 
+static void compute_sprite_data(sf::Texture* texture, int tileX, int tileY, int& spriteSheetX, int& spriteSheetY, Direction& startDirection)
+{
+  int numberOfTilesX = texture->getSize().x / config::TILE_W;
+  int numberOfTilesY = texture->getSize().y / config::TILE_H;
+
+  int numberOfBlocksX = (texture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X));
+  int numberOfBlocksY = (texture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y));
+
+  spriteSheetX = 0;
+  spriteSheetY = 0;
+
+  startDirection = DIR_DOWN;
+
+  // haha.
+  for (int blockY = 0; blockY < numberOfBlocksY; blockY++)
+  {
+    for (int blockX = 0; blockX < numberOfBlocksX; blockX++)
+    {
+      for (int y = blockY; y < blockY + config::NUM_SPRITES_Y; y++)
+      {
+        for (int x = blockX; x < blockX + config::NUM_SPRITES_X; x++)
+        {
+          if (tileX == blockX && tileY == blockY)
+          {
+            spriteSheetX = blockX;
+            spriteSheetY = blockY;
+            startDirection = (Direction)(tileY - blockY * numberOfTilesY);
+
+            return;
+          }
+        }
+      }
+    }
+  }
+}
+
 Map::Map()
  : m_width(0),
    m_height(0)
@@ -314,61 +350,41 @@ Map* Map::loadTiledFile(const std::string& filename)
           std::string spriteSheet = "Resources/Maps/" + tileset->tilesetSource;
           sf::Texture* texture = cache::loadTexture(spriteSheet);
 
-          int numberOfTilesX = texture->getSize().x / config::TILE_W;
-          int numberOfTilesY = texture->getSize().y / config::TILE_H;
-
-          int numberOfBlocksX = (texture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X));
-          int numberOfBlocksY = (texture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y));
-
-          int tileX = tileId % (texture->getSize().x / config::TILE_W);
-          int tileY = tileId / (texture->getSize().x / config::TILE_H);
-
-          int spriteSheetX = 0;
-          int spriteSheetY = 0;
+          std::string name = object->name;
+          float walkSpeed = fromString<float>(loader.getObjectProperty(objectIndex, "walkSpeed"));
 
           int objX = object->x / config::TILE_W;
           int objY = object->y / config::TILE_H;
 
-          Direction startDirection = DIR_DOWN;
-
-          // haha.
-          for (int blockY = 0; blockY < numberOfBlocksY; blockY++)
-          {
-            for (int blockX = 0; blockX < numberOfBlocksX; blockX++)
-            {
-              for (int y = blockY; y < blockY + config::NUM_SPRITES_Y; y++)
-              {
-                for (int x = blockX; x < blockX + config::NUM_SPRITES_X; x++)
-                {
-                  if (tileX == blockX && tileY == blockY)
-                  {
-                    spriteSheetX = blockX;
-                    spriteSheetY = blockY;
-                    startDirection = (Direction)(tileY - blockY * numberOfTilesY);
-
-                    goto break_out;
-                  }
-                }
-              }
-            }
-          }
-break_out:
-          std::string name = object->name;
-          float walkSpeed = fromString<float>(loader.getObjectProperty(objectIndex, "walkSpeed"));
+          int tileX = tileId % (texture->getSize().x / config::TILE_W);
+          int tileY = tileId / (texture->getSize().x / config::TILE_H);
 
           Entity* entity = new Entity;
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
           entity->setWalkSpeed(walkSpeed);
 
-          Sprite* entitySprite = new Sprite;
-          entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY);
-          entitySprite->setDirection(startDirection);
-          entity->setSprite(entitySprite);
-
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),
               loader.getObjectProperty(objectIndex, "stepScript"));
+
+          if (texture == map->m_tileset)
+          {
+            TileSprite* tileSprite = new TileSprite(map->m_tileset, tileX, tileY);
+            entity->setSprite(tileSprite);
+          }
+          else
+          {
+            int spriteSheetX, spriteSheetY;
+            Direction startDirection;
+
+            compute_sprite_data(texture, tileX, tileY, spriteSheetX, spriteSheetY, startDirection);
+
+            Sprite* entitySprite = new Sprite;
+            entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY);
+            entitySprite->setDirection(startDirection);
+            entity->setSprite(entitySprite);
+          }
 
           map->m_entities.push_back(entity);
 

@@ -88,3 +88,21 @@ void Sprite::render(sf::RenderTarget& target, float x, float y)
   m_sprite.setTextureRect(sf::IntRect(rectLeft, rectTop, m_width, m_height));
   target.draw(m_sprite);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)
+ : m_tileX(tileX),
+   m_tileY(tileY)
+{
+  TRACE("Creating new TileSprite. tileX=%d, tileY=%d", tileX, tileY);
+
+  m_sprite.setTexture(*tileset);
+  m_sprite.setTextureRect(sf::IntRect(tileX * config::TILE_W, tileY * config::TILE_H, config::TILE_W, config::TILE_H));
+}
+
+void TileSprite::render(sf::RenderTarget& target, float x, float y)
+{
+  m_sprite.setPosition(x, y);
+  target.draw(m_sprite);
+}

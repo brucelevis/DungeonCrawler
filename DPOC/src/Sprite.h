@@ -9,10 +9,10 @@ class Sprite
 {
 public:
   Sprite();
-  ~Sprite();
+  virtual ~Sprite();
   void create(const std::string& spriteId, int spriteSheetX, int spriteSheetY, int speed = 10);
   void update(Direction direction);
-  void render(sf::RenderTarget& target, float x, float y);
+  virtual void render(sf::RenderTarget& target, float x, float y);
 
   void setDirection(Direction dir)
   {
@@ -29,7 +29,7 @@ public:
 private:
   Sprite(const Sprite&);
   Sprite& operator=(const Sprite&);
-private:
+protected:
   int m_width, m_height;
   int m_frame, m_maxFrame, m_ticksPerFrame, m_ticks;
   Direction m_direction;
@@ -39,6 +39,16 @@ private:
 
   sf::Sprite m_sprite;
   std::string m_textureName;
+};
+
+class TileSprite : public Sprite
+{
+public:
+  TileSprite(sf::Texture* tileset, int tileX, int tileY);
+
+  void render(sf::RenderTarget& target, float x, float y);
+private:
+  int m_tileX, m_tileY;
 };
 
 #endif
