@@ -23,7 +23,11 @@ public:
     OP_IF,
     OP_END_IF,
     OP_ELSE,
-    OP_CHOICE
+    OP_CHOICE,
+    OP_SET_TILE_ID, // For entities with tileSprites.
+    OP_GIVE_ITEM,
+    OP_GIVE_GOLD,
+    OP_PLAY_SOUND
   };
 
   struct ScriptData
@@ -75,6 +79,27 @@ public:
         int numberOfChoices;
         char choices[MAX_CHOICES][MAX_SCRIPT_KEY_SIZE];
       } choiceData;
+
+      struct
+      {
+        int tileId;
+      } setTileIdData;
+
+      struct
+      {
+        char itemName[MAX_SCRIPT_KEY_SIZE];
+        int amount;
+      } giveItemData;
+
+      struct
+      {
+        int amount;
+      } giveGoldData;
+
+      struct
+      {
+        char sound[MAX_SCRIPT_KEY_SIZE];
+      } playSoundData;
     } data;
   };
 

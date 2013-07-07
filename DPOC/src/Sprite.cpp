@@ -93,7 +93,8 @@ void Sprite::render(sf::RenderTarget& target, float x, float y)
 
 TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)
  : m_tileX(tileX),
-   m_tileY(tileY)
+   m_tileY(tileY),
+   m_tileset(tileset)
 {
   TRACE("Creating new TileSprite. tileX=%d, tileY=%d", tileX, tileY);
 
@@ -105,4 +106,12 @@ void TileSprite::render(sf::RenderTarget& target, float x, float y)
 {
   m_sprite.setPosition(x, y);
   target.draw(m_sprite);
+}
+
+void TileSprite::setTileNum(int tileNum)
+{
+  m_tileX = tileNum % (m_tileset->getSize().x / config::TILE_W);
+  m_tileY = tileNum / (m_tileset->getSize().x / config::TILE_H);
+
+  m_sprite.setTextureRect(sf::IntRect(m_tileX * config::TILE_W, m_tileY * config::TILE_H, config::TILE_W, config::TILE_H));
 }

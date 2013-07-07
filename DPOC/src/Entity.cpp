@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <sstream>
 
+#include "Sound.h"
 #include "Utility.h"
 #include "Map.h"
 #include "Player.h"
@@ -435,6 +436,37 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     }
 
     Game::instance().openChoiceMenu(choices);
+  }
+  else if (data.opcode == Script::OP_SET_TILE_ID)
+  {
+    int tileId = data.data.setTileIdData.tileId;
+
+    TileSprite* tileSprite = dynamic_cast<TileSprite*>(m_sprite);
+    if (tileSprite)
+    {
+      tileSprite->setTileNum(tileId);
+    }
+    else
+    {
+      TRACE("Attempting to call set_tile_id on entity not using tileSprite.");
+    }
+  }
+  else if (data.opcode == Script::OP_GIVE_ITEM)
+  {
+    int amount = data.data.giveItemData.amount;
+    std::string itemName = data.data.giveItemData.itemName;
+
+    get_player()->addItemToInventory(itemName, amount);
+  }
+  else if (data.opcode == Script::OP_GIVE_GOLD)
+  {
+    int amount = data.data.giveGoldData.amount;
+    get_player()->gainGold(amount);
+  }
+  else if (data.opcode == Script::OP_PLAY_SOUND)
+  {
+    std::string sound = data.data.playSoundData.sound;
+    play_sound("Resources/Audio/" + sound);
   }
 }
 

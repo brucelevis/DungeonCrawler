@@ -47,8 +47,11 @@ public:
   TileSprite(sf::Texture* tileset, int tileX, int tileY);
 
   void render(sf::RenderTarget& target, float x, float y);
+
+  void setTileNum(int tileNum);
 private:
   int m_tileX, m_tileY;
+  sf::Texture* m_tileset;
 };
 
 #endif

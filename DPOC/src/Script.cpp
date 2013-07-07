@@ -327,6 +327,30 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       strcpy(data.data.choiceData.choices[i - 1], strings[i].c_str());
     }
   }
+  else if (opcode == OP_SET_TILE_ID)
+  {
+    data.data.setTileIdData.tileId = atoi(strings[1].c_str());
+  }
+  else if (opcode == OP_GIVE_ITEM)
+  {
+    memset(data.data.giveItemData.itemName, '\0', MAX_SCRIPT_KEY_SIZE);
+    data.data.giveItemData.amount = atoi(strings[1].c_str());
+    for (size_t i = 2; i < strings.size(); i++)
+    {
+      strcat(data.data.giveItemData.itemName, strings[i].c_str());
+      if (i < strings.size() - 1)
+        strcat(data.data.giveItemData.itemName, " ");
+    }
+  }
+  else if (opcode == OP_GIVE_GOLD)
+  {
+    data.data.giveGoldData.amount = atoi(strings[1].c_str());
+  }
+  else if (opcode == OP_PLAY_SOUND)
+  {
+    memset(data.data.playSoundData.sound, '\0', MAX_SCRIPT_KEY_SIZE);
+    strcpy(data.data.playSoundData.sound, strings[1].c_str());
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -339,15 +363,19 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
 {
   static std::map<std::string, Opcode> OP_MAP =
   {
-    { "message", OP_MESSAGE },
-    { "walk", OP_WALK },
-    { "wait", OP_WAIT },
-    { "set_global", OP_SET_GLOBAL },
-    { "set_local", OP_SET_LOCAL },
-    { "if", OP_IF },
-    { "endif", OP_END_IF },
-    { "else", OP_ELSE },
-    { "choice", OP_CHOICE }
+    { "message",      OP_MESSAGE },
+    { "walk",         OP_WALK },
+    { "wait",         OP_WAIT },
+    { "set_global",   OP_SET_GLOBAL },
+    { "set_local",    OP_SET_LOCAL },
+    { "if",           OP_IF },
+    { "endif",        OP_END_IF },
+    { "else",         OP_ELSE },
+    { "choice",       OP_CHOICE },
+    { "set_tile_id",  OP_SET_TILE_ID },
+    { "give_item",    OP_GIVE_ITEM },
+    { "give_gold",    OP_GIVE_GOLD },
+    { "play_sound",   OP_PLAY_SOUND }
   };
 
   auto it = OP_MAP.find(opStr);
