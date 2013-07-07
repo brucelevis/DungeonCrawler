@@ -352,6 +352,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
           std::string name = object->name;
           float walkSpeed = fromString<float>(loader.getObjectProperty(objectIndex, "walkSpeed"));
+          std::string walkThroughProperty = loader.getObjectProperty(objectIndex, "walkThrough");
 
           int objX = object->x / config::TILE_W;
           int objY = object->y / config::TILE_H;
@@ -363,6 +364,11 @@ Map* Map::loadTiledFile(const std::string& filename)
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
           entity->setWalkSpeed(walkSpeed);
+
+          if (walkThroughProperty == "true")
+          {
+            entity->setWalkThrough(true);
+          }
 
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),
