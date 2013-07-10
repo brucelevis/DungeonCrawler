@@ -2,6 +2,7 @@
 #include "Cache.h"
 #include "Utility.h"
 #include "Monster.h"
+#include "StatusEffect.h"
 #include "Character.h"
 
 Character::~Character()
@@ -59,16 +60,87 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
   }
 }
 
+bool Character::afflictStatus(const std::string& status)
+{
+  auto it = getStatusEffectIterator(status);
+
+  if (it == m_status.end())
+  {
+    // Dead status removes all other statuses.
+    if (status == "Dead")
+    {
+      resetStatus();
+    }
+
+    if (hasStatus("Normal"))
+    {
+      m_status.clear();
+    }
+
+    m_status.push_back(get_status_effect(status));
+
+    return true;
+  }
+
+  return false;
+}
+
+bool Character::cureStatus(const std::string& status)
+{
+  auto it = getStatusEffectIterator(status);
+
+  if (it != m_status.end())
+  {
+    m_status.erase(it);
+
+    if (m_status.empty())
+      resetStatus();
+
+    return true;
+  }
+
+  return false;
+}
+
+bool Character::hasStatus(const std::string& status)
+{
+  return getStatusEffectIterator(status) != m_status.end();
+}
+
+std::string Character::getStatus() const
+{
+  // Always display most recent status.
+  if (m_status.size() > 0)
+    return m_status.back()->name;
+
+  return "Normal";
+}
+
 bool Character::incapacitated() const
 {
-  return getStatus() == "Dead" ||
-         getStatus() == "Paralyzed" ||
-         getStatus() == "Sleeping";
+  for (auto it = m_status.begin(); it != m_status.end(); ++it)
+  {
+    if ((*it)->incapacitate)
+      return true;
+  }
+
+  return false;
 }
 
 void Character::resetStatus()
 {
-  setStatus("Normal");
+  m_status.clear();
+  m_status.push_back(get_status_effect("Normal"));
+}
+
+std::vector<StatusEffect*>::iterator Character::getStatusEffectIterator(const std::string& status)
+{
+  for (auto it = m_status.begin(); it != m_status.end(); ++it)
+  {
+    if (to_lower((*it)->name) == to_lower(status))
+      return it;
+  }
+  return m_status.end();
 }
 
 void Character::takeDamage(const std::string& attr, int amount)
@@ -89,7 +161,7 @@ Character* Character::createMonster(const std::string& name)
   character->m_name = def.name;
   character->m_faceTexture = cache::loadTexture(def.texture);
   character->m_textureRect = def.textureRect;
-  character->m_status = "Normal";
+  character->m_status.push_back(get_status_effect("Normal"));
 
   for (auto it = def.attributeMap.begin(); it != def.attributeMap.end(); ++it)
   {

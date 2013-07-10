@@ -4,6 +4,7 @@
 #include "Utility.h"
 #include "random_pick.h"
 
+#include "StatusEffect.h"
 #include "Monster.h"
 #include "Item.h"
 #include "Spell.h"
@@ -61,8 +62,7 @@ static void check_death(Character* actor)
 {
   if (actor->getAttribute("hp").current <= 0)
   {
-    actor->setStatus("Dead");
-    battle_message("%s has fallen!", actor->getName().c_str());
+    actor->afflictStatus("Dead");
   }
 }
 
@@ -473,33 +473,66 @@ void Battle::processStatusEffects()
 bool Battle::processStatusEffectForCharacter(Character* actor)
 {
   bool didProcess = false;
+  bool tookDamage = false;
 
-  if (actor->getStatus() == "Poisoned")
-  {
-    int damage = 1;
-
-    actor->takeDamage("hp", damage);
-
-    battle_message("%s takes %d damage from poison.",
-        actor->getName().c_str(), damage);
-
-    if (isMonster(actor))
-    {
-      actor->flash().start(6, 3);
-    }
-
-    play_sound(config::SOUND_POISON);
-
-    didProcess = true;
-  }
-  else if (actor->getStatus() == "Dead")
+  if (actor->getStatus() == "Dead")
   {
     return false;
   }
 
-  check_death(actor);
+  const std::vector<StatusEffect*> statusEffects = actor->getStatusEffects();
 
-  checkVictoryOrDefeat();
+  for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
+  {
+    StatusEffect* status = *it;
+
+    if (status->damageType != StatusEffect::DAMAGE_NONE)
+    {
+      int damage = 0;
+
+      if (status->damageType == StatusEffect::DAMAGE_FIXED)
+      {
+        damage = status->damagePerTurn;
+      }
+      else if (status->damageType == StatusEffect::DAMAGE_PERCENT)
+      {
+        float percent = (float)status->damagePerTurn / 100.0f;
+        damage = percent * (float)actor->getAttribute(status->damageStat).max;
+      }
+
+      actor->takeDamage(status->damageStat, damage);
+
+      battle_message("%s takes %d %s damage from %s!",
+          actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
+
+      if (!status->sound.empty())
+        play_sound("Resources/Audio/" + status->sound);
+
+      didProcess = true;
+      tookDamage = true;
+    }
+
+    int range = random_range(0, 100);
+    if (range < status->recoveryChance)
+    {
+      cure_status(actor, status->name);
+      didProcess = true;
+    }
+  }
+
+  if (tookDamage)
+  {
+    check_death(actor);
+    checkVictoryOrDefeat();
+  }
+
+  if (didProcess)
+  {
+    if (isMonster(actor))
+    {
+      actor->flash().start(6, 3);
+    }
+  }
 
   return didProcess;
 }

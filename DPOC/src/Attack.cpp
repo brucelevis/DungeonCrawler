@@ -1,5 +1,6 @@
 #include "Utility.h"
 #include "Message.h"
+#include "StatusEffect.h"
 
 #include "Attack.h"
 
@@ -93,12 +94,12 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
 
 void cause_status(Character* target, const std::string& status)
 {
-  if (target->getStatus() == "Normal")
+  if (target->getStatus() != "Dead" && !target->hasStatus(status))
   {
-    target->setStatus(status);
+    target->afflictStatus(status);
 
-    battle_message("%s is now %s!",
-        target->getName().c_str(), status.c_str());
+    battle_message("%s %s",
+        target->getName().c_str(), get_status_effect(status)->verb.c_str());
   }
   else
   {
@@ -108,12 +109,12 @@ void cause_status(Character* target, const std::string& status)
 
 void cure_status(Character* target, const std::string& status)
 {
-  if (target->getStatus() == status)
+  if (target->hasStatus(status))
   {
-    target->resetStatus();
+    target->cureStatus(status);
 
-    battle_message("%s is no longer %s!",
-        target->getName().c_str(), status.c_str());
+    battle_message("%s %s",
+        target->getName().c_str(), get_status_effect(status)->recoverVerb.c_str());
   }
   else
   {

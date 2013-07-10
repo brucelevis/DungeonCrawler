@@ -1,23 +1,49 @@
 #include <vector>
+
+#include "logger.h"
+#include "Utility.h"
 #include "StatusEffect.h"
 
 static std::vector<StatusEffect> statusEffects =
 {
   {
-    "Normal", "",
+    "Normal", "", "",
     0, false,
     StatusEffect::DAMAGE_NONE
   },
 
   {
-    "Dead", "has fallen",
-    0, 0, true,
+    "Dead", "has fallen!", "comes back to life!",
+    0, true,
     StatusEffect::DAMAGE_NONE
   },
 
   {
-    "Poison", "is poisoned",
+    "Poison", "is poisoned!", "feels better.",
     0, false,
-    StatusEffect::DAMAGE_FIXED, 1
+    StatusEffect::DAMAGE_FIXED, "hp", 1,
+    "Poison.wav"
+  },
+
+  {
+    "Paralyze", "is paralyzed!", "can move again.",
+    25, true,
+    StatusEffect::DAMAGE_NONE
   }
 };
+
+
+StatusEffect* get_status_effect(const std::string& status)
+{
+  for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
+  {
+    if (to_lower(it->name) == to_lower(status))
+    {
+      return &(*it);
+    }
+  }
+
+  TRACE("No status effect %s defined!", status.c_str());
+
+  return 0;
+}

@@ -1,6 +1,7 @@
 #include "Utility.h"
 #include "Cache.h"
 #include "Message.h"
+#include "StatusEffect.h"
 
 #include "PlayerCharacter.h"
 
@@ -168,7 +169,7 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name)
 
   character->m_class = player_class_ref("Hero");
 
-  character->m_status = "Normal";
+  character->m_status.push_back(get_status_effect("Normal"));
 
   character->m_attributes["level"] = make_attribute(0);
   character->m_attributes["exp"] = make_attribute(0);

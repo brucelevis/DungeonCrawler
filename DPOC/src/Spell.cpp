@@ -52,7 +52,7 @@ static std::vector<Spell> spells =
     "",
     Spell::SPELL_CAUSE_STATUS,
     0,
-    "Paralyzed"
+    "Paralyze"
   },
 
   {
@@ -63,7 +63,7 @@ static std::vector<Spell> spells =
     "",
     Spell::SPELL_CAUSE_STATUS,
     0,
-    "Poisoned"
+    "Poison"
   },
 
   {

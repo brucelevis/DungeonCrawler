@@ -10,6 +10,8 @@
 #include "Item.h"
 #include "Flash.h"
 
+class StatusEffect;
+
 struct Attribute
 {
   int current;
@@ -43,9 +45,17 @@ public:
 
   virtual int computeCurrentAttribute(const std::string& attribName);
 
-  void setStatus(const std::string& status) { m_status = status; }
-  std::string getStatus() const { return m_status; }
+  /// @return True if status was afflicted on character.
+  bool afflictStatus(const std::string& status);
+
+  /// @return True if status was cured from character.
+  bool cureStatus(const std::string& status);
+
+  bool hasStatus(const std::string& status);
+  std::string getStatus() const;
   void resetStatus();
+
+  const std::vector<StatusEffect*> getStatusEffects() const { return m_status; }
 
   int spriteWidth() const { return m_textureRect.width; }
   int spriteHeight() const { return m_textureRect.height; }
@@ -55,6 +65,8 @@ public:
   bool incapacitated() const;
 
   void takeDamage(const std::string& attr, int amount);
+private:
+  std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:
   std::string m_name;
 
@@ -63,7 +75,7 @@ protected:
 
   std::map<std::string, Attribute> m_attributes;
 
-  std::string m_status;
+  std::vector<StatusEffect*> m_status;
 
   // Flash data
   Flash m_flash;
