@@ -420,6 +420,15 @@ void Battle::doVictory()
       reset_attribute((*it)->getAttribute("mag.def"));
       reset_attribute((*it)->getAttribute("speed"));
 
+      std::vector<StatusEffect*> statusEffects = (*it)->getStatusEffects();
+      for (auto statusIt = statusEffects.begin(); statusIt != statusEffects.end(); ++statusIt)
+      {
+        if ((*statusIt)->battleOnly)
+        {
+          (*it)->cureStatus((*statusIt)->name);
+        }
+      }
+
       (*it)->checkLevelUp();
     }
 

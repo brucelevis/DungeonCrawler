@@ -8,26 +8,26 @@ static std::vector<StatusEffect> statusEffects =
 {
   {
     "Normal", "", "",
-    0, false,
+    false, 0, false,
     StatusEffect::DAMAGE_NONE
   },
 
   {
     "Dead", "has fallen!", "comes back to life!",
-    0, true,
+    false, 0, true,
     StatusEffect::DAMAGE_NONE
   },
 
   {
     "Poison", "is poisoned!", "feels better.",
-    0, false,
+    false, 0, false,
     StatusEffect::DAMAGE_FIXED, "hp", 1,
     "Poison.wav"
   },
 
   {
     "Paralyze", "is paralyzed!", "can move again.",
-    25, true,
+    true, 25, true,
     StatusEffect::DAMAGE_NONE
   }
 };

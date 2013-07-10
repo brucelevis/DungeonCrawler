@@ -9,6 +9,8 @@ struct StatusEffect
   std::string verb;
   std::string recoverVerb;
 
+  bool battleOnly;
+
   int recoveryChance;
 
   bool incapacitate;
