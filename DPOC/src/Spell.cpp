@@ -117,6 +117,10 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
       {
         cause_status(target, it->first);
       }
+      else
+      {
+        battle_message("No effect...");
+      }
     }
   }
 
