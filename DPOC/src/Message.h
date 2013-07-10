@@ -28,6 +28,11 @@ public:
     return m_currentIndex == m_pages.front().size();
   }
 
+  bool lastMessage() const
+  {
+	return isWaitingForKey() && m_pages.size() == 1;
+  }
+
   void update();
   void draw(sf::RenderTarget& target);
 private:

@@ -55,6 +55,12 @@ void Game::run()
       if (Message::instance().isVisible())
       {
         Message::instance().update();
+
+        // If it is the absolute last message, pop up the choice menu.
+        if (m_choiceMenu && !m_choiceMenu->isVisible() && Message::instance().lastMessage())
+        {
+        	m_choiceMenu->setVisible(true);
+        }
       }
       else if (m_menu.isVisible())
       {
@@ -111,7 +117,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     if (Message::instance().isVisible() && Message::instance().isWaitingForKey())
     {
       // CHoice menu when message box open: handle confirm and close message box.
-      if (m_choiceMenu)
+      if (m_choiceMenu && m_choiceMenu->isVisible())
       {
         m_choiceMenu->handleConfirm();
 
@@ -130,7 +136,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
       {
         m_menu.handleConfirm();
       }
-      else if (m_choiceMenu)
+      else if (m_choiceMenu && m_choiceMenu->isVisible())
       {
         // ChoiceMenu when no message box is open.
 
@@ -276,7 +282,7 @@ void Game::playMusic(const std::string& music)
 void Game::openChoiceMenu(const std::vector<std::string>& choices)
 {
   m_choiceMenu = new ChoiceMenu;
-  m_choiceMenu->setVisible(true);
+  m_choiceMenu->setVisible(false);
   for (auto it = choices.begin(); it != choices.end(); ++it)
   {
     m_choiceMenu->addEntry(*it);
