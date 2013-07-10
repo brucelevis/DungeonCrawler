@@ -44,5 +44,6 @@ int random_range(int low, int high);
 
 char upcase(char c);
 std::string capitalize(std::string str);
+std::string replace_string(const std::string& str, char from, char to);
 
 #endif

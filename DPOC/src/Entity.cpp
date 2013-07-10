@@ -494,6 +494,25 @@ void Entity::getIfValue(const std::string& input, const std::string& key, int& v
       value = atoi(key.c_str());
     }
   }
+  else if (input == "item")
+  {
+    if (key != "gold")
+    {
+      Item* item = get_player()->getItem(replace_string(key, '_', ' '));
+      if (item)
+      {
+        value = item->stackSize;
+      }
+      else
+      {
+        value = 0;
+      }
+    }
+    else
+    {
+      value = get_player()->getGold();
+    }
+  }
   else
   {
     TRACE("Entity[%s]: Unknown input value %s from script.", getTag().c_str(), input.c_str());

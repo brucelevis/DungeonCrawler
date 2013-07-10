@@ -127,3 +127,12 @@ std::string capitalize(std::string str)
   str[0] = upcase(str[0]);
   return str;
 }
+
+std::string replace_string(const std::string& str, char from, char to)
+{
+  std::string transform = str;
+  std::transform(transform.begin(), transform.end(), transform.begin(),
+      [=](char c) { return from == c ? to : c; });
+
+  return transform;
+}

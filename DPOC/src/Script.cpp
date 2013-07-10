@@ -286,13 +286,13 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     memset(data.data.ifData.boolOperation, 0, MAX_SCRIPT_KEY_SIZE);
 
     lhs_what = get_value_to_bracket(lhs);
-    if (lhs_what == "global" || lhs_what == "local" || lhs_what == "const")
+    if (lhs_what == "global" || lhs_what == "local" || lhs_what == "const" || lhs_what == "item")
     {
       lhs_key = get_value_in_bracket(lhs);
     }
 
     rhs_what = get_value_to_bracket(rhs);
-    if (rhs_what == "global" || rhs_what == "local" || rhs_what == "const")
+    if (rhs_what == "global" || rhs_what == "local" || rhs_what == "const" || rhs_what == "item")
     {
       rhs_key = get_value_in_bracket(rhs);
     }
