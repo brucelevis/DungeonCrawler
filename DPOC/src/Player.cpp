@@ -161,8 +161,11 @@ void Player::gainExperience(int sum)
 {
   for (auto it = m_party.begin(); it != m_party.end(); ++it)
   {
-    (*it)->getAttribute("exp").max += sum;
-    reset_attribute((*it)->getAttribute("exp"));
+    if ((*it)->getStatus() != "Dead")
+    {
+      (*it)->getAttribute("exp").max += sum;
+      reset_attribute((*it)->getAttribute("exp"));
+    }
   }
 }
 
