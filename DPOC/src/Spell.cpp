@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "Utility.h"
 #include "Attack.h"
 #include "logger.h"
 #include "Message.h"
@@ -52,7 +53,9 @@ static std::vector<Spell> spells =
     "",
     Spell::SPELL_CAUSE_STATUS,
     0,
-    "Paralyze"
+    {
+      { "Paralyze", 75 }
+    }
   },
 
   {
@@ -63,7 +66,9 @@ static std::vector<Spell> spells =
     "",
     Spell::SPELL_CAUSE_STATUS,
     0,
-    "Poison"
+    {
+      { "Poison", 100 }
+    }
   },
 
   {
@@ -74,7 +79,8 @@ static std::vector<Spell> spells =
     "",
     Spell::SPELL_BUFF,
     100,
-    "strength"
+    {},
+    { "strength" }
   }
 };
 
@@ -97,21 +103,37 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 {
   int damage = 0;
 
-  if (spell->spellType == Spell::SPELL_DAMAGE || spell->spellType == Spell::SPELL_HEAL)
+  if ((spell->spellType & Spell::SPELL_DAMAGE) || (spell->spellType & Spell::SPELL_HEAL))
   {
     damage = calculate_magical_damage(caster, target, spell);
   }
-  else if (spell->spellType == Spell::SPELL_CAUSE_STATUS)
+
+  if (spell->spellType & Spell::SPELL_CAUSE_STATUS)
   {
-    cause_status(target, spell->extra);
+    for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
+    {
+      int range = random_range(0, 100);
+      if (range < it->second)
+      {
+        cause_status(target, it->first);
+      }
+    }
   }
-  else if (spell->spellType == Spell::SPELL_REMOVE_STATUS)
+
+  if (spell->spellType & Spell::SPELL_REMOVE_STATUS)
   {
-    cure_status(target, spell->extra);
+    for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
+    {
+      cure_status(target, it->first);
+    }
   }
-  else if (spell->spellType == Spell::SPELL_BUFF)
+
+  if (spell->spellType & Spell::SPELL_BUFF)
   {
-    buff(target, spell->extra, spell->power);
+    for (auto it = spell->attributeBuffs.begin(); it != spell->attributeBuffs.end(); ++it)
+    {
+      buff(target, *it, spell->power);
+    }
   }
 
   target->takeDamage("hp", damage);
