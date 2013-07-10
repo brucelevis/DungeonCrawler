@@ -413,6 +413,27 @@ Map* Map::loadTiledFile(const std::string& filename)
           TRACE("New warp: srcX=%d, srcY=%d, dstX=%d, dstY=%d, dstMap=%s",
               warp.srcX, warp.srcY, warp.dstX, warp.dstY, warp.destMap.c_str());
         }
+        else if (to_lower(name) == "zone")
+        {
+          int zoneId = fromString<int>(loader.getObjectProperty(objectIndex, "zoneId"));
+
+          int x = object->x / config::TILE_W;
+          int y = object->y / config::TILE_H;
+          int w = object->width / config::TILE_W;
+          int h = object->height / config::TILE_H;
+
+          for (int py = y; py < y + h; py++)
+          {
+            for (int px = x; px < x + w; px++)
+            {
+              int index = py * map->m_width + px;
+              map->m_tiles[0][index].zone = zoneId;
+            }
+          }
+
+          TRACE("New zone: x=%d, y=%d, width=%d, height=%d",
+              x, y, w, h);
+        }
       }
     }
 
