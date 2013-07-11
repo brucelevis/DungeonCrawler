@@ -1472,11 +1472,9 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
         get_status_effect(character->getStatus())->color,
         "%s", limit_string(character->getStatus(), 4).c_str());
     draw_text_bmp_ex(target, x + 100, offY,
-        hpPercent > 0.2 ? sf::Color::Green : sf::Color::Red,
+        hpPercent > 0.2 ? sf::Color::White : sf::Color::Red,
         "%d", character->getAttribute("hp").current);
-    draw_text_bmp_ex(target, x + 136, offY,
-        sf::Color::Blue,
-        "%d", character->getAttribute("mp").current);
+    draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
 
     if (i == m_currentActor && !m_currenActorRectHidden)
     {
