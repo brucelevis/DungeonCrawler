@@ -1,6 +1,8 @@
 #ifndef TARGET_H
 #define TARGET_H
 
+#include <string>
+
 enum Target
 {
   TARGET_SINGLE_ENEMY,
@@ -10,5 +12,8 @@ enum Target
   TARGET_SELF,
   TARGET_NONE
 };
+
+std::string targetToString(Target target);
+Target targetFromString(const std::string& str);
 
 #endif
