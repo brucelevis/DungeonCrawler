@@ -7,6 +7,7 @@
 #include "Utility.h"
 #include "Sound.h"
 
+#include "StatusEffect.h"
 #include "Attack.h"
 #include "Player.h"
 #include "Character.h"
@@ -532,7 +533,9 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 
   character->draw(target, x, y);
 
-  draw_text_bmp(target, x + 40, y, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
+  draw_text_bmp_ex(target, x + 40, y,
+      get_status_effect(character->getStatus())->color,
+      "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
   draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
   draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
@@ -809,7 +812,9 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 
     character->draw(target, offX, offY + i * 48);
 
-    draw_text_bmp(target, offX + 40, offY + i * 48, "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
+    draw_text_bmp_ex(target, offX + 40, offY + i * 48,
+        get_status_effect(character->getStatus())->color,
+        "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
     draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
     draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
@@ -1460,10 +1465,18 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 
     int offY = y + 8 + i * ENTRY_OFFSET;
 
+    float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
+
     draw_text_bmp(target, x + 8,  offY, "%s", limit_string(name, 5).c_str());
-    draw_text_bmp(target, x + 56, offY, "%s", limit_string(character->getStatus(), 4).c_str());
-    draw_text_bmp(target, x + 100, offY, "%d", character->getAttribute("hp").current);
-    draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
+    draw_text_bmp_ex(target, x + 56, offY,
+        get_status_effect(character->getStatus())->color,
+        "%s", limit_string(character->getStatus(), 4).c_str());
+    draw_text_bmp_ex(target, x + 100, offY,
+        hpPercent > 0.2 ? sf::Color::Green : sf::Color::Red,
+        "%d", character->getAttribute("hp").current);
+    draw_text_bmp_ex(target, x + 136, offY,
+        sf::Color::Blue,
+        "%d", character->getAttribute("mp").current);
 
     if (i == m_currentActor && !m_currenActorRectHidden)
     {

@@ -8,18 +8,21 @@ static std::vector<StatusEffect> statusEffects =
 {
   {
     "Normal", "", "",
+    sf::Color::White,
     false, 0, false,
     StatusEffect::DAMAGE_NONE
   },
 
   {
     "Dead", "has fallen!", "comes back to life!",
+    sf::Color::Red,
     false, 0, true,
     StatusEffect::DAMAGE_NONE
   },
 
   {
     "Poison", "is poisoned!", "feels better.",
+    sf::Color::Green,
     false, 0, false,
     StatusEffect::DAMAGE_FIXED, "hp", 1,
     "Poison.wav"
@@ -27,6 +30,7 @@ static std::vector<StatusEffect> statusEffects =
 
   {
     "Paralyze", "is paralyzed!", "can move again.",
+    sf::Color::Yellow,
     true, 25, true,
     StatusEffect::DAMAGE_NONE
   }

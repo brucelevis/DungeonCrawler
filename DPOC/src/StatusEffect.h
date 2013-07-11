@@ -3,11 +3,16 @@
 
 #include <string>
 
+#include <SFML/Graphics.hpp>
+
 struct StatusEffect
 {
   std::string name;
   std::string verb;
   std::string recoverVerb;
+
+  // Color to identify status effect by.
+  sf::Color color;
 
   bool battleOnly;
 
