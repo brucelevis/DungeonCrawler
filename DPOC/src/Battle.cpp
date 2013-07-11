@@ -156,6 +156,26 @@ void Battle::start()
 void Battle::endBattle()
 {
   m_battleOngoing = false;
+
+  // reset attributes that might have been affected by buffs and clear status effects.
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+  {
+    reset_attribute((*it)->getAttribute("strength"));
+    reset_attribute((*it)->getAttribute("power"));
+    reset_attribute((*it)->getAttribute("defense"));
+    reset_attribute((*it)->getAttribute("magic"));
+    reset_attribute((*it)->getAttribute("mag.def"));
+    reset_attribute((*it)->getAttribute("speed"));
+
+    std::vector<StatusEffect*> statusEffects = (*it)->getStatusEffects();
+    for (auto statusIt = statusEffects.begin(); statusIt != statusEffects.end(); ++statusIt)
+    {
+      if ((*statusIt)->battleOnly)
+      {
+        (*it)->cureStatus((*statusIt)->name);
+      }
+    }
+  }
 }
 
 void Battle::executeActions()
@@ -413,22 +433,6 @@ void Battle::doVictory()
     // reset attributes that might have been affected by buffs. check for level up.
     for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
     {
-      reset_attribute((*it)->getAttribute("strength"));
-      reset_attribute((*it)->getAttribute("power"));
-      reset_attribute((*it)->getAttribute("defense"));
-      reset_attribute((*it)->getAttribute("magic"));
-      reset_attribute((*it)->getAttribute("mag.def"));
-      reset_attribute((*it)->getAttribute("speed"));
-
-      std::vector<StatusEffect*> statusEffects = (*it)->getStatusEffects();
-      for (auto statusIt = statusEffects.begin(); statusIt != statusEffects.end(); ++statusIt)
-      {
-        if ((*statusIt)->battleOnly)
-        {
-          (*it)->cureStatus((*statusIt)->name);
-        }
-      }
-
       (*it)->checkLevelUp();
     }
 
