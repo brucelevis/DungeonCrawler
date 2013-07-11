@@ -85,6 +85,19 @@ namespace cache
     }
   }
 
+  std::string getTextureName(sf::Texture* texture)
+  {
+    for (auto it = textures.begin(); it != textures.end(); ++it)
+    {
+      if (it->second.resource == texture)
+      {
+        return it->first;
+      }
+    }
+
+    return "";
+  }
+
   sf::SoundBuffer& loadSound(const std::string& sndFile)
   {
     auto it = soundBuffers.find(sndFile);

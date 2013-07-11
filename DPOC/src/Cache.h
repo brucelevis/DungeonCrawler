@@ -12,6 +12,8 @@ namespace cache
   void releaseTexture(const std::string& textureName);
   void releaseTexture(sf::Texture* texture);
 
+  std::string getTextureName(sf::Texture* texture);
+
   sf::SoundBuffer& loadSound(const std::string& sndFile);
 }
 
