@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <stdexcept>
 
 #include "logger.h"
 #include "Utility.h"
@@ -51,10 +52,18 @@ void save_game(const std::string& saveFile)
 
 void load_game(const std::string& saveFile)
 {
-  TRACE("Loading game: %s", saveFile.c_str());
+  std::string fullPath = "Resources/Saves/" + saveFile;
+
+  TRACE("Loading game: %s", fullPath.c_str());
 
   XMLDocument doc;
-  doc.LoadFile(("Resources/Saves/" + saveFile).c_str());
+  if (doc.LoadFile(fullPath.c_str()) != 0)
+  {
+    TRACE("Unable to load save: %s (%s)", fullPath.c_str(), doc.GetErrorStr1());
+
+    throw std::runtime_error("Unable to load save: " +
+        fullPath + "(" + std::string(doc.GetErrorStr1()) + ")");
+  }
 
   const XMLElement* root = doc.FirstChildElement("save");
 
@@ -86,6 +95,8 @@ void parseMapElement(const XMLElement* mapElement)
   const XMLAttribute* nameAttrib  = mapElement->FindAttribute("name");
   if (nameAttrib)
   {
+    TRACE(" - name=%s", nameAttrib->Value());
+
     Game::instance().loadNewMap(nameAttrib->Value());
   }
 
@@ -132,12 +143,21 @@ EntityData parseEntityElement(const XMLElement* entityElement)
 
   data.name = nameAttrib->Value();
   data.tag = tagAttrib->Value();
-  data.x = fromString<int>(xElem->Value());
-  data.y = fromString<int>(yElem->Value());
-  data.dir = directionFromString(dirElem->Value());
-  data.walkThrough = fromString<bool>(walkThroughElemt->Value());
-  data.speed = fromString<float>(speedElem->Value());
+  data.x = fromString<int>(xElem->GetText());
+  data.y = fromString<int>(yElem->GetText());
+  data.dir = directionFromString(dirElem->GetText());
+  data.walkThrough = fromString<bool>(walkThroughElemt->GetText());
+  data.speed = fromString<float>(speedElem->GetText());
   data.spriteName = spriteElem->FindAttribute("name")->Value();
+
+  TRACE(" - name=%s", data.name.c_str());
+  TRACE(" - tag=%s", data.tag.c_str());
+  TRACE(" - x=%d", data.x);
+  TRACE(" - y=%d", data.y);
+  TRACE(" - dir=%s", directionToString(data.dir).c_str());
+  TRACE(" - walkThrough=%s", data.walkThrough ? "true" : "false");
+  TRACE(" - speed=%f", data.speed);
+  TRACE(" - sprite=%s", data.spriteName.c_str());
 
   return data;
 }
@@ -161,6 +181,8 @@ void parsePlayerElement(const XMLElement* playerElement)
     else if (elemName == "gold")
     {
       int gold = fromString<int>(element->GetText());
+
+      TRACE(" - gold=%d", gold);
 
       get_player()->gainGold(gold);
     }
@@ -206,11 +228,15 @@ CharacterData parseCharacterElement(const XMLElement* characterElement)
   std::string name = characterElement->FindAttribute("name")->Value();
   data.name = name;
 
+  TRACE(" - name=%s", name.c_str());
+
   const XMLElement* equipElement = characterElement->FirstChildElement("equipment");
   for (const XMLElement* element = equipElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     std::string eqName = element->Name();
     std::string itemName = element->GetText();
+
+    TRACE(" - equipment[%s]=%s", eqName.c_str(), itemName.c_str());
 
     data.equipment[eqName] = itemName;
   }
@@ -220,12 +246,16 @@ CharacterData parseCharacterElement(const XMLElement* characterElement)
   {
     std::string spellName = element->GetText();
 
+    TRACE(" - spell=%s", spellName.c_str());
+
     data.spells.push_back(spellName);
   }
 
   const XMLElement* classElement = characterElement->FirstChildElement("class");
   std::string className = classElement->GetText();
   data.className = className;
+
+  TRACE(" - className=%s", className.c_str());
 
   const XMLElement* textureElement = characterElement->FirstChildElement("texture");
   std::string textureName = textureElement->FindAttribute("name")->Value();
@@ -239,12 +269,16 @@ CharacterData parseCharacterElement(const XMLElement* characterElement)
   data.textureW = tw;
   data.textureH = th;
 
+  TRACE(" - texture=%s, [%d, %d, %d, %d", textureName.c_str(), tx, ty, tw, th);
+
   const XMLElement* attribElement = characterElement->FirstChildElement("attributes");
   for (const XMLElement* element = attribElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     std::string attribName = element->FindAttribute("name")->Value();
     int current = fromString<int>(element->FindAttribute("current")->Value());
     int max = fromString<int>(element->FindAttribute("max")->Value());
+
+    TRACE(" - attribute[%s]=[%d/%d]", attribName.c_str(), current, max);
 
     data.attributes[attribName].current = current;
     data.attributes[attribName].max = max;
@@ -254,6 +288,8 @@ CharacterData parseCharacterElement(const XMLElement* characterElement)
   for (const XMLElement* element = statusElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     std::string statusName = element->GetText();
+
+    TRACE(" - statusEffect=%s", statusName.c_str());
 
     data.statusEffects.push_back(statusName);
   }
@@ -265,13 +301,15 @@ void parseInventoryElement(const XMLElement* inventoryElement)
 {
   TRACE("Parse Inventory Element");
 
-  for (const XMLElement* element = inventoryElement->FirstChildElement(); element; element->NextSiblingElement())
+  for (const XMLElement* element = inventoryElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     const XMLAttribute* nameAttrib = element->FindAttribute("name");
     const XMLAttribute* stackAttrib = element->FindAttribute("stackSize");
 
     std::string name = nameAttrib->Value();
     int stackSize = fromString<int>(stackAttrib->Value());
+
+    TRACE(" - ItemName=%s, stackSize=%d", name.c_str(), stackSize);
 
     get_player()->addItemToInventory(name, stackSize);
   }
@@ -285,6 +323,8 @@ void parsePersistents(const XMLElement* persElement)
   {
     std::string key = element->FindAttribute("key")->Value();
     int value = fromString<int>(element->FindAttribute("value")->Value());
+
+    TRACE(" - key=%s, value=%d", key.c_str(), value);
 
     Persistent<int>::instance().set(key, value);
   }

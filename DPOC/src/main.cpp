@@ -36,8 +36,9 @@ int main(int argc, char* argv[])
   }
   else
   {
-    Game::instance().setPlayer(Player::create(4, 4));
-    Game::instance().loadNewMap("Resources/Maps/Test.tmx");
+    //Game::instance().setPlayer(Player::create(4, 4));
+    //Game::instance().loadNewMap("Resources/Maps/Test.tmx");
+    load_game("TestSave.xml");
     Game::instance().run();
   }
 
