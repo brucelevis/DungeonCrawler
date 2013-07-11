@@ -319,7 +319,7 @@ void parsePersistents(const XMLElement* persElement)
 {
   TRACE("Parse Persistents");
 
-  for (const XMLElement* element = persElement->FirstChildElement(); element; element->NextSiblingElement())
+  for (const XMLElement* element = persElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     std::string key = element->FindAttribute("key")->Value();
     int value = fromString<int>(element->FindAttribute("value")->Value());
