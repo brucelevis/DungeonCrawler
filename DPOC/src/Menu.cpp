@@ -18,6 +18,8 @@
 #include "Monster.h"
 #include "Battle.h"
 
+#include "SaveLoad.h"
+
 #include "Menu.h"
 
 static const int ENTRY_OFFSET = 12;
@@ -238,6 +240,10 @@ void MainMenu::handleConfirm()
     {
       m_characterMenu->resetChoice();
       openCharacterMenu();
+    }
+    else if (getCurrentMenuChoice() == "Save")
+    {
+      save_game("TestSave.xml");
     }
   }
   else if (currentState == STATE_CHARACTER_MENU)
