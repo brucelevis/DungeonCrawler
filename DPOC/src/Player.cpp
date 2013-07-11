@@ -10,6 +10,12 @@
 #include "Game.h"
 #include "Player.h"
 
+Player::Player()
+ : m_gold(0)
+{
+
+}
+
 Player::~Player()
 {
   for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)

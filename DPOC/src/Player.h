@@ -45,6 +45,8 @@ public:
   static Player* create(int x, int y);
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:
+  Player();
+
   void moveTrain();
 private:
   std::vector<Entity*> m_playerTrain;
