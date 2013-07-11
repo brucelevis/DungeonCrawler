@@ -1,5 +1,7 @@
 #include <sstream>
 
+#include "SaveLoad.h"
+
 #include "Utility.h"
 #include "Cache.h"
 #include "Message.h"
@@ -236,6 +238,39 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name)
 
   // character->m_equipment["weapon"] = create_item("Rusty Knife");
   // character->m_equipment["shield"] = create_item("Wood Shield");
+
+  return character;
+}
+
+PlayerCharacter* PlayerCharacter::createFromSaveData(CharacterData* data)
+{
+  PlayerCharacter* character = new PlayerCharacter;
+
+  character->m_name = data->name;
+  character->m_faceTexture = cache::loadTexture(data->textureName);
+  character->m_textureRect = sf::IntRect(data->textureX, data->textureY, data->textureW, data->textureH);
+
+  character->m_class = player_class_ref(data->className);
+
+  for (auto it = data->statusEffects.begin(); it != data->statusEffects.end(); ++it)
+  {
+    character->m_status.push_back(get_status_effect(*it));
+  }
+
+  for (auto it = data->attributes.begin(); it != data->attributes.end(); ++it)
+  {
+    character->m_attributes[it->first] = it->second;
+  }
+
+  for (auto it = data->spells.begin(); it != data->spells.end(); ++it)
+  {
+    character->m_spells.push_back(*it);
+  }
+
+  for (auto it = data->equipment.begin(); it != data->equipment.end(); ++it)
+  {
+    character->m_equipment[it->first] = create_item(it->second, 1);
+  }
 
   return character;
 }

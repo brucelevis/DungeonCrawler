@@ -8,6 +8,8 @@
 #include "Item.h"
 #include "PlayerClass.h"
 
+struct CharacterData;
+
 class PlayerCharacter : public Character
 {
 public:
@@ -30,6 +32,7 @@ public:
   std::string xmlDump() const;
 
   static PlayerCharacter* create(const std::string& name);
+  static PlayerCharacter* createFromSaveData(CharacterData* data);
 private:
   void setAttributes();
   void setLevel(int levelReached, bool display = true);

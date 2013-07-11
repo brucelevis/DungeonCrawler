@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <sstream>
 
+#include "SaveLoad.h"
+
 #include "Direction.h"
 #include "Entity.h"
 #include "Game.h"
@@ -225,6 +227,34 @@ Player* Player::create(int x, int y)
   player->m_inventory.push_back(create_item("Steroids", 10));
 
   player->m_gold = 0;
+
+  return player;
+}
+
+Player* Player::createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData)
+{
+  Player* player = new Player;
+
+  for (size_t i = 0; i < entData.size(); i++)
+  {
+    Entity* entity = new Entity(entData[i]->name);
+    entity->setPosition(entData[i]->x, entData[i]->y);
+    entity->setDirection(entData[i]->dir);
+    entity->setWalkSpeed(entData[i]->speed);
+    entity->setWalkThrough(entData[i]->walkThrough);
+
+    if (entity->sprite()->getTextureName() != entData[i]->spriteName)
+    {
+      entity->sprite()->changeTexture(entData[i]->spriteName);
+    }
+
+    player->m_playerTrain.push_back(entity);
+  }
+
+  for (size_t i = 0; i < charData.size(); i++)
+  {
+    player->m_party.push_back(PlayerCharacter::createFromSaveData(charData[i]));
+  }
 
   return player;
 }

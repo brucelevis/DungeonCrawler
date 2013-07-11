@@ -63,6 +63,11 @@ void Sprite::create(const std::string& spriteId, int spriteSheetX, int spriteShe
   }
 }
 
+void Sprite::changeTexture(const std::string& textureName)
+{
+  create(textureName, m_spriteSheetX, m_spriteSheetY, m_ticksPerFrame);
+}
+
 void Sprite::update(Direction direction)
 {
   m_direction = direction;

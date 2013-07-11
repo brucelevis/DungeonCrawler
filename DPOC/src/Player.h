@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 class Entity;
+struct CharacterData;
+struct EntityData;
 
 #include <map>
 #include <vector>
@@ -41,6 +43,7 @@ public:
   std::string xmlDump() const;
 
   static Player* create(int x, int y);
+  static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:
   void moveTrain();
 private:

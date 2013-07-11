@@ -20,12 +20,11 @@ Game& Game::instance()
 
 Game::Game()
  : m_currentMap(0),
-   m_player(Player::create(4, 4)),
+   m_player(0),
    m_choiceMenu(0)
 {
   m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
   m_window.setKeyRepeatEnabled(false);
-  loadNewMap("Resources/Maps/Test.tmx");
 }
 
 Game::~Game()

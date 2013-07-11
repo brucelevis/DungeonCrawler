@@ -26,6 +26,10 @@ public:
   void playMusic(const std::string& music);
 
   void openChoiceMenu(const std::vector<std::string>& choices);
+
+  void setPlayer(Player* player) { m_player = player; }
+
+  void loadNewMap(const std::string& file);
 private:
   Game();
   ~Game();
@@ -36,8 +40,6 @@ private:
   void checkWarps();
 
   void handleKeyPress(sf::Keyboard::Key key);
-
-  void loadNewMap(const std::string& file);
 
   void closeChoiceMenu();
 private:
