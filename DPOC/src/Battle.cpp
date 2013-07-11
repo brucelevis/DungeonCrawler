@@ -284,6 +284,7 @@ void Battle::executeActions()
   else if (action.actionName == "Run")
   {
     play_sound(config::SOUND_ESCAPE);
+    m_battleMenu.setVisible(false);
     show_message("You run away.");
   }
 
