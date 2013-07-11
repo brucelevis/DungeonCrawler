@@ -38,6 +38,8 @@ public:
 
   void gainExperience(int sum);
 
+  std::string xmlDump() const;
+
   static Player* create(int x, int y);
 private:
   void moveTrain();

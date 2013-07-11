@@ -1,6 +1,7 @@
 #include <SFML/Window.hpp>
 
 #include <algorithm>
+#include <sstream>
 
 #include "Direction.h"
 #include "Entity.h"
@@ -167,6 +168,34 @@ void Player::gainExperience(int sum)
       reset_attribute((*it)->getAttribute("exp"));
     }
   }
+}
+
+std::string Player::xmlDump() const
+{
+  std::ostringstream xml;
+  xml << "<player>\n";
+
+  xml << " <party>\n";
+  for (size_t i = 0; i < m_party.size(); i++)
+  {
+    xml << "  <member id=\"" << i << "\">\n";
+    xml << m_playerTrain[i]->xmlDump();
+    xml << m_party[i]->xmlDump();
+    xml << "  </member>\n";
+  }
+  xml << " </party>\n";
+
+  xml << " <inventory>\n";
+  for (auto it = m_inventory.begin(); it != m_inventory.end(); ++it)
+  {
+    xml << "   <item name=\"" << it->name << "\" stackSize=\"" << it->stackSize << "\" />\n";
+  }
+  xml << " </inventory>\n";
+
+  xml << "  <gold>" << getGold() << "</gold>\n";
+
+  xml << "</player>\n";
+  return xml.str();
 }
 
 Player* Player::create(int x, int y)

@@ -27,6 +27,8 @@ public:
   int expForLevel();
   int checkLevelUp(bool display = true);
 
+  std::string xmlDump() const;
+
   static PlayerCharacter* create(const std::string& name);
 private:
   void setAttributes();

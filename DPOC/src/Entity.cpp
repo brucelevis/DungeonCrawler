@@ -560,3 +560,21 @@ bool Entity::checkEntityCollision() const
 
   return false;
 }
+
+std::string Entity::xmlDump() const
+{
+  std::ostringstream xml;
+
+  xml << "<entity name=\"" << m_name << "\" tag=\"" << getTag() << "\">\n";
+
+  xml << " <sprite name=\"" << m_sprite->getTextureName() << "\" />\n";
+  xml << " <direction>" << directionToString(m_direction) << "</direction>\n";
+  xml << " <speed>" << m_speed << "</speed>\n";
+  xml << " <walkThrough>" << m_walkThrough << "</walkThrough>\n";
+  xml << " <x>" << (int)x << "</x>\n";
+  xml << " <y>" << (int)y << "</y>\n";
+
+  xml << "</entity>\n";
+
+  return xml.str();
+}

@@ -53,6 +53,8 @@ public:
   const std::vector<Entity*>& getEntities() const { return m_entities; }
 
   bool blocking(int x, int y);
+
+  std::string xmlDump() const;
 private:
   Map();
   Map(const Map&);

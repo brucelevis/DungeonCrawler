@@ -26,6 +26,8 @@ public:
 
   inline int getWidth() const { return m_width; }
   inline int getHeight() const { return m_height;}
+
+  std::string getTextureName() const { return m_textureName; }
 private:
   Sprite(const Sprite&);
   Sprite& operator=(const Sprite&);

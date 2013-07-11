@@ -75,6 +75,8 @@ public:
   void setWalkSpeed(float speed) { m_speed = speed; }
 
   void loadScripts(const std::string& talkScript, const std::string& stepScript);
+
+  std::string xmlDump() const;
 public:
   float x, y;
 private:

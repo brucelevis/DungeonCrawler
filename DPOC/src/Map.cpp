@@ -496,3 +496,21 @@ bool Map::blocking(int x, int y)
 
   return false;
 }
+
+std::string Map::xmlDump() const
+{
+  std::ostringstream xml;
+
+  xml << "<map name=\"" << getName() << "\">\n";
+
+  xml << " <entities>\n";
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+  {
+    xml << (*it)->xmlDump();
+  }
+  xml << " </entities>\n";
+
+  xml << "</map>\n";
+
+  return xml.str();
+}

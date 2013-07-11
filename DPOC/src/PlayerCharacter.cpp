@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "Utility.h"
 #include "Cache.h"
 #include "Message.h"
@@ -157,6 +159,60 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
       }
     }
   }
+}
+
+std::string PlayerCharacter::xmlDump() const
+{
+  std::ostringstream xml;
+  xml << "<playerCharacter name=\"" << getName() << "\">\n";
+
+  xml << " <equipment>\n";
+  for (auto it = m_equipment.begin(); it != m_equipment.end(); ++it)
+  {
+    xml << "<" << it->first << ">" << it->second.name << "</" << it->first << ">\n";
+  }
+  xml << " </equipment>\n";
+
+  xml << " <spells>\n";
+  for (auto it = m_spells.begin(); it != m_spells.end(); ++it)
+  {
+    xml << "<spell>" << (*it) << "</spell>\n";
+  }
+  xml << " </spells>\n";
+
+  xml << " <class>" << m_class.name << "</class>\n";
+
+  xml << " <texture name=\""
+      << cache::getTextureName(m_faceTexture)
+      << "\" x=\""
+      << m_textureRect.left
+      << "\" y=\""
+      << m_textureRect.top
+      << "\" w=\""
+      << m_textureRect.width
+      << "\" h=\""
+      << m_textureRect.height
+      << "\" />\n";
+
+  xml << " <attributes>\n";
+  for (auto it = m_attributes.begin(); it != m_attributes.end(); ++it)
+  {
+    xml << "  <attribute name=\"" << it->first
+        << "\" current=\"" << it->second.current
+        << "\" max=\"" << it->second.max << "\" />\n";
+  }
+  xml << " </attributes>\n";
+
+  xml << " <statusEffects>\n";
+  for (auto it = m_status.begin(); it != m_status.end(); ++it)
+  {
+    xml << "  <status>" << (*it)->name << "</status>\n";
+  }
+  xml << " </statusEffects>\n";
+
+  xml << "</playerCharacter>\n";
+
+  return xml.str();
 }
 
 PlayerCharacter* PlayerCharacter::create(const std::string& name)

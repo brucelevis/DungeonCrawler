@@ -3,6 +3,7 @@
 
 // Global variables, local variables, global toggles, local toggles.
 
+#include <sstream>
 #include <string>
 #include <map>
 
@@ -40,6 +41,21 @@ public:
     TRACE("SET %s = %d", key.c_str(), value);
 
     m_storage[key] = value;
+  }
+
+  std::string xmlDump() const
+  {
+    std::string xml = "<persistents>\n";
+
+    for (auto it = m_storage.begin(); it != m_storage.end(); ++it)
+    {
+      std::ostringstream ss;
+      ss << " <data key=\"" << it->first << "\" value=\"" << it->second << "\" />\n";
+      xml += ss.str();
+    }
+
+    xml += "</persistents>\n";
+    return xml;
   }
 protected:
   Persistent() {}
