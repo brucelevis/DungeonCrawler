@@ -84,7 +84,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
           1 * //weak
           (85 + random_range(0, 16)) / 100;
 
-  if (spell->spellType == Spell::SPELL_HEAL)
+  if (spell->spellType == SPELL_HEAL)
   {
     damage = -damage;
   }

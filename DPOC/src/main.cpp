@@ -5,6 +5,8 @@
 #include "SaveLoad.h"
 
 #include "draw_text.h"
+#include "Spell.h"
+
 #include "Player.h"
 #include "Editor.h"
 #include "Game.h"
@@ -14,6 +16,7 @@ int main(int argc, char* argv[])
   START_LOG;
 
   init_text_drawing();
+  load_spells();
 
   srand(time(0));
 
