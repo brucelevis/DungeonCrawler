@@ -79,7 +79,7 @@ void load_game(const std::string& saveFile)
     {
       parsePlayerElement(element);
     }
-    else if (elementName == "persistent")
+    else if (elementName == "persistents")
     {
       parsePersistents(element);
     }
