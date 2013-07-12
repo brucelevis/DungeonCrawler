@@ -1,44 +1,157 @@
 #include <vector>
+#include <stdexcept>
 
 #include "Utility.h"
 #include "logger.h"
 #include "Monster.h"
 
+#include "../dep/tinyxml2.h"
+
+using namespace tinyxml2;
+
 static std::vector<MonsterDef> monsters =
 {
   {
     BUG_MONSTER
-  },
-
-  {
-    "Skelington", "A spooky skeleton",
-    {
-      { "hp",       5  },
-      { "mp",       0   },
-      { "strength", 14  },
-      { "power",    18  },
-      { "defense",  10  },
-      { "magic",    8   },
-      { "mag.def",  8   },
-      { "speed",    12  },
-      { "level",    1   },
-      { "exp",      8   },
-      { "gold",     4   }
-    },
-    "Resources/rpg_monster_set.png",
-    { 12, 32, 32, 36 },
-
-    {
-      { "Attack", "", 6 },
-      { "Spell", "Hurt All", 3 },
-      { "Spell", "Heal", 3 }
-    },
-
-    {
-      { "Herb", 50 }
-    }
   }
 };
+
+static MonsterDef parse_monster_element(const XMLElement* monsterElement)
+{
+  MonsterDef monster;
+  // Monsters does not care about MP but it's required for spellcasting.
+  monster.attributeMap["mp"] = 0;
+
+  const XMLElement* nameElem = monsterElement->FirstChildElement("name");
+  const XMLElement* descElem = monsterElement->FirstChildElement("description");
+  const XMLElement* textElem = monsterElement->FirstChildElement("texture");
+
+  if (nameElem)
+    monster.name = nameElem->GetText();
+  if (descElem)
+    monster.description = descElem->GetText();
+  if (textElem)
+  {
+    const XMLAttribute* nameAttr = textElem->FindAttribute("name");
+    const XMLAttribute* xAttr = textElem->FindAttribute("x");
+    const XMLAttribute* yAttr = textElem->FindAttribute("y");
+    const XMLAttribute* wAttr = textElem->FindAttribute("w");
+    const XMLAttribute* hAttr = textElem->FindAttribute("h");
+    if (nameAttr && xAttr && wAttr && yAttr && hAttr)
+    {
+      std::string name = nameAttr->Value();
+      int x = fromString<int>(xAttr->Value());
+      int y = fromString<int>(yAttr->Value());
+      int w = fromString<int>(wAttr->Value());
+      int h = fromString<int>(hAttr->Value());
+
+      monster.texture = name;
+      monster.textureRect = sf::IntRect(x, y, w, h);
+    }
+    else
+    {
+      TRACE("Bad values for texture.");
+    }
+  }
+
+  const XMLElement* attrElem = monsterElement->FirstChildElement("attributes");
+  for (const XMLElement* element = attrElem->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    const XMLAttribute* nameAttr = element->FindAttribute("name");
+    const XMLAttribute* valueAttr = element->FindAttribute("value");
+
+    if (nameAttr && valueAttr)
+    {
+      std::string name = nameAttr->Value();
+      int value = fromString<int>(valueAttr->Value());
+
+      monster.attributeMap[name] = value;
+    }
+    else
+    {
+      TRACE("No nameAttr/valueAttr");
+    }
+  }
+
+  const XMLElement* actionElem = monsterElement->FirstChildElement("actions");
+  for (const XMLElement* element = actionElem->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    const XMLAttribute* nameAttr = element->FindAttribute("name");
+    const XMLAttribute* chanceAttr = element->FindAttribute("chance");
+
+    if (nameAttr && chanceAttr)
+    {
+      std::string name = nameAttr->Value();
+      int chance = fromString<int>(chanceAttr->Value());
+      std::string spell;
+
+      if (name == "Spell")
+      {
+        spell = element->GetText();
+      }
+
+      MonsterActionEntry entry;
+      entry.action = name;
+      entry.objectName = spell;
+      entry.weight = chance;
+
+      monster.actions.push_back(entry);
+    }
+    else
+    {
+      TRACE("No nameAttr/chanceAttr");
+    }
+  }
+
+  const XMLElement* itemElem = monsterElement->FirstChildElement("items");
+  for (const XMLElement* element = itemElem->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    const XMLAttribute* nameAttr = element->FindAttribute("name");
+    const XMLAttribute* chanceAttr = element->FindAttribute("chance");
+
+    if (nameAttr && chanceAttr)
+    {
+      std::string name = nameAttr->Value();
+      int chance = fromString<int>(chanceAttr->Value());
+
+      MonsterDropItem drop;
+      drop.itemName = name;
+      drop.chance = chance;
+
+      monster.itemDrop.push_back(drop);
+    }
+    else
+    {
+      TRACE("No nameAttr/chanceAttr");
+    }
+  }
+
+  return monster;
+}
+
+void load_monsters()
+{
+  static const std::string database = "Resources/Monsters.xml";
+
+  XMLDocument doc;
+  if (doc.LoadFile(database.c_str()) != 0)
+  {
+    TRACE("Unable to open monster database %s (%s)!", database.c_str(), doc.GetErrorStr1());
+
+    throw std::runtime_error("Unable to open monster database " + database);
+  }
+
+  const XMLElement* root = doc.FirstChildElement("monsters");
+
+  for (const XMLElement* element = root->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    MonsterDef monster = parse_monster_element(element);
+
+    TRACE("Loaded monster %s", monster.name.c_str());
+
+    monsters.push_back(monster);
+  }
+}
 
 MonsterDef get_monster_definition(const std::string& name)
 {

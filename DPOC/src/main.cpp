@@ -6,6 +6,8 @@
 
 #include "draw_text.h"
 #include "Spell.h"
+#include "Item.h"
+#include "Monster.h"
 
 #include "Player.h"
 #include "Editor.h"
@@ -20,6 +22,7 @@ int main(int argc, char* argv[])
   // Load databases.
   load_spells();
   load_items();
+  load_monsters();
 
   srand(time(0));
 

@@ -35,6 +35,8 @@ struct MonsterDef
   std::vector<MonsterDropItem> itemDrop;
 };
 
+void load_monsters();
+
 MonsterDef get_monster_definition(const std::string& name);
 std::string get_monster_description(const std::string& name);
 std::vector<std::string> monster_drop_items(const MonsterDef& monster);
