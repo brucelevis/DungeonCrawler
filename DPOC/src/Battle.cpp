@@ -500,15 +500,15 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
   {
     StatusEffect* status = *it;
 
-    if (status->damageType != StatusEffect::DAMAGE_NONE)
+    if (status->damageType != DAMAGE_NONE)
     {
       int damage = 0;
 
-      if (status->damageType == StatusEffect::DAMAGE_FIXED)
+      if (status->damageType == DAMAGE_FIXED)
       {
         damage = status->damagePerTurn;
       }
-      else if (status->damageType == StatusEffect::DAMAGE_PERCENT)
+      else if (status->damageType == DAMAGE_PERCENT)
       {
         float percent = (float)status->damagePerTurn / 100.0f;
         damage = percent * (float)actor->getAttribute(status->damageStat).max;

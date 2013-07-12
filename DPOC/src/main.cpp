@@ -9,6 +9,7 @@
 #include "Item.h"
 #include "Monster.h"
 #include "PlayerClass.h"
+#include "StatusEffect.h"
 
 #include "Player.h"
 #include "Editor.h"
@@ -25,6 +26,7 @@ int main(int argc, char* argv[])
   load_items();
   load_monsters();
   load_classes();
+  load_status_effects();
 
   srand(time(0));
 
