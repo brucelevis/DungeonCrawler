@@ -11,6 +11,8 @@ class Character;
 enum ItemType
 {
   ITEM_USE,
+  ITEM_USE_MENU,
+  ITEM_USE_BATTLE,
   ITEM_WEAPON,
   ITEM_SHIELD,
   ITEM_ARMOR,

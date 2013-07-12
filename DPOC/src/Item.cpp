@@ -48,7 +48,7 @@ static std::vector<Item> itemDefinitions =
   {
     "Firebomb", "Explodes in flames",
     100,
-    ITEM_USE,
+    ITEM_USE_BATTLE,
     TARGET_SINGLE_ENEMY,
     {
       { "strength", 120 },
@@ -61,11 +61,11 @@ static std::vector<Item> itemDefinitions =
   {
     "Steroids", "Makes you mighty",
     500,
-    ITEM_USE,
+    ITEM_USE_MENU,
     TARGET_SINGLE_ALLY,
     {
-      { "strength", 120 },
-      { "power", 120 }
+      { "strength", 4 },
+      { "power", 4 }
     },
     "",
     ITEM_BUFF
@@ -125,25 +125,30 @@ int use_item(Item* item, Character* user, Character* target)
 {
   int damage = calculate_physical_damage_item(user, target, item);
 
+  if (item->itemUseType == ITEM_HEAL || item->itemUseType == ITEM_HEAL_FIXED ||
+          item->itemUseType == ITEM_DAMAGE)
+  {
+    target->takeDamage("hp", damage);
+  }
+  else if (item->itemUseType == ITEM_RESTORE_MP || item->itemUseType == ITEM_RESTORE_MP_FIXED)
+  {
+    target->takeDamage("mp", damage);
+
+    battle_message("%s's MP restored by %d!",
+        target->getName().c_str(), damage);
+
+    damage = 0;
+  }
+
   for (auto it = item->attributeGain.begin(); it != item->attributeGain.end(); ++it)
   {
-    if (item->itemUseType == ITEM_HEAL || item->itemUseType == ITEM_HEAL_FIXED ||
-        item->itemUseType == ITEM_DAMAGE)
+    if (item->itemUseType == ITEM_BUFF)
     {
-      target->takeDamage(it->first, damage);
-    }
-    else if (item->itemUseType == ITEM_RESTORE_MP || item->itemUseType == ITEM_RESTORE_MP_FIXED)
-    {
-      target->takeDamage(it->first, damage);
+      target->getAttribute(it->first).max += it->second;
+      reset_attribute(target->getAttribute(it->first));
 
-      battle_message("%s's MP restored by %d!",
-          target->getName().c_str(), damage);
-
-      damage = 0;
-    }
-    else if (item->itemUseType == ITEM_BUFF)
-    {
-      buff(target, it->first, it->second);
+      show_message("%s %s increased by %d!",
+          target->getName().c_str(), it->first.c_str(), it->second);
     }
   }
 

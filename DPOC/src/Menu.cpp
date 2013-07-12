@@ -323,7 +323,8 @@ void MainMenu::handleConfirm()
   {
     std::string itemName = m_itemMenu->getSelectedItemName();
     Item* item = get_player()->getItem(itemName);
-    if (item && item->type == ITEM_USE && item->target == TARGET_SINGLE_ALLY)
+    if (item && (item->type == ITEM_USE || item->type == ITEM_USE_MENU) &&
+        item->target == TARGET_SINGLE_ALLY)
     {
       m_characterMenu->setItemToUse(itemName);
       openCharacterMenu();
@@ -1142,27 +1143,31 @@ void BattleMenu::handleConfirm()
   {
     const Item* item = get_player()->getItem(m_itemMenu->getSelectedItemName());
 
-    if (item->target == TARGET_NONE || item->type != ITEM_USE)
+    if (item->target != TARGET_NONE &&
+        (item->type == ITEM_USE || item->type == ITEM_USE_BATTLE))
+    {
+      if (item->target == TARGET_SINGLE_ENEMY)
+      {
+        m_itemMenu->setVisible(false);
+        selectMonster();
+      }
+      else if (item->target == TARGET_SINGLE_ALLY)
+      {
+        m_itemMenu->setVisible(false);
+        selectCharacter();
+      }
+      else if (item->target == TARGET_ALL_ENEMY ||
+               item->target == TARGET_ALL_ALLY ||
+               item->target == TARGET_SELF)
+      {
+        prepareAction();
+
+        nextActor();
+      }
+    }
+    else
     {
       play_sound(config::SOUND_CANCEL);
-    }
-    else if (item->target == TARGET_SINGLE_ENEMY)
-    {
-      m_itemMenu->setVisible(false);
-      selectMonster();
-    }
-    else if (item->target == TARGET_SINGLE_ALLY)
-    {
-      m_itemMenu->setVisible(false);
-      selectCharacter();
-    }
-    else if (item->target == TARGET_ALL_ENEMY ||
-             item->target == TARGET_ALL_ALLY ||
-             item->target == TARGET_SELF)
-    {
-      prepareAction();
-
-      nextActor();
     }
   }
 }
