@@ -13,6 +13,8 @@ struct PlayerClass
   std::vector<std::string> equipment;
 };
 
+void load_classes();
+
 PlayerClass& player_class_ref(const std::string& className);
 
 #endif

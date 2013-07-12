@@ -8,6 +8,7 @@
 #include "Spell.h"
 #include "Item.h"
 #include "Monster.h"
+#include "PlayerClass.h"
 
 #include "Player.h"
 #include "Editor.h"
@@ -23,6 +24,7 @@ int main(int argc, char* argv[])
   load_spells();
   load_items();
   load_monsters();
+  load_classes();
 
   srand(time(0));
 
