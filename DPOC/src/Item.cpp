@@ -8,90 +8,216 @@
 #include "Message.h"
 #include "Item.h"
 
+#include "../dep/tinyxml2.h"
+
+using namespace tinyxml2;
+
 static std::vector<Item> itemDefinitions =
 {
-  {
-    "Herb", "A medicin herb",
-    25,
-    ITEM_USE,
-    TARGET_SINGLE_ALLY,
-    {
-      { "hp", 25 }
-    },
-    "",
-    ITEM_HEAL_FIXED
-  },
+//  {
+//    "Herb", "A medicin herb",
+//    25,
+//    ITEM_USE,
+//    TARGET_SINGLE_ALLY,
+//    {
+//      { "hp", 25 }
+//    },
+//    "",
+//    ITEM_HEAL_FIXED
+//  },
+//
+//  {
+//    "Ether", "Delicious",
+//    150,
+//    ITEM_USE,
+//    TARGET_SINGLE_ALLY,
+//    {
+//      { "mp", 25 }
+//    },
+//    "",
+//    ITEM_RESTORE_MP_FIXED
+//  },
+//
+//  {
+//    "Antidote", "Cures poison",
+//    50,
+//    ITEM_USE,
+//    TARGET_SINGLE_ALLY,
+//    {},
+//    "",
+//    ITEM_REMOVE_STATUS,
+//    "Poison"
+//  },
+//
+//  {
+//    "Firebomb", "Explodes in flames",
+//    100,
+//    ITEM_USE_BATTLE,
+//    TARGET_SINGLE_ENEMY,
+//    {
+//      { "strength", 120 },
+//      { "power", 120 }
+//    },
+//    "Effect_Flame",
+//    ITEM_DAMAGE
+//  },
+//
+//  {
+//    "Steroids", "Makes you mighty",
+//    500,
+//    ITEM_USE_MENU,
+//    TARGET_SINGLE_ALLY,
+//    {
+//      { "strength", 4 },
+//      { "power", 4 }
+//    },
+//    "",
+//    ITEM_BUFF
+//  },
+//
+//  {
+//    "Rusty Knife", "An old rusty knife",
+//    10,
+//    ITEM_WEAPON,
+//    TARGET_NONE,
+//    {
+//      { "power", 4 }
+//    },
+//    "Effect_Slash"
+//  },
+//
+//  {
+//    "Wood Shield", "A wooden shield",
+//    25,
+//    ITEM_SHIELD,
+//    TARGET_NONE,
+//    {
+//      { "defense", 4 }
+//    }
+//  }
+};
 
-  {
-    "Ether", "Delicious",
-    150,
-    ITEM_USE,
-    TARGET_SINGLE_ALLY,
-    {
-      { "mp", 25 }
-    },
-    "",
-    ITEM_RESTORE_MP_FIXED
-  },
+#define E_S(A, B) if (A == #B) return B
 
-  {
-    "Antidote", "Cures poison",
-    50,
-    ITEM_USE,
-    TARGET_SINGLE_ALLY,
-    {},
-    "",
-    ITEM_REMOVE_STATUS,
-    "Poison"
-  },
+static ItemType itemTypeFromString(const std::string& type)
+{
+  E_S(type, ITEM_USE);
+  E_S(type, ITEM_USE_MENU);
+  E_S(type, ITEM_USE_BATTLE);
+  E_S(type, ITEM_WEAPON);
+  E_S(type, ITEM_SHIELD);
+  E_S(type, ITEM_ARMOR);
+  E_S(type, ITEM_HELMET);
+  E_S(type, ITEM_MISC);
 
-  {
-    "Firebomb", "Explodes in flames",
-    100,
-    ITEM_USE_BATTLE,
-    TARGET_SINGLE_ENEMY,
-    {
-      { "strength", 120 },
-      { "power", 120 }
-    },
-    "Effect_Flame",
-    ITEM_DAMAGE
-  },
+  TRACE("Unknown item type %s", type.c_str());
 
-  {
-    "Steroids", "Makes you mighty",
-    500,
-    ITEM_USE_MENU,
-    TARGET_SINGLE_ALLY,
-    {
-      { "strength", 4 },
-      { "power", 4 }
-    },
-    "",
-    ITEM_BUFF
-  },
+  return ITEM_USE;
+}
 
-  {
-    "Rusty Knife", "An old rusty knife",
-    10,
-    ITEM_WEAPON,
-    TARGET_NONE,
-    {
-      { "power", 4 }
-    },
-    "Effect_Slash"
-  },
+static ItemUseType itemUseTypeFromString(const std::string& type)
+{
+  E_S(type, ITEM_HEAL);
+  E_S(type, ITEM_HEAL_FIXED);
+  E_S(type, ITEM_RESTORE_MP);
+  E_S(type, ITEM_RESTORE_MP_FIXED);
+  E_S(type, ITEM_DAMAGE);
+  E_S(type, ITEM_BUFF);
+  E_S(type, ITEM_REMOVE_STATUS);
+  E_S(type, ITEM_CAUSE_STATUS);
+  E_S(type, ITEM_CUSTOM);
 
+  TRACE("Unknown item use type %s", type.c_str());
+
+  return ITEM_HEAL;
+}
+
+static Item parse_item_element(const XMLElement* itemElement)
+{
+  Item item;
+  item.cost = 0;
+  item.name = "ERROR";
+  item.itemUseType = ITEM_HEAL;
+  item.stackSize = 0;
+  item.target = TARGET_NONE;
+  item.type = ITEM_USE;
+
+  const XMLElement* nameElem = itemElement->FirstChildElement("name");
+  const XMLElement* descElem = itemElement->FirstChildElement("description");
+  const XMLElement* costElem = itemElement->FirstChildElement("cost");
+  const XMLElement* typeElem = itemElement->FirstChildElement("type");
+  const XMLElement* targElem = itemElement->FirstChildElement("target");
+  const XMLElement* useElem  = itemElement->FirstChildElement("onUse");
+  const XMLElement* statElem = itemElement->FirstChildElement("status");
+  const XMLElement* effeElem = itemElement->FirstChildElement("effect");
+
+  if (nameElem)
+    item.name = nameElem->GetText();
+  if (descElem)
+    item.description = descElem->GetText();
+  if (costElem)
+    item.cost = fromString<int>(costElem->GetText());
+  if (typeElem)
+    item.type = itemTypeFromString(typeElem->GetText());
+  if (targElem)
+    item.target = targetFromString(targElem->GetText());
+  if (useElem)
+    item.itemUseType = itemUseTypeFromString(useElem->GetText());
+  if (statElem)
+    item.status = statElem->GetText();
+  if (effeElem)
+    item.effect = effeElem->GetText();
+
+  const XMLElement* attrElem = itemElement->FirstChildElement("attributes");
+  if (attrElem)
   {
-    "Wood Shield", "A wooden shield",
-    25,
-    ITEM_SHIELD,
-    TARGET_NONE,
+    for (const XMLElement* element = attrElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
-      { "defense", 4 }
+      const XMLAttribute* nameAttr = element->FindAttribute("name");
+      const XMLAttribute* valueAttr = element->FindAttribute("value");
+
+      if (nameAttr && valueAttr)
+      {
+        std::string name = nameAttr->Value();
+        int value = fromString<int>(valueAttr->Value());
+
+        item.attributeGain[name] = value;
+      }
+      else
+      {
+        TRACE("Attribute name or value not set for item %s!", item.name.c_str());
+
+        throw std::runtime_error("Attribute name or value not set for item " + item.name);
+      }
     }
   }
-};
+
+  return item;
+}
+
+void load_items()
+{
+  static const std::string itemDatabase = "Resources/Items.xml";
+
+  XMLDocument doc;
+
+  if (doc.LoadFile(itemDatabase.c_str()) != 0)
+  {
+    TRACE("Unable to open item database %s (%s)!", itemDatabase.c_str(), doc.GetErrorStr1());
+
+    throw std::runtime_error("Unable to open item database " + itemDatabase);
+  }
+
+  const XMLElement* root = doc.FirstChildElement("items");
+  for (const XMLElement* element = root->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    Item item = parse_item_element(element);
+
+    TRACE("Loaded new item %s", item.name.c_str());
+
+    itemDefinitions.push_back(item);
+  }
+}
 
 Item create_item(const std::string& name, int stackSize)
 {

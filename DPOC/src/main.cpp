@@ -16,7 +16,10 @@ int main(int argc, char* argv[])
   START_LOG;
 
   init_text_drawing();
+
+  // Load databases.
   load_spells();
+  load_items();
 
   srand(time(0));
 

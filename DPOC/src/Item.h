@@ -55,6 +55,8 @@ struct Item
   int stackSize;
 };
 
+void load_items();
+
 Item create_item(const std::string& name, int stackSize = 1);
 Item& item_ref(const std::string& name);
 int use_item(Item* item, Character* user, Character* target);
