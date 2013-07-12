@@ -18,6 +18,19 @@ enum ItemType
   ITEM_MISC
 };
 
+enum ItemUseType
+{
+  ITEM_HEAL,
+  ITEM_HEAL_FIXED,
+  ITEM_RESTORE_MP,
+  ITEM_RESTORE_MP_FIXED,
+  ITEM_DAMAGE,
+  ITEM_BUFF,
+  ITEM_REMOVE_STATUS,
+  ITEM_CAUSE_STATUS,
+  ITEM_CUSTOM
+};
+
 struct Item
 {
   std::string name;
@@ -31,18 +44,7 @@ struct Item
 
   std::string effect;
 
-  enum
-  {
-    ITEM_HEAL,
-    ITEM_HEAL_FIXED,
-    ITEM_RESTORE_MP,
-    ITEM_RESTORE_MP_FIXED,
-    ITEM_DAMAGE,
-    ITEM_BUFF,
-    ITEM_REMOVE_STATUS,
-    ITEM_CAUSE_STATUS,
-    ITEM_CUSTOM
-  } itemUseType;
+  ItemUseType itemUseType;
 
   std::string status;
 

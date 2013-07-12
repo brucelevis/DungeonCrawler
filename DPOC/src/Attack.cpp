@@ -37,11 +37,11 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
 
 int calculate_physical_damage_item(Character* attacker, Character* target, Item* usedItem)
 {
-  if (usedItem->itemUseType == Item::ITEM_HEAL_FIXED)
+  if (usedItem->itemUseType == ITEM_HEAL_FIXED)
   {
     return -usedItem->attributeGain["hp"];
   }
-  else if (usedItem->itemUseType == Item::ITEM_DAMAGE || usedItem->itemUseType == Item::ITEM_HEAL)
+  else if (usedItem->itemUseType == ITEM_DAMAGE || usedItem->itemUseType == ITEM_HEAL)
   {
     int level = attacker->computeCurrentAttribute("level");
     int str = usedItem->attributeGain["strength"];
@@ -55,14 +55,14 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
             1 * //weak
             (85 + random_range(0, 16)) / 100;
 
-    if (usedItem->itemUseType == Item::ITEM_HEAL)
+    if (usedItem->itemUseType == ITEM_HEAL)
     {
       damage = -damage;
     }
 
     return damage;
   }
-  else if (usedItem->itemUseType == Item::ITEM_RESTORE_MP_FIXED)
+  else if (usedItem->itemUseType == ITEM_RESTORE_MP_FIXED)
   {
     return -usedItem->attributeGain["mp"];
   }

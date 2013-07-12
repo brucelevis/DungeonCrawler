@@ -19,7 +19,7 @@ static std::vector<Item> itemDefinitions =
       { "hp", 25 }
     },
     "",
-    Item::ITEM_HEAL_FIXED
+    ITEM_HEAL_FIXED
   },
 
   {
@@ -31,7 +31,7 @@ static std::vector<Item> itemDefinitions =
       { "mp", 25 }
     },
     "",
-    Item::ITEM_RESTORE_MP_FIXED
+    ITEM_RESTORE_MP_FIXED
   },
 
   {
@@ -41,7 +41,7 @@ static std::vector<Item> itemDefinitions =
     TARGET_SINGLE_ALLY,
     {},
     "",
-    Item::ITEM_REMOVE_STATUS,
+    ITEM_REMOVE_STATUS,
     "Poison"
   },
 
@@ -55,7 +55,7 @@ static std::vector<Item> itemDefinitions =
       { "power", 120 }
     },
     "Effect_Flame",
-    Item::ITEM_DAMAGE
+    ITEM_DAMAGE
   },
 
   {
@@ -68,7 +68,7 @@ static std::vector<Item> itemDefinitions =
       { "power", 120 }
     },
     "",
-    Item::ITEM_BUFF
+    ITEM_BUFF
   },
 
   {
@@ -127,12 +127,12 @@ int use_item(Item* item, Character* user, Character* target)
 
   for (auto it = item->attributeGain.begin(); it != item->attributeGain.end(); ++it)
   {
-    if (item->itemUseType == Item::ITEM_HEAL || item->itemUseType == Item::ITEM_HEAL_FIXED ||
-        item->itemUseType == Item::ITEM_DAMAGE)
+    if (item->itemUseType == ITEM_HEAL || item->itemUseType == ITEM_HEAL_FIXED ||
+        item->itemUseType == ITEM_DAMAGE)
     {
       target->takeDamage(it->first, damage);
     }
-    else if (item->itemUseType == Item::ITEM_RESTORE_MP || item->itemUseType == Item::ITEM_RESTORE_MP_FIXED)
+    else if (item->itemUseType == ITEM_RESTORE_MP || item->itemUseType == ITEM_RESTORE_MP_FIXED)
     {
       target->takeDamage(it->first, damage);
 
@@ -141,17 +141,17 @@ int use_item(Item* item, Character* user, Character* target)
 
       damage = 0;
     }
-    else if (item->itemUseType == Item::ITEM_BUFF)
+    else if (item->itemUseType == ITEM_BUFF)
     {
       buff(target, it->first, it->second);
     }
   }
 
-  if (item->itemUseType == Item::ITEM_REMOVE_STATUS)
+  if (item->itemUseType == ITEM_REMOVE_STATUS)
   {
     cure_status(target, item->status);
   }
-  else if (item->itemUseType == Item::ITEM_CAUSE_STATUS)
+  else if (item->itemUseType == ITEM_CAUSE_STATUS)
   {
     cause_status(target, item->status);
   }
