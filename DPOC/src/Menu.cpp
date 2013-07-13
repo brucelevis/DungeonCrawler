@@ -1662,6 +1662,7 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
     int posX = config::GAME_RES_X / 2;
     int posY = config::GAME_RES_Y / 2;
 
+    // Center adjustment for evenly sized monster groups.
     if ((m_monsters.size() % 2) == 0)
     {
       posX += config::GAME_RES_X / 8;
