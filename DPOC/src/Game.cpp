@@ -76,7 +76,19 @@ void Game::run()
 
         // Only check for warps if the player moved onto the tile this update step.
         if (playerMoved && !m_player->player()->isWalking())
-          checkWarps();
+        {
+          if (!checkWarps())
+          {
+            // Also check encounters if no warps were taken.
+
+            std::vector<std::string> monsters =
+                m_currentMap->checkEncounter(m_player->player()->x, m_player->player()->y);
+            if (!monsters.empty())
+            {
+              startBattle(monsters);
+            }
+          }
+        }
       }
 
       timerThen += 1000 / config::FPS;
@@ -187,17 +199,8 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
   if (key == sf::Keyboard::B)
   {
-    m_currentMusic.pause();
-
-    Battle battle(m_window,
-      {
-        Character::createMonster("Skelington"),
-        Character::createMonster("Skelington"),
-        Character::createMonster("Skelington")
-      });
-    battle.start();
-
-    m_currentMusic.play();
+    std::vector<std::string> monsters = {"Skelington", "Skelington", "Skelington"};
+    startBattle(monsters);
   }
 }
 
@@ -245,7 +248,7 @@ void Game::updatePlayer()
   }
 }
 
-void Game::checkWarps()
+bool Game::checkWarps()
 {
   if (m_player && m_currentMap &&
       !m_player->player()->isWalking() &&
@@ -255,7 +258,11 @@ void Game::checkWarps()
     std::string warpTargetName = getWarpTargetName(*warp);
 
     transferPlayer(warpTargetName, warp->dstX, warp->dstY);
+
+    return true;
   }
+
+  return false;
 }
 
 void Game::transferPlayer(const std::string& targetMap, int x, int y)
@@ -313,4 +320,20 @@ void Game::loadNewMap(const std::string& file)
   {
     playMusic(m_currentMap->getMusic());
   }
+}
+
+void Game::startBattle(const std::vector<std::string>& monsters)
+{
+  m_currentMusic.pause();
+
+  std::vector<Character*> monsterChars;
+  for (auto it = monsters.begin(); it != monsters.end(); ++it)
+  {
+    monsterChars.push_back(Character::createMonster(*it));
+  }
+
+  Battle battle(m_window, monsterChars);
+  battle.start();
+
+  m_currentMusic.play();
 }

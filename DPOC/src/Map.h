@@ -2,6 +2,8 @@
 #define MAP_H
 
 #include <vector>
+#include <string>
+#include <map>
 
 #include <SFML/Graphics.hpp>
 
@@ -54,6 +56,8 @@ public:
 
   bool blocking(int x, int y);
 
+  std::vector<std::string> checkEncounter(int x, int y);
+
   std::string xmlDump() const;
 private:
   Map();
@@ -70,6 +74,9 @@ private:
   std::vector<Entity*> m_entities;
   std::string m_music;
   std::vector<Warp> m_warps;
+
+  int m_encounterRate;
+  std::multimap<int, std::vector<std::string> > m_encounters;
 
   sf::Texture* m_tileset;
   std::string m_name;

@@ -1,5 +1,6 @@
 #include <sstream>
 #include <fstream>
+#include <set>
 
 #include "Direction.h"
 #include "Utility.h"
@@ -262,6 +263,13 @@ Map* Map::loadTiledFile(const std::string& filename)
     map->m_name = filename;
     map->m_music = loader.getProperty("music");
 
+    std::set<int> zones;
+    map->m_encounterRate = 30;
+    if (!loader.getProperty("encounterRate").empty())
+    {
+      map->m_encounterRate = fromString<int>(loader.getProperty("encounterRate"));
+    }
+
     TRACE("Map: Loading tilesets");
 
     std::vector<std::string> tilesets = loader.getTilesets();
@@ -417,6 +425,8 @@ Map* Map::loadTiledFile(const std::string& filename)
         {
           int zoneId = fromString<int>(loader.getObjectProperty(objectIndex, "zoneId"));
 
+          zones.insert(zoneId);
+
           int x = object->x / config::TILE_W;
           int y = object->y / config::TILE_H;
           int w = object->width / config::TILE_W;
@@ -435,6 +445,27 @@ Map* Map::loadTiledFile(const std::string& filename)
               x, y, w, h);
         }
       }
+    }
+
+    TRACE("Reading encounters");
+    for (auto it = zones.begin(); it != zones.end(); ++it)
+    {
+      std::string enc = loader.getProperty("zone:" + toString(*it));
+      std::vector<std::string> groups = split_string(enc, '|');
+      for (auto groupIt = groups.begin(); groupIt != groups.end(); ++groupIt)
+      {
+        std::vector<std::string> monsters = split_string(*groupIt, ',');
+        map->m_encounters.insert(std::make_pair(*it, monsters));
+      }
+    }
+    for (auto it = map->m_encounters.begin(); it != map->m_encounters.end(); ++it)
+    {
+      std::string buff;
+      for (auto jit = it->second.begin(); jit != it->second.end(); ++jit)
+      {
+        buff += (*jit) + " ";
+      }
+      TRACE(" - %d: %s", it->first, buff.c_str());
     }
 
     TRACE("Map loading completed!");
@@ -513,4 +544,31 @@ std::string Map::xmlDump() const
   xml << "</map>\n";
 
   return xml.str();
+}
+
+std::vector<std::string> Map::checkEncounter(int x, int y)
+{
+  std::vector<std::string> monsters;
+
+  int range = random_range(0, m_encounterRate);
+  if (range == 0)
+  {
+    int zone = getTileAt(x, y, 0)->zone;
+
+    std::vector< std::vector<std::string> > potentials;
+
+    auto itPair = m_encounters.equal_range(zone);
+    for (auto it = itPair.first; it != itPair.second; ++it)
+    {
+      potentials.push_back(it->second);
+    }
+
+    if (potentials.size() > 0)
+    {
+      std::random_shuffle(potentials.begin(), potentials.end());
+      monsters = potentials.front();
+    }
+  }
+
+  return monsters;
 }

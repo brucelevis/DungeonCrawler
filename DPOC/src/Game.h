@@ -30,6 +30,8 @@ public:
   void setPlayer(Player* player) { m_player = player; }
 
   void loadNewMap(const std::string& file);
+
+  void startBattle(const std::vector<std::string>& monsters);
 private:
   Game();
   ~Game();
@@ -37,7 +39,7 @@ private:
   void pollEvents();
   void draw();
   void updatePlayer();
-  void checkWarps();
+  bool checkWarps();
 
   void handleKeyPress(sf::Keyboard::Key key);
 
