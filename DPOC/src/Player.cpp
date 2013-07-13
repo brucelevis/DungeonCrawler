@@ -242,23 +242,7 @@ Player* Player::create()
       std::string name = element->FindAttribute("name")->Value();
       std::string className = element->FindAttribute("class")->Value();
 
-      PlayerClass& pc = player_class_ref(className);
-
-      Entity* entity = new Entity;
-      entity->setPosition(startX, startY);
-      entity->setWalkSpeed(0.1f);
-
-      Sprite* sprite = new Sprite;
-      sprite->create(pc.texture, pc.textureBlock.x, pc.textureBlock.y);
-
-      entity->setSprite(sprite);
-
-      if (player->m_playerTrain.size() > 0)
-        entity->setWalkThrough(true);
-
-      player->m_playerTrain.push_back(entity);
-
-      player->m_party.push_back(PlayerCharacter::create(name, className));
+      player->addNewCharacter(name, className, startX, startY);
     }
   }
 
@@ -310,4 +294,25 @@ Player* Player::createFromSaveData(std::vector<CharacterData*> charData, std::ve
 Player* get_player()
 {
   return Game::instance().getPlayer();
+}
+
+void Player::addNewCharacter(const std::string& name, const std::string& className, int x, int y)
+{
+  PlayerClass& pc = player_class_ref(className);
+
+  Entity* entity = new Entity;
+  entity->setPosition(x, y);
+  entity->setWalkSpeed(0.1f);
+
+  Sprite* sprite = new Sprite;
+  sprite->create(pc.texture, pc.textureBlock.x, pc.textureBlock.y);
+
+  entity->setSprite(sprite);
+
+  if (m_playerTrain.size() > 0)
+    entity->setWalkThrough(true);
+
+  m_playerTrain.push_back(entity);
+
+  m_party.push_back(PlayerCharacter::create(name, className));
 }

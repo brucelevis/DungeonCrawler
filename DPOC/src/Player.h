@@ -42,6 +42,8 @@ public:
 
   std::string xmlDump() const;
 
+  void addNewCharacter(const std::string& name, const std::string& className, int x, int y);
+
   static Player* create();
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:
