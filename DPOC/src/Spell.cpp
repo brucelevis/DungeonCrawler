@@ -1,11 +1,15 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Config.h"
+#include "Sound.h"
 #include "Utility.h"
-#include "Attack.h"
 #include "logger.h"
+
+#include "Attack.h"
 #include "Message.h"
 #include "Character.h"
+#include "StatusEffect.h"
 #include "Spell.h"
 
 #include "../dep/tinyxml2.h"
@@ -148,25 +152,46 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
   if (spell->spellType & SPELL_CAUSE_STATUS)
   {
+    std::string soundToPlay;
+
     for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
     {
       int range = random_range(0, 100);
       if (range < it->second)
       {
         cause_status(target, it->first);
+
+        // Play the first applicable sound.
+        if (soundToPlay.empty())
+        {
+          soundToPlay = get_status_effect(it->first)->sound;
+        }
       }
       else
       {
         battle_message("No effect...");
       }
     }
+
+    if (damage == 0 && !soundToPlay.empty())
+    {
+      play_sound("Resources/Audio/" + soundToPlay);
+    }
   }
 
   if (spell->spellType & SPELL_REMOVE_STATUS)
   {
+    std::vector<StatusEffect*> effects = target->getStatusEffects();
+
     for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
     {
       cure_status(target, it->first);
+    }
+
+    // Play sound if the previous effects differ from current.
+    if (damage == 0 && effects.size() != target->getStatusEffects().size())
+    {
+      play_sound(config::SOUND_RECOVERY);
     }
   }
 
@@ -175,6 +200,18 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     for (auto it = spell->attributeBuffs.begin(); it != spell->attributeBuffs.end(); ++it)
     {
       buff(target, *it, spell->power);
+    }
+
+    if (damage == 0)
+    {
+      if (spell->power > 0)
+      {
+        play_sound(config::SOUND_BUFF);
+      }
+      else if (spell->power < 0)
+      {
+        play_sound(config::SOUND_DEBUFF);
+      }
     }
   }
 

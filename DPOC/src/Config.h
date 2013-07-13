@@ -30,6 +30,9 @@ namespace config
   static const std::string SOUND_MISS = "Resources/Audio/Evasion1.wav";
   static const std::string SOUND_HEAL = "Resources/Audio/blipp.wav";
   static const std::string SOUND_POISON = "Resources/Audio/Poison.wav";
+  static const std::string SOUND_BUFF = "Resources/Audio/Up.wav";
+  static const std::string SOUND_DEBUFF = "Resources/Audio/Down.wav";
+  static const std::string SOUND_RECOVERY = "Resources/Audio/Recovery3.wav";
 }
 
 #endif

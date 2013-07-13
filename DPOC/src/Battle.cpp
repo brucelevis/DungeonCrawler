@@ -124,7 +124,7 @@ void Battle::start()
       }
       else if (m_state == STATE_EFFECT_MESSAGE)
       {
-        if (m_turnDelay == 0)
+        if (!effectInProgress() && m_turnDelay == 0)
         {
           nextActor();
         }
