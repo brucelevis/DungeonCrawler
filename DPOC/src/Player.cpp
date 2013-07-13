@@ -298,7 +298,7 @@ Player* get_player()
 
 void Player::addNewCharacter(const std::string& name, const std::string& className, int x, int y)
 {
-  PlayerClass& pc = player_class_ref(className);
+  PlayerClass pc = player_class_ref(className);
 
   Entity* entity = new Entity;
   entity->setPosition(x, y);

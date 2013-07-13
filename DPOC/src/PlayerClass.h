@@ -25,6 +25,6 @@ struct PlayerClass
 
 void load_classes();
 
-PlayerClass& player_class_ref(const std::string& className);
+PlayerClass player_class_ref(const std::string& className);
 
 #endif

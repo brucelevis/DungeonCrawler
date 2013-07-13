@@ -40,7 +40,7 @@ private:
   std::map<std::string, Item> m_equipment;
   std::vector<std::string> m_spells;
 
-  PlayerClass& m_class;
+  PlayerClass m_class;
 };
 
 #endif

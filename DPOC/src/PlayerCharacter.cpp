@@ -15,7 +15,6 @@ std::vector<std::string> PlayerCharacter::equipNames =
 };
 
 PlayerCharacter::PlayerCharacter()
- : m_class(player_class_ref("Hero"))
 {
 }
 
