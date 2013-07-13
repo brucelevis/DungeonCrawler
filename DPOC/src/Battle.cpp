@@ -216,10 +216,11 @@ void Battle::executeActions()
 
   if (action.actionName == "Attack")
   {
-    if (isMonster(m_currentActor))
-    {
+    // TODO: Uncomment when effects are used.
+    //if (isMonster(m_currentActor))
+    //{
       play_sound(config::SOUND_ATTACK);
-    }
+    //}
 
     battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
   }
@@ -895,11 +896,13 @@ void Battle::createEffects()
       Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("Weapon");
       if (weapon)
       {
-        effectName = weapon->effect;
+        // TODO: Uncomment when effects are used.
+        //effectName = weapon->effect;
       }
       else
       {
-        effectName = "Effect_Hit";
+        // TODO: Uncomment when effects are used.
+        //effectName = "Effect_Hit";
       }
     }
   }
@@ -907,13 +910,15 @@ void Battle::createEffects()
   {
     const Spell* spell = get_spell(action.objectName);
 
-    effectName = spell->effect;
+    // TODO: Uncomment when effects are used.
+    //effectName = spell->effect;
   }
   else if (action.actionName == "Item")
   {
     Item& item = item_ref(action.objectName);
 
-    effectName = item.effect;
+    // TODO: Uncomment when effects are used.
+    //effectName = item.effect;
   }
 
   for (auto it = m_currentTargets.begin(); it != m_currentTargets.end(); ++it)
