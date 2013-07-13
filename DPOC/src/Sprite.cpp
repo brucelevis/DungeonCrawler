@@ -86,8 +86,8 @@ void Sprite::update(Direction direction)
 
 void Sprite::render(sf::RenderTarget& target, float x, float y)
 {
-  int rectLeft = m_spriteSheetX * m_width + m_frame * m_width;
-  int rectTop = m_spriteSheetY * m_height + m_direction * m_height;
+  int rectLeft = m_spriteSheetX * m_width * config::NUM_SPRITES_X + m_frame * m_width;
+  int rectTop = m_spriteSheetY * m_height * config::NUM_SPRITES_Y + m_direction * m_height;
 
   m_sprite.setPosition(x, y);
   m_sprite.setTextureRect(sf::IntRect(rectLeft, rectTop, m_width, m_height));
