@@ -1458,6 +1458,7 @@ BattleStatusMenu::BattleStatusMenu()
   }
 
   setCursorVisible(false);
+  resetActor();
 }
 
 void BattleStatusMenu::handleConfirm()
