@@ -31,7 +31,7 @@ public:
 
   std::string xmlDump() const;
 
-  static PlayerCharacter* create(const std::string& name);
+  static PlayerCharacter* create(const std::string& name, const std::string& className);
   static PlayerCharacter* createFromSaveData(CharacterData* data);
 private:
   void setAttributes();

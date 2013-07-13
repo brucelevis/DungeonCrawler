@@ -220,15 +220,15 @@ std::string PlayerCharacter::xmlDump() const
   return xml.str();
 }
 
-PlayerCharacter* PlayerCharacter::create(const std::string& name)
+PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className)
 {
   PlayerCharacter* character = new PlayerCharacter;
 
   character->m_name = name;
-  character->m_faceTexture = cache::loadTexture("Resources/Faces/Face.png");
-  character->m_textureRect = sf::IntRect(0, 0, character->m_faceTexture->getSize().x, character->m_faceTexture->getSize().y);
+  character->m_class = player_class_ref(className);
 
-  character->m_class = player_class_ref("Hero");
+  character->m_faceTexture = cache::loadTexture(character->m_class.faceTexture);
+  character->m_textureRect = character->m_class.textureRect;
 
   character->m_status.push_back(get_status_effect("Normal"));
 
@@ -238,9 +238,6 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name)
   character->setLevel(1, false);
   reset_attribute(character->m_attributes["hp"]);
   reset_attribute(character->m_attributes["mp"]);
-
-  // character->m_equipment["weapon"] = create_item("Rusty Knife");
-  // character->m_equipment["shield"] = create_item("Wood Shield");
 
   return character;
 }

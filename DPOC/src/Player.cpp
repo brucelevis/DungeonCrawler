@@ -4,11 +4,18 @@
 #include <sstream>
 
 #include "SaveLoad.h"
+#include "Utility.h"
 
 #include "Direction.h"
 #include "Entity.h"
+#include "Sprite.h"
+#include "PlayerClass.h"
 #include "Game.h"
 #include "Player.h"
+
+#include "../dep/tinyxml2.h"
+
+using namespace tinyxml2;
 
 Player::Player()
  : m_gold(0)
@@ -206,31 +213,66 @@ std::string Player::xmlDump() const
   return xml.str();
 }
 
-Player* Player::create(int x, int y)
+Player* Player::create()
 {
   Player* player = new Player;
 
-  for (size_t i = 0; i < 4; i++)
-  {
-    player->m_playerTrain.push_back(new Entity("player"));
-    player->m_playerTrain[i]->setPosition(x, y);
+  int startX = 0;
+  int startY = 0;
 
-    if (i > 0)
-      player->m_playerTrain[i]->setWalkThrough(true);
+  XMLDocument doc;
+  doc.LoadFile("Resources/Player.xml");
+
+  const XMLElement* root = doc.FirstChildElement("player");
+  const XMLElement* start = root->FirstChildElement("start");
+  if (start)
+  {
+    startX = fromString<int>(start->FindAttribute("x")->Value());
+    startY = fromString<int>(start->FindAttribute("y")->Value());
+    std::string startMap = start->FindAttribute("map")->Value();
+
+    Game::instance().loadNewMap("Resources/Maps/" + startMap);
   }
 
-  player->m_party.push_back(PlayerCharacter::create("Char1"));
-  player->m_party.push_back(PlayerCharacter::create("Char2"));
-  player->m_party.push_back(PlayerCharacter::create("Char3"));
-  player->m_party.push_back(PlayerCharacter::create("Char4"));
+  const XMLElement* party = root->FirstChildElement("party");
+  if (party)
+  {
+    for (const XMLElement* element = party->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string name = element->FindAttribute("name")->Value();
+      std::string className = element->FindAttribute("class")->Value();
 
-  player->m_inventory.push_back(create_item("Herb", 3));
-  player->m_inventory.push_back(create_item("Rusty Knife", 3));
-  player->m_inventory.push_back(create_item("Wood Shield", 21));
-  player->m_inventory.push_back(create_item("Firebomb", 99));
-  player->m_inventory.push_back(create_item("Antidote", 10));
-  player->m_inventory.push_back(create_item("Ether", 10));
-  player->m_inventory.push_back(create_item("Steroids", 10));
+      PlayerClass& pc = player_class_ref(className);
+
+      Entity* entity = new Entity;
+      entity->setPosition(startX, startY);
+      entity->setWalkSpeed(0.1f);
+
+      Sprite* sprite = new Sprite;
+      sprite->create(pc.texture, pc.textureBlock.x, pc.textureBlock.y);
+
+      entity->setSprite(sprite);
+
+      if (player->m_playerTrain.size() > 0)
+        entity->setWalkThrough(true);
+
+      player->m_playerTrain.push_back(entity);
+
+      player->m_party.push_back(PlayerCharacter::create(name, className));
+    }
+  }
+
+  const XMLElement* inventory = root->FirstChildElement("inventory");
+  if (inventory)
+  {
+    for (const XMLElement* element = inventory->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string name = element->FindAttribute("name")->Value();
+      int amount = fromString<int>(element->FindAttribute("amount")->Value());
+
+      player->m_inventory.push_back(create_item(name, amount));
+    }
+  }
 
   player->m_gold = 0;
 

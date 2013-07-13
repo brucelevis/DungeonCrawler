@@ -42,7 +42,7 @@ public:
 
   std::string xmlDump() const;
 
-  static Player* create(int x, int y);
+  static Player* create();
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:
   Player();

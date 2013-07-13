@@ -69,6 +69,29 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     }
   }
 
+  const XMLElement* textElem = classElement->FirstChildElement("texture");
+  if (textElem)
+  {
+    std::string name = textElem->FindAttribute("name")->Value();
+    int x = fromString<int>(textElem->FindAttribute("x")->Value());
+    int y = fromString<int>(textElem->FindAttribute("y")->Value());
+    pc.texture = name;
+    pc.textureBlock.x = x;
+    pc.textureBlock.y = y;
+  }
+
+  const XMLElement* faceElem = classElement->FirstChildElement("face");
+  if (faceElem)
+  {
+    std::string name = faceElem->FindAttribute("name")->Value();
+    int x = fromString<int>(faceElem->FindAttribute("x")->Value());
+    int y = fromString<int>(faceElem->FindAttribute("y")->Value());
+    int w = fromString<int>(faceElem->FindAttribute("w")->Value());
+    int h = fromString<int>(faceElem->FindAttribute("h")->Value());
+    pc.faceTexture = name;
+    pc.textureRect = sf::IntRect(x, y, w, h);
+  }
+
   return pc;
 }
 
