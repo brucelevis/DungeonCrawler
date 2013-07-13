@@ -1662,8 +1662,13 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
     int posX = config::GAME_RES_X / 2;
     int posY = config::GAME_RES_Y / 2;
 
+    if ((m_monsters.size() % 2) == 0)
+    {
+      posX += config::GAME_RES_X / 8;
+    }
+
     posX -= monster->spriteWidth() / 2;
-    posY -= monster->spriteHeight() / 2;
+    posY -= monster->spriteHeight() - 16;// / 2;
 
     posX -= (m_monsters.size() / 2 - i) * (monster->spriteWidth() + 12);
 
