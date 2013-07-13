@@ -32,7 +32,7 @@ public:
   struct Action
   {
     std::string actionName;
-    Character* target;  // TODO: Vector
+    Character* target;
 
     // Item or spell.
     std::string objectName;
