@@ -88,7 +88,10 @@ int PlayerCharacter::checkLevelUp(bool display)
     levelReached = getAttribute("level").max;
   }
 
-  setLevel(levelReached, display);
+  if (levelReached > 0)
+  {
+    setLevel(levelReached, display);
+  }
 
   return levelReached;
 }
