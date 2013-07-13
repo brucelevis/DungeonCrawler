@@ -94,6 +94,11 @@ void Battle::start()
 
   m_battleOngoing = true;
 
+  m_battleMusic.openFromFile(config::MUSIC_BATTLE);
+  m_battleMusic.setVolume(50);
+  m_battleMusic.setLoop(true);
+  m_battleMusic.play();
+
   while (m_window.isOpen() && m_battleOngoing)
   {
     int timerNow = clock.getElapsedTime().asMilliseconds();
@@ -156,6 +161,7 @@ void Battle::start()
 void Battle::endBattle()
 {
   m_battleOngoing = false;
+  m_battleMusic.stop();
 
   // reset attributes that might have been affected by buffs and clear status effects.
   for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
@@ -425,6 +431,10 @@ void Battle::doVictory()
   {
     clear_message();
     m_battleMenu.setVisible(false);
+    m_battleMusic.stop();
+    m_battleMusic.openFromFile(config::MUSIC_VICTORY);
+    m_battleMusic.setLoop(false);
+    m_battleMusic.play();
 
     show_message("Victory!");
     show_message("The party gains %d experience and %d gold!", getExperience(), getGold());
@@ -589,6 +599,15 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
       if ((m_state == STATE_ESCAPE || m_state == STATE_VICTORY_POST) && message.isWaitingForKey())
       {
         message.nextPage();
+
+        // Haha.
+        if (message.currentMessage().find("level") != std::string::npos)
+        {
+          m_battleMusic.stop();
+          m_battleMusic.openFromFile(config::MUSIC_LEVELUP);
+          m_battleMusic.setLoop(false);
+          m_battleMusic.play();
+        }
 
         if (!message.isVisible())
         {

@@ -187,6 +187,8 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
   if (key == sf::Keyboard::B)
   {
+    m_currentMusic.pause();
+
     Battle battle(m_window,
       {
         Character::createMonster("Skelington"),
@@ -194,6 +196,8 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
         Character::createMonster("Skelington")
       });
     battle.start();
+
+    m_currentMusic.play();
   }
 }
 

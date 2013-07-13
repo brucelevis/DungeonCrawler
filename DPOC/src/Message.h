@@ -33,6 +33,13 @@ public:
 	return isWaitingForKey() && m_pages.size() == 1;
   }
 
+  std::string currentMessage() const
+  {
+    if (m_pages.size() > 0)
+      return m_pages.front();
+    return "";
+  }
+
   void update();
   void draw(sf::RenderTarget& target);
 private:

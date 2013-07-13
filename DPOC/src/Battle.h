@@ -5,6 +5,7 @@
 #include <map>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Menu.h"
 #include "Target.h"
@@ -107,6 +108,8 @@ private:
   int m_turnDelay;
 
   int m_shakeCounter;
+
+  sf::Music m_battleMusic;
 };
 
 #endif

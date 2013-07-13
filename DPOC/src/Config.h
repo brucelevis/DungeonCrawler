@@ -18,6 +18,10 @@ namespace config
   static const int GAME_RES_X = 256;
   static const int GAME_RES_Y = 240;
 
+  static const std::string MUSIC_BATTLE = "Resources/Music/Battle.ogg";
+  static const std::string MUSIC_VICTORY = "Resources/Music/Victory.ogg";
+  static const std::string MUSIC_LEVELUP = "Resources/Music/LevelUp.ogg";
+
   static const std::string SOUND_CANCEL = "Resources/Audio/Cancel1.wav";
   static const std::string SOUND_USE_ITEM = "Resources/Audio/Item2.wav";
   static const std::string SOUND_SUCCESS = "Resources/Audio/Sucess2.wav";
