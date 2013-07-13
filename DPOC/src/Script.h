@@ -27,7 +27,10 @@ public:
     OP_SET_TILE_ID, // For entities with tileSprites.
     OP_GIVE_ITEM,
     OP_GIVE_GOLD,
-    OP_PLAY_SOUND
+    OP_PLAY_SOUND,
+    OP_ADD_PARTY_MEMBER,
+    OP_SET_VISIBLE,
+    OP_SET_WALKTHROUGH
   };
 
   struct ScriptData
@@ -100,6 +103,23 @@ public:
       {
         char sound[MAX_SCRIPT_KEY_SIZE];
       } playSoundData;
+
+      struct
+      {
+        char name[MAX_SCRIPT_KEY_SIZE];
+        char className[MAX_SCRIPT_KEY_SIZE];
+        int level;
+      } addPartyMemberData;
+
+      struct
+      {
+        bool visibility;
+      } setVisibleData;
+
+      struct
+      {
+        bool walkthrough;
+      } setWalkthroughData;
     } data;
   };
 

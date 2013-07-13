@@ -36,7 +36,8 @@ Entity::Entity()
   m_targetX(0), m_targetY(0),
   m_state(STATE_NORMAL),
   m_waitCounter(0),
-  m_walkThrough(false)
+  m_walkThrough(false),
+  m_visible(true)
 {
 }
 
@@ -49,7 +50,8 @@ Entity::Entity(const std::string& name)
    m_targetX(0), m_targetY(0),
    m_state(STATE_NORMAL),
    m_waitCounter(0),
-   m_walkThrough(false)
+   m_walkThrough(false),
+   m_visible(true)
 {
   auto it = std::find_if(ENTITY_DEF.begin(), ENTITY_DEF.end(),
       [=](const EntityDef& entity)
@@ -255,7 +257,7 @@ void Entity::wait(int duration)
 
 void Entity::draw(sf::RenderTarget& target, const coord_t& view)
 {
-  if (m_sprite)
+  if (m_sprite && m_visible)
   {
     m_sprite->render(target, getRealX() - view.x, getRealY() - view.y);
   }
@@ -462,6 +464,25 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     std::string sound = data.data.playSoundData.sound;
     play_sound("Resources/Audio/" + sound);
+  }
+  else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
+  {
+    int level = data.data.addPartyMemberData.level; // TODO
+    std::string name = data.data.addPartyMemberData.name;
+    std::string className = data.data.addPartyMemberData.className;
+
+    int x = get_player()->getTrain().back()->x;
+    int y = get_player()->getTrain().back()->y;
+
+    get_player()->addNewCharacter(name, className, x, y);
+  }
+  else if (data.opcode == Script::OP_SET_VISIBLE)
+  {
+    m_visible = data.data.setVisibleData.visibility;
+  }
+  else if (data.opcode == Script::OP_SET_WALKTHROUGH)
+  {
+    m_walkThrough = data.data.setWalkthroughData.walkthrough;
   }
 }
 

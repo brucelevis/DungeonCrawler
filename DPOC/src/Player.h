@@ -26,6 +26,7 @@ public:
 
   const std::vector<Item>& getInventory() const { return m_inventory; }
   const std::vector<PlayerCharacter*>& getParty() const { return m_party; }
+  const std::vector<Entity*>& getTrain() const { return m_playerTrain; }
 
   void addItemToInventory(const std::string& itemName, int number);
   void removeItemFromInventory(const std::string& itemName, int number);

@@ -110,6 +110,7 @@ private:
   std::string m_tag;
 
   bool m_walkThrough;
+  bool m_visible;
 };
 
 #endif

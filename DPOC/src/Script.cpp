@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cctype>
+#include <stdexcept>
 
 #include "logger.h"
 #include "Utility.h"
@@ -351,6 +352,30 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     memset(data.data.playSoundData.sound, '\0', MAX_SCRIPT_KEY_SIZE);
     strcpy(data.data.playSoundData.sound, strings[1].c_str());
   }
+  else if (opcode == OP_ADD_PARTY_MEMBER)
+  {
+    memset(data.data.addPartyMemberData.className, '\0', MAX_SCRIPT_KEY_SIZE);
+    memset(data.data.addPartyMemberData.name, '\0', MAX_SCRIPT_KEY_SIZE);
+    data.data.addPartyMemberData.level = 1;
+
+    strcpy(data.data.addPartyMemberData.name, strings[1].c_str());
+    strcpy(data.data.addPartyMemberData.className, strings[2].c_str());
+    data.data.addPartyMemberData.level = atoi(strings[3].c_str());
+  }
+  else if (opcode == OP_SET_VISIBLE)
+  {
+    if (strings[1] == "true")
+      data.data.setVisibleData.visibility = true;
+    else
+      data.data.setVisibleData.visibility = false;
+  }
+  else if (opcode == OP_SET_WALKTHROUGH)
+  {
+    if (strings[1] == "true")
+      data.data.setWalkthroughData.walkthrough = true;
+    else
+      data.data.setWalkthroughData.walkthrough = false;
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -375,7 +400,10 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "set_tile_id",  OP_SET_TILE_ID },
     { "give_item",    OP_GIVE_ITEM },
     { "give_gold",    OP_GIVE_GOLD },
-    { "play_sound",   OP_PLAY_SOUND }
+    { "play_sound",   OP_PLAY_SOUND },
+    { "add_member",   OP_ADD_PARTY_MEMBER },
+    { "set_visible",  OP_SET_VISIBLE },
+    { "set_walkthrough", OP_SET_WALKTHROUGH }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -383,6 +411,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
   {
     return it->second;
   }
+
+  TRACE("UNKNOWN OPCODE %s!!!", opStr.c_str());
+  throw std::runtime_error("UNKNOWN OPCODE " + opStr + "!!!");
 
   return OP_NOP;
 }
