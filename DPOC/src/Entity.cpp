@@ -15,8 +15,6 @@
 
 static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
 {
-  TRACE("exec_bool_operation: (%d %s %d)", lhs, operation.c_str(), rhs);
-
   if (operation == "==") return lhs == rhs;
   if (operation == "!=") return lhs != rhs;
   if (operation == "<") return lhs < rhs;
@@ -377,9 +375,6 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     std::string operation = data.data.ifData.boolOperation;
 
     int lhsValue, rhsValue;
-
-    TRACE("Entity[%s]: lhs=%s rhs=%s lhsKey=%s rhsKey=%s operation=%s",
-        getTag().c_str(), lhs.c_str(), rhs.c_str(), lhsKey.c_str(), rhsKey.c_str(), operation.c_str());
 
     getIfValue(lhs, lhsKey, lhsValue);
     getIfValue(rhs, rhsKey, rhsValue);
