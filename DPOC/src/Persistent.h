@@ -29,8 +29,6 @@ public:
     auto it = m_storage.find(key);
     if (it != m_storage.end())
     {
-      TRACE("GET %s = %d", key.c_str(), it->second);
-
       return it->second;
     }
     return T();
@@ -38,8 +36,6 @@ public:
 
   void set(const std::string& key, T value)
   {
-    TRACE("SET %s = %d", key.c_str(), value);
-
     m_storage[key] = value;
   }
 
