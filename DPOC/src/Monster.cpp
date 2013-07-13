@@ -55,74 +55,83 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
   }
 
   const XMLElement* attrElem = monsterElement->FirstChildElement("attributes");
-  for (const XMLElement* element = attrElem->FirstChildElement(); element; element = element->NextSiblingElement())
+  if (attrElem)
   {
-    const XMLAttribute* nameAttr = element->FindAttribute("name");
-    const XMLAttribute* valueAttr = element->FindAttribute("value");
-
-    if (nameAttr && valueAttr)
+    for (const XMLElement* element = attrElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
-      std::string name = nameAttr->Value();
-      int value = fromString<int>(valueAttr->Value());
+      const XMLAttribute* nameAttr = element->FindAttribute("name");
+      const XMLAttribute* valueAttr = element->FindAttribute("value");
 
-      monster.attributeMap[name] = value;
-    }
-    else
-    {
-      TRACE("No nameAttr/valueAttr");
+      if (nameAttr && valueAttr)
+      {
+        std::string name = nameAttr->Value();
+        int value = fromString<int>(valueAttr->Value());
+
+        monster.attributeMap[name] = value;
+      }
+      else
+      {
+        TRACE("No nameAttr/valueAttr");
+      }
     }
   }
 
   const XMLElement* actionElem = monsterElement->FirstChildElement("actions");
-  for (const XMLElement* element = actionElem->FirstChildElement(); element; element = element->NextSiblingElement())
+  if (actionElem)
   {
-    const XMLAttribute* nameAttr = element->FindAttribute("name");
-    const XMLAttribute* chanceAttr = element->FindAttribute("chance");
-
-    if (nameAttr && chanceAttr)
+    for (const XMLElement* element = actionElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
-      std::string name = nameAttr->Value();
-      int chance = fromString<int>(chanceAttr->Value());
-      std::string spell;
+      const XMLAttribute* nameAttr = element->FindAttribute("name");
+      const XMLAttribute* chanceAttr = element->FindAttribute("chance");
 
-      if (name == "Spell")
+      if (nameAttr && chanceAttr)
       {
-        spell = element->GetText();
+        std::string name = nameAttr->Value();
+        int chance = fromString<int>(chanceAttr->Value());
+        std::string spell;
+
+        if (name == "Spell")
+        {
+          spell = element->GetText();
+        }
+
+        MonsterActionEntry entry;
+        entry.action = name;
+        entry.objectName = spell;
+        entry.weight = chance;
+
+        monster.actions.push_back(entry);
       }
-
-      MonsterActionEntry entry;
-      entry.action = name;
-      entry.objectName = spell;
-      entry.weight = chance;
-
-      monster.actions.push_back(entry);
-    }
-    else
-    {
-      TRACE("No nameAttr/chanceAttr");
+      else
+      {
+        TRACE("No nameAttr/chanceAttr");
+      }
     }
   }
 
   const XMLElement* itemElem = monsterElement->FirstChildElement("items");
-  for (const XMLElement* element = itemElem->FirstChildElement(); element; element = element->NextSiblingElement())
+  if (itemElem)
   {
-    const XMLAttribute* nameAttr = element->FindAttribute("name");
-    const XMLAttribute* chanceAttr = element->FindAttribute("chance");
-
-    if (nameAttr && chanceAttr)
+    for (const XMLElement* element = itemElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
-      std::string name = nameAttr->Value();
-      int chance = fromString<int>(chanceAttr->Value());
+      const XMLAttribute* nameAttr = element->FindAttribute("name");
+      const XMLAttribute* chanceAttr = element->FindAttribute("chance");
 
-      MonsterDropItem drop;
-      drop.itemName = name;
-      drop.chance = chance;
+      if (nameAttr && chanceAttr)
+      {
+        std::string name = nameAttr->Value();
+        int chance = fromString<int>(chanceAttr->Value());
 
-      monster.itemDrop.push_back(drop);
-    }
-    else
-    {
-      TRACE("No nameAttr/chanceAttr");
+        MonsterDropItem drop;
+        drop.itemName = name;
+        drop.chance = chance;
+
+        monster.itemDrop.push_back(drop);
+      }
+      else
+      {
+        TRACE("No nameAttr/chanceAttr");
+      }
     }
   }
 
