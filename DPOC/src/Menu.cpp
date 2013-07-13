@@ -1509,6 +1509,11 @@ int BattleStatusMenu::getWidth() const
   return config::GAME_RES_X - 80;
 }
 
+int BattleStatusMenu::getHeight() const
+{
+  return 2 * 8 + 4 * 12;
+}
+
 bool BattleStatusMenu::prevActor()
 {
   int tmpIndex = m_currentActor;

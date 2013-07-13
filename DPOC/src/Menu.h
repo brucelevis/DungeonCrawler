@@ -320,6 +320,7 @@ public:
   void draw(sf::RenderTarget& target, int x, int y);
 
   int getWidth() const;
+  int getHeight() const;
 
   /////////////////////////////////////////////////////////////////////////////
   ///
