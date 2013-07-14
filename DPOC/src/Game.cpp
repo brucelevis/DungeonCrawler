@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Message.h"
 #include "Game.h"
+#include "Sound.h"
 
 #include "Battle.h"
 
@@ -299,6 +300,7 @@ bool Game::checkWarps()
   {
     const Warp* warp = m_currentMap->getWarpAt(m_player->player()->x, m_player->player()->y);
 
+    play_sound(config::SOUND_MOVEMENT);
     fadeOut(32);
 
     m_currentWarp = warp;
@@ -408,16 +410,18 @@ void Game::processFade()
       m_fade = FADE_NONE;
       m_player->setControlsEnabled(true);
     }
-
-    if (m_currentWarp)
+    else if (m_fadeCounter == 0 && m_fade == FADE_OUT)
     {
-      std::string warpTargetName = getWarpTargetName(*m_currentWarp);
+      if (m_currentWarp)
+      {
+        std::string warpTargetName = getWarpTargetName(*m_currentWarp);
 
-      transferPlayer(warpTargetName, m_currentWarp->dstX, m_currentWarp->dstY);
+        transferPlayer(warpTargetName, m_currentWarp->dstX, m_currentWarp->dstY);
 
-      m_currentWarp = 0;
+        m_currentWarp = 0;
 
-      fadeIn(32);
+        fadeIn(32);
+      }
     }
   }
 }

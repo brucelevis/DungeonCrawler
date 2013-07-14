@@ -37,6 +37,7 @@ namespace config
   static const std::string SOUND_BUFF = "Resources/Audio/Up.wav";
   static const std::string SOUND_DEBUFF = "Resources/Audio/Down.wav";
   static const std::string SOUND_RECOVERY = "Resources/Audio/Recovery3.wav";
+  static const std::string SOUND_MOVEMENT = "Resources/Audio/Movement.wav";
 }
 
 #endif
