@@ -358,7 +358,13 @@ void Battle::actionEffect()
           guard = true;
         }
 
-        damage = attack(m_currentActor, currentTarget, guard);
+        Item* weapon = 0;
+        if (!isMonster(m_currentActor))
+        {
+          weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("Weapon");
+        }
+
+        damage = attack(m_currentActor, currentTarget, guard, weapon);
       }
       else if (actionName == "Spell")
       {

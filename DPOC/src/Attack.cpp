@@ -25,11 +25,21 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
   float pow = attacker->computeCurrentAttribute("power");
   float def = target->computeCurrentAttribute("defense");
 
+  float resist = 1.0f;
+
+  if (weapon)
+  {
+    for (auto it = weapon->elements.begin(); it != weapon->elements.end(); ++it)
+    {
+      resist *= target->getResistance(it->first);
+    }
+  }
+
   float damage =
       ((((2.0f * level / 5.0f + 2.0f) *
       str * pow / def) / 50.0f) + 2.0f) *
           1.0f * //stab
-          1.0f * //weak
+          resist * //weak
           (85.0f + (float)random_range(0, 16)) / 100.0f;
 
   return damage;

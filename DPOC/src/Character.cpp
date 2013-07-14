@@ -149,7 +149,7 @@ void Character::takeDamage(const std::string& attr, int amount)
   clamp_attribute(getAttribute(attr));
 }
 
-float Character::getResistance(const std::string& element)
+float Character::getResistance(const std::string& element) const
 {
   auto it = m_resistance.find(element);
   if (it != m_resistance.end())

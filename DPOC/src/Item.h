@@ -50,6 +50,10 @@ struct Item
 
   std::string status;
 
+  /// Damage element for weapons, protection for armors.
+  /// Map because resist amount.
+  std::map<std::string, float> elements;
+
   // Put members that should not be initialized after this comment.
 
   int stackSize;

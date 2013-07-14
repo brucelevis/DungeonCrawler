@@ -219,6 +219,22 @@ std::string PlayerCharacter::xmlDump() const
   return xml.str();
 }
 
+float PlayerCharacter::getResistance(const std::string& element) const
+{
+  float resistSum = 1.0f;
+
+  for (auto it = m_equipment.begin(); it != m_equipment.end(); ++it)
+  {
+    auto elemIt = it->second.elements.find(element);
+    if (elemIt != it->second.elements.end())
+    {
+      resistSum *= elemIt->second;
+    }
+  }
+
+  return Character::getResistance(element);
+}
+
 PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className)
 {
   PlayerCharacter* character = new PlayerCharacter;

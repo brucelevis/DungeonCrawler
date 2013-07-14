@@ -109,6 +109,17 @@ static Item parse_item_element(const XMLElement* itemElement)
     }
   }
 
+  const XMLElement* elemElement = itemElement->FirstChildElement("elements");
+  if (elemElement)
+  {
+    for (const XMLElement* element = elemElement->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string name = element->FindAttribute("name")->Value();
+      float value = fromString<float>(element->FindAttribute("value")->Value());
+      item.elements[name] = value;
+    }
+  }
+
   return item;
 }
 

@@ -66,7 +66,7 @@ public:
 
   void takeDamage(const std::string& attr, int amount);
 
-  float getResistance(const std::string& element);
+  virtual float getResistance(const std::string& element) const;
 private:
   std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:

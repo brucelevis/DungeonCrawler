@@ -31,6 +31,9 @@ public:
 
   std::string xmlDump() const;
 
+  /// Checks equipment for resistance.
+  float getResistance(const std::string& element) const;
+
   static PlayerCharacter* create(const std::string& name, const std::string& className);
   static PlayerCharacter* createFromSaveData(CharacterData* data);
 private:
