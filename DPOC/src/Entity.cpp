@@ -488,6 +488,10 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     get_player()->setControlsEnabled(data.data.enableControlsData.enabled);
   }
+  else if (data.opcode == Script::OP_RECOVER_ALL)
+  {
+    get_player()->recoverAll();
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

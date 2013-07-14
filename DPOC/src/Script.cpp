@@ -383,6 +383,10 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     else
       data.data.enableControlsData.enabled = false;
   }
+  else if (opcode == OP_RECOVER_ALL)
+  {
+    // Nothing
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -411,7 +415,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "add_member",   OP_ADD_PARTY_MEMBER },
     { "set_visible",  OP_SET_VISIBLE },
     { "set_walkthrough", OP_SET_WALKTHROUGH },
-    { "enable_controls", OP_ENABLE_CONTROLS }
+    { "enable_controls", OP_ENABLE_CONTROLS },
+    { "recover_all",  OP_RECOVER_ALL }
   };
 
   auto it = OP_MAP.find(opStr);

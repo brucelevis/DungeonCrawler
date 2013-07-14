@@ -48,6 +48,8 @@ public:
   void setControlsEnabled(bool enabled) { m_controlsEnabled = enabled; }
   bool isControlsEnabled() const { return m_controlsEnabled; }
 
+  void recoverAll();
+
   static Player* create();
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:

@@ -320,3 +320,13 @@ void Player::addNewCharacter(const std::string& name, const std::string& classNa
 
   m_party.push_back(PlayerCharacter::create(name, className));
 }
+
+void Player::recoverAll()
+{
+  for (auto it = m_party.begin(); it != m_party.end(); ++it)
+  {
+    reset_attribute((*it)->getAttribute("hp"));
+    reset_attribute((*it)->getAttribute("mp"));
+    (*it)->resetStatus();
+  }
+}

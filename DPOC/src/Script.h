@@ -31,7 +31,8 @@ public:
     OP_ADD_PARTY_MEMBER,
     OP_SET_VISIBLE,
     OP_SET_WALKTHROUGH,
-    OP_ENABLE_CONTROLS
+    OP_ENABLE_CONTROLS,
+    OP_RECOVER_ALL
   };
 
   struct ScriptData
