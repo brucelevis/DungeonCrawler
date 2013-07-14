@@ -34,19 +34,17 @@ static void compute_sprite_data(sf::Texture* texture, int tileX, int tileY, int&
   {
     for (int blockX = 0; blockX < numberOfBlocksX; blockX++)
     {
-      for (int y = blockY; y < blockY + config::NUM_SPRITES_Y; y++)
-      {
-        for (int x = blockX; x < blockX + config::NUM_SPRITES_X; x++)
-        {
-          if (tileX == blockX && tileY == blockY)
-          {
-            spriteSheetX = blockX;
-            spriteSheetY = blockY;
-            startDirection = (Direction)(tileY - blockY * numberOfTilesY);
+      int sx = blockX * config::NUM_SPRITES_X;
+      int sy = blockY * config::NUM_SPRITES_Y;
 
-            return;
-          }
-        }
+      if (tileX >= sx && tileY >= sy &&
+          tileX < (sx + config::NUM_SPRITES_X) && tileY < (sy + config::NUM_SPRITES_Y))
+      {
+        spriteSheetX = blockX;
+        spriteSheetY = blockY;
+        startDirection = (Direction)(tileY - blockY * numberOfTilesY);
+
+        return;
       }
     }
   }
@@ -54,7 +52,8 @@ static void compute_sprite_data(sf::Texture* texture, int tileX, int tileY, int&
 
 Map::Map()
  : m_width(0),
-   m_height(0)
+   m_height(0),
+   m_encounterRate(0)
 {
 //  for (int i = 0; i < config::MAX_LAYERS; i++)
 //  {
@@ -351,7 +350,7 @@ Map* Map::loadTiledFile(const std::string& filename)
       if (object->tileId > 0)
       {
         const TiledLoader::Tileset* tileset = loader.findTilesetMatchingTileIndex(object->tileId);
-        int tileId = object->tileId - 1;
+        int tileId = object->tileId - tileset->startTileIndex;
 
         if (tileset)
         {
