@@ -8,6 +8,20 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
 {
   int damage = calculate_physical_damage(attacker, target, weapon);
 
+  int aSpeed = attacker->computeCurrentAttribute("speed");
+  int bSpeed = target->computeCurrentAttribute("speed");
+
+  if (aSpeed < bSpeed)
+  {
+    int speedDelta = bSpeed - aSpeed;
+
+    int range = random_range(0, 255);
+    if (range < speedDelta)
+    {
+      damage = 0;
+    }
+  }
+
   if (guard)
   {
     damage /= 2;
