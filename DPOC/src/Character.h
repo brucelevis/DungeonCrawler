@@ -65,6 +65,8 @@ public:
   bool incapacitated() const;
 
   void takeDamage(const std::string& attr, int amount);
+
+  float getResistance(const std::string& element);
 private:
   std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:
@@ -76,6 +78,7 @@ protected:
   std::map<std::string, Attribute> m_attributes;
 
   std::vector<StatusEffect*> m_status;
+  std::map<std::string, float> m_resistance;
 
   // Flash data
   Flash m_flash;

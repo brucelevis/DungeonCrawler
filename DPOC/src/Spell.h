@@ -38,6 +38,8 @@ struct Spell
   // Status name/attribute name for buffs.
   std::map<std::string, int> causeStatus;
   std::vector<std::string> attributeBuffs;
+
+  std::string element;
 };
 
 void load_spells();

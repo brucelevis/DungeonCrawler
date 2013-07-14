@@ -135,6 +135,18 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     }
   }
 
+  const XMLElement* resElem = monsterElement->FirstChildElement("resistance");
+  if (resElem)
+  {
+    for (const XMLElement* element = resElem->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string name = element->FindAttribute("name")->Value();
+      float resist = fromString<float>(element->FindAttribute("resist")->Value());
+
+      monster.resistance[name] = resist;
+    }
+  }
+
   return monster;
 }
 

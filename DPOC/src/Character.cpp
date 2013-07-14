@@ -149,6 +149,17 @@ void Character::takeDamage(const std::string& attr, int amount)
   clamp_attribute(getAttribute(attr));
 }
 
+float Character::getResistance(const std::string& element)
+{
+  auto it = m_resistance.find(element);
+  if (it != m_resistance.end())
+  {
+    return it->second;
+  }
+
+  return 1;
+}
+
 Character* Character::createMonster(const std::string& name)
 {
   MonsterDef def = get_monster_definition(name);
@@ -167,6 +178,8 @@ Character* Character::createMonster(const std::string& name)
   {
     character->m_attributes[it->first] = make_attribute(it->second);
   }
+
+  character->m_resistance = def.resistance;
 
   return character;
 }

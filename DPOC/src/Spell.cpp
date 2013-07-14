@@ -51,6 +51,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   const XMLElement* battElem = spellElement->FirstChildElement("battleOnly");
   const XMLElement* powrElem = spellElement->FirstChildElement("power");
   const XMLElement* effeElem = spellElement->FirstChildElement("effect");
+  const XMLElement* elemElem = spellElement->FirstChildElement("element");
 
   if (nameElem)
     spell.name = nameElem->GetText();
@@ -66,6 +67,8 @@ static Spell parse_spell_element(const XMLElement* spellElement)
     spell.power = fromString<int>(powrElem->GetText());
   if (effeElem)
     spell.effect = effeElem->GetText();
+  if (elemElem)
+    spell.element = elemElem->GetText();
 
   const XMLElement* typeElem = spellElement->FirstChildElement("spellType");
   if (typeElem)

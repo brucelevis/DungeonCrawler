@@ -33,6 +33,8 @@ struct MonsterDef
 
   std::vector<MonsterActionEntry> actions;
   std::vector<MonsterDropItem> itemDrop;
+
+  std::map<std::string, float> resistance;
 };
 
 void load_monsters();
