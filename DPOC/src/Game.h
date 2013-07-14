@@ -46,6 +46,8 @@ private:
   void closeChoiceMenu();
 private:
   sf::RenderWindow m_window;
+  sf::RenderTexture m_targetTexture;
+
   Map* m_currentMap;
   Player* m_player;
   coord_t m_view;

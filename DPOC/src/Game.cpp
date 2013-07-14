@@ -23,8 +23,10 @@ Game::Game()
    m_player(0),
    m_choiceMenu(0)
 {
-  m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
+  m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
   m_window.setKeyRepeatEnabled(false);
+
+  m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
 }
 
 Game::~Game()
@@ -208,26 +210,39 @@ void Game::draw()
 {
   m_window.clear();
 
+  // Because "clear" doesn't clear...
+  sf::RectangleShape clearRect;
+  clearRect.setFillColor(sf::Color::Black);
+  clearRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
+  m_targetTexture.draw(clearRect);
+
   if (m_currentMap)
-    m_currentMap->draw(m_window, m_view);
+    m_currentMap->draw(m_targetTexture, m_view);
 
   if (m_player)
-    m_player->draw(m_window, m_view);
+    m_player->draw(m_targetTexture, m_view);
 
   if (m_menu.isVisible())
   {
-    m_menu.draw(m_window, 0, 0);
+    m_menu.draw(m_targetTexture, 0, 0);
   }
 
   if (Message::instance().isVisible())
   {
-    Message::instance().draw(m_window);
+    Message::instance().draw(m_targetTexture);
   }
 
   if (m_choiceMenu && m_choiceMenu->isVisible())
   {
-    m_choiceMenu->draw(m_window, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
+    m_choiceMenu->draw(m_targetTexture, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
   }
+
+  m_targetTexture.display();
+
+  sf::Sprite sprite;
+  sprite.setTexture(m_targetTexture.getTexture());
+  sprite.setScale(sf::Vector2f(2, 2));
+  m_window.draw(sprite);
 
   m_window.display();
 }

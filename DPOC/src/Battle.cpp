@@ -667,6 +667,7 @@ void Battle::draw()
 
   sf::Sprite sprite;
   sprite.setTexture(m_targetTexture.getTexture());
+  sprite.setScale(sf::Vector2f(2, 2));
   sprite.setPosition(0, 0);
 
   if (m_shakeCounter > 0)
