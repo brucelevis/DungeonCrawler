@@ -42,7 +42,7 @@ static void compute_sprite_data(sf::Texture* texture, int tileX, int tileY, int&
       {
         spriteSheetX = blockX;
         spriteSheetY = blockY;
-        startDirection = (Direction)(tileY - blockY * numberOfTilesY);
+        startDirection = (Direction)(tileY % 4);
 
         return;
       }
