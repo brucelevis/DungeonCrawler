@@ -18,26 +18,9 @@ namespace config
   static const int GAME_RES_X = 256;
   static const int GAME_RES_Y = 240;
 
-  static const std::string MUSIC_BATTLE = "Resources/Music/Battle.ogg";
-  static const std::string MUSIC_VICTORY = "Resources/Music/Victory.ogg";
-  static const std::string MUSIC_LEVELUP = "Resources/Music/LevelUp.ogg";
+  void load_config();
 
-  static const std::string SOUND_CANCEL = "Resources/Audio/Cancel1.wav";
-  static const std::string SOUND_USE_ITEM = "Resources/Audio/Item2.wav";
-  static const std::string SOUND_SUCCESS = "Resources/Audio/Sucess2.wav";
-  static const std::string SOUND_EQUIP = "Resources/Audio/Equip1.ogg";
-  static const std::string SOUND_ATTACK = "Resources/Audio/attack.wav";
-  static const std::string SOUND_HIT = "Resources/Audio/hit.wav";
-  static const std::string SOUND_ENEMY_HIT = "Resources/Audio/enemy-hit.wav";
-  static const std::string SOUND_SPELL = "Resources/Audio/spell.wav";
-  static const std::string SOUND_ESCAPE = "Resources/Audio/Run.ogg";
-  static const std::string SOUND_MISS = "Resources/Audio/Evasion1.wav";
-  static const std::string SOUND_HEAL = "Resources/Audio/blipp.wav";
-  static const std::string SOUND_POISON = "Resources/Audio/Poison.wav";
-  static const std::string SOUND_BUFF = "Resources/Audio/Up.wav";
-  static const std::string SOUND_DEBUFF = "Resources/Audio/Down.wav";
-  static const std::string SOUND_RECOVERY = "Resources/Audio/Recovery3.wav";
-  static const std::string SOUND_MOVEMENT = "Resources/Audio/Movement.wav";
+  std::string get(const std::string& key);
 }
 
 #endif

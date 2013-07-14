@@ -191,7 +191,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     // Play sound if the previous effects differ from current.
     if (damage == 0 && effects.size() != target->getStatusEffects().size())
     {
-      play_sound(config::SOUND_RECOVERY);
+      play_sound(config::get("SOUND_RECOVERY"));
     }
   }
 
@@ -206,11 +206,11 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     {
       if (spell->power > 0)
       {
-        play_sound(config::SOUND_BUFF);
+        play_sound(config::get("SOUND_BUFF"));
       }
       else if (spell->power < 0)
       {
-        play_sound(config::SOUND_DEBUFF);
+        play_sound(config::get("SOUND_DEBUFF"));
       }
     }
   }

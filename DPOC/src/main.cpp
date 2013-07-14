@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "SaveLoad.h"
 
+#include "Config.h"
 #include "draw_text.h"
 #include "Spell.h"
 #include "Item.h"
@@ -20,6 +21,8 @@ int main(int argc, char* argv[])
   START_LOG;
 
   init_text_drawing();
+
+  config::load_config();
 
   // Load databases.
   load_spells();

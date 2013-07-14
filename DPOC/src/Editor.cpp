@@ -1085,7 +1085,7 @@ void Editor::saveMap(const std::string& name)
   m_currentMapName = map->getName();
   delete map;
 
-  play_sound(config::SOUND_SUCCESS);
+  play_sound(config::get("SOUND_SUCCESS"));
 }
 
 Map* Editor::createMap() const

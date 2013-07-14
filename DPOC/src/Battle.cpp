@@ -94,7 +94,7 @@ void Battle::start()
 
   m_battleOngoing = true;
 
-  m_battleMusic.openFromFile(config::MUSIC_BATTLE);
+  m_battleMusic.openFromFile(config::get("MUSIC_BATTLE"));
   m_battleMusic.setVolume(50);
   m_battleMusic.setLoop(true);
   m_battleMusic.play();
@@ -225,14 +225,14 @@ void Battle::executeActions()
     // TODO: Uncomment when effects are used.
     //if (isMonster(m_currentActor))
     //{
-      play_sound(config::SOUND_ATTACK);
+      play_sound(config::get("SOUND_ATTACK"));
     //}
 
     battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
   }
   else if (action.actionName == "Spell")
   {
-    play_sound(config::SOUND_SPELL);
+    play_sound(config::get("SOUND_SPELL"));
 
     if (action.target)
     {
@@ -252,7 +252,7 @@ void Battle::executeActions()
   {
     if (get_player()->getItem(action.objectName))
     {
-      play_sound(config::SOUND_USE_ITEM);
+      play_sound(config::get("SOUND_USE_ITEM"));
 
       Item& item = item_ref(action.objectName);
 
@@ -274,7 +274,7 @@ void Battle::executeActions()
     }
     else
     {
-      play_sound(config::SOUND_CANCEL);
+      play_sound(config::get("SOUND_CANCEL"));
 
       battle_message("%s tries to use %s... But there are none left!",
           m_currentActor->getName().c_str(), action.objectName.c_str());
@@ -290,7 +290,7 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Run")
   {
-    play_sound(config::SOUND_ESCAPE);
+    play_sound(config::get("SOUND_ESCAPE"));
     m_battleMenu.setVisible(false);
     show_message("You run away.");
   }
@@ -379,26 +379,26 @@ void Battle::actionEffect()
 
         if (isMonster(m_currentActor))
         {
-          play_sound(config::SOUND_ENEMY_HIT);
+          play_sound(config::get("SOUND_ENEMY_HIT"));
 
           shakeScreen();
         }
         else
         {
-          play_sound(config::SOUND_HIT);
+          play_sound(config::get("SOUND_HIT"));
         }
       }
       else if (damage == 0 && actionName == "Attack")
       {
         battle_message("Miss! %s takes no damage!", currentTarget->getName().c_str(), damage);
 
-        play_sound(config::SOUND_MISS);
+        play_sound(config::get("SOUND_MISS"));
       }
       else if (damage < 0)
       {
         battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
 
-        play_sound(config::SOUND_HEAL);
+        play_sound(config::get("SOUND_HEAL"));
       }
 
       check_death(currentTarget);
@@ -432,7 +432,7 @@ void Battle::doVictory()
     clear_message();
     m_battleMenu.setVisible(false);
     m_battleMusic.stop();
-    m_battleMusic.openFromFile(config::MUSIC_VICTORY);
+    m_battleMusic.openFromFile(config::get("MUSIC_VICTORY"));
     m_battleMusic.setLoop(false);
     m_battleMusic.play();
 
@@ -604,7 +604,7 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
         if (message.currentMessage().find("level") != std::string::npos)
         {
           m_battleMusic.stop();
-          m_battleMusic.openFromFile(config::MUSIC_LEVELUP);
+          m_battleMusic.openFromFile(config::get("MUSIC_LEVELUP"));
           m_battleMusic.setLoop(false);
           m_battleMusic.play();
         }

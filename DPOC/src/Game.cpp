@@ -300,7 +300,7 @@ bool Game::checkWarps()
   {
     const Warp* warp = m_currentMap->getWarpAt(m_player->player()->x, m_player->player()->y);
 
-    play_sound(config::SOUND_MOVEMENT);
+    play_sound(config::get("SOUND_MOVEMENT"));
     fadeOut(32);
 
     m_currentWarp = warp;

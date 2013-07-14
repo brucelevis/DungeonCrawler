@@ -254,7 +254,7 @@ void MainMenu::handleConfirm()
       {
         m_characterMenu->setTargetToCurrentChoice();
 
-        play_sound(config::SOUND_USE_ITEM);
+        play_sound(config::get("SOUND_USE_ITEM"));
 
         cast_spell(m_characterMenu->getSpellToUse(),
             m_characterMenu->getUser(),
@@ -280,7 +280,7 @@ void MainMenu::handleConfirm()
         m_characterMenu->setUserToCurrentChoice();
         m_characterMenu->setTargetToCurrentChoice();
 
-        play_sound(config::SOUND_USE_ITEM);
+        play_sound(config::get("SOUND_USE_ITEM"));
 
         Item* item = get_player()->getItem(m_characterMenu->getItemToUse());
         use_item(item, m_characterMenu->getUser(), m_characterMenu->getTarget());
@@ -316,7 +316,7 @@ void MainMenu::handleConfirm()
     }
     else
     {
-      play_sound(config::SOUND_CANCEL);
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
   else if (currentState == STATE_ITEM_MENU)
@@ -331,7 +331,7 @@ void MainMenu::handleConfirm()
     }
     else
     {
-      play_sound(config::SOUND_CANCEL);
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
   else if (currentState == STATE_EQUIP_MENU)
@@ -908,11 +908,11 @@ void EquipMenu::doEquip()
 
     m_state = STATE_SELECT_EQUIPMENT_TYPE;
 
-    play_sound(config::SOUND_EQUIP);
+    play_sound(config::get("SOUND_EQUIP"));
   }
   else
   {
-    play_sound(config::SOUND_CANCEL);
+    play_sound(config::get("SOUND_CANCEL"));
   }
 }
 
@@ -930,11 +930,11 @@ void EquipMenu::doUnEquip()
 
     m_state = STATE_SELECT_EQUIPMENT_TYPE;
 
-    play_sound(config::SOUND_EQUIP);
+    play_sound(config::get("SOUND_EQUIP"));
   }
   else
   {
-    play_sound(config::SOUND_CANCEL);
+    play_sound(config::get("SOUND_CANCEL"));
   }
 }
 
@@ -1103,7 +1103,7 @@ void BattleMenu::handleConfirm()
     // TODO: Spells/items that can target dead
     if (m_statusMenu->getCurrentSelectedActor()->getStatus() == "Dead")
     {
-      play_sound(config::SOUND_CANCEL);
+      play_sound(config::get("SOUND_CANCEL"));
     }
     else
     {
@@ -1118,7 +1118,7 @@ void BattleMenu::handleConfirm()
 
     if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
     {
-      play_sound(config::SOUND_CANCEL);
+      play_sound(config::get("SOUND_CANCEL"));
     }
     else if (spell->target == TARGET_SINGLE_ENEMY)
     {
@@ -1167,7 +1167,7 @@ void BattleMenu::handleConfirm()
     }
     else
     {
-      play_sound(config::SOUND_CANCEL);
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
 }
