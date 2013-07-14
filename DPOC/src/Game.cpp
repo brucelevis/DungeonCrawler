@@ -372,11 +372,16 @@ void Game::startBattle(const std::vector<std::string>& monsters)
 {
   m_currentMusic.pause();
 
+  std::string traceString;
+
   std::vector<Character*> monsterChars;
   for (auto it = monsters.begin(); it != monsters.end(); ++it)
   {
+    traceString += (*it) + " ";
     monsterChars.push_back(Character::createMonster(*it));
   }
+
+  TRACE("Starting combat with: %s", traceString.c_str());
 
   Battle battle(m_window, monsterChars);
   battle.start();

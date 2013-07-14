@@ -504,6 +504,17 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     get_player()->recoverAll();
   }
+  else if (data.opcode == Script::OP_COMBAT)
+  {
+    std::vector<std::string> monsters;
+
+    for (int i = 0; i < data.data.combatData.number; i++)
+    {
+      monsters.push_back(data.data.combatData.monsters[i]);
+    }
+
+    Game::instance().startBattle(monsters);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

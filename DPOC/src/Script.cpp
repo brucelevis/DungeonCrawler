@@ -387,6 +387,28 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     // Nothing
   }
+  else if (opcode == OP_COMBAT)
+  {
+    memset(data.data.combatData.monsters, '\0', MAX_SCRIPT_KEY_SIZE * MAX_SCRIPT_KEY_SIZE);
+
+    std::string all;
+
+    for (size_t i = 1; i < strings.size(); i++)
+    {
+      all += strings[i];
+      if (i < strings.size() - 1)
+        all += " ";
+    }
+
+    std::vector<std::string> monsters = split_string(all, ',');
+
+    for (size_t i = 0; i < monsters.size(); i++)
+    {
+      strcpy(data.data.combatData.monsters[i], monsters[i].c_str());
+    }
+
+    data.data.combatData.number = monsters.size();
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -418,7 +440,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "set_visible",  OP_SET_VISIBLE },
     { "set_walkthrough", OP_SET_WALKTHROUGH },
     { "enable_controls", OP_ENABLE_CONTROLS },
-    { "recover_all",  OP_RECOVER_ALL }
+    { "recover_all",  OP_RECOVER_ALL },
+    { "combat",       OP_COMBAT }
   };
 
   auto it = OP_MAP.find(opStr);

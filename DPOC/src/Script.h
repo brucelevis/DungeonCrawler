@@ -34,7 +34,8 @@ public:
     OP_SET_VISIBLE,
     OP_SET_WALKTHROUGH,
     OP_ENABLE_CONTROLS,
-    OP_RECOVER_ALL
+    OP_RECOVER_ALL,
+    OP_COMBAT
   };
 
   struct ScriptData
@@ -129,6 +130,12 @@ public:
       {
         bool enabled;
       } enableControlsData;
+
+      struct
+      {
+        int number;
+        char monsters[MAX_SCRIPT_KEY_SIZE][MAX_SCRIPT_KEY_SIZE];
+      } combatData;
     } data;
   };
 
