@@ -38,6 +38,11 @@ public:
 
   int getGold() const { return m_gold; }
   void gainGold(int sum) { m_gold += sum; }
+  void removeGold(int sum)
+  {
+    m_gold -= sum;
+    if (m_gold < 0) m_gold = 0;
+  }
 
   void gainExperience(int sum);
 

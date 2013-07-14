@@ -332,7 +332,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.data.setTileIdData.tileId = atoi(strings[1].c_str());
   }
-  else if (opcode == OP_GIVE_ITEM)
+  else if (opcode == OP_GIVE_ITEM || opcode == OP_TAKE_ITEM)
   {
     memset(data.data.giveItemData.itemName, '\0', MAX_SCRIPT_KEY_SIZE);
     data.data.giveItemData.amount = atoi(strings[1].c_str());
@@ -343,7 +343,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
         strcat(data.data.giveItemData.itemName, " ");
     }
   }
-  else if (opcode == OP_GIVE_GOLD)
+  else if (opcode == OP_GIVE_GOLD || opcode == OP_TAKE_GOLD)
   {
     data.data.giveGoldData.amount = atoi(strings[1].c_str());
   }
@@ -410,7 +410,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "choice",       OP_CHOICE },
     { "set_tile_id",  OP_SET_TILE_ID },
     { "give_item",    OP_GIVE_ITEM },
+    { "take_item",    OP_TAKE_ITEM },
     { "give_gold",    OP_GIVE_GOLD },
+    { "take_gold",    OP_TAKE_GOLD },
     { "play_sound",   OP_PLAY_SOUND },
     { "add_member",   OP_ADD_PARTY_MEMBER },
     { "set_visible",  OP_SET_VISIBLE },

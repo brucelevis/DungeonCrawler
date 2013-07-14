@@ -455,10 +455,22 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     get_player()->addItemToInventory(itemName, amount);
   }
+  else if (data.opcode == Script::OP_TAKE_ITEM)
+  {
+    int amount = data.data.giveItemData.amount;
+    std::string itemName = data.data.giveItemData.itemName;
+
+    get_player()->removeItemFromInventory(itemName, amount);
+  }
   else if (data.opcode == Script::OP_GIVE_GOLD)
   {
     int amount = data.data.giveGoldData.amount;
     get_player()->gainGold(amount);
+  }
+  else if (data.opcode == Script::OP_TAKE_GOLD)
+  {
+    int amount = data.data.giveGoldData.amount;
+    get_player()->removeGold(amount);
   }
   else if (data.opcode == Script::OP_PLAY_SOUND)
   {

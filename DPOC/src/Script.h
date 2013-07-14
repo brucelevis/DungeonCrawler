@@ -26,7 +26,9 @@ public:
     OP_CHOICE,
     OP_SET_TILE_ID, // For entities with tileSprites.
     OP_GIVE_ITEM,
+    OP_TAKE_ITEM,
     OP_GIVE_GOLD,
+    OP_TAKE_GOLD,
     OP_PLAY_SOUND,
     OP_ADD_PARTY_MEMBER,
     OP_SET_VISIBLE,
