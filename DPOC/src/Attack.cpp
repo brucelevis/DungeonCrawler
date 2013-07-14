@@ -20,17 +20,17 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
 
 int calculate_physical_damage(Character* attacker, Character* target, Item* weapon)
 {
-  int level = attacker->computeCurrentAttribute("level");
-  int str = attacker->computeCurrentAttribute("strength");
-  int pow = attacker->computeCurrentAttribute("power");
-  int def = target->computeCurrentAttribute("defense");
+  float level = attacker->computeCurrentAttribute("level");
+  float str = attacker->computeCurrentAttribute("strength");
+  float pow = attacker->computeCurrentAttribute("power");
+  float def = target->computeCurrentAttribute("defense");
 
-  int damage =
-      ((((2 * level / 5 + 2) *
-      str * pow / def) / 50) + 2) *
-          1 * //stab
-          1 * //weak
-          (85 + random_range(0, 16)) / 100;
+  float damage =
+      ((((2.0f * level / 5.0f + 2.0f) *
+      str * pow / def) / 50.0f) + 2.0f) *
+          1.0f * //stab
+          1.0f * //weak
+          (85.0f + (float)random_range(0, 16)) / 100.0f;
 
   return damage;
 }
@@ -72,19 +72,19 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
 
 int calculate_magical_damage(Character* attacker, Character* target, const Spell* spell)
 {
-  int level = attacker->computeCurrentAttribute("level");
-  int str = attacker->computeCurrentAttribute("magic");
-  int pow = spell->power;
-  int def = target->computeCurrentAttribute("mag.def");
+  float level = attacker->computeCurrentAttribute("level");
+  float str = attacker->computeCurrentAttribute("magic");
+  float pow = spell->power;
+  float def = target->computeCurrentAttribute("mag.def");
 
   float resistance = target->getResistance(spell->element);
 
-  int damage =
-      ((((2 * level / 5 + 2) *
-      str * pow / def) / 50) + 2) *
-          1 * //stab
+  float damage =
+      ((((2.0f * level / 5.0f + 2.0f) *
+      str * pow / def) / 50.0f) + 2.0f) *
+          1.0f * //stab
           resistance * //weak
-          (85 + random_range(0, 16)) / 100;
+          (85.0f + (float)random_range(0, 16)) / 100.0f;
 
   if (spell->spellType == SPELL_HEAL)
   {
