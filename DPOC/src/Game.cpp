@@ -21,7 +21,12 @@ Game& Game::instance()
 Game::Game()
  : m_currentMap(0),
    m_player(0),
-   m_choiceMenu(0)
+   m_choiceMenu(0),
+   m_fade(FADE_NONE),
+   m_fadeCounter(0),
+   m_fadeDuration(0),
+   m_currentWarp(0),
+   m_playerMoved(false)
 {
   m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
   m_window.setKeyRepeatEnabled(false);
@@ -43,8 +48,6 @@ void Game::run()
   sf::Clock clock;
   int timerThen = clock.restart().asMilliseconds();
 
-  bool playerMoved = false;
-
   while (m_window.isOpen())
   {
     int timerNow = clock.getElapsedTime().asMilliseconds();
@@ -53,45 +56,9 @@ void Game::run()
     {
       pollEvents();
 
-      if (Message::instance().isVisible())
-      {
-        Message::instance().update();
+      processFade();
 
-        // If it is the absolute last message, pop up the choice menu.
-        if (m_choiceMenu && !m_choiceMenu->isVisible() && Message::instance().lastMessage())
-        {
-        	m_choiceMenu->setVisible(true);
-        }
-      }
-      else if (m_menu.isVisible())
-      {
-
-      }
-      else
-      {
-        if (m_currentMap)
-          m_currentMap->update();
-
-        playerMoved = m_player->player()->isWalking();
-
-        updatePlayer();
-
-        // Only check for warps if the player moved onto the tile this update step.
-        if (playerMoved && !m_player->player()->isWalking())
-        {
-          if (!checkWarps())
-          {
-            // Also check encounters if no warps were taken.
-
-            std::vector<std::string> monsters =
-                m_currentMap->checkEncounter(m_player->player()->x, m_player->player()->y);
-            if (!monsters.empty())
-            {
-              startBattle(monsters);
-            }
-          }
-        }
-      }
+      update();
 
       timerThen += 1000 / config::FPS;
     }
@@ -99,6 +66,49 @@ void Game::run()
     draw();
 
     sf::sleep(sf::milliseconds(timerThen - timerNow));
+  }
+}
+
+void Game::update()
+{
+  if (Message::instance().isVisible())
+  {
+    Message::instance().update();
+
+    // If it is the absolute last message, pop up the choice menu.
+    if (m_choiceMenu && !m_choiceMenu->isVisible() && Message::instance().lastMessage())
+    {
+      m_choiceMenu->setVisible(true);
+    }
+  }
+  else if (m_menu.isVisible())
+  {
+
+  }
+  else
+  {
+    if (m_currentMap)
+      m_currentMap->update();
+
+    m_playerMoved = m_player->player()->isWalking();
+
+    updatePlayer();
+
+    // Only check for warps if the player moved onto the tile this update step.
+    if (m_playerMoved && !m_player->player()->isWalking())
+    {
+      if (!checkWarps())
+      {
+        // Also check encounters if no warps were taken.
+
+        std::vector<std::string> monsters =
+            m_currentMap->checkEncounter(m_player->player()->x, m_player->player()->y);
+        if (!monsters.empty())
+        {
+          startBattle(monsters);
+        }
+      }
+    }
   }
 }
 
@@ -242,6 +252,24 @@ void Game::draw()
   sf::Sprite sprite;
   sprite.setTexture(m_targetTexture.getTexture());
   sprite.setScale(sf::Vector2f(2, 2));
+
+  if (m_fade != FADE_NONE)
+  {
+    float percent = (float)m_fadeCounter / (float)m_fadeDuration;
+
+    float opacity = 255;
+    if (m_fade == FADE_OUT)
+    {
+      opacity = 255.0f * percent;
+    }
+    else if (m_fade == FADE_IN)
+    {
+      opacity = 255.0f - (255.0f * percent);
+    }
+
+    sprite.setColor(sf::Color(255, 255, 255, opacity));
+  }
+
   m_window.draw(sprite);
 
   m_window.display();
@@ -270,9 +298,10 @@ bool Game::checkWarps()
       m_currentMap->warpAt(m_player->player()->x, m_player->player()->y))
   {
     const Warp* warp = m_currentMap->getWarpAt(m_player->player()->x, m_player->player()->y);
-    std::string warpTargetName = getWarpTargetName(*warp);
 
-    transferPlayer(warpTargetName, warp->dstX, warp->dstY);
+    fadeOut(32);
+
+    m_currentWarp = warp;
 
     return true;
   }
@@ -351,4 +380,44 @@ void Game::startBattle(const std::vector<std::string>& monsters)
   battle.start();
 
   m_currentMusic.play();
+}
+
+void Game::fadeIn(int duration)
+{
+  m_fade = FADE_IN;
+  m_fadeCounter = duration;
+  m_fadeDuration = duration;
+}
+
+void Game::fadeOut(int duration)
+{
+  m_fade = FADE_OUT;
+  m_fadeCounter = duration;
+  m_fadeDuration = duration;
+
+  m_player->setControlsEnabled(false);
+}
+
+void Game::processFade()
+{
+  if (m_fadeCounter > 0)
+  {
+    m_fadeCounter--;
+    if (m_fadeCounter == 0 && m_fade == FADE_IN)
+    {
+      m_fade = FADE_NONE;
+      m_player->setControlsEnabled(true);
+    }
+
+    if (m_currentWarp)
+    {
+      std::string warpTargetName = getWarpTargetName(*m_currentWarp);
+
+      transferPlayer(warpTargetName, m_currentWarp->dstX, m_currentWarp->dstY);
+
+      m_currentWarp = 0;
+
+      fadeIn(32);
+    }
+  }
 }

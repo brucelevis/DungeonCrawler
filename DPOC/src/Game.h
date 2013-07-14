@@ -11,6 +11,7 @@
 
 class Map;
 class Player;
+struct Warp;
 
 class Game
 {
@@ -32,10 +33,14 @@ public:
   void loadNewMap(const std::string& file);
 
   void startBattle(const std::vector<std::string>& monsters);
+
+  void fadeIn(int duration);
+  void fadeOut(int duration);
 private:
   Game();
   ~Game();
 
+  void update();
   void pollEvents();
   void draw();
   void updatePlayer();
@@ -44,6 +49,8 @@ private:
   void handleKeyPress(sf::Keyboard::Key key);
 
   void closeChoiceMenu();
+
+  void processFade();
 private:
   sf::RenderWindow m_window;
   sf::RenderTexture m_targetTexture;
@@ -57,6 +64,18 @@ private:
 
   MainMenu m_menu;
   ChoiceMenu* m_choiceMenu;
+
+  enum
+  {
+    FADE_NONE,
+    FADE_IN,
+    FADE_OUT
+  } m_fade;
+  int m_fadeCounter;
+  int m_fadeDuration;
+
+  const Warp* m_currentWarp;
+  bool m_playerMoved;
 };
 
 #endif
