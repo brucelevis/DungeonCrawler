@@ -484,6 +484,10 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     m_walkThrough = data.data.setWalkthroughData.walkthrough;
   }
+  else if (data.opcode == Script::OP_ENABLE_CONTROLS)
+  {
+    get_player()->setControlsEnabled(data.data.enableControlsData.enabled);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

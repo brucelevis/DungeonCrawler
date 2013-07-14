@@ -30,7 +30,8 @@ public:
     OP_PLAY_SOUND,
     OP_ADD_PARTY_MEMBER,
     OP_SET_VISIBLE,
-    OP_SET_WALKTHROUGH
+    OP_SET_WALKTHROUGH,
+    OP_ENABLE_CONTROLS
   };
 
   struct ScriptData
@@ -120,6 +121,11 @@ public:
       {
         bool walkthrough;
       } setWalkthroughData;
+
+      struct
+      {
+        bool enabled;
+      } enableControlsData;
     } data;
   };
 
