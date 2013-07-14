@@ -18,7 +18,8 @@
 using namespace tinyxml2;
 
 Player::Player()
- : m_gold(0)
+ : m_gold(0),
+   m_controlsEnabled(true)
 {
 
 }
@@ -52,29 +53,32 @@ void Player::update()
     }
   }
 
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+  if (m_controlsEnabled)
   {
-    player()->step(DIR_RIGHT);
-    if (player()->isWalking())
-      moveTrain();
-  }
-  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-  {
-    player()->step(DIR_LEFT);
-    if (player()->isWalking())
-      moveTrain();
-  }
-  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-  {
-    player()->step(DIR_DOWN);
-    if (player()->isWalking())
-      moveTrain();
-  }
-  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-  {
-    player()->step(DIR_UP);
-    if (player()->isWalking())
-      moveTrain();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+      player()->step(DIR_RIGHT);
+      if (player()->isWalking())
+        moveTrain();
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    {
+      player()->step(DIR_LEFT);
+      if (player()->isWalking())
+        moveTrain();
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+      player()->step(DIR_DOWN);
+      if (player()->isWalking())
+        moveTrain();
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+      player()->step(DIR_UP);
+      if (player()->isWalking())
+        moveTrain();
+    }
   }
 
   for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)

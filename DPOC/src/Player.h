@@ -45,6 +45,9 @@ public:
 
   void addNewCharacter(const std::string& name, const std::string& className, int x, int y);
 
+  void setControlsEnabled(bool enabled) { m_controlsEnabled = enabled; }
+  bool isControlsEnabled() const { return m_controlsEnabled; }
+
   static Player* create();
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:
@@ -59,6 +62,8 @@ private:
   std::map<Entity*, coord_t> m_trainCoords;
 
   int m_gold;
+
+  bool m_controlsEnabled;
 };
 
 Player* get_player();

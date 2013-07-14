@@ -155,7 +155,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
         closeChoiceMenu();
       }
-      else
+      else if (m_player->isControlsEnabled())
       {
         for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
         {
@@ -169,7 +169,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   }
   else if (key == sf::Keyboard::Escape)
   {
-    if (!Message::instance().isVisible())
+    if (!Message::instance().isVisible() && m_player->isControlsEnabled())
     {
       if (!m_player->player()->isWalking() && !Message::instance().isVisible() && !m_menu.isVisible())
       {
