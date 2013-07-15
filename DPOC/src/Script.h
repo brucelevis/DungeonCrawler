@@ -17,6 +17,7 @@ public:
     OP_NOP,
     OP_MESSAGE,
     OP_WALK,
+    OP_SET_DIR,
     OP_WAIT,
     OP_SET_GLOBAL,
     OP_SET_LOCAL,

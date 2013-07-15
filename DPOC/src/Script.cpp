@@ -229,6 +229,10 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.data.walkData.dir = directionFromString(strings[1]);
   }
+  else if (opcode == OP_SET_DIR)
+  {
+    data.data.walkData.dir = directionFromString(strings[1]);
+  }
   else if (opcode == OP_WAIT)
   {
     data.data.waitData.duration = atoi(strings[1].c_str());
@@ -423,6 +427,7 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
   {
     { "message",      OP_MESSAGE },
     { "walk",         OP_WALK },
+    { "set_dir",      OP_SET_DIR },
     { "wait",         OP_WAIT },
     { "set_global",   OP_SET_GLOBAL },
     { "set_local",    OP_SET_LOCAL },

@@ -355,6 +355,10 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     step(data.data.walkData.dir);
   }
+  else if (data.opcode == Script::OP_SET_DIR)
+  {
+    setDirection(data.data.walkData.dir);
+  }
   else if (data.opcode == Script::OP_WAIT)
   {
     // wait(data.data.waitData.duration);
