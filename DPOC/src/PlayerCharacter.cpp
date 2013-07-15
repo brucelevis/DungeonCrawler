@@ -235,6 +235,17 @@ float PlayerCharacter::getResistance(const std::string& element) const
   return Character::getResistance(element);
 }
 
+bool PlayerCharacter::isImmune(const std::string& status) const
+{
+  for (auto it = m_equipment.begin(); it != m_equipment.end(); ++it)
+  {
+    if (it->second.status == status)
+      return true;
+  }
+
+  return Character::isImmune(status);
+}
+
 PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className)
 {
   PlayerCharacter* character = new PlayerCharacter;

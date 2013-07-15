@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "logger.h"
 #include "Cache.h"
 #include "Utility.h"
@@ -192,6 +194,11 @@ float Character::getResistance(const std::string& element) const
   return 1;
 }
 
+bool Character::isImmune(const std::string& status) const
+{
+  return std::find(m_statusImmunity.begin(), m_statusImmunity.end(), status) != m_statusImmunity.end();
+}
+
 Character* Character::createMonster(const std::string& name)
 {
   MonsterDef def = get_monster_definition(name);
@@ -212,6 +219,7 @@ Character* Character::createMonster(const std::string& name)
   }
 
   character->m_resistance = def.resistance;
+  character->m_statusImmunity = def.immunity;
 
   return character;
 }

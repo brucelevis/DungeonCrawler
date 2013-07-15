@@ -34,6 +34,8 @@ public:
   /// Checks equipment for resistance.
   float getResistance(const std::string& element) const;
 
+  bool isImmune(const std::string& status) const;
+
   static PlayerCharacter* create(const std::string& name, const std::string& className);
   static PlayerCharacter* createFromSaveData(CharacterData* data);
 private:

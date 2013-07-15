@@ -212,7 +212,7 @@ int use_item(Item* item, Character* user, Character* target)
   }
   else if (item->itemUseType == ITEM_CAUSE_STATUS)
   {
-    cause_status(target, item->status);
+    cause_status(target, item->status, false);
   }
 
   return damage;

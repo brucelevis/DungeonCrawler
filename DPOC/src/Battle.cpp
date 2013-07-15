@@ -62,7 +62,7 @@ static void check_death(Character* actor)
 {
   if (actor->getAttribute("hp").current <= 0)
   {
-    cause_status(actor, "Dead");
+    cause_status(actor, "Dead", true);
   }
 }
 

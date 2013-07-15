@@ -176,7 +176,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
       int range = random_range(0, 100);
       if (range < it->second.chance)
       {
-        cause_status(target, it->first, it->second.duration);
+        cause_status(target, it->first, false, it->second.duration);
 
         // Play the first applicable sound.
         if (soundToPlay.empty())

@@ -68,6 +68,7 @@ public:
   void takeDamage(const std::string& attr, int amount);
 
   virtual float getResistance(const std::string& element) const;
+  virtual bool isImmune(const std::string& status) const;
 private:
   std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:
@@ -82,6 +83,7 @@ protected:
   std::map<StatusEffect*, int> m_statusDurations;
 
   std::map<std::string, float> m_resistance;
+  std::vector<std::string> m_statusImmunity;
 
   // Flash data
   Flash m_flash;

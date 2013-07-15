@@ -35,6 +35,8 @@ struct MonsterDef
   std::vector<MonsterDropItem> itemDrop;
 
   std::map<std::string, float> resistance;
+
+  std::vector<std::string> immunity;
 };
 
 void load_monsters();
