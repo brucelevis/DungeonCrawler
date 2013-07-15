@@ -220,6 +220,50 @@ void Battle::executeActions()
     m_currentActor->flash().start(2, 3);
   }
 
+  /////////////////////////////////////////////////////////////////////////////
+  // Check status effects.
+  if (m_currentActor->hasStatusType(STATUS_FUMBLE) && coinflip())
+  {
+    action.actionName = "Fumble";
+    action.target = 0;
+  }
+  else if (m_currentActor->hasStatusType(STATUS_CONFUSE))
+  {
+    battle_message("%s is confused!", m_currentActor->getName().c_str());
+
+    if (coinflip())
+    {
+      action.actionName = "Attack";
+      action.target = m_currentActor;
+    }
+
+    if (action.target && coinflip())
+    {
+      if (coinflip())
+      {
+        action.target = selectRandomFriendlyTarget(m_currentActor);
+      }
+      else
+      {
+        action.target = selectRandomTarget(m_currentActor);
+      }
+    }
+    else if (coinflip())
+    {
+      action.actionName = "Fumble";
+      action.target = 0;
+    }
+  }
+  else if (m_currentActor->hasStatusType(STATUS_SILENCE))
+  {
+    if (action.actionName == "Spell")
+    {
+      action.actionName = "Silence";
+      action.target = 0;
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////
+
   if (action.actionName == "Attack")
   {
     // TODO: Uncomment when effects are used.
@@ -236,10 +280,22 @@ void Battle::executeActions()
 
     if (action.target)
     {
-      battle_message("%s casts the %s spell at %s!",
-          m_currentActor->getName().c_str(),
-          action.objectName.c_str(),
-          action.target->getName().c_str());
+      if (action.target->hasStatusType(STATUS_REFLECT))
+      {
+        battle_message("%s casts the %s spell at %s... but it rebounds!",
+            m_currentActor->getName().c_str(),
+            action.objectName.c_str(),
+            action.target->getName().c_str());
+
+        action.target = m_currentActor;
+      }
+      else
+      {
+        battle_message("%s casts the %s spell at %s!",
+            m_currentActor->getName().c_str(),
+            action.objectName.c_str(),
+            action.target->getName().c_str());
+      }
     }
     else
     {
@@ -293,6 +349,16 @@ void Battle::executeActions()
     play_sound(config::get("SOUND_ESCAPE"));
     m_battleMenu.setVisible(false);
     show_message("You run away.");
+  }
+  else if (action.actionName == "Fumble")
+  {
+    play_sound(config::get("SOUND_MISS"));
+    battle_message("%s is fumbling and loses its turn!", m_currentActor->getName().c_str());
+  }
+  else if (action.actionName == "Silence")
+  {
+    play_sound(config::get("SOUND_MISS"));
+    battle_message("%s can't utter a word!", m_currentActor->getName().c_str());
   }
 
   m_state = STATE_SHOW_ACTION;
@@ -856,6 +922,15 @@ Character* Battle::selectRandomTarget(Character* actor)
 
   if (all_dead(actors))
     return 0;
+
+  // Find provoked target.
+  for (auto it = actors.begin(); it != actors.end(); ++it)
+  {
+    if ((*it)->hasStatusType(STATUS_PROVOKE))
+    {
+      return *it;
+    }
+  }
 
   do
   {

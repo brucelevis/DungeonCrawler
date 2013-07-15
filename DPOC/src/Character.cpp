@@ -207,6 +207,19 @@ bool Character::isImmune(const std::string& status) const
   return std::find(m_statusImmunity.begin(), m_statusImmunity.end(), status) != m_statusImmunity.end();
 }
 
+bool Character::hasStatusType(int statusType) const
+{
+  for (auto it = m_status.begin(); it != m_status.end(); ++it)
+  {
+    if ((*it)->statusType & statusType)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 Character* Character::createMonster(const std::string& name)
 {
   MonsterDef def = get_monster_definition(name);

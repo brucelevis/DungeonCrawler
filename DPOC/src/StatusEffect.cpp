@@ -37,15 +37,31 @@ static DamageType damageTypeFromString(const std::string& type)
   return DAMAGE_NONE;
 }
 
+static StatusType statusTypeFromString(const std::string& type)
+{
+  if (type == "STATUS_NONE")    return STATUS_NONE;
+  if (type == "STATUS_CONFUSE") return STATUS_CONFUSE;
+  if (type == "STATUS_FUMBLE")  return STATUS_FUMBLE;
+  if (type == "STATUS_BLIND")   return STATUS_BLIND;
+  if (type == "STATUS_REFLECT") return STATUS_REFLECT;
+  if (type == "STATUS_PROVOKE") return STATUS_PROVOKE;
+  if (type == "STATUS_SILENCE") return STATUS_SILENCE;
+
+  TRACE("Unknown status type=%s", type.c_str());
+
+  return STATUS_NONE;
+}
+
 static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
 {
   StatusEffect status;
   status.battleOnly = true;
   status.damagePerTurn = 0;
   status.damageType = DAMAGE_NONE;
-  status.incapacitate = true;
+  status.incapacitate = false;
   status.name = "ERROR";
   status.recoveryChance = 0;
+  status.statusType = STATUS_NONE;
 
   const XMLElement* nameElem = statusElement->FirstChildElement("name");
   const XMLElement* verbElem = statusElement->FirstChildElement("verb");
@@ -84,6 +100,17 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
   }
   if (soundElem)
     status.sound = soundElem->GetText();
+
+  const XMLElement* typesElem = statusElement->FirstChildElement("statusType");
+  if (typesElem)
+  {
+    for (const XMLElement* element = typesElem->FirstChildElement(); element; element = typesElem->NextSiblingElement())
+    {
+      std::string type = element->GetText();
+
+      status.statusType |= statusTypeFromString(type);
+    }
+  }
 
   return status;
 }

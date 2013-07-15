@@ -22,6 +22,11 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
     }
   }
 
+  if (attacker->hasStatusType(STATUS_BLIND) && coinflip())
+  {
+    damage = 0;
+  }
+
   if (guard)
   {
     damage /= 2;

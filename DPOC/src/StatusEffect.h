@@ -12,6 +12,18 @@ enum DamageType
   DAMAGE_PERCENT,
 };
 
+// Some hard-coded status effect types flags.
+enum StatusType
+{
+  STATUS_NONE       = 0,
+  STATUS_CONFUSE    = 1,
+  STATUS_FUMBLE     = 2,
+  STATUS_BLIND      = 4,
+  STATUS_REFLECT    = 8,
+  STATUS_PROVOKE    = 16,
+  STATUS_SILENCE    = 32
+};
+
 struct StatusEffect
 {
   std::string name;
@@ -30,6 +42,8 @@ struct StatusEffect
   DamageType damageType;
   std::string damageStat;
   int damagePerTurn;
+
+  int statusType;
 
   std::string sound;
 };

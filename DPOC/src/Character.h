@@ -69,6 +69,8 @@ public:
 
   virtual float getResistance(const std::string& element) const;
   virtual bool isImmune(const std::string& status) const;
+
+  bool hasStatusType(int statusType) const;
 private:
   std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:
