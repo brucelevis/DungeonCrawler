@@ -46,7 +46,7 @@ public:
   virtual int computeCurrentAttribute(const std::string& attribName);
 
   /// @return True if status was afflicted on character.
-  bool afflictStatus(const std::string& status);
+  bool afflictStatus(const std::string& status, int duration);
 
   /// @return True if status was cured from character.
   bool cureStatus(const std::string& status);
@@ -54,6 +54,7 @@ public:
   bool hasStatus(const std::string& status);
   std::string getStatus() const;
   void resetStatus();
+  bool tickStatusDurations();
 
   const std::vector<StatusEffect*> getStatusEffects() const { return m_status; }
 
@@ -78,6 +79,8 @@ protected:
   std::map<std::string, Attribute> m_attributes;
 
   std::vector<StatusEffect*> m_status;
+  std::map<StatusEffect*, int> m_statusDurations;
+
   std::map<std::string, float> m_resistance;
 
   // Flash data

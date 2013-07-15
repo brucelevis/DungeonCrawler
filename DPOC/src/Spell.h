@@ -19,6 +19,12 @@ enum SpellType
   SPELL_CUSTOM        = 32
 };
 
+struct SpellStatusEntry
+{
+  int chance;
+  int duration;
+};
+
 struct Spell
 {
   std::string name;
@@ -36,7 +42,7 @@ struct Spell
   int power;
 
   // Status name/attribute name for buffs.
-  std::map<std::string, int> causeStatus;
+  std::map<std::string, SpellStatusEntry> causeStatus;
   std::vector<std::string> attributeBuffs;
 
   std::string element;

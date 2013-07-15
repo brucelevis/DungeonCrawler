@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "Monster.h"
 #include "StatusEffect.h"
+#include "Attack.h"
 #include "Character.h"
 
 Character::~Character()
@@ -60,7 +61,7 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
   }
 }
 
-bool Character::afflictStatus(const std::string& status)
+bool Character::afflictStatus(const std::string& status, int duration)
 {
   auto it = getStatusEffectIterator(status);
 
@@ -79,6 +80,11 @@ bool Character::afflictStatus(const std::string& status)
 
     m_status.push_back(get_status_effect(status));
 
+    if (duration > 0)
+    {
+      m_statusDurations[get_status_effect(status)] = duration;
+    }
+
     return true;
   }
 
@@ -91,6 +97,11 @@ bool Character::cureStatus(const std::string& status)
 
   if (it != m_status.end())
   {
+    if (m_statusDurations.find(*it) != m_statusDurations.end())
+    {
+      m_statusDurations.erase(*it);
+    }
+
     m_status.erase(it);
 
     if (m_status.empty())
@@ -130,7 +141,28 @@ bool Character::incapacitated() const
 void Character::resetStatus()
 {
   m_status.clear();
+  m_statusDurations.clear();
   m_status.push_back(get_status_effect("Normal"));
+}
+
+bool Character::tickStatusDurations()
+{
+  bool statusRemoved = false;
+  std::map<StatusEffect*, int> durCopy = m_statusDurations;
+
+  for (auto it = durCopy.begin(); it != durCopy.end(); ++it)
+  {
+    auto st = m_statusDurations.find(it->first);
+    st->second--;
+    if (st->second <= 0)
+    {
+      cure_status(this, st->first->name);
+
+      statusRemoved = true;
+    }
+  }
+
+  return statusRemoved;
 }
 
 std::vector<StatusEffect*>::iterator Character::getStatusEffectIterator(const std::string& status)

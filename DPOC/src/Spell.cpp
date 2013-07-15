@@ -86,9 +86,23 @@ static Spell parse_spell_element(const XMLElement* spellElement)
     for (const XMLElement* element = statusElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       std::string name = element->FindAttribute("name")->Value();
-      int chance = fromString<int>(element->FindAttribute("chance")->Value());
 
-      spell.causeStatus[name] = chance;
+      int chance = 100;
+      const XMLAttribute* chanceAttr = element->FindAttribute("chance");
+      if (chanceAttr)
+      {
+        chance = fromString<int>(chanceAttr->Value());
+      }
+
+      int duration = -1;
+      const XMLAttribute* durAttr = element->FindAttribute("duration");
+      if (durAttr)
+      {
+        duration = fromString<int>(durAttr->Value());
+      }
+
+      spell.causeStatus[name].chance = chance;
+      spell.causeStatus[name].duration = duration;
     }
   }
 
@@ -160,9 +174,9 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
     {
       int range = random_range(0, 100);
-      if (range < it->second)
+      if (range < it->second.chance)
       {
-        cause_status(target, it->first);
+        cause_status(target, it->first, it->second.duration);
 
         // Play the first applicable sound.
         if (soundToPlay.empty())

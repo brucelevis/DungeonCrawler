@@ -118,11 +118,11 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
   return damage;
 }
 
-void cause_status(Character* target, const std::string& status)
+void cause_status(Character* target, const std::string& status, int duration)
 {
   if (target->getStatus() != "Dead" && !target->hasStatus(status))
   {
-    target->afflictStatus(status);
+    target->afflictStatus(status, duration);
 
     battle_message("%s %s",
         target->getName().c_str(), get_status_effect(status)->verb.c_str());

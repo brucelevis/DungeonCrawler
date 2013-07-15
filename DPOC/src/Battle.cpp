@@ -511,6 +511,8 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
     return false;
   }
 
+  didProcess = actor->tickStatusDurations();
+
   const std::vector<StatusEffect*> statusEffects = actor->getStatusEffects();
 
   for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
