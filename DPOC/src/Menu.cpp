@@ -268,7 +268,7 @@ void MainMenu::handleConfirm()
       }
       else
       {
-        m_stateStack.pop();
+        //m_stateStack.pop();
         m_characterMenu->setUserToCurrentChoice();
         openSpellMenu(m_characterMenu->getCurrentMenuChoice());
       }
