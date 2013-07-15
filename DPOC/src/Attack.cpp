@@ -21,6 +21,14 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
       damage = 0;
     }
   }
+  else
+  {
+    int range = random_range(0, 255);
+    if (range == 0)
+    {
+      damage = 0;
+    }
+  }
 
   if (attacker->hasStatusType(STATUS_BLIND) && coinflip())
   {
