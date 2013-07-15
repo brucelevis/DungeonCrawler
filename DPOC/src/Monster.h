@@ -30,6 +30,7 @@ struct MonsterDef
 
   std::string texture;
   sf::IntRect textureRect;
+  sf::Color color;
 
   std::vector<MonsterActionEntry> actions;
   std::vector<MonsterDropItem> itemDrop;

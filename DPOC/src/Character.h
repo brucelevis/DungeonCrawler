@@ -31,7 +31,7 @@ static inline Attribute make_attribute(int val) { return { val, val }; }
 class Character
 {
 public:
-
+  Character();
   virtual ~Character();
 
   std::string getName() const { return m_name; }
@@ -76,6 +76,7 @@ protected:
 
   sf::Texture* m_faceTexture;
   sf::IntRect m_textureRect;
+  sf::Color m_color;
 
   std::map<std::string, Attribute> m_attributes;
 

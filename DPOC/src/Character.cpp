@@ -8,6 +8,13 @@
 #include "Attack.h"
 #include "Character.h"
 
+Character::Character()
+ : m_faceTexture(0),
+   m_color(sf::Color::White)
+{
+
+}
+
 Character::~Character()
 {
   cache::releaseTexture(m_faceTexture);
@@ -49,6 +56,7 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
     sf::Sprite sprite;
     sprite.setTexture(*m_faceTexture);
     sprite.setTextureRect(m_textureRect);
+    sprite.setColor(m_color);
     sprite.setPosition(x, y);
     target.draw(sprite);
   }
@@ -211,6 +219,8 @@ Character* Character::createMonster(const std::string& name)
   character->m_name = def.name;
   character->m_faceTexture = cache::loadTexture(def.texture);
   character->m_textureRect = def.textureRect;
+  character->m_color = def.color;
+
   character->m_status.push_back(get_status_effect("Normal"));
 
   for (auto it = def.attributeMap.begin(); it != def.attributeMap.end(); ++it)
