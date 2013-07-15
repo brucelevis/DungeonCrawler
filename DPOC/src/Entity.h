@@ -76,6 +76,8 @@ public:
 
   void loadScripts(const std::string& talkScript, const std::string& stepScript);
 
+  void setFixedDirection(bool fixed) { m_fixedDirection = fixed; }
+
   std::string xmlDump() const;
 public:
   float x, y;
@@ -111,6 +113,7 @@ private:
 
   bool m_walkThrough;
   bool m_visible;
+  bool m_fixedDirection;
 };
 
 #endif

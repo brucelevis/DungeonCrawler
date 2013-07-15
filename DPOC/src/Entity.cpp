@@ -37,7 +37,8 @@ Entity::Entity()
   m_state(STATE_NORMAL),
   m_waitCounter(0),
   m_walkThrough(false),
-  m_visible(true)
+  m_visible(true),
+  m_fixedDirection(false)
 {
 }
 
@@ -51,7 +52,8 @@ Entity::Entity(const std::string& name)
    m_state(STATE_NORMAL),
    m_waitCounter(0),
    m_walkThrough(false),
-   m_visible(true)
+   m_visible(true),
+   m_fixedDirection(false)
 {
   auto it = std::find_if(ENTITY_DEF.begin(), ENTITY_DEF.end(),
       [=](const EntityDef& entity)
@@ -167,6 +169,9 @@ void Entity::update()
 
 void Entity::setDirection(Direction dir)
 {
+  if (m_fixedDirection)
+    return;
+
   if (dir == DIR_RANDOM)
   {
     m_direction = (Direction)(rand()%4);
@@ -357,7 +362,13 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   }
   else if (data.opcode == Script::OP_SET_DIR)
   {
+    // Script should override fixed direction property.
+    bool fixTemp = m_fixedDirection;
+    setFixedDirection(false);
+
     setDirection(data.data.walkData.dir);
+
+    setFixedDirection(fixTemp);
   }
   else if (data.opcode == Script::OP_WAIT)
   {

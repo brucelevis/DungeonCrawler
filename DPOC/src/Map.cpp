@@ -397,6 +397,12 @@ Map* Map::loadTiledFile(const std::string& filename)
             entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY);
             entitySprite->setDirection(startDirection);
             entity->setSprite(entitySprite);
+
+            std::string fixDir = loader.getObjectProperty(objectIndex, "fixedDirection");
+            if (fixDir == "true")
+            {
+              entity->setFixedDirection(true);
+            }
           }
 
           map->m_entities.push_back(entity);
