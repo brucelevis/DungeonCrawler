@@ -234,8 +234,6 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
   target->takeDamage("hp", damage);
 
-  caster->getAttribute("mp").current -= spell->mpCost;
-
   return damage;
 }
 

@@ -380,6 +380,10 @@ void Battle::showAction()
       {
         const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
 
+        // Reduce it here since cast_spell is called for each target when
+        // spell has multiple targets.
+        m_currentActor->getAttribute("mp").current -= spell->mpCost;
+
         setCurrentTargets(spell->target);
       }
       else if (m_battleActions[m_currentActor].actionName == "Item")

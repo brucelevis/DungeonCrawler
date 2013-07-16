@@ -260,6 +260,10 @@ void MainMenu::handleConfirm()
             m_characterMenu->getUser(),
             m_characterMenu->getTarget());
 
+        // Reduce it here since cast_spell is called for each target when
+        // spell has multiple targets.
+        m_characterMenu->getUser()->getAttribute("mp").current -= m_characterMenu->getSpellToUse()->mpCost;
+
         // If we can't cast the selected spell, clsoe the char menu.
         if (!can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()))
         {
