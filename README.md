@@ -48,14 +48,14 @@ Spells.xml (<spells><spell>)
 <buff>
   <attribute name>*
 
-Spell types:
-  SPELL_NONE
-  SPELL_DAMAGE
-  SPELL_HEAL
-  SPELL_BUFF
-  SPELL_REMOVE_STATUS
-  SPELL_CAUSE_STATUS
-  SPELL_CUSTOM
+### Spell types: ### 
+ * SPELL_NONE
+ * SPELL_DAMAGE
+ * SPELL_HEAL
+ * SPELL_BUFF
+ * SPELL_REMOVE_STATUS
+ * SPELL_CAUSE_STATUS
+ * SPELL_CUSTOM
 
 Items.xml (<items><item>)
 ---------
@@ -72,26 +72,26 @@ Items.xml (<items><item>)
 <elements> (damage element, protection from element)
   <element name, value>* (value = multiplier in damage calculation)
 
-type:
-  ITEM_USE,
-  ITEM_USE_MENU,
-  ITEM_USE_BATTLE,
-  ITEM_WEAPON,
-  ITEM_SHIELD,
-  ITEM_ARMOR,
-  ITEM_HELMET,
-  ITEM_MISC
+### type: ###
+ * ITEM_USE
+ * ITEM_USE_MENU
+ * ITEM_USE_BATTLE
+ * ITEM_WEAPON
+ * ITEM_SHIELD
+ * ITEM_ARMOR
+ * ITEM_HELMET
+ * ITEM_MISC
 
-onUse:
-  ITEM_HEAL,
-  ITEM_HEAL_FIXED,
-  ITEM_RESTORE_MP,
-  ITEM_RESTORE_MP_FIXED,
-  ITEM_DAMAGE,
-  ITEM_BUFF,
-  ITEM_REMOVE_STATUS,
-  ITEM_CAUSE_STATUS,
-  ITEM_CUSTOM
+### onUse: ###
+ * ITEM_HEAL
+ * ITEM_HEAL_FIXED
+ * ITEM_RESTORE_MP
+ * ITEM_RESTORE_MP_FIXED
+ * ITEM_DAMAGE
+ * ITEM_BUFF
+ * ITEM_REMOVE_STATUS
+ * ITEM_CAUSE_STATUS
+ * ITEM_CUSTOM
 
 Monsters.xml (<monsters><monster>)
 ------------
@@ -113,8 +113,9 @@ Monsters.xml (<monsters><monster>)
 Config.xml (<config>)
 ----------
 Just a key-value store.
-Example:
- <KEY>Value</KEY>
+
+Example:  
+ <KEY>Value</KEY>  
  Value can be retrieved then with config::get("KEY")
 
 Classes.xml (<classes><class>)
@@ -153,90 +154,94 @@ StatusEffects.xml (<statusEffects><statusEffect>)
 <statusType>
  <type>StatusType</type>*
 
-Damage types:
-  DAMAGE_NONE - No damage default
-  DAMAGE_FIXED - Fixed damge per turn
-  DAMAGE_PERCENT - Damage = % of max hp/mp
+###Damage types:###
+* DAMAGE_NONE - No damage default
+* DAMAGE_FIXED - Fixed damge per turn
+* DAMAGE_PERCENT - Damage = % of max hp/mp
 
-Status effect types:
+###Status effect types:###
 These are hardcoded behaviors.
-  STATUS_NONE
-  STATUS_CONFUSE - Several things:
-                   * Chance to attack random target instead of usual action
-                   * Chance to select random target with usual action.
-                   * Chance to fumble
-  STATUS_FUMBLE  - 50% chance to lose turn.
-  STATUS_BLIND   - 50% miss chance.
-  STATUS_REFLECT - Single target spells rebound to caster.
-  STATUS_PROVOKE - When targets are randomly selected provoking actor
-                   is always picked.
-  STATUS_SILENCE - Can't cast spells.
+* STATUS_NONE
+* STATUS_CONFUSE
+ - Chance to attack random target instead of usual action
+ - Chance to select random target with usual action.
+ - Chance to fumble
+* STATUS_FUMBLE  
+ - 50% chance to lose turn.
+* STATUS_BLIND   
+ - 50% miss chance.
+* STATUS_REFLECT 
+ - Single target spells rebound to caster.
+* STATUS_PROVOKE 
+ - When targets are randomly selected provoking actor is always picked.
+* STATUS_SILENCE 
+ - Can't cast spells.
 
 Attributes
 ----------
-hp
-strength
-power
-defense
-magic
-mag.def
-speed
-level
-exp   (exp gain by monsters)
-gold  (gold gain by monsters)
+* hp
+* strength
+* power
+* defense
+* magic
+* mag.def
+* speed
+* level
+* exp   (exp gain by monsters)
+* gold  (gold gain by monsters)
 
 Script Commands
 ---------------
-message [msg]
-  Displays a message box with msg.
-walk [dir]
-  Entity takes a step in dir, one of DIR_RIGHT, DIR_LEFT, DIR_DOWN, DIR_UP,
-  DIR_RANDOM
-set_dir [dir]
-  Entity changes direction to dir. Overrides fixed direction.
-wait [frames]
-  Entity waits for some frames before continuing script
-set_global [key] [value]
-  Set global variable.
-set_local [key] [value]
-  Set local variable. This depends on the name of the entity so if several
-  entities have the same name on the same map then they will share locals.
-if [condition]
-  ...
-{else}
-  ...
-endif
-  Bool operations: <, >, <=, >=, ==, !=
-  Valid things: local[key],
-                global[key], 
-                const[number|true|false],
+* message [msg]
+ - Displays a message box with msg.
+* walk [dir]
+ - Entity takes a step in dir, one of DIR_RIGHT, DIR_LEFT, DIR_DOWN, DIR_UP,
+ - DIR_RANDOM
+* set_dir [dir]
+ - Entity changes direction to dir. Overrides fixed direction.
+* wait [frames]
+ - Entity waits for some frames before continuing script
+* set_global [key] [value]
+ - Set global variable.
+* set_local [key] [value]
+ - Set local variable. This depends on the name of the entity so if several
+   entities have the same name on the same map then they will share locals.
+* if [condition]  
+   ...  
+  {else}  
+   ...  
+  endif  
+  Bool operations: <, >, <=, >=, ==, !=  
+  Valid things: local[key],  
+                global[key],  
+                const[number|true|false],  
                 item[item_name] (use _ for spaces here; item_name=gold for gold
-choice [choice0, choice1, ..., choiceN]
-  Pops up a choice menu. The selected choice is stored in global[sys:choice].
-  Hardcoded limit to 4 choices right now.
-set_tile_id [tilenum]
-  If the entity is a tile entity this changes the tile number.
-give_item [amount] [item_name]
-take_item [amount] [item_name]
-give_gold [amount]
-take_gold [amount]
-play_sound [sound]
-add_member [name] [class] {level}
-  Adds a new member to the player party. level not implemented yet..
-set_visible [true/false]
-  Sets the visibilty of the entity
-set_walkthrough [true/false]
-  If walkthrough is false (default) the entity is solid.
-enable_controls [true/false]
-  Enable/disable player controls
-recover_all
-  Restore all hp/mp/status to player
-combat [monster1,monster2,...,monsterN]
-  Comma separated list of monsters to fight.
-  ex: combat Batty,Monster With Space In Name,Skelington
+* choice [choice0, choice1, ..., choiceN]
+ - Pops up a choice menu. The selected choice is stored in global[sys:choice].
+   Hardcoded limit to 4 choices right now.
+* set_tile_id [tilenum]
+ - If the entity is a tile entity this changes the tile number.
+* give_item [amount] [item_name]
+* take_item [amount] [item_name]
+* give_gold [amount]
+* take_gold [amount]
+* play_sound [sound]
+* add_member [name] [class] {level}
+ - Adds a new member to the player party. level not implemented yet..
+* set_visible [true/false]
+ - Sets the visibilty of the entity
+* set_walkthrough [true/false]
+ - If walkthrough is false (default) the entity is solid.
+* enable_controls [true/false]
+ - Enable/disable player controls
+* recover_all
+ - Restore all hp/mp/status to player
+* combat [monster1,monster2,...,monsterN]
+ - Comma separated list of monsters to fight.  
+   ex: combat Batty,Monster With Space In Name,Skelington
 
 Formulas
 --------
-Miss chance:
+* Miss chance:
  - if target is faster, miss chance is rand(255) < (targetSpeed - attackerSpeed)
  - else 1/255 chance
