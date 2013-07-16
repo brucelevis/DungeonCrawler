@@ -164,14 +164,18 @@ void Message::flush()
   if (m_pages.empty())
     return;
 
-  setIsQuiet(true);
+  bool quiet = m_quiet;
+
+  if (!quiet)
+    setIsQuiet(true);
 
   while (m_currentIndex < m_pages.front().size())
   {
     update();
   }
 
-  setIsQuiet(false);
+  if (!quiet)
+    setIsQuiet(false);
 }
 
 void Message::clear()
