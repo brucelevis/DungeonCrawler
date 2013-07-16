@@ -1001,7 +1001,9 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 {
-  Item* currentEquip = m_character->getEquipment(getCurrentMenuChoice());
+  std::string currentEquip = m_character->getEquipment(getCurrentMenuChoice()) ?
+      m_character->getEquipment(getCurrentMenuChoice())->name :
+      "";
 
   if (m_itemMenu->validChoice())
   {
@@ -1019,7 +1021,7 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
   int newMdf = m_character->computeCurrentAttribute("mag.def");
   int newSpd = m_character->computeCurrentAttribute("speed");
 
-  m_character->equip(getCurrentMenuChoice(), currentEquip ? currentEquip->name : "");
+  m_character->equip(getCurrentMenuChoice(), currentEquip);
 
   draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
   draw_text_bmp(target, x, y + 12, "Pow: %d (%d)", m_character->computeCurrentAttribute("power"), newPow);
