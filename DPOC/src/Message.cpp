@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdarg>
 
+#include "Sound.h"
 #include "Config.h"
 #include "draw_text.h"
 #include "Utility.h"
@@ -163,10 +164,14 @@ void Message::flush()
   if (m_pages.empty())
     return;
 
+  setIsQuiet(true);
+
   while (m_currentIndex < m_pages.front().size())
   {
     update();
   }
+
+  setIsQuiet(false);
 }
 
 void Message::clear()
@@ -180,6 +185,11 @@ void Message::update()
   if (!m_pages.empty() && m_currentIndex < m_pages.front().size())
   {
     m_currentBuffer += m_pages.front()[m_currentIndex];
+
+    if (!m_quiet && !config::get("SOUND_MESSAGE_INCREMENT").empty())
+    {
+      play_sound(config::get("SOUND_MESSAGE_INCREMENT"));
+    }
 
     m_currentIndex++;
   }

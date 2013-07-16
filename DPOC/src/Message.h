@@ -42,12 +42,16 @@ public:
 
   void update();
   void draw(sf::RenderTarget& target);
+
+  void setIsQuiet(bool b) { m_quiet = b; }
 private:
-  Message() : m_currentIndex(0) {}
+  Message() : m_currentIndex(0), m_quiet(false) {}
 private:
   std::queue<std::string> m_pages;
   std::string m_currentBuffer;
   size_t m_currentIndex;
+
+  bool m_quiet;
 };
 
 // Thin wrappers around singleton.

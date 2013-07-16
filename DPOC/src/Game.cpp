@@ -372,6 +372,8 @@ void Game::startBattle(const std::vector<std::string>& monsters)
 {
   m_currentMusic.pause();
 
+  Message::instance().setIsQuiet(true);
+
   std::string traceString;
 
   std::vector<Character*> monsterChars;
@@ -385,6 +387,8 @@ void Game::startBattle(const std::vector<std::string>& monsters)
 
   Battle battle(m_window, monsterChars);
   battle.start();
+
+  Message::instance().setIsQuiet(false);
 
   m_currentMusic.play();
 }
