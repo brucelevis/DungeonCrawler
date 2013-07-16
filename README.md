@@ -213,9 +213,9 @@ Script Commands
                 global[key],  
                 const[number|true|false],  
                 item[item_name] (use _ for spaces here; item_name=gold for gold
-* choice [choice0, choice1, ..., choiceN]
+* choice [choice0,choice1,...,choiceN]
  - Pops up a choice menu. The selected choice is stored in global[sys:choice].
-   Hardcoded limit to 4 choices right now.
+   Hardcoded limit to 4 choices right now. Comma separated list.
 * set_tile_id [tilenum]
  - If the entity is a tile entity this changes the tile number.
 * give_item [amount] [item_name]
