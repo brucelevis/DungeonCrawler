@@ -185,6 +185,56 @@ level
 exp   (exp gain by monsters)
 gold  (gold gain by monsters)
 
+Script Commands
+---------------
+message [msg]
+  Displays a message box with msg.
+walk [dir]
+  Entity takes a step in dir, one of DIR_RIGHT, DIR_LEFT, DIR_DOWN, DIR_UP,
+  DIR_RANDOM
+set_dir [dir]
+  Entity changes direction to dir. Overrides fixed direction.
+wait [frames]
+  Entity waits for some frames before continuing script
+set_global [key] [value]
+  Set global variable.
+set_local [key] [value]
+  Set local variable. This depends on the name of the entity so if several
+  entities have the same name on the same map then they will share locals.
+if [condition]
+  ...
+{else}
+  ...
+endif
+  Bool operations: <, >, <=, >=, ==, !=
+  Valid things: local[key],
+                global[key], 
+                const[number|true|false],
+                item[item_name] (use _ for spaces here; item_name=gold for gold
+choice [choice0, choice1, ..., choiceN]
+  Pops up a choice menu. The selected choice is stored in global[sys:choice].
+  Hardcoded limit to 4 choices right now.
+set_tile_id [tilenum]
+  If the entity is a tile entity this changes the tile number.
+give_item [amount] [item_name]
+take_item [amount] [item_name]
+give_gold [amount]
+take_gold [amount]
+play_sound [sound]
+add_member [name] [class] {level}
+  Adds a new member to the player party. level not implemented yet..
+set_visible [true/false]
+  Sets the visibilty of the entity
+set_walkthrough [true/false]
+  If walkthrough is false (default) the entity is solid.
+enable_controls [true/false]
+  Enable/disable player controls
+recover_all
+  Restore all hp/mp/status to player
+combat [monster1,monster2,...,monsterN]
+  Comma separated list of monsters to fight.
+  ex: combat Batty,Monster With Space In Name,Skelington
+
 Formulas
 --------
 Miss chance:
