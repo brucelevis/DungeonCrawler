@@ -326,10 +326,20 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       memset(data.data.choiceData.choices[i], '\0', MAX_SCRIPT_KEY_SIZE);
     }
 
-    data.data.choiceData.numberOfChoices = strings.size() - 1;
+    std::string all;
     for (size_t i = 1; i < strings.size(); i++)
     {
-      strcpy(data.data.choiceData.choices[i - 1], strings[i].c_str());
+      all += strings[i];
+      if (i < strings.size() - 1)
+        all += " ";
+    }
+
+    std::vector<std::string> choices = split_string(all, ',');
+
+    data.data.choiceData.numberOfChoices = choices.size();
+    for (size_t i = 0; i < choices.size(); i++)
+    {
+      strcpy(data.data.choiceData.choices[i], choices[i].c_str());
     }
   }
   else if (opcode == OP_SET_TILE_ID)
