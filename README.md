@@ -31,24 +31,26 @@ Objects:
   - Objects with name set to "zone" represents a zone for encounters.
   - property zoneId required.
 
-Spells.xml (`<spells><spell>`)
-----------
-`<name>`
-`<description>`
-`<cost>` (default 0)
-`<target>` (default TARGET_NONE)
-`<battleOnly>` (default true)
-`<power>` (default 0)
-`<effect>` (effect animation)
-`<element>` (spell element)
-`<spellType>`
-  `<type>`*
-`<statusChange>`
-  `<status name, {chance, duration}>`* (chance default 100, duration default 0)
-`<buff>`
-  `<attribute name>`*
+XML Formats
+-----------
 
-### Spell types: ###
+### Spells.xml (`<spells><spell>`) ###
+* `<name>`
+* `<description>`
+* `<cost>` (default 0)
+* `<target>` (default TARGET_NONE)
+* `<battleOnly>` (default true)
+* `<power>` (default 0)
+* `<effect>` (effect animation)
+* `<element>` (spell element)
+* `<spellType>`
+ - `<type>`*
+* `<statusChange>`
+ - `<status name, {chance, duration}>`* (chance default 100, duration default 0)
+* `<buff>`
+ - `<attribute name>`*
+
+#### Spell types: ####
  * SPELL_NONE
  * SPELL_DAMAGE
  * SPELL_HEAL
@@ -57,22 +59,21 @@ Spells.xml (`<spells><spell>`)
  * SPELL_CAUSE_STATUS
  * SPELL_CUSTOM
 
-Items.xml (`<items><item>`)
----------
-`<name>`
-`<description>`
-`<cost>`
-`<type>`
-`<target>`
-`<onUse>`
-`<status>`
-`<effect>`
-`<attributes>` (gain when use, bonus when equipped)
-  `<attribute name, value>`*
-`<elements>` (damage element, protection from element)
-  `<element name, value>`* (value = multiplier in damage calculation)
+### Items.xml (`<items><item>`) ###
+* `<name>`
+* `<description>`
+* `<cost>`
+* `<type>`
+* `<target>`
+* `<onUse>`
+* `<status>`
+* `<effect>`
+* `<attributes>` (gain when use, bonus when equipped)
+ - `<attribute name, value>`*
+* `<elements>` (damage element, protection from element)
+ - `<element name, value>`* (value = multiplier in damage calculation)
 
-### type: ###
+#### type: ####
  * ITEM_USE
  * ITEM_USE_MENU
  * ITEM_USE_BATTLE
@@ -82,7 +83,7 @@ Items.xml (`<items><item>`)
  * ITEM_HELMET
  * ITEM_MISC
 
-### onUse: ###
+#### onUse: ####
  * ITEM_HEAL
  * ITEM_HEAL_FIXED
  * ITEM_RESTORE_MP
@@ -93,73 +94,69 @@ Items.xml (`<items><item>`)
  * ITEM_CAUSE_STATUS
  * ITEM_CUSTOM
 
-Monsters.xml (`<monsters><monster>`)
-------------
-`<name>`
-`<description>`
-`<texture name, x, y, w, h>` (rect in atlas)
-`<color r, g, b>` (default white)
-`<attributes>`
-  `<attr name, value>`*
-`<actions>`
-  `<action name, chance>{SpellName}</action>`*
-`<items>` (item drops)
-  `<item name, chance>`*
-`<resistance>`
-  `<element name, resist>`* (resist is used as multiplier in dmg calculation)
-`<immunity>`
-  `<status name>`*
+### Monsters.xml (`<monsters><monster>`) ###
+* `<name>`
+* `<description>`
+* `<texture name, x, y, w, h>` (rect in atlas)
+* `<color r, g, b>` (default white)
+* `<attributes>`
+ - `<attr name, value>`*
+* `<actions>`
+ - `<action name, chance>{SpellName}</action>`*
+* `<items>` (item drops)
+ - `<item name, chance>`*
+* `<resistance>`
+ - `<element name, resist>`* (resist is used as multiplier in dmg calculation)
+* `<immunity>`
+ - `<status name>`*
 
-Config.xml (`<config>`)
-----------
+### Config.xml (`<config>`) ###
 Just a key-value store.
 
 Example:  
  `<KEY>Value</KEY>`  
  Value can be retrieved then with config::get("KEY")
 
-Classes.xml (`<classes><class>`)
------------
-`<name>`
-`<attributes>`  (BASE attributes used when leveling.)
-  `<attr name, value>`*
-`<texture name, x, y>` (entry in texture 2x4 texture block)
-`<face name x, y, w, h>` (w, h should be 32x32)
-`<spellsPerLevel>`
-  `<level num>`*
-    `<spell>SpellName</spell>`*
-`<equipment>` (equipment this class can use)
-  `<item>ItemName</item>`*
+### Classes.xml (`<classes><class>`) ###
+* `<name>`
+* `<attributes>`  (BASE attributes used when leveling.)
+ - `<attr name, value>`*
+* `<texture name, x, y>` (entry in texture 2x4 texture block)
+* `<face name x, y, w, h>` (w, h should be 32x32)
+* `<spellsPerLevel>`
+ - `<level num>`*
+   + `<spell>SpellName</spell>`*
+* `<equipment>` (equipment this class can use)
+ - `<item>ItemName</item>`*
 
-Player.xml (`<player>`)
-----------
+### Player.xml (`<player>`) ###
 Initial values for the player.
-`<start map, x, y>`
-`<party>`
-  `<character name, class>`*
-`<inventory>`
-  `<item name, amount>`*
 
-StatusEffects.xml (`<statusEffects><statusEffect>`)
-------------------
-`<name>`
-`<verb>` (Text to print when effect is activated)
-`<recoveryVerb>` (Text to print when recovery)
-`<color r, g, b>` (Color to use for status)
-`<battleOnly>` (Default true)
-`<recoveryChance>` (% chance of recovery every turn, default 0)
-`<incapacitate>` (default false. Character not usable if true)
-`<damage type, amount, attr>`
-`<sound>` (Sound to play when effect activates)
-`<statusType>`
- `<type>StatusType</type>`*
+* `<start map, x, y>`
+* `<party>`
+ - `<character name, class>`*
+* `<inventory>`
+ - `<item name, amount>`*
 
-###Damage types:###
+### StatusEffects.xml (`<statusEffects><statusEffect>`) ###
+* `<name>`
+* `<verb>` (Text to print when effect is activated)
+* `<recoveryVerb>` (Text to print when recovery)
+* `<color r, g, b>` (Color to use for status)
+* `<battleOnly>` (Default true)
+* `<recoveryChance>` (% chance of recovery every turn, default 0)
+* `<incapacitate>` (default false. Character not usable if true)
+* `<damage type, amount, attr>`
+* `<sound>` (Sound to play when effect activates)
+* `<statusType>`
+ - `<type>StatusType</type>`*
+
+####Damage types:####
 * DAMAGE_NONE - No damage default
 * DAMAGE_FIXED - Fixed damge per turn
 * DAMAGE_PERCENT - Damage = % of max hp/mp
 
-###Status effect types:###
+####Status effect types:####
 These are hardcoded behaviors.
 * STATUS_NONE
 * STATUS_CONFUSE
