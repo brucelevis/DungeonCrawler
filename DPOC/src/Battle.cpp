@@ -792,10 +792,10 @@ void Battle::doneSelectingActions()
       action.actionName = def.actions[actionIndex].action;
       action.objectName = def.actions[actionIndex].objectName;
 
-			if (action.actionName == "Attack")
-			{
-			  action.target = selectRandomTarget(*it);
-			}
+      if (action.actionName == "Attack")
+      {
+        action.target = selectRandomTarget(*it);
+      }
       else if (action.actionName == "Spell")
       {
         const Spell* spell = get_spell(action.objectName);
