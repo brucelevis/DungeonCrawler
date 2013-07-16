@@ -444,7 +444,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     for (int i = 0; i < data.data.choiceData.numberOfChoices; i++)
     {
-      choices.push_back(data.data.choiceData.choices[i]);
+      choices.push_back(replace_string(data.data.choiceData.choices[i], '_', ' '));
     }
 
     Game::instance().openChoiceMenu(choices);
