@@ -273,11 +273,21 @@ Player* Player::createFromSaveData(std::vector<CharacterData*> charData, std::ve
 
   for (size_t i = 0; i < entData.size(); i++)
   {
-    Entity* entity = new Entity(entData[i]->name);
-    entity->setPosition(entData[i]->x, entData[i]->y);
+    std::string className = charData[i]->className;
+
+    PlayerClass pc = player_class_ref(className);
+
+    Entity* entity = new Entity;
+
+    Sprite* sprite = new Sprite;
+    sprite->create(pc.texture, pc.textureBlock.x, pc.textureBlock.y);
+
+    entity->setSprite(sprite);
+
     entity->setDirection(entData[i]->dir);
     entity->setWalkSpeed(entData[i]->speed);
     entity->setWalkThrough(entData[i]->walkThrough);
+    entity->setPosition(entData[i]->x, entData[i]->y);
 
     if (entity->sprite()->getTextureName() != entData[i]->spriteName)
     {
