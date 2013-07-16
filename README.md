@@ -31,24 +31,24 @@ Objects:
   - Objects with name set to "zone" represents a zone for encounters.
   - property zoneId required.
 
-Spells.xml (<spells><spell>)
+Spells.xml (`<spells><spell>`)
 ----------
-<name>
-<description>
-<cost> (default 0)
-<target> (default TARGET_NONE)
-<battleOnly> (default true)
-<power> (default 0)
-<effect> (effect animation)
-<element> (spell element)
-<spellType>
-  <type>*
-<statusChange>
-  <status name, {chance, duration}>* (chance default 100, duration default 0)
-<buff>
-  <attribute name>*
+`<name>`
+`<description>`
+`<cost>` (default 0)
+`<target>` (default TARGET_NONE)
+`<battleOnly>` (default true)
+`<power>` (default 0)
+`<effect>` (effect animation)
+`<element>` (spell element)
+`<spellType>`
+  `<type>`*
+`<statusChange>`
+  `<status name, {chance, duration}>`* (chance default 100, duration default 0)
+`<buff>`
+  `<attribute name>`*
 
-### Spell types: ### 
+### Spell types: ###
  * SPELL_NONE
  * SPELL_DAMAGE
  * SPELL_HEAL
@@ -57,20 +57,20 @@ Spells.xml (<spells><spell>)
  * SPELL_CAUSE_STATUS
  * SPELL_CUSTOM
 
-Items.xml (<items><item>)
+Items.xml (`<items><item>`)
 ---------
-<name>
-<description>
-<cost>
-<type>
-<target>
-<onUse>
-<status>
-<effect>
-<attributes> (gain when use, bonus when equipped)
-  <attribute name, value>*
-<elements> (damage element, protection from element)
-  <element name, value>* (value = multiplier in damage calculation)
+`<name>`
+`<description>`
+`<cost>`
+`<type>`
+`<target>`
+`<onUse>`
+`<status>`
+`<effect>`
+`<attributes>` (gain when use, bonus when equipped)
+  `<attribute name, value>`*
+`<elements>` (damage element, protection from element)
+  `<element name, value>`* (value = multiplier in damage calculation)
 
 ### type: ###
  * ITEM_USE
@@ -93,66 +93,66 @@ Items.xml (<items><item>)
  * ITEM_CAUSE_STATUS
  * ITEM_CUSTOM
 
-Monsters.xml (<monsters><monster>)
+Monsters.xml (`<monsters><monster>`)
 ------------
-<name>
-<description>
-<texture name, x, y, w, h> (rect in atlas)
-<color r, g, b> (default white)
-<attributes>
-  <attr name, value>*
-<actions>
-  <action name, chance>{SpellName}</action>*
-<items> (item drops)
-  <item name, chance>*
-<resistance>
-  <element name, resist>* (resist is used as multiplier in dmg calculation)
-<immunity>
-  <status name>*
+`<name>`
+`<description>`
+`<texture name, x, y, w, h>` (rect in atlas)
+`<color r, g, b>` (default white)
+`<attributes>`
+  `<attr name, value>`*
+`<actions>`
+  `<action name, chance>{SpellName}</action>`*
+`<items>` (item drops)
+  `<item name, chance>`*
+`<resistance>`
+  `<element name, resist>`* (resist is used as multiplier in dmg calculation)
+`<immunity>`
+  `<status name>`*
 
-Config.xml (<config>)
+Config.xml (`<config>`)
 ----------
 Just a key-value store.
 
 Example:  
- <KEY>Value</KEY>  
+ `<KEY>Value</KEY>`  
  Value can be retrieved then with config::get("KEY")
 
-Classes.xml (<classes><class>)
+Classes.xml (`<classes><class>`)
 -----------
-<name>
-<attributes>  (BASE attributes used when leveling.)
-  <attr name, value>*
-<texture name, x, y> (entry in texture 2x4 texture block)
-<face name x, y, w, h> (w, h should be 32x32)
-<spellsPerLevel>
-  <level num>*
-    <spell>SpellName</spell>*
-<equipment> (equipment this class can use)
-  <item>ItemName</item>*
+`<name>`
+`<attributes>`  (BASE attributes used when leveling.)
+  `<attr name, value>`*
+`<texture name, x, y>` (entry in texture 2x4 texture block)
+`<face name x, y, w, h>` (w, h should be 32x32)
+`<spellsPerLevel>`
+  `<level num>`*
+    `<spell>SpellName</spell>`*
+`<equipment>` (equipment this class can use)
+  `<item>ItemName</item>`*
 
-Player.xml (<player>)
+Player.xml (`<player>`)
 ----------
 Initial values for the player.
-<start map, x, y>
-<party>
-  <character name, class>*
-<inventory>
-  <item name, amount>*
+`<start map, x, y>`
+`<party>`
+  `<character name, class>`*
+`<inventory>`
+  `<item name, amount>`*
 
-StatusEffects.xml (<statusEffects><statusEffect>)
+StatusEffects.xml (`<statusEffects><statusEffect>`)
 ------------------
-<name>
-<verb> (Text to print when effect is activated)
-<recoveryVerb> (Text to print when recovery)
-<color r, g, b> (Color to use for status)
-<battleOnly> (Default true)
-<recoveryChance> (% chance of recovery every turn, default 0)
-<incapacitate> (default false. Character not usable if true)
-<damage type, amount, attr>
-<sound> (Sound to play when effect activates)
-<statusType>
- <type>StatusType</type>*
+`<name>`
+`<verb>` (Text to print when effect is activated)
+`<recoveryVerb>` (Text to print when recovery)
+`<color r, g, b>` (Color to use for status)
+`<battleOnly>` (Default true)
+`<recoveryChance>` (% chance of recovery every turn, default 0)
+`<incapacitate>` (default false. Character not usable if true)
+`<damage type, amount, attr>`
+`<sound>` (Sound to play when effect activates)
+`<statusType>`
+ `<type>StatusType</type>`*
 
 ###Damage types:###
 * DAMAGE_NONE - No damage default
@@ -211,7 +211,7 @@ Script Commands
   {else}  
    ...  
   endif  
-  Bool operations: <, >, <=, >=, ==, !=  
+  Bool operations: `<, >, <=, >`=, ==, !=  
   Valid things: local[key],  
                 global[key],  
                 const[number|true|false],  
