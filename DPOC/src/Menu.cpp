@@ -1006,27 +1006,46 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 
 void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 {
-  std::string currentEquip = m_character->getEquipment(getCurrentMenuChoice()) ?
-      m_character->getEquipment(getCurrentMenuChoice())->name :
-      "";
+  int newStr;
+  int newPow;
+  int newDef;
+  int newMag;
+  int newMdf;
+  int newSpd;
 
-  if (m_itemMenu->validChoice())
+  if (m_state == STATE_EQUIP_ITEM)
   {
-    m_character->equip(getCurrentMenuChoice(), m_itemMenu->getSelectedItemName());
+    std::string currentEquip = m_character->getEquipment(getCurrentMenuChoice()) ?
+        m_character->getEquipment(getCurrentMenuChoice())->name :
+        "";
+
+    if (m_itemMenu->validChoice())
+    {
+      m_character->equip(getCurrentMenuChoice(), m_itemMenu->getSelectedItemName());
+    }
+    else
+    {
+      m_character->equip(getCurrentMenuChoice(), "");
+    }
+
+    newStr = m_character->computeCurrentAttribute("strength");
+    newPow = m_character->computeCurrentAttribute("power");
+    newDef = m_character->computeCurrentAttribute("defense");
+    newMag = m_character->computeCurrentAttribute("magic");
+    newMdf = m_character->computeCurrentAttribute("mag.def");
+    newSpd = m_character->computeCurrentAttribute("speed");
+
+    m_character->equip(getCurrentMenuChoice(), currentEquip);
   }
   else
   {
-    m_character->equip(getCurrentMenuChoice(), "");
+    newStr = m_character->computeCurrentAttribute("strength");
+    newPow = m_character->computeCurrentAttribute("power");
+    newDef = m_character->computeCurrentAttribute("defense");
+    newMag = m_character->computeCurrentAttribute("magic");
+    newMdf = m_character->computeCurrentAttribute("mag.def");
+    newSpd = m_character->computeCurrentAttribute("speed");
   }
-
-  int newStr = m_character->computeCurrentAttribute("strength");
-  int newPow = m_character->computeCurrentAttribute("power");
-  int newDef = m_character->computeCurrentAttribute("defense");
-  int newMag = m_character->computeCurrentAttribute("magic");
-  int newMdf = m_character->computeCurrentAttribute("mag.def");
-  int newSpd = m_character->computeCurrentAttribute("speed");
-
-  m_character->equip(getCurrentMenuChoice(), currentEquip);
 
   draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
   draw_text_bmp(target, x, y + 12, "Pow: %d (%d)", m_character->computeCurrentAttribute("power"), newPow);
