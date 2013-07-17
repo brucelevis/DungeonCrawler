@@ -263,7 +263,7 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
 
   for (int i = 1; i <= level; i++)
   {
-    character->setLevel(level, false);
+    character->setLevel(i, false);
   }
   reset_attribute(character->m_attributes["hp"]);
   reset_attribute(character->m_attributes["mp"]);
