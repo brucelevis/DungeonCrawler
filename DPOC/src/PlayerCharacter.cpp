@@ -246,7 +246,7 @@ bool PlayerCharacter::isImmune(const std::string& status) const
   return Character::isImmune(status);
 }
 
-PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className)
+PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className, int level)
 {
   PlayerCharacter* character = new PlayerCharacter;
 
@@ -261,7 +261,7 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
   character->m_attributes["level"] = make_attribute(0);
   character->m_attributes["exp"] = make_attribute(0);
 
-  character->setLevel(1, false);
+  character->setLevel(level, false);
   reset_attribute(character->m_attributes["hp"]);
   reset_attribute(character->m_attributes["mp"]);
 

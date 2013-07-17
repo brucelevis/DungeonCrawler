@@ -501,7 +501,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     int x = get_player()->getTrain().back()->x;
     int y = get_player()->getTrain().back()->y;
 
-    get_player()->addNewCharacter(name, className, x, y);
+    get_player()->addNewCharacter(name, className, x, y, level);
   }
   else if (data.opcode == Script::OP_SET_VISIBLE)
   {

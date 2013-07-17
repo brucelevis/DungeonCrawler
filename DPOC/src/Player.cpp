@@ -310,7 +310,7 @@ Player* get_player()
   return Game::instance().getPlayer();
 }
 
-void Player::addNewCharacter(const std::string& name, const std::string& className, int x, int y)
+void Player::addNewCharacter(const std::string& name, const std::string& className, int x, int y, int level)
 {
   PlayerClass pc = player_class_ref(className);
 
@@ -328,7 +328,7 @@ void Player::addNewCharacter(const std::string& name, const std::string& classNa
 
   m_playerTrain.push_back(entity);
 
-  m_party.push_back(PlayerCharacter::create(name, className));
+  m_party.push_back(PlayerCharacter::create(name, className, level));
 }
 
 void Player::recoverAll()
