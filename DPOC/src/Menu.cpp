@@ -680,6 +680,7 @@ EquipItemMenu::EquipItemMenu(int width, int height)
 void EquipItemMenu::refresh(const std::string& equipmentType)
 {
   clear();
+  m_items.clear();
 
   const std::vector<Item>& items = get_player()->getInventory();
 
