@@ -55,6 +55,8 @@ public:
   void doneSelectingActions();
 
   void endBattle();
+
+  void postFade(FadeType fadeType);
 private:
   void executeActions();
   void showAction();

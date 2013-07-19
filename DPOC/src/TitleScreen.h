@@ -1,6 +1,7 @@
 #ifndef TITLE_SCREEN_H
 #define TITLE_SCREEN_H
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "Scene.h"
@@ -29,6 +30,7 @@ private:
 private:
   TitleMenu m_menu;
   sf::Texture* m_titleTexture;
+  sf::Music m_titleMusic;
 };
 
 #endif

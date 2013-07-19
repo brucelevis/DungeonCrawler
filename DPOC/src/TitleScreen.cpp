@@ -7,6 +7,7 @@
 #include "SaveLoad.h"
 #include "Game.h"
 #include "Player.h"
+#include "Message.h"
 
 #include "TitleScreen.h"
 
@@ -42,6 +43,8 @@ TitleScreen::TitleScreen()
   m_menu.setVisible(true);
 
   m_titleTexture = cache::loadTexture("Resources/Title/TitleScreen.png");
+  m_titleMusic.openFromFile(config::get("MUSIC_TITLE"));
+  m_titleMusic.play();
 }
 
 TitleScreen::~TitleScreen()
@@ -99,7 +102,16 @@ void TitleScreen::postFade(FadeType fadeType)
   if (fadeType == FADE_OUT)
   {
     //close();
+    m_titleMusic.stop();
+
     SceneManager::instance().fadeIn(32);
     SceneManager::instance().addScene(&Game::instance());
+  }
+  else if (fadeType == FADE_IN)
+  {
+    m_menu.setVisible(true);
+    Message::instance().clear();
+
+    m_titleMusic.play();
   }
 }

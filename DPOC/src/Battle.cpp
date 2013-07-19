@@ -1048,8 +1048,25 @@ bool Battle::checkVictoryOrDefeat()
   {
     m_state = STATE_DEFEAT;
 
+    clear_message();
+    m_battleMenu.setVisible(false);
+
+    show_message("You have been defeated...");
+    SceneManager::instance().fadeOut(128);
+
     return true;
   }
 
   return false;
+}
+
+void Battle::postFade(FadeType fadeType)
+{
+  if (fadeType == FADE_OUT && m_state == STATE_DEFEAT)
+  {
+    endBattle();
+    Game::instance().close();
+
+    SceneManager::instance().fadeIn(128);
+  }
 }

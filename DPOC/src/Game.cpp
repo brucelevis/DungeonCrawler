@@ -15,10 +15,16 @@
 
 #include "Battle.h"
 
+Game* Game::theInstance = 0;
+
 Game& Game::instance()
 {
-  static Game game;
-  return game;
+  if (theInstance == 0)
+  {
+    theInstance = new Game;
+  }
+
+  return (*theInstance);
 }
 
 Game::Game()
@@ -36,6 +42,8 @@ Game::~Game()
   delete m_currentMap;
   delete m_player;
   delete m_choiceMenu;
+
+  theInstance = 0;
 }
 
 void Game::update()

@@ -17,6 +17,7 @@ struct Warp;
 
 class Game : public Scene
 {
+  static Game* theInstance;
 public:
   static Game& instance();
 
