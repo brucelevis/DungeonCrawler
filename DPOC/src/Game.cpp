@@ -3,6 +3,8 @@
 
 #include <SFML/System.hpp>
 
+#include "SceneManager.h"
+
 #include "logger.h"
 #include "Map.h"
 #include "Config.h"
@@ -29,45 +31,14 @@ Game::Game()
    m_currentWarp(0),
    m_playerMoved(false)
 {
-  m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
-  m_window.setKeyRepeatEnabled(false);
 
-  m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
 }
 
 Game::~Game()
 {
-  m_window.close();
-
   delete m_currentMap;
   delete m_player;
   delete m_choiceMenu;
-}
-
-void Game::run()
-{
-  sf::Clock clock;
-  int timerThen = clock.restart().asMilliseconds();
-
-  while (m_window.isOpen())
-  {
-    int timerNow = clock.getElapsedTime().asMilliseconds();
-
-    while (timerThen < timerNow)
-    {
-      pollEvents();
-
-      processFade();
-
-      update();
-
-      timerThen += 1000 / config::FPS;
-    }
-
-    draw();
-
-    sf::sleep(sf::milliseconds(timerThen - timerNow));
-  }
 }
 
 void Game::update()
@@ -113,24 +84,16 @@ void Game::update()
   }
 }
 
-void Game::pollEvents()
+void Game::handleEvent(sf::Event& event)
 {
-  sf::Event event;
-
-  while (m_window.pollEvent(event))
+  switch (event.type)
   {
-    switch (event.type)
-    {
-    case sf::Event::Closed:
-      m_window.close();
-      break;
-    case sf::Event::KeyPressed:
-      handleKeyPress(event.key.code);
+  case sf::Event::KeyPressed:
+    handleKeyPress(event.key.code);
 
-      break;
-    default:
-      break;
-    }
+    break;
+  default:
+    break;
   }
 }
 
@@ -217,63 +180,28 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   }
 }
 
-void Game::draw()
+void Game::draw(sf::RenderTarget& target)
 {
-  m_window.clear();
-
-  // Because "clear" doesn't clear...
-  sf::RectangleShape clearRect;
-  clearRect.setFillColor(sf::Color::Black);
-  clearRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
-  m_targetTexture.draw(clearRect);
-
   if (m_currentMap)
-    m_currentMap->draw(m_targetTexture, m_view);
+    m_currentMap->draw(target, m_view);
 
   if (m_player)
-    m_player->draw(m_targetTexture, m_view);
+    m_player->draw(target, m_view);
 
   if (m_menu.isVisible())
   {
-    m_menu.draw(m_targetTexture, 0, 0);
+    m_menu.draw(target, 0, 0);
   }
 
   if (Message::instance().isVisible())
   {
-    Message::instance().draw(m_targetTexture);
+    Message::instance().draw(target);
   }
 
   if (m_choiceMenu && m_choiceMenu->isVisible())
   {
-    m_choiceMenu->draw(m_targetTexture, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
+    m_choiceMenu->draw(target, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
   }
-
-  m_targetTexture.display();
-
-  sf::Sprite sprite;
-  sprite.setTexture(m_targetTexture.getTexture());
-  sprite.setScale(sf::Vector2f(2, 2));
-
-  if (m_fade != FADE_NONE)
-  {
-    float percent = (float)m_fadeCounter / (float)m_fadeDuration;
-
-    float opacity = 255;
-    if (m_fade == FADE_OUT)
-    {
-      opacity = 255.0f * percent;
-    }
-    else if (m_fade == FADE_IN)
-    {
-      opacity = 255.0f - (255.0f * percent);
-    }
-
-    sprite.setColor(sf::Color(255, 255, 255, opacity));
-  }
-
-  m_window.draw(sprite);
-
-  m_window.display();
 }
 
 void Game::updatePlayer()
@@ -301,7 +229,7 @@ bool Game::checkWarps()
     const Warp* warp = m_currentMap->getWarpAt(m_player->player()->x, m_player->player()->y);
 
     play_sound(config::get("SOUND_MOVEMENT"));
-    fadeOut(32);
+    SceneManager::instance().fadeOut(32);
 
     m_currentWarp = warp;
 
@@ -359,7 +287,7 @@ void Game::loadNewMap(const std::string& file)
   if (!m_currentMap)
   {
     TRACE("Loading map failed! Quitting game...");
-    m_window.close();
+    SceneManager::instance().close();
   }
 
   if (!m_currentMap->getMusic().empty())
@@ -385,52 +313,44 @@ void Game::startBattle(const std::vector<std::string>& monsters)
 
   TRACE("Starting combat with: %s", traceString.c_str());
 
-  Battle battle(m_window, monsterChars);
-  battle.start();
+  Battle* battle = new Battle(monsterChars);
+  battle->start();
 
+  SceneManager::instance().addScene(battle);
+}
+
+void Game::postBattle()
+{
   Message::instance().setIsQuiet(false);
 
   m_currentMusic.play();
 }
 
-void Game::fadeIn(int duration)
+void Game::preFade(FadeType fadeType)
 {
-  m_fade = FADE_IN;
-  m_fadeCounter = duration;
-  m_fadeDuration = duration;
-}
-
-void Game::fadeOut(int duration)
-{
-  m_fade = FADE_OUT;
-  m_fadeCounter = duration;
-  m_fadeDuration = duration;
-
-  m_player->setControlsEnabled(false);
-}
-
-void Game::processFade()
-{
-  if (m_fadeCounter > 0)
+  if (fadeType == FADE_OUT)
   {
-    m_fadeCounter--;
-    if (m_fadeCounter == 0 && m_fade == FADE_IN)
+    m_player->setControlsEnabled(false);
+  }
+}
+
+void Game::postFade(FadeType fadeType)
+{
+  if (fadeType == FADE_IN)
+  {
+    m_player->setControlsEnabled(true);
+  }
+  else
+  {
+    if (m_currentWarp)
     {
-      m_fade = FADE_NONE;
-      m_player->setControlsEnabled(true);
-    }
-    else if (m_fadeCounter == 0 && m_fade == FADE_OUT)
-    {
-      if (m_currentWarp)
-      {
-        std::string warpTargetName = getWarpTargetName(*m_currentWarp);
+      std::string warpTargetName = getWarpTargetName(*m_currentWarp);
 
-        transferPlayer(warpTargetName, m_currentWarp->dstX, m_currentWarp->dstY);
+      transferPlayer(warpTargetName, m_currentWarp->dstX, m_currentWarp->dstY);
 
-        m_currentWarp = 0;
+      m_currentWarp = 0;
 
-        fadeIn(32);
-      }
+      SceneManager::instance().fadeIn(32);
     }
   }
 }

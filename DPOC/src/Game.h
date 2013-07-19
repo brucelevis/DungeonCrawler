@@ -6,19 +6,23 @@
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+
 #include "coord.h"
 #include "Menu.h"
+#include "Scene.h"
 
 class Map;
 class Player;
 struct Warp;
 
-class Game
+class Game : public Scene
 {
 public:
   static Game& instance();
 
-  void run();
+  void update();
+  void draw(sf::RenderTarget& target);
+  void handleEvent(sf::Event& event);
 
   Map* getCurrentMap() { return m_currentMap; }
   Player* getPlayer() { return m_player; }
@@ -34,27 +38,21 @@ public:
 
   void startBattle(const std::vector<std::string>& monsters);
 
-  void fadeIn(int duration);
-  void fadeOut(int duration);
+  void preFade(FadeType fadeType);
+  void postFade(FadeType fadeType);
+
+  void postBattle();
 private:
   Game();
   ~Game();
 
-  void update();
-  void pollEvents();
-  void draw();
   void updatePlayer();
   bool checkWarps();
 
   void handleKeyPress(sf::Keyboard::Key key);
 
   void closeChoiceMenu();
-
-  void processFade();
 private:
-  sf::RenderWindow m_window;
-  sf::RenderTexture m_targetTexture;
-
   Map* m_currentMap;
   Player* m_player;
   coord_t m_view;

@@ -1,6 +1,8 @@
 #include <cstdlib>
 #include <string>
 
+#include "SceneManager.h"
+
 #include "logger.h"
 #include "SaveLoad.h"
 
@@ -33,6 +35,8 @@ int main(int argc, char* argv[])
 
   srand(time(0));
 
+  SceneManager::instance().create();
+
   if (argc > 1)
   {
     std::string arg = argv[1];
@@ -46,15 +50,16 @@ int main(int argc, char* argv[])
       std::string saveFile = argv[2];
 
       load_game(saveFile);
-
-      Game::instance().run();
     }
   }
   else
   {
     Game::instance().setPlayer(Player::create());
-    Game::instance().run();
   }
+
+  SceneManager::instance().addScene(&Game::instance());
+
+  SceneManager::instance().run();
 
   return 0;
 }

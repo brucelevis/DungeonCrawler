@@ -1,8 +1,11 @@
 #include <iterator>
 
+#include "SceneManager.h"
+
 #include "Config.h"
 #include "Utility.h"
 #include "random_pick.h"
+#include "Game.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -66,17 +69,14 @@ static void check_death(Character* actor)
   }
 }
 
-Battle::Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters)
+Battle::Battle(const std::vector<Character*>& monsters)
  : m_battleOngoing(false),
    m_state(STATE_SELECT_ACTIONS),
    m_battleMenu(this, monsters),
    m_monsters(monsters),
    m_currentActor(0),
-   m_window(window),
-   m_turnDelay(0),
-   m_shakeCounter(0)
+   m_turnDelay(0)
 {
-  m_targetTexture.create(window.getSize().x, window.getSize().y);
 }
 
 Battle::~Battle()
@@ -98,64 +98,48 @@ void Battle::start()
   m_battleMusic.setVolume(50);
   m_battleMusic.setLoop(true);
   m_battleMusic.play();
+}
 
-  while (m_window.isOpen() && m_battleOngoing)
+void Battle::update()
+{
+  if (m_turnDelay > 0)
+    m_turnDelay--;
+
+  updateEffects();
+
+  if (m_state == STATE_EXECUTE_ACTIONS)
   {
-    int timerNow = clock.getElapsedTime().asMilliseconds();
-
-    while (timerThen < timerNow)
-    {
-      pollEvents();
-
-      if (m_turnDelay > 0)
-        m_turnDelay--;
-
-      if (m_shakeCounter > 0)
-        m_shakeCounter--;
-
-      updateEffects();
-
-      if (m_state == STATE_EXECUTE_ACTIONS)
-      {
-        executeActions();
-      }
-      else if (m_state == STATE_SHOW_ACTION)
-      {
-        showAction();
-      }
-      else if (m_state == STATE_ACTION_EFFECT)
-      {
-        actionEffect();
-      }
-      else if (m_state == STATE_EFFECT_MESSAGE)
-      {
-        if (!effectInProgress() && m_turnDelay == 0)
-        {
-          nextActor();
-        }
-      }
-      else if (m_state == STATE_VICTORY_PRE)
-      {
-        doVictory();
-      }
-      else if (m_state == STATE_DEFEAT)
-      {
-
-      }
-      else if (m_state == STATE_PROCESS_STATUS_EFFECTS)
-      {
-        processStatusEffects();
-      }
-
-      update_message();
-
-      timerThen += 1000 / config::FPS;
-    }
-
-    draw();
-
-    sf::sleep(sf::milliseconds(timerThen - timerNow));
+    executeActions();
   }
+  else if (m_state == STATE_SHOW_ACTION)
+  {
+    showAction();
+  }
+  else if (m_state == STATE_ACTION_EFFECT)
+  {
+    actionEffect();
+  }
+  else if (m_state == STATE_EFFECT_MESSAGE)
+  {
+    if (!effectInProgress() && m_turnDelay == 0)
+    {
+      nextActor();
+    }
+  }
+  else if (m_state == STATE_VICTORY_PRE)
+  {
+    doVictory();
+  }
+  else if (m_state == STATE_DEFEAT)
+  {
+
+  }
+  else if (m_state == STATE_PROCESS_STATUS_EFFECTS)
+  {
+    processStatusEffects();
+  }
+
+  update_message();
 }
 
 void Battle::endBattle()
@@ -182,6 +166,10 @@ void Battle::endBattle()
       }
     }
   }
+
+  close();
+
+  Game::instance().postBattle();
 }
 
 void Battle::executeActions()
@@ -457,7 +445,7 @@ void Battle::actionEffect()
         {
           play_sound(config::get("SOUND_ENEMY_HIT"));
 
-          shakeScreen();
+          SceneManager::instance().shakeScreen(16);
         }
         else
         {
@@ -640,24 +628,15 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
   return didProcess;
 }
 
-void Battle::pollEvents()
+void Battle::handleEvent(sf::Event& event)
 {
-  sf::Event event;
-
-  while (m_window.pollEvent(event))
+  switch (event.type)
   {
-    switch (event.type)
-    {
-    case sf::Event::Closed:
-      m_window.close();
-      break;
-    case sf::Event::KeyPressed:
-      handleKeyPress(event.key.code);
-
-      break;
-    default:
-      break;
-    }
+  case sf::Event::KeyPressed:
+    handleKeyPress(event.key.code);
+    break;
+  default:
+    break;
   }
 }
 
@@ -709,17 +688,8 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
   }
 }
 
-void Battle::draw()
+void Battle::draw(sf::RenderTarget& target)
 {
-  m_window.clear();
-  m_targetTexture.clear();
-
-  // Because "clear" doesn't clear...
-  sf::RectangleShape clearRect;
-  clearRect.setFillColor(sf::Color::Black);
-  clearRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
-  m_targetTexture.draw(clearRect);
-
   int battleMenuX = 0;
 
   if (m_state != STATE_SELECT_ACTIONS)
@@ -727,36 +697,19 @@ void Battle::draw()
     battleMenuX = -40;
   }
 
-  m_battleMenu.draw(m_targetTexture, battleMenuX, 152);
+  m_battleMenu.draw(target, battleMenuX, 152);
 
   if (Message::instance().isVisible())
   {
-    Message::instance().draw(m_targetTexture);
+    Message::instance().draw(target);
   }
 
-  draw_battle_message(m_targetTexture);
+  draw_battle_message(target);
 
   for (auto it = m_activeEffects.begin(); it != m_activeEffects.end(); ++it)
   {
-    (*it)->render(m_targetTexture);
+    (*it)->render(target);
   }
-
-  m_targetTexture.display();
-
-  sf::Sprite sprite;
-  sprite.setTexture(m_targetTexture.getTexture());
-  sprite.setScale(sf::Vector2f(2, 2));
-  sprite.setPosition(0, 0);
-
-  if (m_shakeCounter > 0)
-  {
-    sprite.setPosition(random_range(-4, 4), 0);
-    // SHake in y-axis as well?!
-    //sprite.setPosition(random_range(-4, 4), random_range(-4, 4));
-  }
-
-  m_window.draw(sprite);
-  m_window.display();
 }
 
 void Battle::setAction(Character* user, Action action)
@@ -870,7 +823,7 @@ bool Battle::effectInProgress() const
   if (m_activeEffects.size() > 0)
     return true;
 
-  if (m_shakeCounter > 0)
+  if (SceneManager::instance().isShaking())
     return true;
 
   return false;
@@ -1015,14 +968,14 @@ void Battle::createEffects()
   }
   else if (action.actionName == "Spell")
   {
-    const Spell* spell = get_spell(action.objectName);
+//    const Spell* spell = get_spell(action.objectName);
 
     // TODO: Uncomment when effects are used.
     //effectName = spell->effect;
   }
   else if (action.actionName == "Item")
   {
-    Item& item = item_ref(action.objectName);
+//    Item& item = item_ref(action.objectName);
 
     // TODO: Uncomment when effects are used.
     //effectName = item.effect;
@@ -1099,9 +1052,4 @@ bool Battle::checkVictoryOrDefeat()
   }
 
   return false;
-}
-
-void Battle::shakeScreen()
-{
-  m_shakeCounter = 16;
 }

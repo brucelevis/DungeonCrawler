@@ -10,11 +10,12 @@
 #include "Menu.h"
 #include "Target.h"
 #include "Effect.h"
+#include "Scene.h"
 
 class Character;
 class PlayerCharacter;
 
-class Battle
+class Battle : public Scene
 {
   enum State
   {
@@ -39,11 +40,15 @@ public:
     std::string objectName;
   };
 
-  Battle(sf::RenderWindow& window, const std::vector<Character*>& monsters);
+  Battle(const std::vector<Character*>& monsters);
 
   ~Battle();
 
   void start();
+
+  void update();
+  void draw(sf::RenderTarget& target);
+  void handleEvent(sf::Event& event);
 
   void setAction(Character* user, Action action);
 
@@ -62,8 +67,6 @@ private:
   void pollEvents();
 
   void handleKeyPress(sf::Keyboard::Key key);
-
-  void draw();
 
   void addToBattleOrder(Character* character);
 
@@ -86,8 +89,6 @@ private:
   std::vector<Character*> getAllActors() const;
 
   bool checkVictoryOrDefeat();
-
-  void shakeScreen();
 private:
   bool m_battleOngoing;
   State m_state;
@@ -101,13 +102,8 @@ private:
   std::vector<Character*> m_currentTargets;
   std::vector<Effect*> m_activeEffects;
 
-  sf::RenderTexture m_targetTexture;
-  sf::RenderWindow& m_window;
-
   // A short delay between "damage" and "next actor".
   int m_turnDelay;
-
-  int m_shakeCounter;
 
   sf::Music m_battleMusic;
 };
