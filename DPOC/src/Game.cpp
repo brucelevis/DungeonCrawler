@@ -25,9 +25,6 @@ Game::Game()
  : m_currentMap(0),
    m_player(0),
    m_choiceMenu(0),
-   m_fade(FADE_NONE),
-   m_fadeCounter(0),
-   m_fadeDuration(0),
    m_currentWarp(0),
    m_playerMoved(false)
 {

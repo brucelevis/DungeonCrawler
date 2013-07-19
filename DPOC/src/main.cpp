@@ -14,6 +14,8 @@
 #include "PlayerClass.h"
 #include "StatusEffect.h"
 
+#include "TitleScreen.h"
+
 #include "Player.h"
 #include "Editor.h"
 #include "Game.h"
@@ -37,28 +39,29 @@ int main(int argc, char* argv[])
 
   SceneManager::instance().create();
 
-  if (argc > 1)
-  {
-    std::string arg = argv[1];
-    if (arg == "e")
-    {
-      Editor editor;
-      editor.run();
-    }
-    else if (arg == "l")
-    {
-      std::string saveFile = argv[2];
+//  if (argc > 1)
+//  {
+//    std::string arg = argv[1];
+//    if (arg == "e")
+//    {
+//      Editor editor;
+//      editor.run();
+//    }
+//    else if (arg == "l")
+//    {
+//      std::string saveFile = argv[2];
+//
+//      load_game(saveFile);
+//    }
+//  }
+//  else
+//  {
+//    Game::instance().setPlayer(Player::create());
+//  }
 
-      load_game(saveFile);
-    }
-  }
-  else
-  {
-    Game::instance().setPlayer(Player::create());
-  }
+//  SceneManager::instance().addScene(&Game::instance());
 
-  SceneManager::instance().addScene(&Game::instance());
-
+  SceneManager::instance().addScene(new TitleScreen);
   SceneManager::instance().run();
 
   return 0;

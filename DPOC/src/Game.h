@@ -63,15 +63,6 @@ private:
   MainMenu m_menu;
   ChoiceMenu* m_choiceMenu;
 
-  enum
-  {
-    FADE_NONE,
-    FADE_IN,
-    FADE_OUT
-  } m_fade;
-  int m_fadeCounter;
-  int m_fadeDuration;
-
   const Warp* m_currentWarp;
   bool m_playerMoved;
 };
