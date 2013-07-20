@@ -1199,7 +1199,7 @@ void BattleMenu::handleConfirm()
       m_spellMenu->setVisible(false);
       selectMonster();
     }
-    else if (spell->target == TARGET_SINGLE_ALLY)
+    else if (spell->target == TARGET_SINGLE_ALLY || spell->target == TARGET_DEAD)
     {
       m_spellMenu->setVisible(false);
       selectCharacter();
