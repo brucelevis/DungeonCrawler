@@ -376,6 +376,11 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     strcpy(data.data.addPartyMemberData.className, strings[2].c_str());
     data.data.addPartyMemberData.level = atoi(strings[3].c_str());
   }
+  else if (opcode == OP_REMOVE_PARTY_MEMBER)
+  {
+    memset(data.data.removePartyMemberData.name, '\0', MAX_SCRIPT_KEY_SIZE);
+    strcpy(data.data.removePartyMemberData.name, strings[1].c_str());
+  }
   else if (opcode == OP_SET_VISIBLE)
   {
     if (strings[1] == "true")
@@ -472,6 +477,7 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "take_gold",    OP_TAKE_GOLD },
     { "play_sound",   OP_PLAY_SOUND },
     { "add_member",   OP_ADD_PARTY_MEMBER },
+    { "remove_member", OP_REMOVE_PARTY_MEMBER },
     { "set_visible",  OP_SET_VISIBLE },
     { "set_walkthrough", OP_SET_WALKTHROUGH },
     { "enable_controls", OP_ENABLE_CONTROLS },

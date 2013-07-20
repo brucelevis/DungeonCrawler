@@ -32,6 +32,7 @@ public:
     OP_TAKE_GOLD,
     OP_PLAY_SOUND,
     OP_ADD_PARTY_MEMBER,
+    OP_REMOVE_PARTY_MEMBER,
     OP_SET_VISIBLE,
     OP_SET_WALKTHROUGH,
     OP_ENABLE_CONTROLS,
@@ -119,6 +120,11 @@ public:
         char className[MAX_SCRIPT_KEY_SIZE];
         int level;
       } addPartyMemberData;
+
+      struct
+      {
+        char name[MAX_SCRIPT_KEY_SIZE];
+      } removePartyMemberData;
 
       struct
       {

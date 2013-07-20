@@ -49,6 +49,7 @@ public:
   std::string xmlDump() const;
 
   void addNewCharacter(const std::string& name, const std::string& className, int x, int y, int level = 1);
+  void removeCharacter(const std::string& name);
 
   void setControlsEnabled(bool enabled) { m_controlsEnabled = enabled; }
   bool isControlsEnabled() const { return m_controlsEnabled; }

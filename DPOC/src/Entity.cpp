@@ -505,6 +505,12 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     get_player()->addNewCharacter(name, className, x, y, level);
   }
+  else if (data.opcode == Script::OP_REMOVE_PARTY_MEMBER)
+  {
+    std::string name = data.data.removePartyMemberData.name;
+
+    get_player()->removeCharacter(name);
+  }
   else if (data.opcode == Script::OP_SET_VISIBLE)
   {
     m_visible = data.data.setVisibleData.visibility;

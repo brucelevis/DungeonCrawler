@@ -331,6 +331,30 @@ void Player::addNewCharacter(const std::string& name, const std::string& classNa
   m_party.push_back(PlayerCharacter::create(name, className, level));
 }
 
+void Player::removeCharacter(const std::string& name)
+{
+  int index = 0;
+  Entity* entityToRemove = 0;
+  for (auto it = m_party.begin(); it != m_party.end(); ++it, ++index)
+  {
+    if ((*it)->getName() == name)
+    {
+      m_party.erase(it);
+      entityToRemove = m_playerTrain[index];
+      break;
+    }
+  }
+
+  for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
+  {
+    if ((*it) == entityToRemove)
+    {
+      m_playerTrain.erase(it);
+      break;
+    }
+  }
+}
+
 void Player::recoverAll()
 {
   for (auto it = m_party.begin(); it != m_party.end(); ++it)
