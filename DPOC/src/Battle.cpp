@@ -75,7 +75,8 @@ Battle::Battle(const std::vector<Character*>& monsters)
    m_battleMenu(this, monsters),
    m_monsters(monsters),
    m_currentActor(0),
-   m_turnDelay(0)
+   m_turnDelay(0),
+   m_canEscape(true)
 {
 }
 
@@ -87,17 +88,16 @@ Battle::~Battle()
   }
 }
 
-void Battle::start()
+void Battle::start(bool canEscape)
 {
-  sf::Clock clock;
-  int timerThen = clock.restart().asMilliseconds();
-
   m_battleOngoing = true;
 
   m_battleMusic.openFromFile(config::get("MUSIC_BATTLE"));
   m_battleMusic.setVolume(50);
   m_battleMusic.setLoop(true);
   m_battleMusic.play();
+
+  m_canEscape = canEscape;
 }
 
 void Battle::update()
@@ -334,9 +334,25 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Run")
   {
-    play_sound(config::get("SOUND_ESCAPE"));
-    m_battleMenu.setVisible(false);
-    show_message("You run away.");
+    if (m_canEscape)
+    {
+      if (random_range(0, 10) >= 2)
+      {
+        play_sound(config::get("SOUND_ESCAPE"));
+        m_battleMenu.setVisible(false);
+        show_message("You run away.");
+      }
+      else
+      {
+        battle_message("The enemy blocks your path.");
+        m_battleActions[m_currentActor].actionName = "";
+      }
+    }
+    else
+    {
+      battle_message("There is no escaping this!");
+      m_battleActions[m_currentActor].actionName = "";
+    }
   }
   else if (action.actionName == "Fumble")
   {

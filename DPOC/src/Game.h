@@ -35,7 +35,7 @@ public:
 
   void loadNewMap(const std::string& file);
 
-  void startBattle(const std::vector<std::string>& monsters);
+  void startBattle(const std::vector<std::string>& monsters, bool canEscape = true);
 
   void preFade(FadeType fadeType);
   void postFade(FadeType fadeType);

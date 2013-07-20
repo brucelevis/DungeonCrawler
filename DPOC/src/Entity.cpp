@@ -527,7 +527,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     get_player()->recoverAll();
   }
-  else if (data.opcode == Script::OP_COMBAT)
+  else if (data.opcode == Script::OP_COMBAT || data.opcode == Script::OP_COMBAT_NO_ESAPE)
   {
     std::vector<std::string> monsters;
 
@@ -536,7 +536,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
       monsters.push_back(data.data.combatData.monsters[i]);
     }
 
-    Game::instance().startBattle(monsters);
+    Game::instance().startBattle(monsters, data.data.combatData.canEscape);
   }
   else if (data.opcode == Script::OP_END_GAME)
   {

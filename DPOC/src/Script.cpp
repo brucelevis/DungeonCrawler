@@ -406,9 +406,11 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     // Nothing
   }
-  else if (opcode == OP_COMBAT)
+  else if (opcode == OP_COMBAT || opcode == OP_COMBAT_NO_ESAPE)
   {
     memset(data.data.combatData.monsters, '\0', MAX_SCRIPT_KEY_SIZE * MAX_SCRIPT_KEY_SIZE);
+
+    data.data.combatData.canEscape = opcode != OP_COMBAT_NO_ESAPE;
 
     std::string all;
 
@@ -483,6 +485,7 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "enable_controls", OP_ENABLE_CONTROLS },
     { "recover_all",  OP_RECOVER_ALL },
     { "combat",       OP_COMBAT },
+    { "combat_no_escape", OP_COMBAT_NO_ESAPE },
     { "end_game",     OP_END_GAME },
     { "set_config",   OP_SET_CONFIG },
     { "transfer",     OP_TRANSFER }

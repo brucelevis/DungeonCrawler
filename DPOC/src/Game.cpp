@@ -312,7 +312,7 @@ void Game::loadNewMap(const std::string& file)
   }
 }
 
-void Game::startBattle(const std::vector<std::string>& monsters)
+void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape)
 {
   m_currentMusic.pause();
 
@@ -330,7 +330,7 @@ void Game::startBattle(const std::vector<std::string>& monsters)
   TRACE("Starting combat with: %s", traceString.c_str());
 
   Battle* battle = new Battle(monsterChars);
-  battle->start();
+  battle->start(canEscape);
 
   SceneManager::instance().addScene(battle);
 }

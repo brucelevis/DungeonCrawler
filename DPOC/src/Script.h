@@ -38,6 +38,7 @@ public:
     OP_ENABLE_CONTROLS,
     OP_RECOVER_ALL,
     OP_COMBAT,
+    OP_COMBAT_NO_ESAPE,
     OP_END_GAME,
     OP_SET_CONFIG,
     OP_TRANSFER
@@ -145,6 +146,7 @@ public:
       {
         int number;
         char monsters[MAX_SCRIPT_KEY_SIZE][MAX_SCRIPT_KEY_SIZE];
+        bool canEscape;
       } combatData;
 
       struct

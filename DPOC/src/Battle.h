@@ -44,7 +44,7 @@ public:
 
   ~Battle();
 
-  void start();
+  void start(bool canEscape = true);
 
   void update();
   void draw(sf::RenderTarget& target);
@@ -108,6 +108,8 @@ private:
   int m_turnDelay;
 
   sf::Music m_battleMusic;
+
+  bool m_canEscape;
 };
 
 #endif
