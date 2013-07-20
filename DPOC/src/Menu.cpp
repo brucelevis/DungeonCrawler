@@ -1737,6 +1737,25 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
 //  posX -= ( Math.floor((this.enemies.length / 2)) - i) *
 //      (enemy.sprite.width + 12);
 
+//  int diff = 12;
+//
+//  while (true)
+//  {
+//    int totalWidth = 0;
+//    for (size_t i = 0; i < m_monsters.size(); i++)
+//    {
+//      totalWidth += m_monsters[i]->spriteWidth() + diff;
+//    }
+//    if (totalWidth >= config::GAME_RES_X)
+//    {
+//      diff--;
+//    }
+//    else
+//    {
+//      break;
+//    }
+//  }
+
   for (size_t i = 0; i < m_monsters.size(); i++)
   {
     const Character* monster = m_monsters[i];
@@ -1799,4 +1818,5 @@ void BattleMonsterMenu::fixSelection()
 void BattleMonsterMenu::addMonster(Character* monster)
 {
   m_monsters.push_back(monster);
+  addEntry(monster->getName());
 }
