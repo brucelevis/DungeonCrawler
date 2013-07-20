@@ -253,28 +253,42 @@ void MainMenu::handleConfirm()
       if (m_characterMenu->getSpellToUse())
       {
         m_characterMenu->setTargetToCurrentChoice();
-
-        play_sound(config::get("SOUND_USE_ITEM"));
-
-        cast_spell(m_characterMenu->getSpellToUse(),
-            m_characterMenu->getUser(),
-            m_characterMenu->getTarget());
-
-        // Reduce it here since cast_spell is called for each target when
-        // spell has multiple targets.
-        m_characterMenu->getUser()->getAttribute("mp").current -= m_characterMenu->getSpellToUse()->mpCost;
-
-        // If we can't cast the selected spell, clsoe the char menu.
-        if (!can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()))
+        if (m_characterMenu->getUser()->getAttribute("mp").current >= m_characterMenu->getSpellToUse()->mpCost
+            && !m_characterMenu->getTarget()->hasStatus("Dead"))
         {
-          closeCharacterMenu();
+          play_sound(config::get("SOUND_USE_ITEM"));
+
+          cast_spell(m_characterMenu->getSpellToUse(),
+              m_characterMenu->getUser(),
+              m_characterMenu->getTarget());
+
+          // Reduce it here since cast_spell is called for each target when
+          // spell has multiple targets.
+          m_characterMenu->getUser()->getAttribute("mp").current -= m_characterMenu->getSpellToUse()->mpCost;
+
+  //        // If we can't cast the selected spell, clsoe the char menu.
+  //        if (!can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()))
+  //        {
+  //          closeCharacterMenu();
+  //        }
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
         }
       }
       else
       {
         //m_stateStack.pop();
         m_characterMenu->setUserToCurrentChoice();
-        openSpellMenu(m_characterMenu->getCurrentMenuChoice());
+        if (m_characterMenu->getUser() && !m_characterMenu->getUser()->hasStatus("Dead"))
+        {
+          openSpellMenu(m_characterMenu->getCurrentMenuChoice());
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
+        }
       }
     }
     else if (getCurrentMenuChoice() == "Item")
@@ -284,14 +298,21 @@ void MainMenu::handleConfirm()
         m_characterMenu->setUserToCurrentChoice();
         m_characterMenu->setTargetToCurrentChoice();
 
-        play_sound(config::get("SOUND_USE_ITEM"));
+        if (m_characterMenu->getTarget() && !m_characterMenu->getTarget()->hasStatus("Dead"))
+        {
+          play_sound(config::get("SOUND_USE_ITEM"));
 
-        Item* item = get_player()->getItem(m_characterMenu->getItemToUse());
-        use_item(item, m_characterMenu->getUser(), m_characterMenu->getTarget());
+          Item* item = get_player()->getItem(m_characterMenu->getItemToUse());
+          use_item(item, m_characterMenu->getUser(), m_characterMenu->getTarget());
 
-        get_player()->removeItemFromInventory(m_characterMenu->getItemToUse(), 1);
+          get_player()->removeItemFromInventory(m_characterMenu->getItemToUse(), 1);
 
-        m_itemMenu->refresh();
+          m_itemMenu->refresh();
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
+        }
 
         // Close if no more items.
 //        if (get_player()->getItem(m_characterMenu->getItemToUse()) == 0)
