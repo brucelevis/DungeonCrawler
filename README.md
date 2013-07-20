@@ -224,7 +224,8 @@ Script Commands
 * take_gold [amount]
 * play_sound [sound]
 * add_member [name] [class] {level}
- - Adds a new member to the player party. level not implemented yet..
+ - Adds a new member to the player party.
+* remove_member [name]
 * set_visible [true/false]
  - Sets the visibilty of the entity
 * set_walkthrough [true/false]
@@ -236,6 +237,9 @@ Script Commands
 * combat [monster1,monster2,...,monsterN]
  - Comma separated list of monsters to fight.  
    ex: combat Batty,Monster With Space In Name,Skelington
+* end_game
+* set_config [key] [value]
+* transfer [targetMap] [x] [y]
 
 Formulas
 --------
