@@ -107,6 +107,9 @@ void PlayerCharacter::setAttributes()
     int base = it->second;
     int attrib;
 
+    if (base == 0)
+      continue;
+
     if (it->first == "hp" || it->first == "mp")
     {
       attrib = 10 + ((IV + (2 * base) + (EV / 4) + 100) * level) / 100;
