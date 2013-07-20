@@ -267,10 +267,14 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
   for (int i = 1; i <= level; i++)
   {
     character->setLevel(i, false);
+
+    if (i < level)
+    {
+      // Gain enough exp for the current level.
+      character->getAttribute("exp").max = character->expForLevel();
+      reset_attribute(character->getAttribute("exp"));
+    }
   }
-  // Gain enough exp for the current level.
-  character->getAttribute("exp").max = character->expForLevel();
-  reset_attribute(character->getAttribute("exp"));
 
   reset_attribute(character->m_attributes["hp"]);
   reset_attribute(character->m_attributes["mp"]);
