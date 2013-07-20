@@ -530,6 +530,11 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     Game::instance().startBattle(monsters);
   }
+  else if (data.opcode == Script::OP_END_GAME)
+  {
+    Game::instance().close();
+    SceneManager::instance().fadeIn(128);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

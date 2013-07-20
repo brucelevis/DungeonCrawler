@@ -423,6 +423,10 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     data.data.combatData.number = monsters.size();
   }
+  else if (opcode == OP_END_GAME)
+  {
+    // Nothing
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -456,7 +460,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "set_walkthrough", OP_SET_WALKTHROUGH },
     { "enable_controls", OP_ENABLE_CONTROLS },
     { "recover_all",  OP_RECOVER_ALL },
-    { "combat",       OP_COMBAT }
+    { "combat",       OP_COMBAT },
+    { "end_game",     OP_END_GAME }
   };
 
   auto it = OP_MAP.find(opStr);

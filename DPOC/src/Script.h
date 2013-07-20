@@ -36,7 +36,8 @@ public:
     OP_SET_WALKTHROUGH,
     OP_ENABLE_CONTROLS,
     OP_RECOVER_ALL,
-    OP_COMBAT
+    OP_COMBAT,
+    OP_END_GAME
   };
 
   struct ScriptData
