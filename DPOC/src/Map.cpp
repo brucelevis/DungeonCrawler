@@ -88,9 +88,21 @@ void Map::draw(sf::RenderTarget& target, const coord_t& view)
   sf::Sprite sprite;
   sprite.setTexture(*m_tileset);
 
-  for (int y = 0; y < m_height; y++)
+  int xStart = view.x / config::TILE_W - 1;
+  int yStart = view.y / config::TILE_H - 1;
+
+  if (xStart < 0) xStart = 0;
+  if (yStart < 0) yStart = 0;
+
+  int xEnd = (view.x + config::GAME_RES_X) / config::TILE_W + 1;
+  int yEnd = (view.y + config::GAME_RES_Y) / config::TILE_H + 1;
+
+  if (xEnd >= m_width) xEnd = m_width;
+  if (yEnd >= m_height) yEnd = m_height;
+
+  for (int y = yStart; y < yEnd; y++)
   {
-    for (int x = 0; x < m_width; x++)
+    for (int x = xStart; x < xEnd; x++)
     {
       for (size_t layer = 0; layer < m_tiles.size(); layer++)
       {
