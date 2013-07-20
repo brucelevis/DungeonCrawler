@@ -53,6 +53,11 @@ public:
     xml += "</persistents>\n";
     return xml;
   }
+
+  void clear()
+  {
+    m_storage.clear();
+  }
 protected:
   Persistent() {}
 private:

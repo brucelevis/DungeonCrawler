@@ -5,6 +5,7 @@
 
 #include "SceneManager.h"
 
+#include "Persistent.h"
 #include "logger.h"
 #include "Map.h"
 #include "Config.h"
@@ -34,7 +35,8 @@ Game::Game()
    m_currentWarp(0),
    m_playerMoved(false)
 {
-
+  // Clear all persistents when a new game is created.
+  Persistent<int>::instance().clear();
 }
 
 Game::~Game()
