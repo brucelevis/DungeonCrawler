@@ -118,7 +118,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
 
   if (spell->spellType == SPELL_HEAL)
   {
-    def = 1;
+    def = level;
   }
 
   float damage =
