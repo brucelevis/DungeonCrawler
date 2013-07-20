@@ -537,6 +537,10 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     Game::instance().close();
     SceneManager::instance().fadeIn(128);
   }
+  else if (data.opcode == Script::OP_SET_CONFIG)
+  {
+    config::set(data.data.setConfigData.key, data.data.setConfigData.value);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

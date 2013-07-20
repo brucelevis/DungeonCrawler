@@ -21,6 +21,7 @@ namespace config
   void load_config();
 
   std::string get(const std::string& key);
+  void set(const std::string& key, const std::string& value);
 }
 
 #endif

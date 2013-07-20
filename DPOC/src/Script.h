@@ -37,7 +37,8 @@ public:
     OP_ENABLE_CONTROLS,
     OP_RECOVER_ALL,
     OP_COMBAT,
-    OP_END_GAME
+    OP_END_GAME,
+    OP_SET_CONFIG
   };
 
   struct ScriptData
@@ -138,6 +139,12 @@ public:
         int number;
         char monsters[MAX_SCRIPT_KEY_SIZE][MAX_SCRIPT_KEY_SIZE];
       } combatData;
+
+      struct
+      {
+        char key[MAX_SCRIPT_KEY_SIZE];
+        char value[MAX_SCRIPT_KEY_SIZE];
+      } setConfigData;
     } data;
   };
 

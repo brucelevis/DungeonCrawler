@@ -33,4 +33,9 @@ namespace config
   {
     return CONFIG[key];
   }
+
+  void set(const std::string& key, const std::string& value)
+  {
+    CONFIG[key] = value;
+  }
 }
