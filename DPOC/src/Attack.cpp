@@ -116,7 +116,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
 
   float resistance = target->getResistance(spell->element);
 
-  if (spell->spellType == SPELL_HEAL)
+  if (spell->spellType & SPELL_HEAL)
   {
     def = level;
   }
@@ -128,7 +128,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
           resistance * //weak
           (85.0f + (float)random_range(0, 16)) / 100.0f;
 
-  if (spell->spellType == SPELL_HEAL)
+  if (spell->spellType & SPELL_HEAL)
   {
     damage = -damage;
   }
