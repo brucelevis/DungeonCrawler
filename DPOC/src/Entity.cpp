@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <sstream>
 
+#include "SceneManager.h"
+
 #include "Sound.h"
 #include "Utility.h"
 #include "Map.h"
