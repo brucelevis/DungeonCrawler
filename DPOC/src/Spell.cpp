@@ -62,7 +62,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   if (targElem)
     spell.target = targetFromString(targElem->GetText());
   if (battElem)
-    spell.battleOnly = fromString<bool>(targElem->GetText());
+    spell.battleOnly = fromString<bool>(battElem->GetText());
   if (powrElem)
     spell.power = fromString<int>(powrElem->GetText());
   if (effeElem)
