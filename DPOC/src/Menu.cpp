@@ -1478,7 +1478,7 @@ Character* BattleMenu::getTarget(Target targetType) const
   {
     result = m_monsterMenu->getCurrentMonster();
   }
-  else if (targetType == TARGET_SINGLE_ALLY)
+  else if (targetType == TARGET_SINGLE_ALLY || targetType == TARGET_DEAD)
   {
     result = m_statusMenu->getCurrentSelectedActor();
   }
