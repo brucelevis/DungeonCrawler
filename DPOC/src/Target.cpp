@@ -15,6 +15,8 @@ std::string targetToString(Target target)
     return "TARGET_ALL_ALLY";
   case TARGET_SELF:
     return "TARGET_SELF";
+  case TARGET_DEAD:
+    return "TARGET_DEAD";
   case TARGET_NONE:
     return "TARGET_NONE";
   }
@@ -38,6 +40,8 @@ Target targetFromString(const std::string& str)
     return TARGET_SELF;
   if (str == "TARGET_NONE")
     return TARGET_NONE;
+  if (str == "TARGET_DEAD")
+    return TARGET_DEAD;
 
   TRACE("Unknown target %s, returning TARGET_NONE", str.c_str());
 
