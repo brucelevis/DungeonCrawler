@@ -272,6 +272,8 @@ public:
   void resetChoice();
 
   void setActionMenuHidden(bool hidden);
+
+  void addMonster(Character* monster);
 private:
   void nextActor();
 
@@ -362,6 +364,8 @@ public:
 
   /// Find first non-dead target.
   void fixSelection();
+
+  void addMonster(Character* monster);
 private:
   std::vector<Character*> m_monsters;
 };

@@ -348,6 +348,17 @@ void Battle::executeActions()
     play_sound(config::get("SOUND_MISS"));
     battle_message("%s can't utter a word!", m_currentActor->getName().c_str());
   }
+  else if (action.actionName == "Summon")
+  {
+    battle_message("%s calls an ally!", m_currentActor->getName().c_str());
+
+    Character* newMonster = Character::createMonster(action.objectName);
+
+    m_monsters.push_back(newMonster);
+    m_battleMenu.addMonster(newMonster);
+
+    battle_message("%s appears!", newMonster->getName().c_str());
+  }
 
   m_state = STATE_SHOW_ACTION;
 }
@@ -748,6 +759,7 @@ void Battle::doneSelectingActions()
 
       action.actionName = def.actions[actionIndex].action;
       action.objectName = def.actions[actionIndex].objectName;
+      action.target = 0;    // Default
 
       if (action.actionName == "Attack")
       {

@@ -100,7 +100,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
         int chance = fromString<int>(chanceAttr->Value());
         std::string spell;
 
-        if (name == "Spell")
+        if (name == "Spell" || name == "Summon")
         {
           spell = element->GetText();
         }

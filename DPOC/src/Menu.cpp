@@ -1500,6 +1500,11 @@ void BattleMenu::setActionMenuHidden(bool hidden)
   m_statusMenu->setCurrentActorRectHidden(hidden);
 }
 
+void BattleMenu::addMonster(Character* monster)
+{
+  m_monsterMenu->addMonster(monster);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BattleActionMenu::BattleActionMenu()
@@ -1789,4 +1794,9 @@ void BattleMonsterMenu::fixSelection()
       }
     }
   }
+}
+
+void BattleMonsterMenu::addMonster(Character* monster)
+{
+  m_monsters.push_back(monster);
 }
