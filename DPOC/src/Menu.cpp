@@ -49,6 +49,23 @@ static sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color
   return rect;
 }
 
+static bool isOKTarget(Character* target, Target targetType)
+{
+  bool targetOK = !target->hasStatus("Dead");
+
+  if (!targetOK && targetType == TARGET_DEAD)
+  {
+    targetOK = true;
+  }
+  else if (targetOK && targetType == TARGET_DEAD)
+  {
+    // Can't target living with TARGET_DEAD.
+    targetOK = false;
+  }
+
+  return targetOK;
+}
+
 Menu::Menu()
  : m_arrowTexture(cache::loadTexture("Resources/Arrow.png")),
    m_visible(false),
@@ -253,8 +270,11 @@ void MainMenu::handleConfirm()
       if (m_characterMenu->getSpellToUse())
       {
         m_characterMenu->setTargetToCurrentChoice();
-        if (m_characterMenu->getUser()->getAttribute("mp").current >= m_characterMenu->getSpellToUse()->mpCost
-            && !m_characterMenu->getTarget()->hasStatus("Dead"))
+
+        bool targetOK = isOKTarget(m_characterMenu->getTarget(), m_characterMenu->getSpellToUse()->target);
+
+        if (can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()) &&
+            targetOK)
         {
           play_sound(config::get("SOUND_USE_ITEM"));
 
@@ -265,12 +285,6 @@ void MainMenu::handleConfirm()
           // Reduce it here since cast_spell is called for each target when
           // spell has multiple targets.
           m_characterMenu->getUser()->getAttribute("mp").current -= m_characterMenu->getSpellToUse()->mpCost;
-
-  //        // If we can't cast the selected spell, clsoe the char menu.
-  //        if (!can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()))
-  //        {
-  //          closeCharacterMenu();
-  //        }
         }
         else
         {
@@ -298,7 +312,10 @@ void MainMenu::handleConfirm()
         m_characterMenu->setUserToCurrentChoice();
         m_characterMenu->setTargetToCurrentChoice();
 
-        if (m_characterMenu->getTarget() && !m_characterMenu->getTarget()->hasStatus("Dead"))
+        bool targetOK = isOKTarget(m_characterMenu->getTarget(),
+            create_item(m_characterMenu->getItemToUse(), 1).target);
+
+        if (m_characterMenu->getTarget() && targetOK)
         {
           play_sound(config::get("SOUND_USE_ITEM"));
 
@@ -349,7 +366,7 @@ void MainMenu::handleConfirm()
     std::string itemName = m_itemMenu->getSelectedItemName();
     Item* item = get_player()->getItem(itemName);
     if (item && (item->type == ITEM_USE || item->type == ITEM_USE_MENU) &&
-        item->target == TARGET_SINGLE_ALLY)
+        (item->target == TARGET_SINGLE_ALLY || item->target == TARGET_DEAD))
     {
       m_characterMenu->setItemToUse(itemName);
       openCharacterMenu();
@@ -1147,8 +1164,18 @@ void BattleMenu::handleConfirm()
   }
   else if (currentState == STATE_SELECT_CHARACTER)
   {
-    // TODO: Spells/items that can target dead
-    if (m_statusMenu->getCurrentSelectedActor()->getStatus() == "Dead")
+    std::string action = m_actionMenu->getCurrentMenuChoice();
+    Target targetType = TARGET_NONE;
+    if (action == "Spell")
+    {
+      targetType = m_spellMenu->getSelectedSpell()->target;
+    }
+    else if (action == "Item")
+    {
+      targetType = create_item(m_itemMenu->getSelectedItemName(), 1).target;
+    }
+
+    if (!isOKTarget(m_statusMenu->getCurrentSelectedActor(), targetType))
     {
       play_sound(config::get("SOUND_CANCEL"));
     }
@@ -1198,7 +1225,7 @@ void BattleMenu::handleConfirm()
         m_itemMenu->setVisible(false);
         selectMonster();
       }
-      else if (item->target == TARGET_SINGLE_ALLY)
+      else if (item->target == TARGET_SINGLE_ALLY || item->target == TARGET_DEAD)
       {
         m_itemMenu->setVisible(false);
         selectCharacter();

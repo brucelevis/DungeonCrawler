@@ -209,6 +209,12 @@ int use_item(Item* item, Character* user, Character* target)
   if (item->itemUseType == ITEM_REMOVE_STATUS)
   {
     cure_status(target, item->status);
+
+    // If dead they should be restored with HP.
+    if (item->status == "Dead")
+    {
+      target->getAttribute("hp").current = 1;
+    }
   }
   else if (item->itemUseType == ITEM_CAUSE_STATUS)
   {
