@@ -27,6 +27,7 @@ static SpellType spellTypeFromString(const std::string& type)
   if (type == "SPELL_REMOVE_STATUS") return SPELL_REMOVE_STATUS;
   if (type == "SPELL_CAUSE_STATUS") return SPELL_CAUSE_STATUS;
   if (type == "SPELL_CUSTOM") return SPELL_CUSTOM;
+  if (type == "SPELL_DRAIN") return SPELL_DRAIN;
 
   TRACE("Unknown spellType=%s", type.c_str());
 
@@ -165,6 +166,15 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
   if ((spell->spellType & SPELL_DAMAGE) || (spell->spellType & SPELL_HEAL))
   {
     damage = calculate_magical_damage(caster, target, spell);
+  }
+
+  if ((spell->spellType & SPELL_DRAIN))
+  {
+    caster->getAttribute("hp").current += damage;
+    clamp_attribute(caster->getAttribute("hp"));
+
+    battle_message("%s drains life from %s!",
+        caster->getName().c_str(), target->getName().c_str());
   }
 
   if (spell->spellType & SPELL_CAUSE_STATUS)

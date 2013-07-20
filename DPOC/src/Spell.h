@@ -16,7 +16,8 @@ enum SpellType
   SPELL_BUFF          = 4,
   SPELL_REMOVE_STATUS = 8,
   SPELL_CAUSE_STATUS  = 16,
-  SPELL_CUSTOM        = 32
+  SPELL_CUSTOM        = 32,
+  SPELL_DRAIN         = 64
 };
 
 struct SpellStatusEntry
