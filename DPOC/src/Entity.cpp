@@ -541,6 +541,11 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   {
     config::set(data.data.setConfigData.key, data.data.setConfigData.value);
   }
+  else if (data.opcode == Script::OP_TRANSFER)
+  {
+    std::string targetMap = data.data.transferData.targetMap;
+    Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

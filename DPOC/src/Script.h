@@ -38,7 +38,8 @@ public:
     OP_RECOVER_ALL,
     OP_COMBAT,
     OP_END_GAME,
-    OP_SET_CONFIG
+    OP_SET_CONFIG,
+    OP_TRANSFER
   };
 
   struct ScriptData
@@ -145,6 +146,12 @@ public:
         char key[MAX_SCRIPT_KEY_SIZE];
         char value[MAX_SCRIPT_KEY_SIZE];
       } setConfigData;
+
+      struct
+      {
+        char targetMap[MAX_SCRIPT_KEY_SIZE];
+        int x, y;
+      } transferData;
     } data;
   };
 

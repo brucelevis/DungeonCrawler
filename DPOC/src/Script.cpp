@@ -435,6 +435,14 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     strcpy(data.data.setConfigData.key, strings[1].c_str());
     strcpy(data.data.setConfigData.value, strings[2].c_str());
   }
+  else if (opcode == OP_TRANSFER)
+  {
+    memset(data.data.transferData.targetMap, '\0', MAX_SCRIPT_KEY_SIZE);
+    strcpy(data.data.transferData.targetMap, strings[1].c_str());
+
+    data.data.transferData.x = atoi(strings[2].c_str());
+    data.data.transferData.y = atoi(strings[3].c_str());
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -470,7 +478,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "recover_all",  OP_RECOVER_ALL },
     { "combat",       OP_COMBAT },
     { "end_game",     OP_END_GAME },
-    { "set_config",   OP_SET_CONFIG }
+    { "set_config",   OP_SET_CONFIG },
+    { "transfer",     OP_TRANSFER }
   };
 
   auto it = OP_MAP.find(opStr);

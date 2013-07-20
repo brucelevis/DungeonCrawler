@@ -32,7 +32,7 @@ Game::Game()
  : m_currentMap(0),
    m_player(0),
    m_choiceMenu(0),
-   m_currentWarp(0),
+   m_transferInProgress(false),
    m_playerMoved(false)
 {
   // Clear all persistents when a new game is created.
@@ -236,14 +236,23 @@ bool Game::checkWarps()
     const Warp* warp = m_currentMap->getWarpAt(m_player->player()->x, m_player->player()->y);
 
     play_sound(config::get("SOUND_MOVEMENT"));
-    SceneManager::instance().fadeOut(32);
 
-    m_currentWarp = warp;
+    prepareTransfer(warp->destMap, warp->dstX, warp->dstY);
 
     return true;
   }
 
   return false;
+}
+
+void Game::prepareTransfer(const std::string& targetMap, int x, int y)
+{
+  SceneManager::instance().fadeOut(32);
+
+  m_currentWarp.dstX = x;
+  m_currentWarp.dstY = y;
+  m_currentWarp.destMap = targetMap;
+  m_transferInProgress = true;
 }
 
 void Game::transferPlayer(const std::string& targetMap, int x, int y)
@@ -349,13 +358,13 @@ void Game::postFade(FadeType fadeType)
   }
   else
   {
-    if (m_currentWarp)
+    if (m_transferInProgress)
     {
-      std::string warpTargetName = getWarpTargetName(*m_currentWarp);
+      std::string warpTargetName = getWarpTargetName(m_currentWarp);
 
-      transferPlayer(warpTargetName, m_currentWarp->dstX, m_currentWarp->dstY);
+      transferPlayer(warpTargetName, m_currentWarp.dstX, m_currentWarp.dstY);
 
-      m_currentWarp = 0;
+      m_transferInProgress = false;
 
       SceneManager::instance().fadeIn(32);
     }

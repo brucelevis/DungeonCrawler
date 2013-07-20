@@ -10,10 +10,9 @@
 #include "coord.h"
 #include "Menu.h"
 #include "Scene.h"
+#include "Map.h"
 
-class Map;
 class Player;
-struct Warp;
 
 class Game : public Scene
 {
@@ -28,7 +27,6 @@ public:
   Map* getCurrentMap() { return m_currentMap; }
   Player* getPlayer() { return m_player; }
 
-  void transferPlayer(const std::string& targetMap, int x, int y);
   void playMusic(const std::string& music);
 
   void openChoiceMenu(const std::vector<std::string>& choices);
@@ -43,12 +41,16 @@ public:
   void postFade(FadeType fadeType);
 
   void postBattle();
+
+  void prepareTransfer(const std::string& targetMap, int x, int y);
 private:
   Game();
   ~Game();
 
   void updatePlayer();
   bool checkWarps();
+
+  void transferPlayer(const std::string& targetMap, int x, int y);
 
   void handleKeyPress(sf::Keyboard::Key key);
 
@@ -64,7 +66,8 @@ private:
   MainMenu m_menu;
   ChoiceMenu* m_choiceMenu;
 
-  const Warp* m_currentWarp;
+  bool m_transferInProgress;
+  Warp m_currentWarp;
   bool m_playerMoved;
 };
 
