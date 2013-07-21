@@ -201,6 +201,13 @@ void ShopMenu::handleConfirm()
   else if (m_sellMenu)
   {
     m_sellMenu->handleConfirm();
+
+    // If the player runs out of items.
+    if (!m_sellMenu->isVisible())
+    {
+      delete m_sellMenu;
+      m_sellMenu = 0;
+    }
   }
   else
   {
@@ -211,8 +218,15 @@ void ShopMenu::handleConfirm()
     }
     else if (choice == "Sell")
     {
-      m_sellMenu = new ShopSellMenu;
-      m_sellMenu->setVisible(true);
+      if (!get_player()->getInventory().empty())
+      {
+        m_sellMenu = new ShopSellMenu;
+        m_sellMenu->setVisible(true);
+      }
+      else
+      {
+        play_sound(config::get("SOUND_CANCEL"));
+      }
     }
     else if (choice == "Leave")
     {
@@ -495,6 +509,11 @@ void ShopSellMenu::refresh()
     std::string entry = stack + " " + itemName;
     addEntry(entry);
   }
+
+  if (get_player()->getInventory().empty())
+  {
+    setVisible(false);
+  }
 }
 
 int ShopSellMenu::getWidth() const
@@ -520,7 +539,7 @@ void ShopSellMenu::handleConfirm()
 
     refresh();
   }
-  else
+  else if (isVisible())
   {
     Item& item = item_ref(get_string_after_first_space(getCurrentMenuChoice()));
     if (item.cost > 0)
