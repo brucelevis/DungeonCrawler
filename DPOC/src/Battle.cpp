@@ -61,6 +61,29 @@ std::vector<Character*> get_alive_actors(const T& actors)
   return result;
 }
 
+template <typename T>
+T* random_dead_character(const std::vector<T*>& actors)
+{
+  std::vector<T*> potentials;
+
+  for (auto it = actors.begin(); it != actors.end(); ++it)
+  {
+    if ((*it)->hasStatus("Dead"))
+    {
+      potentials.push_back(*it);
+    }
+  }
+
+  if (potentials.size() > 0)
+  {
+    std::random_shuffle(potentials.begin(), potentials.end());
+
+    return potentials.front();
+  }
+
+  return 0;
+}
+
 static void check_death(Character* actor)
 {
   if (actor->getAttribute("hp").current <= 0)
@@ -374,6 +397,10 @@ void Battle::executeActions()
     m_battleMenu.addMonster(newMonster);
 
     battle_message("%s appears!", newMonster->getName().c_str());
+  }
+  else if (action.actionName == "Ponder")
+  {
+    battle_message("%s ponders the situation.", m_currentActor->getName().c_str());
   }
 
   m_state = STATE_SHOW_ACTION;
@@ -794,13 +821,29 @@ void Battle::doneSelectingActions()
       {
         const Spell* spell = get_spell(action.objectName);
         if (spell->target == TARGET_SINGLE_ENEMY)
+        {
           action.target = selectRandomTarget(*it);
+        }
         else if (spell->target == TARGET_ALL_ENEMY || spell->target == TARGET_ALL_ALLY)
+        {
           action.target = 0;
+        }
         else if (spell->target == TARGET_SINGLE_ALLY)
+        {
           action.target = selectRandomFriendlyTarget(*it);
+        }
         else if (spell->target == TARGET_SELF)
+        {
           action.target = *it;
+        }
+        else if (spell->target == TARGET_DEAD)
+        {
+          action.target = random_dead_character<Character>(m_monsters);
+          if (action.target == 0)
+          {
+            action.actionName = "Ponder";
+          }
+        }
       }
     }
 
