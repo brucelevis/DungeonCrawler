@@ -181,12 +181,12 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Down) m_choiceMenu->moveArrow(DIR_DOWN);
   }
 
-  if (key == sf::Keyboard::B)
+  if (key == sf::Keyboard::B && config::get("DEBUG_MODE") == "true")
   {
     std::vector<std::string> monsters = {"Skelington", "Skelington", "Skelington"};
     startBattle(monsters);
   }
-  else if (key == sf::Keyboard::S)
+  else if (key == sf::Keyboard::S && config::get("DEBUG_MODE") == "true")
   {
     Shop* shop = new Shop;
     SceneManager::instance().addScene(shop);
