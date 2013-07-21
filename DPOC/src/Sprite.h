@@ -13,6 +13,7 @@ public:
   void create(const std::string& spriteId, int spriteSheetX, int spriteSheetY, int speed = 10);
   void update(Direction direction);
   virtual void render(sf::RenderTarget& target, float x, float y);
+  void render_ex(sf::RenderTarget& target, float x, float y, sf::Color color);
 
   void setDirection(Direction dir)
   {

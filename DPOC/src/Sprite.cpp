@@ -94,6 +94,15 @@ void Sprite::render(sf::RenderTarget& target, float x, float y)
   target.draw(m_sprite);
 }
 
+void Sprite::render_ex(sf::RenderTarget& target, float x, float y, sf::Color color)
+{
+  m_sprite.setColor(color);
+
+  render(target, x, y);
+
+  m_sprite.setColor(sf::Color::White);
+}
+
 Sprite* Sprite::clone() const
 {
   Sprite* rhs = new Sprite;
