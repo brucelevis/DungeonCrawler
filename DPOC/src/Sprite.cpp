@@ -94,6 +94,18 @@ void Sprite::render(sf::RenderTarget& target, float x, float y)
   target.draw(m_sprite);
 }
 
+Sprite* Sprite::clone() const
+{
+  Sprite* rhs = new Sprite;
+  rhs->create(m_textureName, m_spriteSheetX, m_spriteSheetY);
+  rhs->m_frame = m_frame;
+  rhs->m_maxFrame = m_maxFrame;
+  rhs->m_ticksPerFrame = m_ticksPerFrame;
+  rhs->m_ticks = m_ticks;
+  rhs->m_direction = m_direction;
+  return rhs;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)

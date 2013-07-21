@@ -30,6 +30,9 @@ public:
   void changeTexture(const std::string& textureName);
 
   std::string getTextureName() const { return m_textureName; }
+
+  /// Retrieve a deep copy of this sprite.
+  Sprite* clone() const;
 private:
   Sprite(const Sprite&);
   Sprite& operator=(const Sprite&);
