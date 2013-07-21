@@ -203,17 +203,19 @@ void ShopMenu::handleConfirm()
   }
   else if (m_sellMenu)
   {
-
+    m_sellMenu->handleConfirm();
   }
   else
   {
     if (choice == "Buy")
     {
       m_buyMenu = new ShopBuyMenu(m_inventory);
+      m_buyMenu->setVisible(true);
     }
     else if (choice == "Sell")
     {
-
+      m_sellMenu = new ShopSellMenu;
+      m_sellMenu->setVisible(true);
     }
     else if (choice == "Leave")
     {
@@ -237,8 +239,12 @@ void ShopMenu::handleEscape()
   }
   else if (m_sellMenu)
   {
-    delete m_sellMenu;
-    m_sellMenu = 0;
+    m_sellMenu->handleEscape();
+    if (!m_sellMenu->isVisible())
+    {
+      delete m_sellMenu;
+      m_sellMenu = 0;
+    }
   }
   else
   {
@@ -261,6 +267,10 @@ void ShopMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     m_buyMenu->draw(target, 0, 24);
   }
+  else if (m_sellMenu)
+  {
+    m_sellMenu->draw(target, 0, 24);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -279,7 +289,7 @@ ShopBuyMenu::ShopBuyMenu(const std::vector<std::string>& inventory)
     while (price.size() < 5)
       price += ' ';
 
-    std::string entry = price + item.name;
+    std::string entry = price + " " + item.name;
     addEntry(entry);
   }
 }
@@ -456,6 +466,120 @@ void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* characte
       newSpd > character->computeCurrentAttribute("speed") ? ">" :
           newSpd < character->computeCurrentAttribute("speed") ? "<" : "=",
       newSpd);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ShopSellMenu::ShopSellMenu()
+ : m_confirmMenu(0)
+{
+  refresh();
+}
+
+ShopSellMenu::~ShopSellMenu()
+{
+  delete m_confirmMenu;
+}
+
+void ShopSellMenu::refresh()
+{
+  clear();
+
+  setMaxVisible(8);
+
+  for (auto it = get_player()->getInventory().begin(); it != get_player()->getInventory().end(); ++it)
+  {
+    std::string itemName = it->name;
+
+    std::string stack = toString(it->stackSize);
+    while (stack.size() < 2)
+      stack += ' ';
+
+    std::string entry = stack + " " + itemName;
+    addEntry(entry);
+  }
+}
+
+int ShopSellMenu::getWidth() const
+{
+  return config::GAME_RES_X;
+}
+
+int ShopSellMenu::getHeight() const
+{
+  return 8 * 12;
+}
+
+void ShopSellMenu::handleConfirm()
+{
+  if (m_confirmMenu)
+  {
+    m_confirmMenu->handleConfirm();
+    if (!m_confirmMenu->isVisible())
+    {
+      delete m_confirmMenu;
+      m_confirmMenu = 0;
+    }
+
+    refresh();
+  }
+  else
+  {
+    Item& item = item_ref(get_string_after_first_space(getCurrentMenuChoice()));
+    if (item.cost > 0)
+    {
+      m_confirmMenu = new ConfirmMenu(ConfirmMenu::SELL, item.name);
+      m_confirmMenu->setVisible(true);
+    }
+    else
+    {
+      play_sound(config::get("SOUND_CANCEL"));
+    }
+  }
+}
+
+void ShopSellMenu::handleEscape()
+{
+  if (m_confirmMenu)
+  {
+    delete m_confirmMenu;
+    m_confirmMenu = 0;
+  }
+  else
+  {
+    Menu::handleEscape();
+  }
+}
+
+void ShopSellMenu::moveArrow(Direction dir)
+{
+  if (m_confirmMenu)
+  {
+    m_confirmMenu->moveArrow(dir);
+  }
+  else
+  {
+    Menu::moveArrow(dir);
+  }
+}
+
+void ShopSellMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  std::string itemName = get_string_after_first_space(getCurrentMenuChoice());
+  Item& item = item_ref(itemName);
+  draw_text_bmp(target, 8, 8, "%s", item.description.c_str());
+
+  Menu::draw(target, x, y);
+
+  draw_frame(target, 0, config::GAME_RES_Y - 16, config::GAME_RES_X, 16);
+  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
+
+  if (m_confirmMenu)
+  {
+    m_confirmMenu->draw(target,
+        config::GAME_RES_X / 2 - m_confirmMenu->getWidth() / 2,
+        config::GAME_RES_Y / 2 - m_confirmMenu->getHeight() / 2);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
