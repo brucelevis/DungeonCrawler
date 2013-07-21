@@ -188,8 +188,8 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   }
   else if (key == sf::Keyboard::S && config::get("DEBUG_MODE") == "true")
   {
-    Shop* shop = new Shop;
-    SceneManager::instance().addScene(shop);
+    std::vector<std::string> items = { "Copper Sword", "Herb", "Magic Staff" };
+    openShop(items);
   }
 }
 
@@ -375,4 +375,10 @@ void Game::postFade(FadeType fadeType)
       SceneManager::instance().fadeIn(32);
     }
   }
+}
+
+void Game::openShop(const std::vector<std::string>& items)
+{
+  Shop* shop = new Shop(items);
+  SceneManager::instance().addScene(shop);
 }

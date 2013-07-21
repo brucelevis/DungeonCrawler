@@ -58,7 +58,7 @@ private:
 class ShopMenu : public Menu
 {
 public:
-  ShopMenu();
+  ShopMenu(const std::vector<std::string>& inventory);
   ~ShopMenu();
 
   void moveArrow(Direction dir);
@@ -76,6 +76,8 @@ private:
 class Shop : public Scene
 {
 public:
+  Shop(const std::vector<std::string>& items);
+
   void update();
   void draw(sf::RenderTarget& target);
   void handleEvent(sf::Event& event);

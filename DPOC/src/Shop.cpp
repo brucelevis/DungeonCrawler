@@ -156,19 +156,16 @@ int ConfirmMenu::getSum() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShopMenu::ShopMenu()
+ShopMenu::ShopMenu(const std::vector<std::string>& inventory)
  : m_buyMenu(0),
-   m_sellMenu(0)
+   m_sellMenu(0),
+   m_inventory(inventory)
 {
   addEntry("Buy");
   addEntry("Sell");
   addEntry("Leave");
 
   setVisible(true);
-
-  m_inventory.push_back("Copper Sword");
-  m_inventory.push_back("Herb");
-  m_inventory.push_back("Magic Staff");
 }
 
 ShopMenu::~ShopMenu()
@@ -583,6 +580,12 @@ void ShopSellMenu::draw(sf::RenderTarget& target, int x, int y)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+Shop::Shop(const std::vector<std::string>& items)
+ : m_menu(items)
+{
+
+}
 
 void Shop::update()
 {

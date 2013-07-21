@@ -240,6 +240,9 @@ Script Commands
 * end_game
 * set_config [key] [value]
 * transfer [targetMap] [x] [y]
+* shop [item1,...itemN]
+ - Comma separated list of items in the shop. hard cap of 32 * 32 string length
+   items right now.
 
 Formulas
 --------

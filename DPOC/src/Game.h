@@ -43,6 +43,8 @@ public:
   void postBattle();
 
   void prepareTransfer(const std::string& targetMap, int x, int y);
+
+  void openShop(const std::vector<std::string>& items);
 private:
   Game();
   ~Game();

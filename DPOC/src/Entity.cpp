@@ -556,6 +556,17 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     std::string targetMap = data.data.transferData.targetMap;
     Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y);
   }
+  else if (data.opcode == Script::OP_SHOP)
+  {
+    std::vector<std::string> items;
+
+    for (int i = 0; i < data.data.shopData.number; i++)
+    {
+      items.push_back(data.data.shopData.inventory[i]);
+    }
+
+    Game::instance().openShop(items);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

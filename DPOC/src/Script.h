@@ -41,7 +41,8 @@ public:
     OP_COMBAT_NO_ESAPE,
     OP_END_GAME,
     OP_SET_CONFIG,
-    OP_TRANSFER
+    OP_TRANSFER,
+    OP_SHOP
   };
 
   struct ScriptData
@@ -160,6 +161,12 @@ public:
         char targetMap[MAX_SCRIPT_KEY_SIZE];
         int x, y;
       } transferData;
+
+      struct
+      {
+        char inventory[32][MAX_SCRIPT_KEY_SIZE];
+        int number;
+      } shopData;
     } data;
   };
 

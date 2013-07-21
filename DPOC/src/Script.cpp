@@ -421,6 +421,13 @@ Script::ScriptData Script::parseLine(const std::string& line) const
         all += " ";
     }
 
+    // Error checking
+    if (all.size() >= MAX_SCRIPT_KEY_SIZE * MAX_SCRIPT_KEY_SIZE)
+    {
+      TRACE("Too long string for combat command: %s", all.c_str());
+      throw std::runtime_error("Too long string for combat command!");
+    }
+
     std::vector<std::string> monsters = split_string(all, ',');
 
     for (size_t i = 0; i < monsters.size(); i++)
@@ -449,6 +456,35 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     data.data.transferData.x = atoi(strings[2].c_str());
     data.data.transferData.y = atoi(strings[3].c_str());
+  }
+  else if (opcode == OP_SHOP)
+  {
+    memset(data.data.combatData.monsters, '\0', MAX_SCRIPT_KEY_SIZE * 32);
+
+    std::string all;
+
+    for (size_t i = 1; i < strings.size(); i++)
+    {
+      all += strings[i];
+      if (i < strings.size() - 1)
+        all += " ";
+    }
+
+    // Error checking
+    if (all.size() >= MAX_SCRIPT_KEY_SIZE * 32)
+    {
+      TRACE("Too long string for shop command: %s", all.c_str());
+      throw std::runtime_error("Too long string for shop command!");
+    }
+
+    std::vector<std::string> items = split_string(all, ',');
+
+    for (size_t i = 0; i < items.size(); i++)
+    {
+      strcpy(data.data.shopData.inventory[i], items[i].c_str());
+    }
+
+    data.data.shopData.number = items.size();
   }
   else
   {
@@ -488,7 +524,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "combat_no_escape", OP_COMBAT_NO_ESAPE },
     { "end_game",     OP_END_GAME },
     { "set_config",   OP_SET_CONFIG },
-    { "transfer",     OP_TRANSFER }
+    { "transfer",     OP_TRANSFER },
+    { "shop",         OP_SHOP }
   };
 
   auto it = OP_MAP.find(opStr);
