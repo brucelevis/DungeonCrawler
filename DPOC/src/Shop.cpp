@@ -2,6 +2,7 @@
 #include "draw_text.h"
 #include "Config.h"
 #include "Utility.h"
+#include "Sound.h"
 
 #include "PlayerCharacter.h"
 #include "Player.h"
@@ -12,6 +13,148 @@
 #include "Item.h"
 
 #include "Shop.h"
+
+class ConfirmMenu : public Menu
+{
+public:
+  enum BuyOrSell
+  {
+    BUY, SELL
+  };
+
+  ConfirmMenu(BuyOrSell type, const std::string& itemName);
+
+  void moveArrow(Direction dir);
+  void handleConfirm();
+
+  void draw(sf::RenderTarget& target, int x, int y);
+
+  int getWidth() const
+  {
+    return 104;
+  }
+private:
+  int getSum() const;
+private:
+  int m_quantity;
+  BuyOrSell m_type;
+  std::string m_itemName;
+};
+
+ConfirmMenu::ConfirmMenu(BuyOrSell type, const std::string& itemName)
+ : m_quantity(1),
+   m_type(type),
+   m_itemName(itemName)
+{
+  addEntry(type == BUY ? "Buy" : "Sell");
+  addEntry("Cancel");
+}
+
+void ConfirmMenu::moveArrow(Direction dir)
+{
+  if (dir == DIR_LEFT)
+  {
+    m_quantity--;
+    if (m_quantity < 1)
+    {
+      m_quantity = 1;
+    }
+  }
+  else if (dir == DIR_RIGHT)
+  {
+    m_quantity++;
+
+    if (m_type == SELL && m_quantity > get_player()->getItem(m_itemName)->stackSize)
+    {
+      m_quantity = get_player()->getItem(m_itemName)->stackSize;
+    }
+    else if (m_quantity > 99)
+    {
+      m_quantity = 99;
+    }
+  }
+  else
+  {
+    Menu::moveArrow(dir);
+  }
+}
+
+void ConfirmMenu::handleConfirm()
+{
+  std::string choice = getCurrentMenuChoice();
+
+  if (choice == "Buy")
+  {
+    int stackAfterBuy = m_quantity;
+    if (get_player()->getItem(m_itemName))
+    {
+      stackAfterBuy += get_player()->getItem(m_itemName)->stackSize;
+    }
+
+    if (get_player()->getGold() >= getSum() && stackAfterBuy <= 99)
+    {
+      get_player()->gainGold(-getSum());
+      get_player()->addItemToInventory(m_itemName, m_quantity);
+
+      play_sound(config::get("SOUND_SHOP"));
+
+      setVisible(false);
+    }
+    else
+    {
+      play_sound(config::get("SOUND_CANCEL"));
+    }
+  }
+  else if (choice == "Sell")
+  {
+    get_player()->gainGold(getSum());
+    get_player()->removeItemFromInventory(m_itemName, m_quantity);
+
+    play_sound(config::get("SOUND_SHOP"));
+
+    setVisible(false);
+  }
+  else if (choice == "Cancel")
+  {
+    setVisible(false);
+  }
+}
+
+void ConfirmMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  int owned = 0;
+  if (get_player()->getItem(m_itemName))
+  {
+    owned = get_player()->getItem(m_itemName)->stackSize;
+  }
+
+  draw_frame(target, x, y, getWidth(), 40);
+  draw_text_bmp(target, x + 8, y + 8,  "Quantity %d", m_quantity);
+  draw_text_bmp(target, x + 8, y + 16, "Owned    %d", owned);
+  draw_text_bmp(target, x + 8, y + 24, "Sum %d", getSum());
+
+  Menu::draw(target, x, y + 40);
+}
+
+int ConfirmMenu::getSum() const
+{
+  Item& item = item_ref(m_itemName);
+
+  int sum;
+
+  if (m_type == BUY)
+  {
+    sum = item.cost * m_quantity;
+  }
+  else
+  {
+    sum = item.cost * m_quantity / 2;
+  }
+
+  return sum;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 ShopMenu::ShopMenu()
  : m_buyMenu(0),
@@ -56,7 +199,7 @@ void ShopMenu::handleConfirm()
 
   if (m_buyMenu)
   {
-
+    m_buyMenu->handleConfirm();
   }
   else if (m_sellMenu)
   {
@@ -85,8 +228,12 @@ void ShopMenu::handleEscape()
 
   if (m_buyMenu)
   {
-    delete m_buyMenu;
-    m_buyMenu = 0;
+    m_buyMenu->handleEscape();
+    if (!m_buyMenu->isVisible())
+    {
+      delete m_buyMenu;
+      m_buyMenu = 0;
+    }
   }
   else if (m_sellMenu)
   {
@@ -119,7 +266,8 @@ void ShopMenu::draw(sf::RenderTarget& target, int x, int y)
 ///////////////////////////////////////////////////////////////////////////////
 
 ShopBuyMenu::ShopBuyMenu(const std::vector<std::string>& inventory)
- : m_inventory(inventory)
+ : m_inventory(inventory),
+   m_confirmMenu(0)
 {
   setMaxVisible(8);
 
@@ -136,6 +284,11 @@ ShopBuyMenu::ShopBuyMenu(const std::vector<std::string>& inventory)
   }
 }
 
+ShopBuyMenu::~ShopBuyMenu()
+{
+  delete m_confirmMenu;
+}
+
 int ShopBuyMenu::getWidth() const
 {
   return config::GAME_RES_X;
@@ -144,6 +297,57 @@ int ShopBuyMenu::getWidth() const
 int ShopBuyMenu::getHeight() const
 {
   return 8 * 12;
+}
+
+void ShopBuyMenu::handleConfirm()
+{
+  if (m_confirmMenu)
+  {
+    m_confirmMenu->handleConfirm();
+    if (!m_confirmMenu->isVisible())
+    {
+      delete m_confirmMenu;
+      m_confirmMenu = 0;
+    }
+  }
+  else
+  {
+    Item& item = item_ref(get_string_after_first_space(getCurrentMenuChoice()));
+    if (item.cost <= get_player()->getGold())
+    {
+      m_confirmMenu = new ConfirmMenu(ConfirmMenu::BUY, item.name);
+      m_confirmMenu->setVisible(true);
+    }
+    else
+    {
+      play_sound(config::get("SOUND_CANCEL"));
+    }
+  }
+}
+
+void ShopBuyMenu::handleEscape()
+{
+  if (m_confirmMenu)
+  {
+    delete m_confirmMenu;
+    m_confirmMenu = 0;
+  }
+  else
+  {
+    Menu::handleEscape();
+  }
+}
+
+void ShopBuyMenu::moveArrow(Direction dir)
+{
+  if (m_confirmMenu)
+  {
+    m_confirmMenu->moveArrow(dir);
+  }
+  else
+  {
+    Menu::moveArrow(dir);
+  }
 }
 
 void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
@@ -177,6 +381,16 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
   }
 
   Menu::draw(target, x, y);
+
+  draw_frame(target, 0, config::GAME_RES_Y - 16, config::GAME_RES_X, 16);
+  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
+
+  if (m_confirmMenu)
+  {
+    m_confirmMenu->draw(target,
+        config::GAME_RES_X / 2 - m_confirmMenu->getWidth() / 2,
+        config::GAME_RES_Y / 2 - m_confirmMenu->getHeight() / 2);
+  }
 }
 
 void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* character, const std::string& itemName, int x, int y)
@@ -285,5 +499,5 @@ void Shop::handleKeyPress(sf::Keyboard::Key key)
   else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
   else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
   else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
-  else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
+  else if (key == sf::Keyboard::Left) m_menu.moveArrow(DIR_LEFT);
 }
