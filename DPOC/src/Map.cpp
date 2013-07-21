@@ -589,3 +589,8 @@ std::vector<std::string> Map::checkEncounter(int x, int y)
 
   return monsters;
 }
+
+bool Map::inside(int x, int y) const
+{
+  return x >= 0 && y >= 0 && x < getWidth() && y < getHeight();
+}

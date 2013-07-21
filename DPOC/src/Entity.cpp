@@ -201,7 +201,11 @@ void Entity::step(Direction dir)
     else if (m_direction == DIR_UP)
       m_targetY = y - 1;
 
-    if (!m_walkThrough && (Game::instance().getCurrentMap()->blocking(m_targetX, m_targetY) || checkPlayerCollision() || checkEntityCollision()))
+    if (!m_walkThrough &&
+        (Game::instance().getCurrentMap()->blocking(m_targetX, m_targetY) ||
+         !Game::instance().getCurrentMap()->inside(m_targetX, m_targetY) ||
+         checkPlayerCollision() ||
+         checkEntityCollision()))
     {
       m_targetX = x;
       m_targetY = y;

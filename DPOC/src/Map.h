@@ -55,6 +55,7 @@ public:
   const std::vector<Entity*>& getEntities() const { return m_entities; }
 
   bool blocking(int x, int y);
+  bool inside(int x, int y) const;
 
   std::vector<std::string> checkEncounter(int x, int y);
 
