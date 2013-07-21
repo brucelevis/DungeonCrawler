@@ -14,6 +14,7 @@
 #include "Game.h"
 #include "Sound.h"
 
+#include "Shop.h"
 #include "Battle.h"
 
 Game* Game::theInstance = 0;
@@ -184,6 +185,11 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   {
     std::vector<std::string> monsters = {"Skelington", "Skelington", "Skelington"};
     startBattle(monsters);
+  }
+  else if (key == sf::Keyboard::S)
+  {
+    Shop* shop = new Shop;
+    SceneManager::instance().addScene(shop);
   }
 }
 
