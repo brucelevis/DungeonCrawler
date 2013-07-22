@@ -709,8 +709,9 @@ std::string ItemMenu::getSelectedItemName() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EquipItemMenu::EquipItemMenu(int width, int height)
- : ItemMenu(width, height)
+EquipItemMenu::EquipItemMenu(PlayerCharacter* character, int width, int height)
+ : ItemMenu(width, height),
+   m_character(character)
 {
 
 }
@@ -726,7 +727,7 @@ void EquipItemMenu::refresh(const std::string& equipmentType)
 
   for (auto it = items.begin(); it != items.end(); ++it)
   {
-    if (equip_type_string(it->type) == equipmentType)
+    if (equip_type_string(it->type) == equipmentType && m_character->canEquip(it->name))
     {
       std::string stack = toString(it->stackSize);
       std::string name = it->name;
@@ -890,7 +891,7 @@ void CharacterMenu::setTargetToCurrentChoice()
 
 EquipMenu::EquipMenu(PlayerCharacter* character)
  : m_character(character),
-   m_itemMenu(new EquipItemMenu(16*16, 8*16)),
+   m_itemMenu(new EquipItemMenu(character, 16*16, 8*16)),
    m_state(STATE_SELECT_EQUIPMENT_TYPE)
 {
   for (auto it = PlayerCharacter::equipNames.begin(); it != PlayerCharacter::equipNames.end(); ++it)
