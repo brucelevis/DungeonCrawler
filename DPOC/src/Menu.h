@@ -53,7 +53,7 @@ public:
   void setCursorVisible(bool visible) { m_cursorVisible = visible; }
   bool cursorVisible() const { return m_cursorVisible; }
 
-  virtual void resetChoice() { m_currentMenuChoice = 0; fixScroll(DIR_UP); }
+  virtual void resetChoice() { m_currentMenuChoice = 0; resetScroll(); }
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
   int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
@@ -61,6 +61,7 @@ protected:
   void setCurrentChoice(int choice) { m_currentMenuChoice = choice; }
 private:
   void fixScroll(Direction dir);
+  void resetScroll() {m_scroll = 0; }
 private:
   sf::Texture* m_arrowTexture;
   bool m_visible;
