@@ -660,7 +660,7 @@ void ItemMenu::refresh()
 
 void ItemMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, getWidth(), 3*16);
+  draw_frame(target, x, y, getWidth(), 48);
 
   Menu::draw(target, x, y + 24);
 
@@ -747,7 +747,7 @@ void EquipItemMenu::refresh(const std::string& equipmentType)
     resetChoice();
   }
 
-  int visible = m_height / 8 - 2;
+  int visible = m_height / 12 - 1;
 
   setMaxVisible(visible);
 }
@@ -891,7 +891,7 @@ void CharacterMenu::setTargetToCurrentChoice()
 
 EquipMenu::EquipMenu(PlayerCharacter* character)
  : m_character(character),
-   m_itemMenu(new EquipItemMenu(character, 16*16, 8*16)),
+   m_itemMenu(new EquipItemMenu(character, 256, 104)),
    m_state(STATE_SELECT_EQUIPMENT_TYPE)
 {
   for (auto it = PlayerCharacter::equipNames.begin(); it != PlayerCharacter::equipNames.end(); ++it)
@@ -1010,15 +1010,15 @@ void EquipMenu::moveArrow(Direction dir)
 
 void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, 8*16, 7*16);
-  draw_frame(target, x + 8*16, y, 8*16, 7*16);
+  draw_frame(target, x, y, 128, 112);
+  draw_frame(target, x + 128, y, 128, 112);
 
   // Top.
-  draw_frame(target, x, y, 16 * 16, 2 * 16);
+  draw_frame(target, x, y, 256, 32);
   m_character->draw(target, x, y);
   draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
 
-  m_itemMenu->draw(target, 0, 7 * 16);
+  m_itemMenu->draw(target, 0, 112);
 
   int offX = x + 8;
   int offY = y + 38;
