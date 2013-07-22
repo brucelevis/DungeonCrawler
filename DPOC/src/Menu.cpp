@@ -653,7 +653,7 @@ void ItemMenu::refresh()
     resetChoice();
   }
 
-  int visible = m_height / 8 - 2;
+  int visible = m_height / 12 - 1;
 
   setMaxVisible(visible);
 }

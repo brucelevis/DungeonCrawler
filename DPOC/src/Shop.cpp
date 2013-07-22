@@ -290,7 +290,7 @@ ShopBuyMenu::ShopBuyMenu(const std::vector<std::string>& inventory)
  : m_inventory(inventory),
    m_confirmMenu(0)
 {
-  setMaxVisible(8);
+  setMaxVisible(7);
 
   for (auto it = m_inventory.begin(); it != m_inventory.end(); ++it)
   {
@@ -496,7 +496,7 @@ void ShopSellMenu::refresh()
 {
   clear();
 
-  setMaxVisible(8);
+  setMaxVisible(7);
 
   for (auto it = get_player()->getInventory().begin(); it != get_player()->getInventory().end(); ++it)
   {
