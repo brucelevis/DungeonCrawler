@@ -514,6 +514,14 @@ void ShopSellMenu::refresh()
   {
     setVisible(false);
   }
+  else
+  {
+    // Fix when selling last entry.
+    if (getCurrentChoiceIndex() >= getNumberOfChoice())
+    {
+      setCurrentChoice(getNumberOfChoice() - 1);
+    }
+  }
 }
 
 int ShopSellMenu::getWidth() const
