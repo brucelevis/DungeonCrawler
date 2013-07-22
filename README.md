@@ -37,6 +37,7 @@ XML Formats
 ### Spells.xml (`<spells><spell>`) ###
 * `<name>`
 * `<description>`
+* `<verb>` (use description, if wanted. defaults to "casts the %s spell at %s!")
 * `<cost>` (default 0)
 * `<target>` (default TARGET_NONE)
 * `<battleOnly>` (default true)
