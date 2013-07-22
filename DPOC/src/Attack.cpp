@@ -69,6 +69,11 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
           resist * //weak
           (85.0f + (float)random_range(0, 16)) / 100.0f;
 
+//  float atk = str + pow;
+//  damage = (atk - def / 2 + ((atk - def / 2 + 1) * random_range(0, 256)) / 256) / 4;
+//  damage *= resist;
+//  if (damage <= 0) damage = random_range(0, 2);
+
   return damage;
 }
 
