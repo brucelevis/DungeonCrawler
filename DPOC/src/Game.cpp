@@ -13,6 +13,7 @@
 #include "Message.h"
 #include "Game.h"
 #include "Sound.h"
+#include "Utility.h"
 
 #include "Shop.h"
 #include "Battle.h"
@@ -183,12 +184,12 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
   if (key == sf::Keyboard::B && config::get("DEBUG_MODE") == "true")
   {
-    std::vector<std::string> monsters = {"Skelington", "Skelington", "Skelington"};
+    std::vector<std::string> monsters = split_string(config::get("DEBUG_BATTLE"), ',');
     startBattle(monsters);
   }
   else if (key == sf::Keyboard::S && config::get("DEBUG_MODE") == "true")
   {
-    std::vector<std::string> items = { "Copper Sword", "Herb", "Magic Staff" };
+    std::vector<std::string> items = split_string(config::get("DEBUG_SHOP"), ',');
     openShop(items);
   }
 }
