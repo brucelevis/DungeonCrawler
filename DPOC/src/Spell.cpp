@@ -53,6 +53,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   const XMLElement* powrElem = spellElement->FirstChildElement("power");
   const XMLElement* effeElem = spellElement->FirstChildElement("effect");
   const XMLElement* elemElem = spellElement->FirstChildElement("element");
+  const XMLElement* verbElem = spellElement->FirstChildElement("verb");
 
   if (nameElem)
     spell.name = nameElem->GetText();
@@ -70,6 +71,8 @@ static Spell parse_spell_element(const XMLElement* spellElement)
     spell.effect = effeElem->GetText();
   if (elemElem)
     spell.element = elemElem->GetText();
+  if (verbElem)
+    spell.verb = verbElem->GetText();
 
   const XMLElement* typeElem = spellElement->FirstChildElement("spellType");
   if (typeElem)

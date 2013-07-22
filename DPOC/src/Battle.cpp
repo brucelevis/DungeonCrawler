@@ -84,6 +84,25 @@ T* random_dead_character(const std::vector<T*>& actors)
   return 0;
 }
 
+static std::string replace_dollar_with_name(const std::string& str, const std::string& name)
+{
+  std::string buffer;
+
+  for (size_t i = 0; i < str.size(); i++)
+  {
+    if (str[i] == '$')
+    {
+      buffer += name;
+    }
+    else
+    {
+      buffer += str[i];
+    }
+  }
+
+  return buffer;
+}
+
 static void check_death(Character* actor)
 {
   if (actor->getAttribute("hp").current <= 0)
@@ -302,17 +321,36 @@ void Battle::executeActions()
       }
       else
       {
-        battle_message("%s casts the %s spell at %s!",
-            m_currentActor->getName().c_str(),
-            action.objectName.c_str(),
-            action.target->getName().c_str());
+        const Spell* spell = get_spell(action.objectName);
+
+        if (spell->verb.empty())
+        {
+          battle_message("%s casts the %s spell at %s!",
+              m_currentActor->getName().c_str(),
+              action.objectName.c_str(),
+              action.target->getName().c_str());
+        }
+        else
+        {
+          std::string use = replace_dollar_with_name(spell->verb, action.target->getName());
+          battle_message("%s %s", m_currentActor->getName().c_str(), use.c_str());
+        }
       }
     }
     else
     {
-      battle_message("%s casts the %s spell!",
-          m_currentActor->getName().c_str(),
-          action.objectName.c_str());
+      const Spell* spell = get_spell(action.objectName);
+
+      if (spell->verb.empty())
+      {
+        battle_message("%s casts the %s spell!",
+            m_currentActor->getName().c_str(),
+            action.objectName.c_str());
+      }
+      else
+      {
+        battle_message("%s %s", m_currentActor->getName().c_str(), spell->verb.c_str());
+      }
     }
   }
   else if (action.actionName == "Item")

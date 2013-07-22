@@ -30,6 +30,7 @@ struct Spell
 {
   std::string name;
   std::string description;
+  std::string verb;
   int mpCost;
 
   Target target;
