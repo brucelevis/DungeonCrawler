@@ -239,6 +239,20 @@ Character* Character::createMonster(const std::string& name)
   for (auto it = def.attributeMap.begin(); it != def.attributeMap.end(); ++it)
   {
     character->m_attributes[it->first] = make_attribute(it->second);
+
+//    if (it->first != "exp" && it->first != "gold" && it->first != "level")
+//    {
+//      float variance = rand_float(0.8, 1.2);
+//      character->m_attributes[it->first].max *= variance;
+//
+//      // Don't want too low stats.
+//      if (character->m_attributes[it->first].max <= 1)
+//      {
+//        character->m_attributes[it->first] = make_attribute(it->second);
+//      }
+//
+//      reset_attribute(character->m_attributes[it->first]);
+//    }
   }
 
   character->m_resistance = def.resistance;
