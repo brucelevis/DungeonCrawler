@@ -132,6 +132,8 @@ Battle::~Battle()
 
 void Battle::start(bool canEscape)
 {
+  clear_message();
+
   m_battleOngoing = true;
 
   m_battleMusic.openFromFile(config::get("MUSIC_BATTLE"));
@@ -1166,7 +1168,7 @@ bool Battle::checkVictoryOrDefeat()
   {
     m_state = STATE_DEFEAT;
 
-    clear_message();
+    // clear_message();
     m_battleMenu.setVisible(false);
 
     show_message("You have been defeated...");
