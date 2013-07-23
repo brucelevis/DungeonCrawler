@@ -120,8 +120,8 @@ Example:
 
 ### Classes.xml (`<classes><class>`) ###
 * `<name>`
-* `<attributes>`  (BASE attributes used when leveling.)
- - `<attr name, value>`*
+* `<attributes>`  (BASE attributes used when leveling. base is at "level 0", max is at max level.)
+ - `<attr name, base, max>`*
 * `<texture name, x, y>` (entry in texture 2x4 texture block)
 * `<face name x, y, w, h>` (w, h should be 32x32)
 * `<spellsPerLevel>`

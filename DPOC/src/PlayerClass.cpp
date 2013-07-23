@@ -28,18 +28,21 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     for (const XMLElement* element = attributesElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       const XMLAttribute* nameAttr = element->FindAttribute("name");
-      const XMLAttribute* valueAttr = element->FindAttribute("value");
+      const XMLAttribute* baseAttr = element->FindAttribute("base");
+      const XMLAttribute* maxAttr = element->FindAttribute("max");
 
-      if (nameAttr && valueAttr)
+      if (nameAttr && baseAttr && maxAttr)
       {
         std::string name = nameAttr->Value();
-        int value = fromString<int>(valueAttr->Value());
+        int base = fromString<int>(baseAttr->Value());
+        int max = fromString<int>(maxAttr->Value());
 
-        pc.baseAttributes[name] = value;
+        pc.baseAttributes[name].base = base;
+        pc.baseAttributes[name].max  = max;
       }
       else
       {
-        TRACE("No nameAttr/valueAttr");
+        TRACE("No nameAttr/baseAttr/maxAttr");
       }
     }
   }

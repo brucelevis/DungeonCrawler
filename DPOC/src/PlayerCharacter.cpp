@@ -102,13 +102,14 @@ void PlayerCharacter::setAttributes()
 
   for (auto it = m_class.baseAttributes.begin(); it != m_class.baseAttributes.end(); ++it)
   {
-    int base = it->second;
+    int base = it->second.base;
+    int max  = it->second.max;
 
     if (base == 0)
       continue;
 
     float percent = (float)level / fromString<float>(config::get("MAX_LEVEL"));
-    int attrib = percent * (float)base;
+    int attrib = base + percent * (float)max;
 
     // TODO: Take into account attribute enhancing things.
     m_attributes[it->first].max = attrib;
