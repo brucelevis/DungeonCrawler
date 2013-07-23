@@ -171,7 +171,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
 
   if (damage <= 0)
   {
-    damage = random_range(0, 2);
+    damage = 1;
   }
 
   damage *= resistance;
