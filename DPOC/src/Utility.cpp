@@ -114,6 +114,11 @@ int random_range(int low, int high)
   return low + ((rand()%high) - low);
 }
 
+float rand_float(float low, float high)
+{
+  return low + (float)rand()/((float)RAND_MAX/(high));
+}
+
 char upcase(char c)
 {
   if (c >= 'a' && c <= 'z')

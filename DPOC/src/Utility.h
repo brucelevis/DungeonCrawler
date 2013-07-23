@@ -41,6 +41,7 @@ std::string get_string_after_first_space(const std::string& str);
 bool coinflip();
 
 int random_range(int low, int high);
+float rand_float(float low, float high);
 
 char upcase(char c);
 std::string capitalize(std::string str);
