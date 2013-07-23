@@ -2,6 +2,7 @@
 
 #include "SaveLoad.h"
 
+#include "Config.h"
 #include "Utility.h"
 #include "Cache.h"
 #include "Message.h"
@@ -101,26 +102,21 @@ void PlayerCharacter::setAttributes()
 
   for (auto it = m_class.baseAttributes.begin(); it != m_class.baseAttributes.end(); ++it)
   {
-    static const int EV = 128;
-    static const int IV = 16;
-
     int base = it->second;
-    int attrib;
 
     if (base == 0)
       continue;
 
-    if (it->first == "hp" || it->first == "mp")
-    {
-      attrib = 10 + ((IV + (2 * base) + (EV / 4) + 100) * level) / 100;
+    float percent = (float)level / fromString<float>(config::get("MAX_LEVEL"));
+    int attrib = percent * (float)base;
 
-      m_attributes[it->first].max = attrib;
-    }
-    else
-    {
-      attrib = 5 + ((IV + (2 * base) + (EV / 4)) * level) / 100;
+    // TODO: Take into account attribute enhancing things.
+    m_attributes[it->first].max = attrib;
 
-      m_attributes[it->first] = make_attribute(attrib);
+    // HP/MP is not restores when leveling up.
+    if (it->first != "hp" && it->first != "mp")
+    {
+      reset_attribute(m_attributes[it->first]);
     }
   }
 }

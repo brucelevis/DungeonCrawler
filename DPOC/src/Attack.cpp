@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Utility.h"
 #include "Message.h"
 #include "StatusEffect.h"
@@ -62,17 +64,32 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
     }
   }
 
-  float damage =
-      ((((2.0f * level / 5.0f + 2.0f) *
-      str * pow / def) / 50.0f) + 2.0f) *
-          1.0f * //stab
-          resist * //weak
-          (85.0f + (float)random_range(0, 16)) / 100.0f;
+//  float damage =
+//      ((((2.0f * level / 5.0f + 2.0f) *
+//      str * pow / def) / 50.0f) + 2.0f) *
+//          1.0f * //stab
+//          resist * //weak
+//          (85.0f + (float)random_range(0, 16)) / 100.0f;
 
-//  float atk = str + pow;
-//  damage = (atk - def / 2 + ((atk - def / 2 + 1) * random_range(0, 256)) / 256) / 4;
-//  damage *= resist;
-//  if (damage <= 0) damage = random_range(0, 2);
+  float atk = (str + pow) / 2.0f;
+  float damage = 0;
+
+  if (atk >= (2 + def))
+  {
+    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
+  }
+  else
+  {
+    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
+    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+  }
+
+  if (damage <= 0)
+  {
+    damage = random_range(0, 2);
+  }
+
+  damage *= resist;
 
   return damage;
 }
@@ -123,15 +140,35 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
 
   if (spell->spellType & SPELL_HEAL)
   {
-    def = level;
+    def = 0;
   }
 
-  float damage =
-      ((((2.0f * level / 5.0f + 2.0f) *
-      str * pow / def) / 50.0f) + 2.0f) *
-          1.0f * //stab
-          resistance * //weak
-          (85.0f + (float)random_range(0, 16)) / 100.0f;
+//  float damage =
+//      ((((2.0f * level / 5.0f + 2.0f) *
+//      str * pow / def) / 50.0f) + 2.0f) *
+//          1.0f * //stab
+//          resistance * //weak
+//          (85.0f + (float)random_range(0, 16)) / 100.0f;
+
+  float atk = (1.0f + str / 255.0f) * pow;
+  float damage = 0;
+
+  if (atk >= (2 + def))
+  {
+    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
+  }
+  else
+  {
+    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
+    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+  }
+
+  if (damage <= 0)
+  {
+    damage = random_range(0, 2);
+  }
+
+  damage *= resistance;
 
   if (spell->spellType & SPELL_HEAL)
   {
