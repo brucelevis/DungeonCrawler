@@ -42,6 +42,17 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
     damage /= 2;
   }
 
+  if (damage > 0)
+  {
+    bool critical = attacker->computeCurrentAttribute("luck") >= random_range(0, 1024);
+
+    if (critical)
+    {
+      battle_message("Critical hit!!");
+      damage *= 3;
+    }
+  }
+
   target->takeDamage("hp", damage);
 
   return damage;
