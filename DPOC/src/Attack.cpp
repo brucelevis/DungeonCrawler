@@ -123,7 +123,7 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
       damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
     }
 
-    if (damage <= 0)
+    if ((int)damage <= 0)
     {
       damage = random_range(0, 2);
     }
@@ -169,7 +169,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
     damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
   }
 
-  if (damage <= 0)
+  if ((int)damage <= 0)
   {
     damage = 1;
   }
