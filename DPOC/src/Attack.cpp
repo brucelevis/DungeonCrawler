@@ -74,7 +74,7 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
   float atk = (str + pow) / 2.0f;
   float damage = 0;
 
-  if (atk >= (2 + def))
+  if (atk >= (2 + def / 2.0f))
   {
     damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
   }
