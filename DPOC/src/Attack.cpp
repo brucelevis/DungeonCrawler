@@ -50,8 +50,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
 int calculate_physical_damage(Character* attacker, Character* target, Item* weapon)
 {
   float level = attacker->computeCurrentAttribute("level");
-  float str = attacker->computeCurrentAttribute("strength");
-  float pow = attacker->computeCurrentAttribute("power");
+  float atk = attacker->computeCurrentAttribute("strength");
   float def = target->computeCurrentAttribute("defense");
 
   float resist = 1.0f;
@@ -71,7 +70,6 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
 //          resist * //weak
 //          (85.0f + (float)random_range(0, 16)) / 100.0f;
 
-  float atk = (str + pow) / 2.0f;
   float damage = 0;
 
   if (atk >= (2 + def / 2.0f))
@@ -102,17 +100,38 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
   }
   else if (usedItem->itemUseType == ITEM_DAMAGE || usedItem->itemUseType == ITEM_HEAL)
   {
-    int level = attacker->computeCurrentAttribute("level");
-    int str = usedItem->attributeGain["strength"];
-    int pow = usedItem->attributeGain["power"];
-    int def = target->computeCurrentAttribute("defense");
+    float level = attacker->computeCurrentAttribute("level");
+    float atk = usedItem->attributeGain["strength"];
+    float def = target->computeCurrentAttribute("defense");
 
-    int damage =
-        ((((2 * level / 5 + 2) *
-        str * pow / def) / 50) + 2) *
-            1 * //stab
-            1 * //weak
-            (85 + random_range(0, 16)) / 100;
+//    int damage =
+//        ((((2 * level / 5 + 2) *
+//        str * pow / def) / 50) + 2) *
+//            1 * //stab
+//            1 * //weak
+//            (85 + random_range(0, 16)) / 100;
+
+    float damage = 0;
+
+    if (usedItem->itemUseType == ITEM_HEAL)
+    {
+      def = 0;
+    }
+
+    if (atk >= (2 + def / 2.0f))
+    {
+      damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
+    }
+    else
+    {
+      float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
+      damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+    }
+
+    if (damage <= 0)
+    {
+      damage = random_range(0, 2);
+    }
 
     if (usedItem->itemUseType == ITEM_HEAL)
     {

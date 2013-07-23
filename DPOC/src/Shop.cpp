@@ -417,11 +417,11 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
 void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* character, const std::string& itemName, int x, int y)
 {
   int newStr;
-  int newPow;
   int newDef;
   int newMag;
   int newMdf;
   int newSpd;
+  int newLuk;
 
   if (character->canEquip(itemName))
   {
@@ -435,48 +435,48 @@ void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* characte
     character->equip(equipSlot, itemName);
 
     newStr = character->computeCurrentAttribute("strength");
-    newPow = character->computeCurrentAttribute("power");
     newDef = character->computeCurrentAttribute("defense");
     newMag = character->computeCurrentAttribute("magic");
     newMdf = character->computeCurrentAttribute("mag.def");
     newSpd = character->computeCurrentAttribute("speed");
+    newLuk = character->computeCurrentAttribute("luck");
 
     character->equip(equipSlot, currentEquip);
   }
   else
   {
     newStr = character->computeCurrentAttribute("strength");
-    newPow = character->computeCurrentAttribute("power");
     newDef = character->computeCurrentAttribute("defense");
     newMag = character->computeCurrentAttribute("magic");
     newMdf = character->computeCurrentAttribute("mag.def");
     newSpd = character->computeCurrentAttribute("speed");
+    newLuk = character->computeCurrentAttribute("luck");
   }
 
   draw_text_bmp(target, x, y,      "St%s%d",
       newStr > character->computeCurrentAttribute("strength") ? ">" :
           newStr < character->computeCurrentAttribute("strength") ? "<" : "=",
               newStr);
-  draw_text_bmp(target, x, y + 12, "Po%s%d",
-      newPow > character->computeCurrentAttribute("power") ? ">" :
-          newPow < character->computeCurrentAttribute("power") ? "<" : "=",
-      newPow);
-  draw_text_bmp(target, x, y + 24, "Df%s%d",
+  draw_text_bmp(target, x, y + 12, "Df%s%d",
       newDef > character->computeCurrentAttribute("defense") ? ">" :
           newDef < character->computeCurrentAttribute("defense") ? "<" : "=",
       newDef);
-  draw_text_bmp(target, x, y + 36, "Mg%s%d",
+  draw_text_bmp(target, x, y + 24, "Mg%s%d",
       newMag > character->computeCurrentAttribute("magic") ? ">" :
           newMag < character->computeCurrentAttribute("magic") ? "<" : "=",
       newMag);
-  draw_text_bmp(target, x, y + 48, "Md%s%d",
+  draw_text_bmp(target, x, y + 36, "Md%s%d",
       newMdf > character->computeCurrentAttribute("mag.def") ? ">" :
           newMdf < character->computeCurrentAttribute("mag.def") ? "<" : "=",
       newMdf);
-  draw_text_bmp(target, x, y + 60, "Sp%s%d",
+  draw_text_bmp(target, x, y + 48, "Sp%s%d",
       newSpd > character->computeCurrentAttribute("speed") ? ">" :
           newSpd < character->computeCurrentAttribute("speed") ? "<" : "=",
       newSpd);
+  draw_text_bmp(target, x, y + 60, "Lu%s%d",
+      newLuk > character->computeCurrentAttribute("luck") ? ">" :
+          newLuk < character->computeCurrentAttribute("luck") ? "<" : "=",
+      newLuk);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

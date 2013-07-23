@@ -594,11 +594,11 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   y += 40;
 
   draw_text_bmp(target, x, y,      "Strength: %d", character->computeCurrentAttribute("strength"));
-  draw_text_bmp(target, x, y + 12, "Power:    %d", character->computeCurrentAttribute("power"));
-  draw_text_bmp(target, x, y + 24, "Defense:  %d", character->computeCurrentAttribute("defense"));
-  draw_text_bmp(target, x, y + 36, "Magic:    %d", character->computeCurrentAttribute("magic"));
-  draw_text_bmp(target, x, y + 48, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
-  draw_text_bmp(target, x, y + 60, "Speed:    %d", character->computeCurrentAttribute("speed"));
+  draw_text_bmp(target, x, y + 12, "Defense:  %d", character->computeCurrentAttribute("defense"));
+  draw_text_bmp(target, x, y + 24, "Magic:    %d", character->computeCurrentAttribute("magic"));
+  draw_text_bmp(target, x, y + 36, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
+  draw_text_bmp(target, x, y + 48, "Speed:    %d", character->computeCurrentAttribute("speed"));
+  draw_text_bmp(target, x, y + 60, "Luck:     %d", character->computeCurrentAttribute("luck"));
 
   for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
   {
@@ -1046,7 +1046,7 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 {
   int newStr;
-  int newPow;
+  int newLuk;
   int newDef;
   int newMag;
   int newMdf;
@@ -1068,30 +1068,30 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
     }
 
     newStr = m_character->computeCurrentAttribute("strength");
-    newPow = m_character->computeCurrentAttribute("power");
     newDef = m_character->computeCurrentAttribute("defense");
     newMag = m_character->computeCurrentAttribute("magic");
     newMdf = m_character->computeCurrentAttribute("mag.def");
     newSpd = m_character->computeCurrentAttribute("speed");
+    newLuk = m_character->computeCurrentAttribute("luck");
 
     m_character->equip(getCurrentMenuChoice(), currentEquip);
   }
   else
   {
     newStr = m_character->computeCurrentAttribute("strength");
-    newPow = m_character->computeCurrentAttribute("power");
     newDef = m_character->computeCurrentAttribute("defense");
     newMag = m_character->computeCurrentAttribute("magic");
     newMdf = m_character->computeCurrentAttribute("mag.def");
     newSpd = m_character->computeCurrentAttribute("speed");
+    newLuk = m_character->computeCurrentAttribute("luck");
   }
 
   draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
-  draw_text_bmp(target, x, y + 12, "Pow: %d (%d)", m_character->computeCurrentAttribute("power"), newPow);
-  draw_text_bmp(target, x, y + 24, "Def: %d (%d)", m_character->computeCurrentAttribute("defense"), newDef);
-  draw_text_bmp(target, x, y + 36, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
-  draw_text_bmp(target, x, y + 48, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
-  draw_text_bmp(target, x, y + 60, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
+  draw_text_bmp(target, x, y + 12, "Def: %d (%d)", m_character->computeCurrentAttribute("defense"), newDef);
+  draw_text_bmp(target, x, y + 24, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
+  draw_text_bmp(target, x, y + 36, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
+  draw_text_bmp(target, x, y + 48, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
+  draw_text_bmp(target, x, y + 60, "Luk: %d (%d)", m_character->computeCurrentAttribute("luck"), newLuk);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
