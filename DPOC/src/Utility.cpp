@@ -119,7 +119,10 @@ int random_range(int low, int high)
 
 float rand_float(float low, float high)
 {
-  return low + (float)rand()/((float)RAND_MAX/(high));
+  float rnd = ((float) rand()) / (float) RAND_MAX;
+  float diff = high - low;
+  float r = rnd * diff;
+  return low + r;
 }
 
 char upcase(char c)
