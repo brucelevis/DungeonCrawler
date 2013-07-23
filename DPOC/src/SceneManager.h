@@ -17,7 +17,7 @@ public:
 
   void addScene(Scene* scene) { m_scenes.push_back(scene); }
 
-  void shakeScreen(int duration);
+  void shakeScreen(int duration, int shakeStrengthX, int shakeStrengthY);
   bool isShaking() const { return m_shakeCounter > 0; }
 
   void close();
@@ -40,6 +40,9 @@ private:
   sf::RenderTexture m_targetTexture;
 
   int m_shakeCounter;
+  int m_shakeStrengthX;
+  int m_shakeStrengthY;
+
   Scene::FadeType m_fade;
   int m_fadeCounter;
   int m_fadeDuration;

@@ -14,6 +14,8 @@ SceneManager& SceneManager::instance()
 
 SceneManager::SceneManager()
  : m_shakeCounter(0),
+   m_shakeStrengthX(0),
+   m_shakeStrengthY(0),
    m_fade(Scene::Scene::FADE_NONE),
    m_fadeCounter(0),
    m_fadeDuration(0)
@@ -103,9 +105,8 @@ void SceneManager::draw()
 
   if (m_shakeCounter > 0)
   {
-    sprite.setPosition(random_range(-4, 4), 0);
-    // SHake in y-axis as well?!
-    //sprite.setPosition(random_range(-4, 4), random_range(-4, 4));
+    sprite.setPosition(random_range(-m_shakeStrengthX, m_shakeStrengthX),
+        random_range(-m_shakeStrengthY, m_shakeStrengthY));
   }
 
   if (m_fade != Scene::FADE_NONE)
@@ -129,9 +130,11 @@ void SceneManager::draw()
   m_window.display();
 }
 
-void SceneManager::shakeScreen(int duration)
+void SceneManager::shakeScreen(int duration, int shakeStrengthX, int shakeStrengthY)
 {
   m_shakeCounter = duration;
+  m_shakeStrengthX = shakeStrengthX;
+  m_shakeStrengthY = shakeStrengthY;
 }
 
 void SceneManager::fadeIn(int duration)

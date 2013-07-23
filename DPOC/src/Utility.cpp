@@ -111,6 +111,9 @@ bool coinflip()
 
 int random_range(int low, int high)
 {
+  if (high == 0)
+    return 0;
+
   return low + ((rand()%high) - low);
 }
 

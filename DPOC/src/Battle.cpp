@@ -496,6 +496,7 @@ void Battle::actionEffect()
   if (!effectInProgress() && m_turnDelay == 0)
   {
     std::string actionName = m_battleActions[m_currentActor].actionName;
+    bool criticalHit = false;
 
     if (actionName == "Attack" || actionName == "Spell" || actionName == "Item")
     {
@@ -525,7 +526,7 @@ void Battle::actionEffect()
           weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("Weapon");
         }
 
-        damage = attack(m_currentActor, currentTarget, guard, weapon);
+        damage = attack(m_currentActor, currentTarget, guard, weapon, criticalHit);
       }
       else if (actionName == "Spell")
       {
@@ -544,11 +545,17 @@ void Battle::actionEffect()
       {
         battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
 
-        if (isMonster(m_currentActor))
+        if (criticalHit)
+        {
+          play_sound(config::get("SOUND_CRITICAL"));
+
+          SceneManager::instance().shakeScreen(16, 8, 8);
+        }
+        else if (isMonster(m_currentActor))
         {
           play_sound(config::get("SOUND_ENEMY_HIT"));
 
-          SceneManager::instance().shakeScreen(16);
+          SceneManager::instance().shakeScreen(16, 4, 0);
         }
         else
         {

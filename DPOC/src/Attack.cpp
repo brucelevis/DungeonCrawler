@@ -6,7 +6,7 @@
 
 #include "Attack.h"
 
-int attack(Character* attacker, Character* target, bool guard, Item* weapon)
+int attack(Character* attacker, Character* target, bool guard, Item* weapon, bool& wasCritical)
 {
   int damage = calculate_physical_damage(attacker, target, weapon);
 
@@ -45,6 +45,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon)
   if (damage > 0)
   {
     bool critical = attacker->computeCurrentAttribute("luck") >= random_range(0, 1024);
+    wasCritical = critical;
 
     if (critical)
     {
