@@ -76,15 +76,17 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
 
   float damage = 0;
 
-  if (atk >= (2 + def / 2.0f))
-  {
-    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
-  }
-  else
-  {
-    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
-  }
+  damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
+
+//  if (atk >= (2 + def / 2.0f))
+//  {
+//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
+//  }
+//  else
+//  {
+//    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
+//    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+//  }
 
   if ((int)damage <= 0)
   {
@@ -160,15 +162,17 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
   float atk = (1.0f + str / 255.0f) * pow;
   float damage = 0;
 
-  if (atk >= (2 + def))
-  {
-    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
-  }
-  else
-  {
-    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
-  }
+  damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
+
+//  if (atk >= (2 + def))
+//  {
+//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
+//  }
+//  else
+//  {
+//    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
+//    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+//  }
 
   if ((int)damage <= 0)
   {
