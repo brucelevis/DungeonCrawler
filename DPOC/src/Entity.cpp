@@ -270,7 +270,10 @@ void Entity::draw(sf::RenderTarget& target, const coord_t& view)
 {
   if (m_sprite && m_visible)
   {
-    m_sprite->render(target, getRealX() - view.x, getRealY() - view.y);
+    float x = getRealX() - (m_sprite->getWidth() - config::TILE_W);
+    float y = getRealY() - (m_sprite->getHeight() - config::TILE_H);
+
+    m_sprite->render(target, x - view.x, y - view.y);
   }
 }
 

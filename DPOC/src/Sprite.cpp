@@ -117,6 +117,8 @@ TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)
 
   m_sprite.setTexture(*tileset);
   m_sprite.setTextureRect(sf::IntRect(tileX * config::TILE_W, tileY * config::TILE_H, config::TILE_W, config::TILE_H));
+  m_width = config::TILE_W;
+  m_height = config::TILE_H;
 }
 
 void TileSprite::render(sf::RenderTarget& target, float x, float y)
