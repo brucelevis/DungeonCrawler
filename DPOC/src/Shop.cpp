@@ -387,7 +387,7 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
     sprite->setDirection(DIR_DOWN);
 
     int posX = 8 + (i * (sprite->getWidth() + 48));
-    int posY = y + getHeight() + 8;
+    int posY = y + getHeight() + 4;
 
     sf::Color color = sf::Color::White;
     if (!party[i]->canEquip(itemName))
@@ -398,7 +398,7 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
     sprite->render_ex(target, posX, posY, color);
     delete sprite;
 
-    drawDeltas(target, party[i], itemName, posX, posY + 8 + sprite->getHeight());
+    drawDeltas(target, party[i], itemName, posX, posY + 4 + sprite->getHeight());
   }
 
   Menu::draw(target, x, y);
