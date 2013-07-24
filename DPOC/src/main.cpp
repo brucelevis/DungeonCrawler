@@ -50,10 +50,6 @@ int main(int argc, char* argv[])
       return 0;
     }
   }
-  else
-  {
-    Game::instance().setPlayer(Player::create());
-  }
 
 //  SceneManager::instance().addScene(&Game::instance());
 
