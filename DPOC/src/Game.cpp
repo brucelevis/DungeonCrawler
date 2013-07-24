@@ -14,6 +14,7 @@
 #include "Game.h"
 #include "Sound.h"
 #include "Utility.h"
+#include "Entity.h"
 
 #include "Shop.h"
 #include "Battle.h"
@@ -199,8 +200,24 @@ void Game::draw(sf::RenderTarget& target)
   if (m_currentMap)
     m_currentMap->draw(target, m_view);
 
-  if (m_player)
-    m_player->draw(target, m_view);
+//  if (m_entitiesToDraw.empty())
+//  {
+    m_entitiesToDraw.clear();
+    auto entVec = m_currentMap->getEntities();
+    auto playVec = get_player()->getTrain();
+
+    m_entitiesToDraw.clear();
+    std::copy(entVec.begin(), entVec.end(), std::back_inserter(m_entitiesToDraw));
+    std::copy(playVec.begin(), playVec.end(), std::back_inserter(m_entitiesToDraw));
+//  }
+
+  std::sort(m_entitiesToDraw.begin(), m_entitiesToDraw.end(),
+      [=](Entity* a, Entity* b) { return a->y < b->y; });
+
+  for (auto it = m_entitiesToDraw.begin(); it != m_entitiesToDraw.end(); ++it)
+  {
+    (*it)->draw(target, m_view);
+  }
 
   if (m_menu.isVisible())
   {
@@ -312,6 +329,8 @@ void Game::loadNewMap(const std::string& file)
     TRACE("Loading map failed! Quitting game...");
     SceneManager::instance().close();
   }
+
+  m_entitiesToDraw.clear();
 
   if (!m_currentMap->getMusic().empty())
   {

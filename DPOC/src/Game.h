@@ -13,6 +13,7 @@
 #include "Map.h"
 
 class Player;
+class Entity;
 
 class Game : public Scene
 {
@@ -71,6 +72,8 @@ private:
   bool m_transferInProgress;
   Warp m_currentWarp;
   bool m_playerMoved;
+
+  std::vector<Entity*> m_entitiesToDraw;
 };
 
 #endif

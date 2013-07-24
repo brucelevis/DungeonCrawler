@@ -118,11 +118,6 @@ void Map::draw(sf::RenderTarget& target, const coord_t& view)
     }
   }
 
-  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
-  {
-    (*it)->draw(target, view);
-  }
-
 //  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
 //  {
 //    sf::RectangleShape rect;
