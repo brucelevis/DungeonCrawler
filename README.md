@@ -110,6 +110,7 @@ XML Formats
  - `<element name, resist>`* (resist is used as multiplier in dmg calculation)
 * `<immunity>`
  - `<status name>`*
+* `<numberOfAttacks>` number of attacks each turn.
 
 ### Config.xml (`<config>`) ###
 Just a key-value store.

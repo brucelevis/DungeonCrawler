@@ -22,11 +22,13 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
   // Monsters does not care about MP but it's required for spellcasting.
   monster.attributeMap["mp"] = 0;
   monster.color = sf::Color::White;
+  monster.numberOfAttacks = 1;
 
   const XMLElement* nameElem = monsterElement->FirstChildElement("name");
   const XMLElement* descElem = monsterElement->FirstChildElement("description");
   const XMLElement* textElem = monsterElement->FirstChildElement("texture");
   const XMLElement* colorElem = monsterElement->FirstChildElement("color");
+  const XMLElement* numAttacksElem = monsterElement->FirstChildElement("numberOfAttacks");
 
   if (nameElem)
     monster.name = nameElem->GetText();
@@ -38,6 +40,10 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     int g = fromString<int>(colorElem->FindAttribute("g")->Value());
     int b = fromString<int>(colorElem->FindAttribute("b")->Value());
     monster.color = sf::Color(r, g, b);
+  }
+  if (numAttacksElem)
+  {
+    monster.numberOfAttacks = fromString<int>(numAttacksElem->GetText());
   }
 
   if (textElem)

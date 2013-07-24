@@ -220,7 +220,7 @@ void Battle::executeActions()
 {
   m_currentActor = m_battleOrder.back();
 
-  Action& action = m_battleActions[m_currentActor];
+  Action& action = m_battleActions[m_currentActor].front();
 
   if (action.target && action.target->getStatus() == "Dead")
   {
@@ -386,7 +386,7 @@ void Battle::executeActions()
       battle_message("%s tries to use %s... But there are none left!",
           m_currentActor->getName().c_str(), action.objectName.c_str());
 
-      m_battleActions[m_currentActor].actionName = "";
+      m_battleActions[m_currentActor].front().actionName = "";
 
       m_turnDelay = 16;
     }
@@ -408,13 +408,13 @@ void Battle::executeActions()
       else
       {
         battle_message("The enemy blocks your path.");
-        m_battleActions[m_currentActor].actionName = "";
+        m_battleActions[m_currentActor].front().actionName = "";
       }
     }
     else
     {
       battle_message("There is no escaping this!");
-      m_battleActions[m_currentActor].actionName = "";
+      m_battleActions[m_currentActor].front().actionName = "";
     }
   }
   else if (action.actionName == "Fumble")
@@ -452,13 +452,13 @@ void Battle::showAction()
   {
     m_state = STATE_ACTION_EFFECT;
 
-    if (m_battleActions[m_currentActor].target)
+    if (m_battleActions[m_currentActor].front().target)
     {
-      m_currentTargets.push_back(m_battleActions[m_currentActor].target);
+      m_currentTargets.push_back(m_battleActions[m_currentActor].front().target);
 
-      if (m_battleActions[m_currentActor].actionName == "Spell")
+      if (m_battleActions[m_currentActor].front().actionName == "Spell")
       {
-        const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
+        const Spell* spell = get_spell(m_battleActions[m_currentActor].front().objectName);
 
         // Reduce it here since cast_spell is called for each target when
         // spell has multiple targets.
@@ -467,9 +467,9 @@ void Battle::showAction()
     }
     else
     {
-      if (m_battleActions[m_currentActor].actionName == "Spell")
+      if (m_battleActions[m_currentActor].front().actionName == "Spell")
       {
-        const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
+        const Spell* spell = get_spell(m_battleActions[m_currentActor].front().objectName);
 
         // Reduce it here since cast_spell is called for each target when
         // spell has multiple targets.
@@ -477,9 +477,9 @@ void Battle::showAction()
 
         setCurrentTargets(spell->target);
       }
-      else if (m_battleActions[m_currentActor].actionName == "Item")
+      else if (m_battleActions[m_currentActor].front().actionName == "Item")
       {
-        Item& item = item_ref(m_battleActions[m_currentActor].objectName);
+        Item& item = item_ref(m_battleActions[m_currentActor].front().objectName);
 
         setCurrentTargets(item.target);
       }
@@ -495,7 +495,7 @@ void Battle::actionEffect()
 {
   if (!effectInProgress() && m_turnDelay == 0)
   {
-    std::string actionName = m_battleActions[m_currentActor].actionName;
+    std::string actionName = m_battleActions[m_currentActor].front().actionName;
     bool criticalHit = false;
 
     if (actionName == "Attack" || actionName == "Spell" || actionName == "Item")
@@ -515,7 +515,7 @@ void Battle::actionEffect()
         bool guard = false;
 
         if (m_battleActions.count(currentTarget) > 0 &&
-            m_battleActions[currentTarget].actionName == "Guard")
+            m_battleActions[currentTarget].front().actionName == "Guard")
         {
           guard = true;
         }
@@ -530,13 +530,13 @@ void Battle::actionEffect()
       }
       else if (actionName == "Spell")
       {
-        const Spell* spell = get_spell(m_battleActions[m_currentActor].objectName);
+        const Spell* spell = get_spell(m_battleActions[m_currentActor].front().objectName);
 
         damage = cast_spell(spell, m_currentActor, currentTarget);
       }
       else if (actionName == "Item")
       {
-        Item& item = item_ref(m_battleActions[m_currentActor].objectName);
+        Item& item = item_ref(m_battleActions[m_currentActor].front().objectName);
 
         damage = use_item(&item, m_currentActor, currentTarget);
       }
@@ -587,6 +587,8 @@ void Battle::actionEffect()
     }
     else if (m_currentTargets.empty())
     {
+      m_battleActions[m_currentActor].erase(m_battleActions[m_currentActor].begin());
+
       if (actionName == "Run")
       {
         m_state = STATE_ESCAPE;
@@ -824,7 +826,7 @@ void Battle::draw(sf::RenderTarget& target)
 
 void Battle::setAction(Character* user, Action action)
 {
-  m_battleActions[user] = action;
+  m_battleActions[user].push_back(action);
 }
 
 void Battle::doneSelectingActions()
@@ -838,65 +840,68 @@ void Battle::doneSelectingActions()
   {
     MonsterDef def = get_monster_definition((*it)->getName());
 
-    Action action;
-
-    if (def.actions.empty())
+    for (int i = 0; i < def.numberOfAttacks; i++)
     {
-      action.actionName = "Attack";
-      action.target = selectRandomTarget(*it);
-    }
-    else
-    {
-      std::vector< rnd::random_pick_entry_t<size_t> > actionEntries;
-      for (size_t i = 0; i < def.actions.size(); i++)
+      Action action;
+
+      if (def.actions.empty())
       {
-        rnd::random_pick_entry_t<size_t> entry = { i, def.actions[i].weight };
-
-        actionEntries.push_back(entry);
-      }
-      size_t actionIndex = rnd::random_pick(actionEntries);
-
-      action.actionName = def.actions[actionIndex].action;
-      action.objectName = def.actions[actionIndex].objectName;
-      action.target = 0;    // Default
-
-      if (action.actionName == "Attack")
-      {
+        action.actionName = "Attack";
         action.target = selectRandomTarget(*it);
       }
-      else if (action.actionName == "Spell")
+      else
       {
-        const Spell* spell = get_spell(action.objectName);
-        if (spell->target == TARGET_SINGLE_ENEMY)
+        std::vector< rnd::random_pick_entry_t<size_t> > actionEntries;
+        for (size_t i = 0; i < def.actions.size(); i++)
+        {
+          rnd::random_pick_entry_t<size_t> entry = { i, def.actions[i].weight };
+
+          actionEntries.push_back(entry);
+        }
+        size_t actionIndex = rnd::random_pick(actionEntries);
+
+        action.actionName = def.actions[actionIndex].action;
+        action.objectName = def.actions[actionIndex].objectName;
+        action.target = 0;    // Default
+
+        if (action.actionName == "Attack")
         {
           action.target = selectRandomTarget(*it);
         }
-        else if (spell->target == TARGET_ALL_ENEMY || spell->target == TARGET_ALL_ALLY)
+        else if (action.actionName == "Spell")
         {
-          action.target = 0;
-        }
-        else if (spell->target == TARGET_SINGLE_ALLY)
-        {
-          action.target = selectRandomFriendlyTarget(*it);
-        }
-        else if (spell->target == TARGET_SELF)
-        {
-          action.target = *it;
-        }
-        else if (spell->target == TARGET_DEAD)
-        {
-          action.target = random_dead_character<Character>(m_monsters);
-          if (action.target == 0)
+          const Spell* spell = get_spell(action.objectName);
+          if (spell->target == TARGET_SINGLE_ENEMY)
           {
-            action.actionName = "Ponder";
+            action.target = selectRandomTarget(*it);
+          }
+          else if (spell->target == TARGET_ALL_ENEMY || spell->target == TARGET_ALL_ALLY)
+          {
+            action.target = 0;
+          }
+          else if (spell->target == TARGET_SINGLE_ALLY)
+          {
+            action.target = selectRandomFriendlyTarget(*it);
+          }
+          else if (spell->target == TARGET_SELF)
+          {
+            action.target = *it;
+          }
+          else if (spell->target == TARGET_DEAD)
+          {
+            action.target = random_dead_character<Character>(m_monsters);
+            if (action.target == 0)
+            {
+              action.actionName = "Ponder";
+            }
           }
         }
       }
+
+      setAction(*it, action);
+
+      addToBattleOrder(*it);
     }
-
-    setAction(*it, action);
-
-    addToBattleOrder(*it);
   }
 
   std::sort(m_battleOrder.begin(), m_battleOrder.end(), speed_comparator);
@@ -1072,7 +1077,7 @@ void Battle::setCurrentTargets(Target targetType)
 
 void Battle::createEffects()
 {
-  Action& action = m_battleActions[m_currentActor];
+  Action& action = m_battleActions[m_currentActor].front();
 
   std::string effectName;
 

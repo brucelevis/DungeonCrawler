@@ -98,7 +98,7 @@ private:
   BattleMenu m_battleMenu;
   std::vector<Character*> m_monsters;
   std::vector<Character*> m_battleOrder;
-  std::map<Character*, Action> m_battleActions;
+  std::map<Character*, std::vector<Action> > m_battleActions;
   Character* m_currentActor;
 
   std::vector<Character*> m_currentTargets;

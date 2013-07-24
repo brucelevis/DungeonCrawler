@@ -38,6 +38,8 @@ struct MonsterDef
   std::map<std::string, float> resistance;
 
   std::vector<std::string> immunity;
+
+  int numberOfAttacks;
 };
 
 void load_monsters();
