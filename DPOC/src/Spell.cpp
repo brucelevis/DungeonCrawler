@@ -184,12 +184,17 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
   {
     std::string soundToPlay;
 
+    bool success = false;
+
     for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
     {
       int range = random_range(0, 100);
       if (range < it->second.chance)
       {
-        cause_status(target, it->first, false, it->second.duration);
+        if (cause_status(target, it->first, false, it->second.duration))
+        {
+          success = true;
+        }
 
         // Play the first applicable sound.
         if (soundToPlay.empty())
@@ -197,10 +202,11 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
           soundToPlay = get_status_effect(it->first)->sound;
         }
       }
-      else
-      {
-        battle_message("No effect...");
-      }
+    }
+
+    if (!success && damage == 0)
+    {
+      battle_message("No effect...");
     }
 
     if (damage == 0 && !soundToPlay.empty())

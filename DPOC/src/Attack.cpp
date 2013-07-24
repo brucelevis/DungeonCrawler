@@ -189,7 +189,7 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
   return damage;
 }
 
-void cause_status(Character* target, const std::string& status, bool forceStatus, int duration)
+bool cause_status(Character* target, const std::string& status, bool forceStatus, int duration)
 {
   bool should = !target->isImmune(status);
 
@@ -205,8 +205,10 @@ void cause_status(Character* target, const std::string& status, bool forceStatus
   }
   else
   {
-    battle_message("No effect...");
+    return false;
   }
+
+  return true;
 }
 
 void cure_status(Character* target, const std::string& status)
