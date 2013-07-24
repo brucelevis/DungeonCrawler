@@ -1136,12 +1136,26 @@ void BattleMenu::handleConfirm()
     {
       m_spellMenu = new SpellMenu(m_statusMenu->getCurrentActor()->getName());
       m_spellMenu->setVisible(true);
+
+      auto it = m_spellMemory.find(m_statusMenu->getCurrentActor());
+      if (it != m_spellMemory.end())
+      {
+        m_spellMenu->setCurrentChoice(it->second);
+      }
+
       m_stateStack.push(STATE_SELECT_SPELL);
     }
     else if (action == "Item")
     {
       m_itemMenu = new ItemMenu;
       m_itemMenu->setVisible(true);
+
+      auto it = m_itemMemory.find(m_statusMenu->getCurrentActor());
+      if (it != m_itemMemory.end())
+      {
+        m_itemMenu->setCurrentChoice(it->second);
+      }
+
       m_stateStack.push(STATE_SELECT_ITEM);
     }
     else if (action == "Guard")
@@ -1191,6 +1205,8 @@ void BattleMenu::handleConfirm()
   {
     const Spell* spell = m_spellMenu->getSelectedSpell();
 
+    m_spellMemory[m_statusMenu->getCurrentActor()] = m_spellMenu->getCurrentChoiceIndex();
+
     if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
     {
       play_sound(config::get("SOUND_CANCEL"));
@@ -1217,6 +1233,8 @@ void BattleMenu::handleConfirm()
   else if (currentState == STATE_SELECT_ITEM)
   {
     const Item* item = get_player()->getItem(m_itemMenu->getSelectedItemName());
+
+    m_itemMemory[m_statusMenu->getCurrentActor()] = m_itemMenu->getCurrentChoiceIndex();
 
     if (item->target != TARGET_NONE &&
         (item->type == ITEM_USE || item->type == ITEM_USE_BATTLE))

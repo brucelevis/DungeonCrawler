@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <map>
 
 #include <SFML/Graphics.hpp>
 
@@ -54,11 +55,12 @@ public:
   bool cursorVisible() const { return m_cursorVisible; }
 
   virtual void resetChoice() { m_currentMenuChoice = 0; resetScroll(); }
+
+  int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
+  void setCurrentChoice(int choice) { m_currentMenuChoice = choice; }
 protected:
   void setMaxVisible(int maxVisible) { m_maxVisible = maxVisible; }
-  int getCurrentChoiceIndex() const { return m_currentMenuChoice; }
   void drawSelectArrow(sf::RenderTarget& target, int x, int y);
-  void setCurrentChoice(int choice) { m_currentMenuChoice = choice; }
 private:
   void fixScroll(Direction dir);
   void resetScroll() {m_scroll = 0; }
@@ -302,6 +304,10 @@ private:
   Battle* m_battle;
 
   bool m_actionMenuHidden;
+
+  // Remember the last selected spell for characters during the battle.
+  std::map<Character*, int> m_spellMemory;
+  std::map<Character*, int> m_itemMemory;
 };
 
 class BattleActionMenu : public Menu
