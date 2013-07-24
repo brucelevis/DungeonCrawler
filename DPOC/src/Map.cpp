@@ -16,13 +16,16 @@ static std::string make_tag(int index, const std::string& name)
   return ss.str();
 }
 
-static void compute_sprite_data(sf::Texture* texture, int tileX, int tileY, int& spriteSheetX, int& spriteSheetY, Direction& startDirection)
+static void compute_sprite_data(sf::Texture* texture,
+    int tileX, int tileY,
+    int tileWidth, int tileHeight,
+    int& spriteSheetX, int& spriteSheetY, Direction& startDirection)
 {
-  int numberOfTilesX = texture->getSize().x / config::TILE_W;
-  int numberOfTilesY = texture->getSize().y / config::TILE_H;
+  int numberOfTilesX = texture->getSize().x / tileWidth;
+  int numberOfTilesY = texture->getSize().y / tileHeight;
 
-  int numberOfBlocksX = (texture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X));
-  int numberOfBlocksY = (texture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y));
+  int numberOfBlocksX = (texture->getSize().x / (tileWidth * config::NUM_SPRITES_X));
+  int numberOfBlocksY = (texture->getSize().y / (tileHeight * config::NUM_SPRITES_Y));
 
   spriteSheetX = 0;
   spriteSheetY = 0;
@@ -379,6 +382,9 @@ Map* Map::loadTiledFile(const std::string& filename)
           int tileX = tileId % (texture->getSize().x / config::TILE_W);
           int tileY = tileId / (texture->getSize().x / config::TILE_H);
 
+          int spriteTileW = tileset->tileW;
+          int spriteTileH = tileset->tileH;
+
           Entity* entity = new Entity;
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
@@ -403,10 +409,13 @@ Map* Map::loadTiledFile(const std::string& filename)
             int spriteSheetX, spriteSheetY;
             Direction startDirection;
 
-            compute_sprite_data(texture, tileX, tileY, spriteSheetX, spriteSheetY, startDirection);
+            compute_sprite_data(texture,
+                tileX, tileY,
+                spriteTileW, spriteTileH,
+                spriteSheetX, spriteSheetY, startDirection);
 
             Sprite* entitySprite = new Sprite;
-            entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY);
+            entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY, spriteTileW, spriteTileH);
             entitySprite->setDirection(startDirection);
             entity->setSprite(entitySprite);
 

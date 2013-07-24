@@ -10,7 +10,9 @@ class Sprite
 public:
   Sprite();
   virtual ~Sprite();
-  void create(const std::string& spriteId, int spriteSheetX, int spriteSheetY, int speed = 10);
+  void create(const std::string& spriteId,
+      int spriteSheetX, int spriteSheetY,
+      int widht, int height, int speed = 10);
   void update(Direction direction);
   virtual void render(sf::RenderTarget& target, float x, float y);
   void render_ex(sf::RenderTarget& target, float x, float y, sf::Color color);
@@ -27,8 +29,6 @@ public:
 
   inline int getWidth() const { return m_width; }
   inline int getHeight() const { return m_height;}
-
-  void changeTexture(const std::string& textureName);
 
   std::string getTextureName() const { return m_textureName; }
 

@@ -22,7 +22,7 @@ struct PlayerClass
   std::vector<std::string> equipment;
 
   std::string texture;
-  coord_t textureBlock;
+  sf::IntRect textureBlock;
 
   std::string faceTexture;
   sf::IntRect textureRect;

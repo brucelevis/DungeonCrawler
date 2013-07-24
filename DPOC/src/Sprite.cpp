@@ -23,7 +23,9 @@ Sprite::~Sprite()
   cache::releaseTexture(m_textureName);
 }
 
-void Sprite::create(const std::string& spriteId, int spriteSheetX, int spriteSheetY, int speed)
+void Sprite::create(const std::string& spriteId,
+    int spriteSheetX, int spriteSheetY,
+    int width, int height, int speed)
 {
   if (!m_textureName.empty())
   {
@@ -42,30 +44,19 @@ void Sprite::create(const std::string& spriteId, int spriteSheetX, int spriteShe
   m_spriteSheetX = spriteSheetX;
   m_spriteSheetY = spriteSheetY;
 
+  m_width = width;
+  m_height = height;
+
   sf::Texture* spriteTexture = cache::loadTexture(m_textureName);
 
   if (spriteTexture)
   {
     m_sprite.setTexture(*spriteTexture);
-
-    int numberOfBlocksX = (spriteTexture->getSize().x / (config::TILE_W * config::NUM_SPRITES_X));
-    int numberOfBlocksY = (spriteTexture->getSize().y / (config::TILE_H * config::NUM_SPRITES_Y));
-
-    int blockW = spriteTexture->getSize().x / numberOfBlocksX;
-    int blockH = spriteTexture->getSize().y / numberOfBlocksY;
-
-    m_width = blockW / config::NUM_SPRITES_X;
-    m_height = blockH / config::NUM_SPRITES_Y;
   }
   else
   {
     TRACE("Unable to create sprite %s: Texture not found!", m_textureName.c_str());
   }
-}
-
-void Sprite::changeTexture(const std::string& textureName)
-{
-  create(textureName, m_spriteSheetX, m_spriteSheetY, m_ticksPerFrame);
 }
 
 void Sprite::update(Direction direction)
@@ -106,7 +97,7 @@ void Sprite::render_ex(sf::RenderTarget& target, float x, float y, sf::Color col
 Sprite* Sprite::clone() const
 {
   Sprite* rhs = new Sprite;
-  rhs->create(m_textureName, m_spriteSheetX, m_spriteSheetY);
+  rhs->create(m_textureName, m_spriteSheetX, m_spriteSheetY, m_width, m_height);
   rhs->m_frame = m_frame;
   rhs->m_maxFrame = m_maxFrame;
   rhs->m_ticksPerFrame = m_ticksPerFrame;

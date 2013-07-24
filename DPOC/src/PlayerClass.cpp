@@ -78,9 +78,13 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     std::string name = textElem->FindAttribute("name")->Value();
     int x = fromString<int>(textElem->FindAttribute("x")->Value());
     int y = fromString<int>(textElem->FindAttribute("y")->Value());
+    int w = fromString<int>(textElem->FindAttribute("w")->Value());
+    int h = fromString<int>(textElem->FindAttribute("h")->Value());
     pc.texture = name;
-    pc.textureBlock.x = x;
-    pc.textureBlock.y = y;
+    pc.textureBlock.left = x;
+    pc.textureBlock.top = y;
+    pc.textureBlock.width = w;
+    pc.textureBlock.height = h;
   }
 
   const XMLElement* faceElem = classElement->FirstChildElement("face");
