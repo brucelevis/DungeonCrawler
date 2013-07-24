@@ -267,6 +267,11 @@ Player* Player::create()
   return player;
 }
 
+Player* Player::createBlank()
+{
+  return new Player;
+}
+
 Player* Player::createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData)
 {
   Player* player = new Player;

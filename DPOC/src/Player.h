@@ -57,6 +57,7 @@ public:
   void recoverAll();
 
   static Player* create();
+  static Player* createBlank();
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 private:
   Player();

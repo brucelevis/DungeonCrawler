@@ -5,6 +5,7 @@
 
 #include "logger.h"
 #include "SaveLoad.h"
+#include "BattleTest.h"
 
 #include "Config.h"
 #include "draw_text.h"
@@ -39,25 +40,20 @@ int main(int argc, char* argv[])
 
   SceneManager::instance().create();
 
-//  if (argc > 1)
-//  {
-//    std::string arg = argv[1];
-//    if (arg == "e")
-//    {
-//      Editor editor;
-//      editor.run();
-//    }
-//    else if (arg == "l")
-//    {
-//      std::string saveFile = argv[2];
-//
-//      load_game(saveFile);
-//    }
-//  }
-//  else
-//  {
-//    Game::instance().setPlayer(Player::create());
-//  }
+  if (argc > 1)
+  {
+    std::string arg = argv[1];
+    if (arg == "test")
+    {
+      start_test_battle();
+
+      return 0;
+    }
+  }
+  else
+  {
+    Game::instance().setPlayer(Player::create());
+  }
 
 //  SceneManager::instance().addScene(&Game::instance());
 
