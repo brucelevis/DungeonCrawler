@@ -34,5 +34,6 @@ struct CharacterData
 
 void save_game(const std::string& saveFile);
 void load_game(const std::string& saveFile);
+CharacterData get_party_leader_from_save(const std::string& saveFile);
 
 #endif

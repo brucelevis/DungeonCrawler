@@ -88,6 +88,51 @@ void load_game(const std::string& saveFile)
   TRACE("Loading completed.");
 }
 
+CharacterData get_party_leader_from_save(const std::string& saveFile)
+{
+  std::string fullPath = "Resources/Saves/" + saveFile;
+
+  XMLDocument doc;
+  if (doc.LoadFile(fullPath.c_str()) != 0)
+  {
+    TRACE("Unable to load save: %s (%s)", fullPath.c_str(), doc.GetErrorStr1());
+
+    throw std::runtime_error("Unable to load save: " +
+        fullPath + "(" + std::string(doc.GetErrorStr1()) + ")");
+  }
+
+  const XMLElement* root = doc.FirstChildElement("save");
+
+  for (const XMLElement* element = root->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    std::string elementName = element->Name();
+
+    if (elementName == "player")
+    {
+      for (const XMLElement* pElem = element->FirstChildElement(); pElem; pElem = pElem->NextSiblingElement())
+      {
+        elementName = pElem->Name();
+
+        if (elementName == "party")
+        {
+          std::vector<EntityData> entityData;
+          std::vector<CharacterData> characterData;
+
+          for (const XMLElement* cElem = pElem->FirstChildElement(); cElem; cElem = cElem->NextSiblingElement())
+          {
+            CharacterData charData = parseCharacterElement(cElem->FirstChildElement("playerCharacter"));
+
+            return charData;
+          }
+
+        }
+      }
+    }
+  }
+
+  return CharacterData();
+}
+
 void parseMapElement(const XMLElement* mapElement)
 {
   TRACE("Parse Map Element");

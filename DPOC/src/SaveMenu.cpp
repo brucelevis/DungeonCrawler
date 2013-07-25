@@ -63,6 +63,15 @@ void SaveMenu::refresh()
 
     m_filenames.push_back(filename);
 
-    addEntry("Save Slot " + toString(i) + (file_exists(path + filename) ? " [Used]" : ""));
+    std::string slotName = "Save Slot " + toString(i+1);
+
+    if (file_exists(path + filename))
+    {
+      CharacterData leader = get_party_leader_from_save(filename);
+
+      slotName += " {" + limit_string(leader.name, 3) + " L" + toString(leader.attributes["level"].max) + "}";
+    }
+
+    addEntry(slotName);
   }
 }
