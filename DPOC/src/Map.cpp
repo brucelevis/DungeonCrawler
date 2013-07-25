@@ -380,6 +380,11 @@ Map* Map::loadTiledFile(const std::string& filename)
           int spriteTileW = tileset->tileW;
           int spriteTileH = tileset->tileH;
 
+          if (name.empty())
+          {
+            name = "anonymous_object@[" + toString(objX) + "," + toString(objY) + "]";
+          }
+
           Entity* entity = new Entity;
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
