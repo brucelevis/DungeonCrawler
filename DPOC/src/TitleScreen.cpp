@@ -11,29 +11,93 @@
 
 #include "TitleScreen.h"
 
+TitleMenu::TitleMenu()
+ : m_saveMenu(0)
+{
+
+}
+
+TitleMenu::~TitleMenu()
+{
+  delete m_saveMenu;
+}
+
 void TitleMenu::handleConfirm()
 {
-  std::string choice = getCurrentMenuChoice();
-
-  if (choice == "New Game")
+  if (m_saveMenu)
   {
-    setVisible(false);
+    m_saveMenu->handleConfirm();
 
-    Game::instance().setPlayer(Player::create());
-    SceneManager::instance().fadeOut(32);
+    if (!m_saveMenu->isVisible())
+    {
+      delete m_saveMenu;
+      m_saveMenu = 0;
+
+      setVisible(false);
+      SceneManager::instance().fadeOut(32);
+    }
   }
-  else if (choice == "Load Game")
+  else
   {
-    setVisible(false);
+    std::string choice = getCurrentMenuChoice();
 
-    load_game("TestSave.xml");
-    SceneManager::instance().fadeOut(32);
-  }
-  else if (choice == "Exit")
-  {
-    SceneManager::instance().close();
+    if (choice == "New Game")
+    {
+      setVisible(false);
+
+      Game::instance().setPlayer(Player::create());
+      SceneManager::instance().fadeOut(32);
+    }
+    else if (choice == "Load Game")
+    {
+      m_saveMenu = new SaveMenu(SaveMenu::LOAD);
+      m_saveMenu->setVisible(true);
+    }
+    else if (choice == "Exit")
+    {
+      SceneManager::instance().close();
+    }
   }
 }
+
+void TitleMenu::moveArrow(Direction dir)
+{
+  if (m_saveMenu)
+  {
+    m_saveMenu->moveArrow(dir);
+  }
+  else
+  {
+    Menu::moveArrow(dir);
+  }
+}
+
+void TitleMenu::handleEscape()
+{
+  if (m_saveMenu)
+  {
+    m_saveMenu->handleEscape();
+
+    if (!m_saveMenu->isVisible())
+    {
+      delete m_saveMenu;
+      m_saveMenu = 0;
+    }
+  }
+}
+
+void TitleMenu::draw(sf::RenderTarget& target, int x, int y)
+{
+  Menu::draw(target, x, y);
+
+  if (m_saveMenu)
+  {
+    m_saveMenu->draw(target, config::GAME_RES_X / 2 - m_saveMenu->getWidth() / 2,
+        config::GAME_RES_Y / 2 - m_saveMenu->getHeight() / 2);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 TitleScreen::TitleScreen()
 {
@@ -88,6 +152,10 @@ void TitleScreen::handleKeyPress(sf::Keyboard::Key key)
     if (key == sf::Keyboard::Space)
     {
       m_menu.handleConfirm();
+    }
+    else if (key == sf::Keyboard::Escape)
+    {
+      m_menu.handleEscape();
     }
 
     if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);

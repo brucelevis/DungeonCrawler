@@ -16,6 +16,7 @@ class Spell;
 class Character;
 class PlayerCharacter;
 class Battle;
+class SaveMenu;
 
 class Menu
 {
@@ -125,12 +126,16 @@ private:
   void openEquipMenu();
   void closeEquipMenu();
 
+  void openSaveMenu();
+  void closeSaveMenu();
+
   void drawStatus(sf::RenderTarget& target, int x, int y);
 private:
   ItemMenu* m_itemMenu;
   SpellMenu* m_spellMenu;
   CharacterMenu* m_characterMenu;
   EquipMenu* m_equipMenu;
+  SaveMenu* m_saveMenu;
 
   std::stack<State> m_stateStack;
 };

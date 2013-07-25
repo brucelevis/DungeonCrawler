@@ -19,6 +19,7 @@
 #include "Battle.h"
 
 #include "SaveLoad.h"
+#include "SaveMenu.h"
 
 #include "Menu.h"
 
@@ -209,7 +210,8 @@ MainMenu::MainMenu()
  : m_itemMenu(0),
    m_spellMenu(0),
    m_characterMenu(new CharacterMenu),
-   m_equipMenu(0)
+   m_equipMenu(0),
+   m_saveMenu(0)
 {
   addEntry("Item");
   addEntry("Spell");
@@ -227,6 +229,7 @@ MainMenu::~MainMenu()
   delete m_spellMenu;
   delete m_characterMenu;
   delete m_equipMenu;
+  delete m_saveMenu;
 }
 
 void MainMenu::handleConfirm()
@@ -260,7 +263,7 @@ void MainMenu::handleConfirm()
     }
     else if (getCurrentMenuChoice() == "Save")
     {
-      save_game("TestSave.xml");
+      openSaveMenu();
     }
   }
   else if (currentState == STATE_CHARACTER_MENU)
@@ -380,6 +383,10 @@ void MainMenu::handleConfirm()
   {
     m_equipMenu->handleConfirm();
   }
+  else if (currentState == STATE_SAVE_MENU)
+  {
+    m_saveMenu->handleConfirm();
+  }
 }
 
 void MainMenu::handleEscape()
@@ -412,6 +419,14 @@ void MainMenu::handleEscape()
     {
       m_stateStack.pop();
     }
+    else if (currentState == STATE_SAVE_MENU)
+    {
+      m_saveMenu->handleEscape();
+      if (!m_saveMenu->isVisible())
+      {
+        closeSaveMenu();
+      }
+    }
   }
   else
   {
@@ -442,6 +457,10 @@ void MainMenu::moveArrow(Direction dir)
   else if (currentState == STATE_EQUIP_MENU)
   {
     m_equipMenu->moveArrow(dir);
+  }
+  else if (currentState == STATE_SAVE_MENU)
+  {
+    m_saveMenu->moveArrow(dir);
   }
 }
 
@@ -508,6 +527,22 @@ void MainMenu::closeEquipMenu()
   m_stateStack.pop();
 }
 
+void MainMenu::openSaveMenu()
+{
+  m_saveMenu = new SaveMenu(SaveMenu::SAVE);
+  m_saveMenu->setVisible(true);
+
+  m_stateStack.push(STATE_SAVE_MENU);
+}
+
+void MainMenu::closeSaveMenu()
+{
+  delete m_saveMenu;
+  m_saveMenu = 0;
+
+  m_stateStack.pop();
+}
+
 void MainMenu::open()
 {
   setVisible(true);
@@ -570,6 +605,11 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
       {
         m_characterMenu->draw(target, x, y);
       }
+    }
+    else if (currentState == STATE_SAVE_MENU)
+    {
+      m_saveMenu->draw(target, config::GAME_RES_X / 2 - m_saveMenu->getWidth() / 2,
+          config::GAME_RES_Y / 2 - m_saveMenu->getHeight() / 2);
     }
   }
 }

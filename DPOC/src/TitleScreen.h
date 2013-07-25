@@ -4,14 +4,24 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "Direction.h"
 #include "Scene.h"
 #include "Menu.h"
+#include "SaveMenu.h"
 
 class TitleMenu : public Menu
 {
 public:
+  TitleMenu();
+  ~TitleMenu();
+
   void handleConfirm();
+  void moveArrow(Direction dir);
+  void handleEscape();
+
+  void draw(sf::RenderTarget& target, int x, int y);
 private:
+  SaveMenu* m_saveMenu;
 };
 
 class TitleScreen : public Scene
