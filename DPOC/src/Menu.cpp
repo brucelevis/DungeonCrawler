@@ -402,6 +402,7 @@ void MainMenu::handleEscape()
     else if (currentState == STATE_SPELL_MENU)
     {
       closeSpellMenu();
+      m_characterMenu->setCursorVisible(true);
     }
     else if (currentState == STATE_CHARACTER_MENU)
     {
