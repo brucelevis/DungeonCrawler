@@ -826,6 +826,7 @@ void Battle::draw(sf::RenderTarget& target)
 
 void Battle::setAction(Character* user, Action action)
 {
+  m_battleActions[user].clear();
   m_battleActions[user].push_back(action);
 }
 
@@ -898,7 +899,7 @@ void Battle::doneSelectingActions()
         }
       }
 
-      setAction(*it, action);
+      m_battleActions[*it].push_back(action);
 
       addToBattleOrder(*it);
     }
