@@ -904,7 +904,28 @@ void Battle::doneSelectingActions()
     }
   }
 
+  // Set some variance to turn order.
+  std::map<Character*, int> tmpSpeeds;
+  for (auto it = m_battleOrder.begin(); it != m_battleOrder.end(); ++it)
+  {
+    tmpSpeeds[*it] = (*it)->getAttribute("speed").current;
+
+    float newSpeed = (float)(*it)->getAttribute("speed").current * rand_float(0.8f, 1.2f);
+    if (newSpeed <= 1)
+    {
+      newSpeed = (*it)->getAttribute("speed").current;
+    }
+
+    (*it)->getAttribute("speed").current = newSpeed;
+  }
+
   std::sort(m_battleOrder.begin(), m_battleOrder.end(), speed_comparator);
+
+  // Restore speeds.
+  for (auto it = tmpSpeeds.begin(); it != tmpSpeeds.end(); ++it)
+  {
+    it->first->getAttribute("speed").current = it->second;
+  }
 
   m_battleMenu.setActionMenuHidden(true);
 
