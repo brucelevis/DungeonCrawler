@@ -1211,6 +1211,13 @@ void BattleMenu::handleConfirm()
 
       nextActor();
     }
+    else
+    {
+      // Undefined action.
+      prepareAction();
+
+      nextActor();
+    }
   }
   else if (currentState == STATE_SELECT_MONSTER)
   {
@@ -1358,6 +1365,10 @@ void BattleMenu::prepareAction()
     battleAction.target = 0;
   }
   else if (action == "Run")
+  {
+    battleAction.target = 0;
+  }
+  else
   {
     battleAction.target = 0;
   }
