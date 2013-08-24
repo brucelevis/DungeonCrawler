@@ -50,6 +50,7 @@ XML Formats
  - `<status name, {chance, duration}>`* (chance default 100, duration default 0)
 * `<buff>`
  - `<attribute name>`*
+* `<isPhysical>` (true/false, default false)
 
 #### Spell types: ####
  * SPELL_NONE

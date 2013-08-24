@@ -148,9 +148,11 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
 
 int calculate_magical_damage(Character* attacker, Character* target, const Spell* spell)
 {
-  float str = attacker->computeCurrentAttribute("magic");
+  float str = !spell->isPhysical ? attacker->computeCurrentAttribute("magic")
+                                 : attacker->computeCurrentAttribute("strength");
   float pow = spell->power;
-  float def = target->computeCurrentAttribute("mag.def");
+  float def = !spell->isPhysical ? target->computeCurrentAttribute("mag.def")
+                                 : target->computeCurrentAttribute("defense");
 
   float resistance = target->getResistance(spell->element);
 

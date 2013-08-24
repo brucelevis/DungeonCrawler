@@ -44,6 +44,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   spell.power = 0;
   spell.spellType = SPELL_NONE;
   spell.target = TARGET_NONE;
+  spell.isPhysical = false;
 
   const XMLElement* nameElem = spellElement->FirstChildElement("name");
   const XMLElement* descElem = spellElement->FirstChildElement("description");
@@ -54,6 +55,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   const XMLElement* effeElem = spellElement->FirstChildElement("effect");
   const XMLElement* elemElem = spellElement->FirstChildElement("element");
   const XMLElement* verbElem = spellElement->FirstChildElement("verb");
+  const XMLElement* physElem = spellElement->FirstChildElement("isPhysical");
 
   if (nameElem)
     spell.name = nameElem->GetText();
@@ -73,6 +75,8 @@ static Spell parse_spell_element(const XMLElement* spellElement)
     spell.element = elemElem->GetText();
   if (verbElem)
     spell.verb = verbElem->GetText();
+  if (physElem)
+    spell.isPhysical = fromString<bool>(physElem->GetText());
 
   const XMLElement* typeElem = spellElement->FirstChildElement("spellType");
   if (typeElem)

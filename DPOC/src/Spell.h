@@ -48,6 +48,9 @@ struct Spell
   std::vector<std::string> attributeBuffs;
 
   std::string element;
+
+  // If true, use strength rather than magic power for damage.
+  bool isPhysical;
 };
 
 void load_spells();
