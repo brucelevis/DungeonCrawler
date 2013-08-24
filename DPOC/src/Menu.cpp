@@ -1139,7 +1139,7 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
 
 BattleMenu::BattleMenu(Battle* battle, const std::vector<Character*>& monsters)
  : m_actionMenu(new BattleActionMenu),
-   m_statusMenu(new BattleStatusMenu),
+   m_statusMenu(new BattleStatusMenu(m_actionMenu)),
    m_monsterMenu(new BattleMonsterMenu(monsters)),
    m_spellMenu(0),
    m_itemMenu(0),
@@ -1594,11 +1594,24 @@ void BattleActionMenu::handleConfirm()
 
 }
 
+void BattleActionMenu::init(PlayerCharacter* character)
+{
+  clear();
+
+  for (auto it = character->getClass().battleActions.begin();
+       it != character->getClass().battleActions.end();
+       ++it)
+  {
+    addEntry(*it);
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
-BattleStatusMenu::BattleStatusMenu()
+BattleStatusMenu::BattleStatusMenu(BattleActionMenu* actionMenu)
  : m_currentActor(0),
-   m_currenActorRectHidden(false)
+   m_currenActorRectHidden(false),
+   m_actionMenu(actionMenu)
 {
   const std::vector<PlayerCharacter*>& party = get_player()->getParty();
 
@@ -1679,6 +1692,8 @@ bool BattleStatusMenu::prevActor()
       if (m_currentActor < 0)
       {
         m_currentActor = tmpIndex;
+
+        refreshActionMenu();
         return false;
       }
     }
@@ -1687,9 +1702,12 @@ bool BattleStatusMenu::prevActor()
   if (m_currentActor < 0)
   {
     m_currentActor = 0;
+
+    refreshActionMenu();
     return false;
   }
 
+  refreshActionMenu();
   return true;
 }
 
@@ -1707,6 +1725,8 @@ bool BattleStatusMenu::nextActor()
       if (m_currentActor >= getNumberOfChoice())
       {
         m_currentActor = tmpIndex;
+
+        refreshActionMenu();
         return false;
       }
     }
@@ -1715,9 +1735,12 @@ bool BattleStatusMenu::nextActor()
   if (m_currentActor >= getNumberOfChoice())
   {
     m_currentActor = getNumberOfChoice() - 1;
+
+    refreshActionMenu();
     return false;
   }
 
+  refreshActionMenu();
   return true;
 }
 
@@ -1744,6 +1767,13 @@ void BattleStatusMenu::resetActor()
       break;
     }
   }
+
+  refreshActionMenu();
+}
+
+void BattleStatusMenu::refreshActionMenu()
+{
+  m_actionMenu->init(get_player()->getParty().at(m_currentActor));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

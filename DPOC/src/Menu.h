@@ -322,6 +322,8 @@ public:
 
   void handleConfirm();
 
+  void init(PlayerCharacter* character);
+
 //  void draw(sf::RenderTarget& target, int x, int y);
 private:
 };
@@ -329,7 +331,7 @@ private:
 class BattleStatusMenu : public Menu
 {
 public:
-  BattleStatusMenu();
+  BattleStatusMenu(BattleActionMenu* actionMenu);
 
   void handleConfirm();
 
@@ -359,9 +361,15 @@ public:
 
   void setCurrentActorRectHidden(bool hidden) { m_currenActorRectHidden = hidden; }
 private:
+  void refreshActionMenu();
+private:
   int m_currentActor;
 
   bool m_currenActorRectHidden;
+
+  // Keep a pointer to the action menu so it can update its action list when
+  // current actor changes.
+  BattleActionMenu* m_actionMenu;
 };
 
 class BattleMonsterMenu : public Menu

@@ -99,6 +99,25 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     pc.textureRect = sf::IntRect(x, y, w, h);
   }
 
+  const XMLElement* actionsElem = classElement->FirstChildElement("actions");
+  if (actionsElem)
+  {
+    for (const XMLElement* element = actionsElem->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string actionName = element->GetText();
+      pc.battleActions.push_back(actionName);
+    }
+  }
+  else
+  {
+    // Default actions.
+    pc.battleActions.push_back("Attack");
+    pc.battleActions.push_back("Spell");
+    pc.battleActions.push_back("Item");
+    pc.battleActions.push_back("Guard");
+    pc.battleActions.push_back("Run");
+  }
+
   return pc;
 }
 

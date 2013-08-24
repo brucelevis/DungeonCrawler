@@ -21,6 +21,8 @@ struct PlayerClass
   std::map<int, std::vector<std::string> > spells;
   std::vector<std::string> equipment;
 
+  std::vector<std::string> battleActions;
+
   std::string texture;
   sf::IntRect textureBlock;
 

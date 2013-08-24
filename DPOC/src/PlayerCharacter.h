@@ -36,6 +36,8 @@ public:
 
   bool isImmune(const std::string& status) const;
 
+  const PlayerClass& getClass() const { return m_class; }
+
   static PlayerCharacter* create(const std::string& name, const std::string& className, int level = 1);
   static PlayerCharacter* createFromSaveData(CharacterData* data);
 private:

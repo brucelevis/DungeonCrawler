@@ -130,6 +130,8 @@ Example:
    + `<spell>SpellName</spell>`*
 * `<equipment>` (equipment this class can use)
  - `<item>ItemName</item>`*
+* `<actions>` (actions class can use in battle. default is attack, spell, item, guard, run).
+ - `<action>ActionName</action>`*
 
 ### Player.xml (`<player>`) ###
 Initial values for the player.
