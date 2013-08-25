@@ -570,6 +570,20 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     Game::instance().openShop(items);
   }
+  else if (data.opcode == Script::OP_SHOW_PICTURE)
+  {
+    std::string name = data.data.showPictureData.name;
+    float x = data.data.showPictureData.x;
+    float y = data.data.showPictureData.y;
+
+    SceneManager::instance().showPicture(name, x, y);
+  }
+  else if (data.opcode == Script::OP_HIDE_PICTURE)
+  {
+    std::string name = data.data.hidePictureData.name;
+
+    SceneManager::instance().hidePicture(name);
+  }
 }
 
 void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const

@@ -42,7 +42,9 @@ public:
     OP_END_GAME,
     OP_SET_CONFIG,
     OP_TRANSFER,
-    OP_SHOP
+    OP_SHOP,
+    OP_SHOW_PICTURE,
+    OP_HIDE_PICTURE
   };
 
   struct ScriptData
@@ -167,6 +169,17 @@ public:
         char inventory[32][MAX_SCRIPT_KEY_SIZE];
         int number;
       } shopData;
+
+      struct
+      {
+        char name[MAX_SCRIPT_KEY_SIZE];
+        float x, y;
+      } showPictureData;
+
+      struct
+      {
+        char name[MAX_SCRIPT_KEY_SIZE];
+      } hidePictureData;
     } data;
   };
 

@@ -486,6 +486,18 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     data.data.shopData.number = items.size();
   }
+  else if (opcode == OP_SHOW_PICTURE)
+  {
+    memset(data.data.showPictureData.name, '\0', MAX_SCRIPT_KEY_SIZE);
+    strcpy(data.data.showPictureData.name, strings[1].c_str());
+    data.data.showPictureData.x = atoi(strings[2].c_str());
+    data.data.showPictureData.y = atoi(strings[3].c_str());
+  }
+  else if (opcode == OP_HIDE_PICTURE)
+  {
+    memset(data.data.hidePictureData.name, '\0', MAX_SCRIPT_KEY_SIZE);
+    strcpy(data.data.hidePictureData.name, strings[1].c_str());
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -525,7 +537,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "end_game",     OP_END_GAME },
     { "set_config",   OP_SET_CONFIG },
     { "transfer",     OP_TRANSFER },
-    { "shop",         OP_SHOP }
+    { "shop",         OP_SHOP },
+    { "show_picture", OP_SHOW_PICTURE },
+    { "hide_picture", OP_HIDE_PICTURE }
   };
 
   auto it = OP_MAP.find(opStr);

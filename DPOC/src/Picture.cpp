@@ -2,7 +2,7 @@
 #include "Picture.h"
 
 Picture::Picture(const std::string& name)
- : m_texture(cache::loadTexture("Pictures/" + name)),
+ : m_texture(cache::loadTexture("Resources/Pictures/" + name)),
    m_x(0),
    m_y(0)
 {
@@ -15,8 +15,11 @@ Picture::~Picture()
 
 void Picture::draw(sf::RenderTarget& target) const
 {
-  sf::Sprite sprite;
-  sprite.setTexture(*m_texture);
-  sprite.setPosition(m_x, m_y);
-  target.draw(sprite);
+  if (m_texture)
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*m_texture);
+    sprite.setPosition(m_x, m_y);
+    target.draw(sprite);
+  }
 }

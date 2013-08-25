@@ -223,7 +223,7 @@ void SceneManager::showPicture(const std::string& pictureName, float x, float y)
 {
   auto it = m_pictures.find(pictureName);
 
-  if (it != m_pictures.end())
+  if (it == m_pictures.end())
   {
     Picture* picture = new Picture(pictureName);
     picture->setPosition(x, y);
