@@ -2,6 +2,7 @@
 
 #include <SFML/System.hpp>
 
+#include "Picture.h"
 #include "Config.h"
 #include "Utility.h"
 #include "SceneManager.h"
@@ -94,6 +95,11 @@ void SceneManager::draw()
   if (m_scenes.size() > 0)
   {
     m_scenes.back()->draw(m_targetTexture);
+  }
+
+  for (auto it = m_pictures.begin(); it != m_pictures.end(); ++it)
+  {
+    it->second->draw(m_targetTexture);
   }
 
   m_targetTexture.display();
@@ -210,5 +216,31 @@ void SceneManager::pollEvents()
       }
       break;
     }
+  }
+}
+
+void SceneManager::showPicture(const std::string& pictureName, float x, float y)
+{
+  auto it = m_pictures.find(pictureName);
+
+  if (it != m_pictures.end())
+  {
+    Picture* picture = new Picture(pictureName);
+    picture->setPosition(x, y);
+    m_pictures[pictureName] = picture;
+  }
+  else
+  {
+    it->second->setPosition(x, y);
+  }
+}
+
+void SceneManager::hidePicture(const std::string& pictureName)
+{
+  auto it = m_pictures.find(pictureName);
+  if (it != m_pictures.end())
+  {
+    delete it->second;
+    m_pictures.erase(it);
   }
 }

@@ -2,10 +2,14 @@
 #define SCENE_MANAGER_H
 
 #include <vector>
+#include <map>
+#include <string>
 
 #include <SFML/Graphics.hpp>
 
 #include "Scene.h"
+
+class Picture;
 
 class SceneManager
 {
@@ -24,6 +28,9 @@ public:
 
   void fadeIn(int duration);
   void fadeOut(int duration);
+
+  void showPicture(const std::string& pictureName, float x, float y);
+  void hidePicture(const std::string& pictureName);
 private:
   SceneManager();
 
@@ -46,6 +53,8 @@ private:
   Scene::FadeType m_fade;
   int m_fadeCounter;
   int m_fadeDuration;
+
+  std::map<std::string, Picture*> m_pictures;
 };
 
 #endif
