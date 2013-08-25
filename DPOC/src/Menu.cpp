@@ -1838,24 +1838,24 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
 //  posX -= ( Math.floor((this.enemies.length / 2)) - i) *
 //      (enemy.sprite.width + 12);
 
-//  int diff = 12;
-//
-//  while (true)
-//  {
-//    int totalWidth = 0;
-//    for (size_t i = 0; i < m_monsters.size(); i++)
-//    {
-//      totalWidth += m_monsters[i]->spriteWidth() + diff;
-//    }
-//    if (totalWidth >= config::GAME_RES_X)
-//    {
-//      diff--;
-//    }
-//    else
-//    {
-//      break;
-//    }
-//  }
+  int diff = 12;
+
+  while (true)
+  {
+    int totalWidth = 0;
+    for (size_t i = 0; i < m_monsters.size(); i++)
+    {
+      totalWidth += m_monsters[i]->spriteWidth() + diff;
+    }
+    if (totalWidth >= config::GAME_RES_X)
+    {
+      diff--;
+    }
+    else
+    {
+      break;
+    }
+  }
 
   for (size_t i = 0; i < m_monsters.size(); i++)
   {
@@ -1876,7 +1876,7 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
     posX -= monster->spriteWidth() / 2;
     posY -= monster->spriteHeight() - 16;// / 2;
 
-    posX -= (m_monsters.size() / 2 - i) * (monster->spriteWidth() + 12);
+    posX -= (m_monsters.size() / 2 - i) * (monster->spriteWidth() + diff);
 
     monster->draw(target, posX, posY);
 
@@ -1888,8 +1888,13 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
       draw_frame(target, 0, 0, config::GAME_RES_X, 24);
       draw_text_bmp(target, 8, 8, "%s", get_monster_description(monster->getName()).c_str());
 
+      // Fix the position of the monster name so it doesn't go outside the screen.
+      int textPosX = posX + monster->spriteWidth() / 2 - 8*(monster->getName().size() / 2);
+      if (textPosX < 0) textPosX = 0;
+      while (textPosX + (int)monster->getName().size() * 8 > config::GAME_RES_X) textPosX--;
+
       draw_text_bmp(target,
-          posX + monster->spriteWidth() / 2 - 8*(monster->getName().size() / 2),
+          textPosX,
           posY + monster->spriteHeight() + 4,
           "%s", monster->getName().c_str());
     }
