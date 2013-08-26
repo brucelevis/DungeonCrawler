@@ -196,6 +196,11 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
 
   for (auto sprIter = m_entities.begin(); sprIter != m_entities.end(); ++sprIter)
   {
+    if (!(*sprIter)->isVisible())
+    {
+      continue;
+    }
+
     float spriteX = 0.5f + ((*sprIter)->x - m_camera->pos.x);
     float spriteY = 0.5f + ((*sprIter)->y - m_camera->pos.y);
 
