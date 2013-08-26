@@ -35,7 +35,7 @@ public:
   /// Retrieve a deep copy of this sprite.
   Sprite* clone() const;
 
-  sf::Image getImage(Direction opposingDirection) const;
+  virtual sf::Image getImage(Direction opposingDirection) const;
 private:
   Sprite(const Sprite&);
   Sprite& operator=(const Sprite&);
@@ -59,6 +59,8 @@ public:
   void render(sf::RenderTarget& target, float x, float y);
 
   void setTileNum(int tileNum);
+
+  sf::Image getImage(Direction opposingDirection) const;
 private:
   int m_tileX, m_tileY;
   sf::Texture* m_tileset;
