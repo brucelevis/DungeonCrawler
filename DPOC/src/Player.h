@@ -73,6 +73,7 @@ private:
   int m_gold;
 
   bool m_controlsEnabled;
+  bool m_movedBackwards;
 };
 
 Player* get_player();

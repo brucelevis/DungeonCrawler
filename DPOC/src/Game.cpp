@@ -207,15 +207,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   {
     if (!m_player->player()->isWalking() && !m_isRotating && m_player->isControlsEnabled())
     {
-      if (key == sf::Keyboard::Up)
-      {
-        m_player->player()->step(m_player->player()->getDirection());
-      }
-      else if (key == sf::Keyboard::Down)
-      {
-
-      }
-      else if (key == sf::Keyboard::Left)
+      if (key == sf::Keyboard::Left)
       {
         startRotate(-90, -10);
         m_player->player()->turnLeft();
@@ -242,9 +234,6 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
 void Game::draw(sf::RenderTarget& target)
 {
-//  if (m_currentMap)
-//    m_currentMap->draw(target, m_view);
-
   for (int y = 0; y < config::GAME_RES_Y; y++)
   {
     for (int x = 0; x < config::GAME_RES_X; x++)
@@ -289,14 +278,6 @@ void Game::updatePlayer()
     {
       execRotate();
     }
-
-//    m_view.x = m_player->player()->getRealX() - config::GAME_RES_X / 2;
-//    m_view.y = m_player->player()->getRealY() - config::GAME_RES_Y / 2;
-//
-//    m_view.x = std::min(m_currentMap->getWidth() * config::TILE_W - config::GAME_RES_X, m_view.x);
-//    m_view.y = std::min(m_currentMap->getHeight() * config::TILE_H - config::GAME_RES_Y, m_view.y);
-//    m_view.x = std::max(0, m_view.x);
-//    m_view.y = std::max(0, m_view.y);
   }
 }
 

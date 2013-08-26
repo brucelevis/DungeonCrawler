@@ -19,7 +19,8 @@ using namespace tinyxml2;
 
 Player::Player()
  : m_gold(0),
-   m_controlsEnabled(true)
+   m_controlsEnabled(true),
+   m_movedBackwards(false)
 {
 
 }
@@ -44,7 +45,51 @@ Entity* Player::player()
 
 void Player::update()
 {
+  if (m_controlsEnabled)
+  {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+      Direction dir = player()->getDirection();
+      Direction tmpDir = dir;
+      if (dir == DIR_DOWN) dir = DIR_UP;
+      else if (dir == DIR_UP) dir = DIR_DOWN;
+      else if (dir == DIR_LEFT) dir = DIR_RIGHT;
+      else if (dir == DIR_RIGHT) dir = DIR_LEFT;
+
+      player()->step(dir);
+
+      // Not walking if collision occured.
+      if (player()->isWalking())
+      {
+        m_movedBackwards = true;
+      }
+      else
+      {
+        player()->setDirection(tmpDir);
+      }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+      player()->step(player()->getDirection());
+
+      m_movedBackwards = false;
+    }
+  }
+
+  bool wasWalking = player()->isWalking();
+
   player()->update();
+
+  if (wasWalking && !player()->isWalking() && m_movedBackwards)
+  {
+    Direction dir = player()->getDirection();
+    if (dir == DIR_DOWN) dir = DIR_UP;
+    else if (dir == DIR_UP) dir = DIR_DOWN;
+    else if (dir == DIR_LEFT) dir = DIR_RIGHT;
+    else if (dir == DIR_RIGHT) dir = DIR_LEFT;
+
+    player()->setDirection(dir);
+  }
 }
 
 void Player::moveTrain()
