@@ -6,6 +6,9 @@
 #include <sstream>
 #include <fstream>
 
+const double PI   = 3.141592653589793238462;
+const float  PI_F = 3.14159265358979f;
+
 std::vector<std::string> split_string(const std::string& str, char delim);
 std::vector<std::string> get_lines(std::ifstream& infile);
 std::vector<std::string> get_lines(std::istringstream& infile);
@@ -46,5 +49,7 @@ float rand_float(float low, float high);
 char upcase(char c);
 std::string capitalize(std::string str);
 std::string replace_string(const std::string& str, char from, char to);
+
+float deg2rad(float degs);
 
 #endif

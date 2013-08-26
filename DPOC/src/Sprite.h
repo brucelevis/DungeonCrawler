@@ -34,6 +34,8 @@ public:
 
   /// Retrieve a deep copy of this sprite.
   Sprite* clone() const;
+
+  sf::Image getImage(Direction opposingDirection) const;
 private:
   Sprite(const Sprite&);
   Sprite& operator=(const Sprite&);

@@ -44,47 +44,7 @@ Entity* Player::player()
 
 void Player::update()
 {
-  for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
-  {
-    if (!(*it)->isWalking())
-    {
-      m_trainCoords[*it].x = (*it)->x;
-      m_trainCoords[*it].y = (*it)->y;
-    }
-  }
-
-  if (m_controlsEnabled)
-  {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-    {
-      player()->step(DIR_RIGHT);
-      if (player()->isWalking())
-        moveTrain();
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-    {
-      player()->step(DIR_LEFT);
-      if (player()->isWalking())
-        moveTrain();
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    {
-      player()->step(DIR_DOWN);
-      if (player()->isWalking())
-        moveTrain();
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-    {
-      player()->step(DIR_UP);
-      if (player()->isWalking())
-        moveTrain();
-    }
-  }
-
-  for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
-  {
-    (*it)->update();
-  }
+  player()->update();
 }
 
 void Player::moveTrain()

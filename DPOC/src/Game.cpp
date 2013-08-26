@@ -1,3 +1,4 @@
+#include <cmath>
 #include <algorithm>
 #include <string>
 
@@ -15,6 +16,8 @@
 #include "Sound.h"
 #include "Utility.h"
 #include "Entity.h"
+#include "Direction.h"
+#include "Raycaster.h"
 
 #include "Shop.h"
 #include "Battle.h"
@@ -36,8 +39,20 @@ Game::Game()
    m_player(0),
    m_choiceMenu(0),
    m_transferInProgress(false),
-   m_playerMoved(false)
+   m_playerMoved(false),
+   m_camera(Vec2(4.5f, 4.5f), Vec2(-1, 0), Vec2(0, -0.66f)),
+   m_raycaster(new Raycaster(config::GAME_RES_X, config::GAME_RES_Y)),
+
+   m_isRotating(false),
+   m_angleToRotate(0),
+   m_angleInc(0),
+   m_accumulatedAngle(0),
+   m_rotateDegs(0)
 {
+  m_raycasterBuffer.create(config::GAME_RES_X, config::GAME_RES_Y);
+  m_texture.create(config::GAME_RES_X, config::GAME_RES_Y);
+  m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
+
   // Clear all persistents when a new game is created.
   Persistent<int>::instance().clear();
 }
@@ -53,6 +68,12 @@ Game::~Game()
 
 void Game::update()
 {
+  if (m_player)
+  {
+    m_camera.pos.x = m_player->player()->x + 0.5f;
+    m_camera.pos.y = m_player->player()->y + 0.5f;
+  }
+
   if (Message::instance().isVisible())
   {
     Message::instance().update();
@@ -182,6 +203,30 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Right) m_choiceMenu->moveArrow(DIR_RIGHT);
     else if (key == sf::Keyboard::Down) m_choiceMenu->moveArrow(DIR_DOWN);
   }
+  else if (!Message::instance().isVisible())
+  {
+    if (!m_player->player()->isWalking() && !m_isRotating && m_player->isControlsEnabled())
+    {
+      if (key == sf::Keyboard::Up)
+      {
+        m_player->player()->step(m_player->player()->getDirection());
+      }
+      else if (key == sf::Keyboard::Down)
+      {
+
+      }
+      else if (key == sf::Keyboard::Left)
+      {
+        startRotate(-90, -10);
+        m_player->player()->turnLeft();
+      }
+      else if (key == sf::Keyboard::Right)
+      {
+        startRotate(90, 10);
+        m_player->player()->turnRight();
+      }
+    }
+  }
 
   if (key == sf::Keyboard::B && config::get("DEBUG_MODE") == "true")
   {
@@ -197,27 +242,26 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
 void Game::draw(sf::RenderTarget& target)
 {
-  if (m_currentMap)
-    m_currentMap->draw(target, m_view);
+//  if (m_currentMap)
+//    m_currentMap->draw(target, m_view);
 
-//  if (m_entitiesToDraw.empty())
-//  {
-    m_entitiesToDraw.clear();
-    auto entVec = m_currentMap->getEntities();
-    auto playVec = get_player()->getTrain();
-
-    m_entitiesToDraw.clear();
-    std::copy(entVec.begin(), entVec.end(), std::back_inserter(m_entitiesToDraw));
-    std::copy(playVec.begin(), playVec.end(), std::back_inserter(m_entitiesToDraw));
-//  }
-
-  std::sort(m_entitiesToDraw.begin(), m_entitiesToDraw.end(),
-      [=](Entity* a, Entity* b) { return a->y < b->y; });
-
-  for (auto it = m_entitiesToDraw.begin(); it != m_entitiesToDraw.end(); ++it)
+  for (int y = 0; y < config::GAME_RES_Y; y++)
   {
-    (*it)->draw(target, m_view);
+    for (int x = 0; x < config::GAME_RES_X; x++)
+    {
+      m_raycasterBuffer.setPixel(x, y, sf::Color::Black);
+    }
   }
+
+  m_raycaster->raycast(&m_camera, m_raycasterBuffer, false, m_player->player()->getDirection());
+  m_texture.loadFromImage(m_raycasterBuffer);
+
+  sf::Sprite sprite(m_texture);
+  m_targetTexture.draw(sprite);
+  m_targetTexture.display();
+
+  sprite.setTexture(m_targetTexture.getTexture());
+  target.draw(sprite);
 
   if (m_menu.isVisible())
   {
@@ -241,13 +285,18 @@ void Game::updatePlayer()
   {
     m_player->update();
 
-    m_view.x = m_player->player()->getRealX() - config::GAME_RES_X / 2;
-    m_view.y = m_player->player()->getRealY() - config::GAME_RES_Y / 2;
+    if (m_isRotating)
+    {
+      execRotate();
+    }
 
-    m_view.x = std::min(m_currentMap->getWidth() * config::TILE_W - config::GAME_RES_X, m_view.x);
-    m_view.y = std::min(m_currentMap->getHeight() * config::TILE_H - config::GAME_RES_Y, m_view.y);
-    m_view.x = std::max(0, m_view.x);
-    m_view.y = std::max(0, m_view.y);
+//    m_view.x = m_player->player()->getRealX() - config::GAME_RES_X / 2;
+//    m_view.y = m_player->player()->getRealY() - config::GAME_RES_Y / 2;
+//
+//    m_view.x = std::min(m_currentMap->getWidth() * config::TILE_W - config::GAME_RES_X, m_view.x);
+//    m_view.y = std::min(m_currentMap->getHeight() * config::TILE_H - config::GAME_RES_Y, m_view.y);
+//    m_view.x = std::max(0, m_view.x);
+//    m_view.y = std::max(0, m_view.y);
   }
 }
 
@@ -330,7 +379,12 @@ void Game::loadNewMap(const std::string& file)
     SceneManager::instance().close();
   }
 
-  m_entitiesToDraw.clear();
+  m_raycaster->setTilemap(m_currentMap);
+  m_raycaster->clearEntities();
+  for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
+  {
+    m_raycaster->addEntity(*it);
+  }
 
   if (!m_currentMap->getMusic().empty())
   {
@@ -401,4 +455,44 @@ void Game::openShop(const std::vector<std::string>& items)
 {
   Shop* shop = new Shop(items);
   SceneManager::instance().addScene(shop);
+}
+
+void Game::startRotate(int angle, int angleInc)
+{
+  m_isRotating = true;
+  m_angleToRotate = angle;
+  m_angleInc = angleInc;
+  m_accumulatedAngle = 0;
+  m_rotateDegs = PI_F * (float)angleInc / 180.0f;
+}
+
+void Game::execRotate()
+{
+  m_camera.rotate(m_rotateDegs);
+
+  m_accumulatedAngle += m_angleInc;
+
+  if (abs(m_accumulatedAngle) >= abs(m_angleToRotate))
+  {
+    m_isRotating = false;
+  }
+}
+
+void Game::setPlayer(Player* player)
+{
+  m_player = player;
+  Direction playerDir = m_player->player()->getDirection();
+
+  if (playerDir == DIR_UP)
+  {
+    m_camera.rotate(deg2rad(90));
+  }
+  else if (playerDir == DIR_DOWN)
+  {
+    m_camera.rotate(deg2rad(-90));
+  }
+  else if (playerDir == DIR_RIGHT)
+  {
+    m_camera.rotate(deg2rad(180));
+  }
 }

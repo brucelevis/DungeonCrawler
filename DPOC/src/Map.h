@@ -16,6 +16,7 @@ struct Tile
   int tileX, tileY;
   int zone;
   bool solid;
+  int tileId;
 };
 
 struct Warp
@@ -60,6 +61,8 @@ public:
   std::vector<std::string> checkEncounter(int x, int y);
 
   std::string xmlDump() const;
+
+  std::vector<sf::Image> getTilesetImages() const;
 private:
   Map();
   Map(const Map&);

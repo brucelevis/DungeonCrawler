@@ -1,3 +1,4 @@
+#include <cmath>
 #include <sstream>
 #include <algorithm>
 #include <ctype.h>
@@ -146,4 +147,9 @@ std::string replace_string(const std::string& str, char from, char to)
       [=](char c) { return from == c ? to : c; });
 
   return transform;
+}
+
+float deg2rad(float degs)
+{
+  return PI_F * (float)degs / 180.0f;
 }

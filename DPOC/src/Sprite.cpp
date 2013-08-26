@@ -106,6 +106,53 @@ Sprite* Sprite::clone() const
   return rhs;
 }
 
+sf::Image Sprite::getImage(Direction opposingDirection) const
+{
+  int direction = m_direction;
+
+  if (opposingDirection != DIR_RANDOM)
+  {
+    if (opposingDirection == DIR_RIGHT)
+    {
+      if (m_direction == DIR_RIGHT) direction = DIR_UP;
+      else if (m_direction == DIR_LEFT) direction = DIR_DOWN;
+      else if (m_direction == DIR_UP) direction = DIR_LEFT;
+      else if (m_direction == DIR_DOWN) direction = DIR_RIGHT;
+    }
+    else if (opposingDirection == DIR_LEFT)
+    {
+      if (m_direction == DIR_RIGHT) direction = DIR_DOWN;
+      else if (m_direction == DIR_LEFT) direction = DIR_UP;
+      else if (m_direction == DIR_UP) direction = DIR_RIGHT;
+      else if (m_direction == DIR_DOWN) direction = DIR_LEFT;
+    }
+    else if (opposingDirection == DIR_DOWN)
+    {
+      if (m_direction == DIR_RIGHT) direction = DIR_LEFT;
+      else if (m_direction == DIR_LEFT) direction = DIR_RIGHT;
+      else if (m_direction == DIR_UP) direction = DIR_DOWN;
+      else if (m_direction == DIR_DOWN) direction = DIR_UP;
+    }
+    else if (opposingDirection == DIR_UP)
+    {
+      if (m_direction == DIR_RIGHT) direction = DIR_RIGHT;
+      else if (m_direction == DIR_LEFT) direction = DIR_LEFT;
+      else if (m_direction == DIR_UP) direction = DIR_UP;
+      else if (m_direction == DIR_DOWN) direction = DIR_DOWN;
+    }
+  }
+
+  int rectLeft = m_spriteSheetX * m_width * config::NUM_SPRITES_X + m_frame * m_width;
+  int rectTop = m_spriteSheetY * m_height * config::NUM_SPRITES_Y + direction * m_height;
+
+  sf::Image image;
+  sf::Image tempImage = m_sprite.getTexture()->copyToImage();
+  image.create(m_width, m_height);
+  image.copy(tempImage, 0, 0, sf::IntRect(rectLeft, rectTop, m_width, m_height), true);
+  image.createMaskFromColor(sf::Color::Black);
+  return image;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)

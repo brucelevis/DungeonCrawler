@@ -332,6 +332,7 @@ Map* Map::loadTiledFile(const std::string& filename)
         {
           tile.tileX = (tileId - 1) % (map->m_tileset->getSize().x / config::TILE_W);
           tile.tileY = (tileId - 1) / (map->m_tileset->getSize().x / config::TILE_H);
+          tile.tileId = tileId - 1;
         }
 
         map->m_tiles.back()[j] = tile;
@@ -507,7 +508,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
 Tile* Map::getTileAt(int x, int y, int layer)
 {
-  if (x < 0 || y < 0 || x >= m_width || y >= m_height)
+  if (x < 0 || y < 0 || x >= m_width || y >= m_height || layer >= m_tiles.size())
     return 0;
 
   int index = y * m_width + x;
@@ -603,4 +604,27 @@ std::vector<std::string> Map::checkEncounter(int x, int y)
 bool Map::inside(int x, int y) const
 {
   return x >= 0 && y >= 0 && x < getWidth() && y < getHeight();
+}
+
+std::vector<sf::Image> Map::getTilesetImages() const
+{
+  int w = m_tileset->getSize().x / config::TILE_W;
+  int h = m_tileset->getSize().y / config::TILE_H;
+
+  sf::Image tempImage = m_tileset->copyToImage();
+
+  std::vector<sf::Image> images;
+
+  for (int y = 0; y < h; y++)
+  {
+    for (int x = 0; x < w; x++)
+    {
+      sf::Image image;
+      image.create(config::TILE_W, config::TILE_H);
+      image.copy(tempImage, 0, 0, sf::IntRect(x * config::TILE_W, y * config::TILE_H, config::TILE_W, config::TILE_H));
+      images.push_back(image);
+    }
+  }
+
+  return images;
 }

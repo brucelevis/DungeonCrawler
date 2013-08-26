@@ -694,3 +694,19 @@ std::string Entity::xmlDump() const
 
   return xml.str();
 }
+
+void Entity::turnLeft()
+{
+  if (m_direction == DIR_DOWN)       m_direction = DIR_RIGHT;
+  else if (m_direction == DIR_UP)    m_direction = DIR_LEFT;
+  else if (m_direction == DIR_RIGHT) m_direction = DIR_UP;
+  else if (m_direction == DIR_LEFT)  m_direction = DIR_DOWN;
+}
+
+void Entity::turnRight()
+{
+  if (m_direction == DIR_DOWN)       m_direction = DIR_LEFT;
+  else if (m_direction == DIR_UP)    m_direction = DIR_RIGHT;
+  else if (m_direction == DIR_RIGHT) m_direction = DIR_DOWN;
+  else if (m_direction == DIR_LEFT)  m_direction = DIR_UP;
+}

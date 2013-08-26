@@ -38,6 +38,7 @@ public:
 
   std::string getName() const { return m_name; }
   Sprite* sprite() { return m_sprite; }
+  Sprite* sprite() const { return m_sprite; }
   void setSprite(Sprite* sprite) { m_sprite = sprite; }
 
   void setDirection(Direction dir);
@@ -79,6 +80,9 @@ public:
   void setFixedDirection(bool fixed) { m_fixedDirection = fixed; }
 
   std::string xmlDump() const;
+
+  void turnLeft();
+  void turnRight();
 public:
   float x, y;
 private:

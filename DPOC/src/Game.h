@@ -11,9 +11,11 @@
 #include "Menu.h"
 #include "Scene.h"
 #include "Map.h"
+#include "Camera.h"
 
 class Player;
 class Entity;
+class Raycaster;
 
 class Game : public Scene
 {
@@ -32,7 +34,7 @@ public:
 
   void openChoiceMenu(const std::vector<std::string>& choices);
 
-  void setPlayer(Player* player) { m_player = player; }
+  void setPlayer(Player* player);
 
   void loadNewMap(const std::string& file);
 
@@ -58,6 +60,9 @@ private:
   void handleKeyPress(sf::Keyboard::Key key);
 
   void closeChoiceMenu();
+
+  void startRotate(int angle, int angleInc);
+  void execRotate();
 private:
   Map* m_currentMap;
   Player* m_player;
@@ -74,6 +79,19 @@ private:
   bool m_playerMoved;
 
   std::vector<Entity*> m_entitiesToDraw;
+
+  Camera m_camera;
+  Raycaster* m_raycaster;
+
+  bool m_isRotating;
+  int m_angleToRotate;
+  int m_angleInc;
+  int m_accumulatedAngle;
+  float m_rotateDegs;
+
+  sf::Image m_raycasterBuffer;
+  sf::Texture m_texture;
+  sf::RenderTexture m_targetTexture;
 };
 
 #endif
