@@ -92,6 +92,8 @@ private:
   sf::Image m_raycasterBuffer;
   sf::Texture m_texture;
   sf::RenderTexture m_targetTexture;
+
+  bool m_rotKeyDown;
 };
 
 #endif

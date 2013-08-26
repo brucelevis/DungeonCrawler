@@ -47,7 +47,9 @@ Game::Game()
    m_angleToRotate(0),
    m_angleInc(0),
    m_accumulatedAngle(0),
-   m_rotateDegs(0)
+   m_rotateDegs(0),
+
+   m_rotKeyDown(false)
 {
   m_raycasterBuffer.create(config::GAME_RES_X, config::GAME_RES_Y);
   m_texture.create(config::GAME_RES_X, config::GAME_RES_Y);
@@ -203,22 +205,6 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Right) m_choiceMenu->moveArrow(DIR_RIGHT);
     else if (key == sf::Keyboard::Down) m_choiceMenu->moveArrow(DIR_DOWN);
   }
-  else if (!Message::instance().isVisible())
-  {
-    if (!m_player->player()->isWalking() && !m_isRotating && m_player->isControlsEnabled())
-    {
-      if (key == sf::Keyboard::Left)
-      {
-        startRotate(-90, -10);
-        m_player->player()->turnLeft();
-      }
-      else if (key == sf::Keyboard::Right)
-      {
-        startRotate(90, 10);
-        m_player->player()->turnRight();
-      }
-    }
-  }
 
   if (key == sf::Keyboard::B && config::get("DEBUG_MODE") == "true")
   {
@@ -273,6 +259,33 @@ void Game::updatePlayer()
   if (m_player)
   {
     m_player->update();
+
+    if (!m_player->player()->isWalking() && !m_isRotating && m_player->isControlsEnabled())
+    {
+      if (!m_rotKeyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+      {
+        startRotate(-90, -10);
+        m_player->player()->turnLeft();
+
+        m_rotKeyDown = true;
+      }
+      else if (!m_rotKeyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      {
+        startRotate(90, 10);
+        m_player->player()->turnRight();
+
+        m_rotKeyDown = true;
+      }
+
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      {
+        m_rotKeyDown = true;
+      }
+      else
+      {
+        m_rotKeyDown = false;
+      }
+    }
 
     if (m_isRotating)
     {
