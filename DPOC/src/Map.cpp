@@ -332,8 +332,8 @@ Map* Map::loadTiledFile(const std::string& filename)
         {
           tile.tileX = (tileId - 1) % (map->m_tileset->getSize().x / config::TILE_W);
           tile.tileY = (tileId - 1) / (map->m_tileset->getSize().x / config::TILE_H);
-          tile.tileId = tileId - 1;
         }
+        tile.tileId = tileId - 1; // -1 then means no tile.
 
         map->m_tiles.back()[j] = tile;
       }

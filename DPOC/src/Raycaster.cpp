@@ -92,14 +92,21 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
         d = y * 256 - m_height * 128 + lineHeight * 128;
         textureY = ((d * config::TILE_W) / lineHeight) / 256;
       
-        Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, 0);
-        int tileId = tile ? tile->tileId : 0;
+        Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, 1);
+        if (tile)
+        {
+          int tileId = tile ? tile->tileId : -1;
 
-        sf::Color color = computeIntensity(
-          m_tileTextures[tileId].getPixel(info.textureX, textureY),
-          0.5, 1.0, info.wallDist);
+          sf::Color color = computeIntensity(
+            m_tileTextures[tileId].getPixel(info.textureX, textureY),
+            0.5, 1.0, info.wallDist);
 
-        buffer.setPixel(x, y, color);
+          buffer.setPixel(x, y, color);
+        }
+        else
+        {
+          buffer.setPixel(x, y, sf::Color::Black);
+        }
       }
       else if (x > 0 && x < (m_width - 1))
       {
@@ -325,7 +332,7 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width, int height)
     }
     
     if ((mapX < 0 || mapY < 0 || mapX >= m_tilemap->getWidth() || mapY >= m_tilemap->getHeight()) || 
-        m_tilemap->blocking(mapX, mapY)/*m_tilemap->getTileAt(mapX, mapY, 1)->tileId != 0*/)
+        /*m_tilemap->blocking(mapX, mapY)*/m_tilemap->getTileAt(mapX, mapY, 1)->tileId != -1)
     {
       break;
     }
