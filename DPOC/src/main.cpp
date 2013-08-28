@@ -18,7 +18,6 @@
 #include "TitleScreen.h"
 
 #include "Player.h"
-#include "Editor.h"
 #include "Game.h"
 
 int main(int argc, char* argv[])
