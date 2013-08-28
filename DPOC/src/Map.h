@@ -40,17 +40,14 @@ public:
   int getHeight() const { return m_height; }
 
   void update();
-  void draw(sf::RenderTarget& target, const coord_t& view);
 
-  Tile* getTileAt(int x, int y, int layer);
+  Tile* getTileAt(int x, int y, const std::string& layer);
   bool warpAt(int x, int y) const;
   const Warp* getWarpAt(int x, int y) const;
 
   std::string getName() const { return m_name; }
   std::string getMusic() const { return m_music; }
 
-  bool saveToFile(const std::string& filename);
-  static Map* loadFromFile(const std::string& filename);
   static Map* loadTiledFile(const std::string& filename);
 
   const std::vector<Entity*>& getEntities() const { return m_entities; }
@@ -73,7 +70,7 @@ private:
     return m_width * m_height;
   }
 private:
-  std::vector<Tile*> m_tiles;
+  std::map<std::string, Tile*> m_tiles;
   int m_width, m_height;
   std::vector<Entity*> m_entities;
   std::string m_music;

@@ -44,7 +44,7 @@ private:
 
   const Entity* getEntityAt(int x, int y) const;
 
-  void drawWallFeature(sf::Image& buffer, bool isWireframe, const Entity* entity, int textureX, int textureY, int wallDist, int x, int y);
+  void drawWallFeature(sf::Image& buffer, bool isWireframe, sf::Image& image, int textureX, int textureY, int wallDist, int x, int y);
 private:
   int m_width, m_height;
 

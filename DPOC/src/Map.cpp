@@ -62,201 +62,25 @@ Map::Map()
 //  {
 //    m_tiles[i] = 0;
 //  }
-
-  m_tileset = cache::loadTexture("Resources/DqTileset.png");
 }
 
 Map::~Map()
 {
-  for (int i = 0; i < config::MAX_LAYERS; i++)
+  for (auto it = m_tiles.begin(); it != m_tiles.end(); ++it)
   {
-    if (m_tiles[i])
-      delete[] m_tiles[i];
+    delete[] it->second;
   }
 
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
 
-  cache::releaseTexture("Resources/DqTileset.png");
+  cache::releaseTexture(m_tileset);
 }
 
 void Map::update()
 {
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     (*it)->update();
-}
-
-void Map::draw(sf::RenderTarget& target, const coord_t& view)
-{
-  sf::Sprite sprite;
-  sprite.setTexture(*m_tileset);
-
-  int xStart = view.x / config::TILE_W - 1;
-  int yStart = view.y / config::TILE_H - 1;
-
-  if (xStart < 0) xStart = 0;
-  if (yStart < 0) yStart = 0;
-
-  int xEnd = (view.x + config::GAME_RES_X) / config::TILE_W + 1;
-  int yEnd = (view.y + config::GAME_RES_Y) / config::TILE_H + 1;
-
-  if (xEnd >= m_width) xEnd = m_width;
-  if (yEnd >= m_height) yEnd = m_height;
-
-  for (int y = yStart; y < yEnd; y++)
-  {
-    for (int x = xStart; x < xEnd; x++)
-    {
-      for (size_t layer = 0; layer < m_tiles.size(); layer++)
-      {
-        Tile* tile = getTileAt(x, y, layer);
-
-        sprite.setTextureRect(sf::IntRect(tile->tileX * config::TILE_W, tile->tileY * config::TILE_H, config::TILE_W, config::TILE_H));
-        sprite.setPosition(x * config::TILE_W - view.x, y * config::TILE_H - view.y);
-        target.draw(sprite);
-      }
-    }
-  }
-
-//  for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
-//  {
-//    sf::RectangleShape rect;
-//    rect.setSize(sf::Vector2f(config::TILE_W, config::TILE_H));
-//    rect.setFillColor(sf::Color::Red);
-//    rect.setPosition(it->srcX*config::TILE_W - view.x, it->srcY*config::TILE_H - view.y);
-//    target.draw(rect);
-//  }
-}
-
-bool Map::saveToFile(const std::string& filename)
-{
-  bool success = false;
-
-  TRACE("Saving map to %s", filename.c_str());
-
-  std::ofstream ofile(filename.c_str());
-  if (ofile.is_open())
-  {
-    m_name = filename;
-
-    ofile << m_width << " " << m_height << " " << config::MAX_LAYERS << " ";
-    for (int i = 0; i < config::MAX_LAYERS; i++)
-    {
-      for (int j = 0; j < m_width * m_height; j++)
-      {
-        ofile << m_tiles[i][j].tileX << " "
-              << m_tiles[i][j].tileY << " "
-              << m_tiles[i][j].zone << " "
-              << m_tiles[i][j].solid << " ";
-      }
-    }
-    ofile << m_music << " ";
-
-    ofile << m_entities.size() << " ";
-    for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
-    {
-      ofile << (*it)->getName() << " "
-            << (int)(*it)->x << " "
-            << (int)(*it)->y << " ";
-    }
-
-    ofile << m_warps.size() << " ";
-    for (auto it = m_warps.begin(); it != m_warps.end(); ++it)
-    {
-      ofile << it->srcX << " "
-            << it->srcY << " "
-            << it->dstX << " "
-            << it->dstY << " "
-            << it->destMap << " ";
-    }
-
-    ofile.close();
-
-    success = true;
-  }
-  else
-  {
-    TRACE("Unable to open %s for writing.", filename.c_str());
-  }
-
-  return success;
-}
-
-Map* Map::loadFromFile(const std::string& filename)
-{
-  TRACE("Loading map from %s", filename.c_str());
-
-  std::ifstream ifile(filename.c_str());
-
-  if (ifile.is_open())
-  {
-    Map* map = new Map;
-    map->m_name = filename;
-
-    for (size_t i = 0; i < config::MAX_LAYERS; i++)
-    {
-      map->m_tiles.push_back(0);
-    }
-
-    int layers;
-
-    ifile >> map->m_width >> map->m_height;
-    ifile >> layers;
-
-    for (int i = 0; i < layers; i++)
-    {
-      map->m_tiles[i] = new Tile[map->m_width * map->m_height]();
-      for (int j = 0; j < map->m_width * map->m_height; j++)
-      {
-        Tile tile;
-        ifile >> tile.tileX >> tile.tileY >> tile.zone >> tile.solid;
-
-        map->m_tiles[i][j] = tile;
-      }
-    }
-
-    ifile >> map->m_music;
-
-    int numEntities;
-    ifile >> numEntities;
-
-    for (int i = 0; i < numEntities; i++)
-    {
-      std::string entName;
-      int entX, entY;
-
-      ifile >> entName >> entX >> entY;
-
-      Entity* entity = new Entity(entName);
-      entity->setPosition(entX, entY);
-      entity->setTag(make_tag(i, map->m_name));
-
-      map->m_entities.push_back(entity);
-    }
-
-    int numWarps;
-    ifile >> numWarps;
-    for (int i = 0; i < numWarps; i++)
-    {
-      Warp warp;
-      ifile >> warp.srcX
-            >> warp.srcY
-            >> warp.dstX
-            >> warp.dstY
-            >> warp.destMap;
-      map->m_warps.push_back(warp);
-    }
-
-    ifile.close();
-
-    return map;
-  }
-  else
-  {
-    TRACE("Unable to open file %s for reading", filename.c_str());
-  }
-
-  return 0;
 }
 
 Map* Map::loadTiledFile(const std::string& filename)
@@ -310,13 +134,14 @@ Map* Map::loadTiledFile(const std::string& filename)
       if (to_lower(layers[i]) == "blocking")
         continue;
 
+      std::string layerName = to_lower(layers[i]);
+
       const TiledLoader::Layer* layer = loader.getLayer(layers[i]);
 
       map->m_width = layer->width;
       map->m_height = layer->height;
 
-      map->m_tiles.push_back(0);
-      map->m_tiles.back() = new Tile[map->m_width * map->m_height]();
+      map->m_tiles[layerName] = new Tile[map->m_width * map->m_height]();
 
       for (size_t j = 0; j < layer->tiles.size(); j++)
       {
@@ -335,7 +160,7 @@ Map* Map::loadTiledFile(const std::string& filename)
         }
         tile.tileId = tileId - 1; // -1 then means no tile.
 
-        map->m_tiles.back()[j] = tile;
+        map->m_tiles[layerName][j] = tile;
       }
     }
 
@@ -350,7 +175,7 @@ Map* Map::loadTiledFile(const std::string& filename)
         {
           int tileId = layer->tiles[i];
           if (tileId != 0)
-            map->m_tiles.front()[i].solid = true;
+            map->m_tiles["floor"][i].solid = true;
         }
       }
     }
@@ -465,7 +290,7 @@ Map* Map::loadTiledFile(const std::string& filename)
             for (int px = x; px < x + w; px++)
             {
               int index = py * map->m_width + px;
-              map->m_tiles[0][index].zone = zoneId;
+              map->m_tiles["floor"][index].zone = zoneId;
             }
           }
 
@@ -506,9 +331,9 @@ Map* Map::loadTiledFile(const std::string& filename)
   return map;
 }
 
-Tile* Map::getTileAt(int x, int y, int layer)
+Tile* Map::getTileAt(int x, int y, const std::string& layer)
 {
-  if (x < 0 || y < 0 || x >= m_width || y >= m_height || layer >= m_tiles.size())
+  if (x < 0 || y < 0 || x >= m_width || y >= m_height || m_tiles.count(layer) == 0)
     return 0;
 
   int index = y * m_width + x;
@@ -545,13 +370,10 @@ const Warp* Map::getWarpAt(int x, int y) const
 
 bool Map::blocking(int x, int y)
 {
-  for (int i = 0; i < config::MAX_LAYERS; i++)
-  {
-    Tile* tile = getTileAt(x, y, i);
+  Tile* tile = getTileAt(x, y, "floor");
 
-    if (tile && tile->solid)
-      return true;
-  }
+  if (tile && tile->solid)
+    return true;
 
   return false;
 }
@@ -581,7 +403,7 @@ std::vector<std::string> Map::checkEncounter(int x, int y)
   int range = random_range(0, m_encounterRate);
   if (range == 0)
   {
-    int zone = getTileAt(x, y, 0)->zone;
+    int zone = getTileAt(x, y, "floor")->zone;
 
     std::vector< std::vector<std::string> > potentials;
 
