@@ -83,15 +83,19 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
     
     if  (wallStart < 0) wallStart = 0;
     
+    // NOTE!! This only works correctly for entites with tile sprites since
+    // they return a single texture.
+    const Entity* entity = getEntityAt(info.mapX, info.mapY);
+
     for (y = wallStart; y < std::min(wallEnd, m_height); y++) 
     {
+      int d, textureY;
+
+      d = y * 256 - m_height * 128 + lineHeight * 128;
+      textureY = ((d * config::TILE_W) / lineHeight) / 256;
+
       if (!wireframe)
       {
-        int d, textureY;
-      
-        d = y * 256 - m_height * 128 + lineHeight * 128;
-        textureY = ((d * config::TILE_W) / lineHeight) / 256;
-      
         Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, 1);
         if (tile)
         {
@@ -118,6 +122,7 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
           buffer.setPixel(x, y, sf::Color::Red);
       }
 
+      drawWallFeature(buffer, wireframe, entity, info.textureX, textureY, info.wallDist, x, y);
     }
   
     if (wallEnd < 0) 
@@ -125,11 +130,9 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
       wallEnd = m_height;
     }
 
-    if (!wireframe)
-    {
-      drawFloorsCeiling(info, x, wallEnd, buffer);
-    }
-    else if (wallEnd < m_height)
+    drawFloorsCeiling(info, x, wallEnd, buffer, wireframe);
+
+    if (wireframe && (wallEnd < m_height))
     {
       buffer.setPixel(x, wallEnd, sf::Color::Red);
       buffer.setPixel(x, m_height - wallEnd, sf::Color::Red);
@@ -138,11 +141,11 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
     prevInfo = info;
   }
 
-  drawSprites(buffer, pDir);
+  drawSprites(buffer, pDir, wireframe);
 
 }
 
-void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer)
+void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer, bool wireframe)
 {
   float cameraDist = 0;
 
@@ -166,30 +169,52 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
     Tile* floorTile = m_tilemap->getTileAt((int) currentFloorX, (int) currentFloorY, 0);
     Tile* ceilTile = m_tilemap->getTileAt((int) currentFloorX, (int) currentFloorY, 2);
 
-    unsigned int floorIndex = floorTile ? floorTile->tileId : 0;
-    unsigned int ceilIndex = ceilTile ? ceilTile->tileId : 0;
+    int floorIndex = floorTile ? floorTile->tileId : -1;
+    int ceilIndex = ceilTile ? ceilTile->tileId : -1;
 
     // Floor
-    if (floorIndex > 0)
+    if (floorIndex > -1)
     {
-      sf::Color color = computeIntensity(
-        m_tileTextures[floorIndex].getPixel(floorTextureX, floorTextureY), 
-        0.5, 1.0, currentDist);
-      buffer.setPixel(x, y, color);
+      if (!wireframe)
+      {
+        sf::Color color = computeIntensity(
+          m_tileTextures[floorIndex].getPixel(floorTextureX, floorTextureY),
+          0.5, 1.0, currentDist);
+        buffer.setPixel(x, y, color);
+      }
+      else
+      {
+        sf::Color color = m_tileTextures[floorIndex].getPixel(floorTextureX, floorTextureY);
+        if (color == sf::Color::White)
+        {
+          buffer.setPixel(x, y, sf::Color::Red);
+        }
+      }
     }
 
     // Ceiling
-    if (ceilIndex > 0)
+    if (ceilIndex > -1)
     {
-      sf::Color color = computeIntensity(
-        m_tileTextures[ceilIndex].getPixel(floorTextureX, floorTextureY), 
-        0.5, 1.0, currentDist);
-      buffer.setPixel(x, m_height - y, color);
+      if (!wireframe)
+      {
+        sf::Color color = computeIntensity(
+          m_tileTextures[ceilIndex].getPixel(floorTextureX, floorTextureY),
+          0.5, 1.0, currentDist);
+        buffer.setPixel(x, m_height - y, color);
+      }
+      else
+      {
+        sf::Color color = m_tileTextures[ceilIndex].getPixel(floorTextureX, floorTextureY);
+        if (color == sf::Color::White)
+        {
+          buffer.setPixel(x, m_height - y, sf::Color::Red);
+        }
+      }
     }
   }
 }
 
-void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
+void Raycaster::drawSprites(sf::Image& buffer, Direction pDir, bool wireframe)
 {
   m_entities.sort([=](const Entity* lhs, const Entity* rhs) -> bool
     {
@@ -258,10 +283,14 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
 
             sf::Color color = spriteImage.getPixel(texX, texY);
 
-            if (color.a == 255)
+            if (!wireframe && color.a == 255)
             {
               color = computeIntensity(color, 0.5, 1.0, transformY);
               buffer.setPixel(x, y, color);
+            }
+            else if (wireframe && color == sf::Color::White)
+            {
+              buffer.setPixel(x, y, sf::Color::Red);
             }
           }
         }
@@ -401,4 +430,39 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width, int height)
 bool Raycaster::sameCoord(const RayInfo& a, const RayInfo& b) const
 {
   return a.mapX == b.mapX && a.mapY == b.mapY;
+}
+
+const Entity* Raycaster::getEntityAt(int x, int y) const
+{
+  for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+  {
+    int px = (*it)->x;
+    int py = (*it)->y;
+
+    if (px == x && py == y)
+    {
+      return *it;
+    }
+  }
+
+  return 0;
+}
+
+void Raycaster::drawWallFeature(sf::Image& buffer, bool isWireframe, const Entity* entity, int textureX, int textureY, int wallDist, int x, int y)
+{
+  if (entity)
+  {
+    sf::Image image = entity->sprite()->getImage(DIR_RANDOM); // Direction does not matter since it is a Tile Sprite.
+    sf::Color featureColor = image.getPixel(textureX, textureY);
+
+    if (isWireframe && featureColor.a == 255)
+    {
+      featureColor = computeIntensity(featureColor, 0.5, 1.0, wallDist);
+      buffer.setPixel(x, y, featureColor);
+    }
+    else if (!isWireframe && featureColor == sf::Color::White)
+    {
+      buffer.setPixel(x, y, sf::Color::Red);
+    }
+  }
 }
