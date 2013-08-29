@@ -96,6 +96,10 @@ Map* Map::loadTiledFile(const std::string& filename)
     map->m_name = filename;
     map->m_music = loader.getProperty("music");
 
+    // The tile size is used everywhere so store it in a global.
+    config::TILE_W = loader.getTileWidth();
+    config::TILE_H = loader.getTileHeight();
+
     std::set<int> zones;
     map->m_encounterRate = 30;
     if (!loader.getProperty("encounterRate").empty())

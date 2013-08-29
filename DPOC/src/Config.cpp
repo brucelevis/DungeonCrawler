@@ -10,6 +10,9 @@ using namespace tinyxml2;
 namespace config
 {
 
+  int TILE_W = 16;
+  int TILE_H = 16;
+
   static std::map<std::string, std::string> CONFIG;
 
   void load_config()

@@ -59,7 +59,7 @@ void Raycaster::removeEntity(const Entity* entity)
 void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direction pDir)
 {
   m_camera = camera;
-wireframe=true;
+
   int x, y;
 
   RayInfo prevInfo, nextInfo;
