@@ -447,7 +447,8 @@ std::vector<sf::Image> Map::getTilesetImages() const
     {
       sf::Image image;
       image.create(config::TILE_W, config::TILE_H);
-      image.copy(tempImage, 0, 0, sf::IntRect(x * config::TILE_W, y * config::TILE_H, config::TILE_W, config::TILE_H));
+      image.copy(tempImage, 0, 0, sf::IntRect(x * config::TILE_W, y * config::TILE_H, config::TILE_W, config::TILE_H), true);
+      image.createMaskFromColor(sf::Color::Black);
       images.push_back(image);
     }
   }

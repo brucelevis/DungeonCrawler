@@ -83,16 +83,6 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
     
     if  (wallStart < 0) wallStart = 0;
     
-    // NOTE!! This only works correctly for entites with tile sprites since
-    // they return a single texture.
-    // DHUAHUHUAHU HUH NOTHING EVER WORKS :::DDDDD
-//    const Entity* entity = getEntityAt(info.mapX, info.mapY);
-//    sf::Image featureImage;
-//    if (entity)
-//    {
-//      //featureImage = entity->sprite()->getImage(DIR_RANDOM);
-//    }
-
     for (y = wallStart; y < std::min(wallEnd, m_height); y++) 
     {
       int d, textureY;
@@ -112,6 +102,13 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
               0.5, 1.0, info.wallDist);
 
           buffer.setPixel(x, y, color);
+
+          // This is slow and bad.
+          Tile* featureTile = m_tilemap->getTileAt(info.mapX, info.mapY, "feature");
+          if (featureTile && featureTile->tileId > -1)
+          {
+            drawWallFeature(buffer, wireframe, featureTile, info.textureX, textureY, info.wallDist, x, y);
+          }
         }
         else
         {
@@ -136,11 +133,6 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
         else if (!sameCoord(info, nextInfo))
           buffer.setPixel(x, y, sf::Color::Red);
       }
-
-//      if (entity && m_tilemap->getTileAt(info.mapX, info.mapY, "wall"))
-//      {
-//        //drawWallFeature(buffer, wireframe, featureImage, info.textureX, textureY, info.wallDist, x, y);
-//      }
     }
   
     if (wallEnd < 0) 
@@ -466,9 +458,9 @@ const Entity* Raycaster::getEntityAt(int x, int y) const
   return 0;
 }
 
-void Raycaster::drawWallFeature(sf::Image& buffer, bool isWireframe, sf::Image& image, int textureX, int textureY, int wallDist, int x, int y)
+void Raycaster::drawWallFeature(sf::Image& buffer, bool isWireframe, Tile* tile, int textureX, int textureY, int wallDist, int x, int y)
 {
-  sf::Color featureColor = image.getPixel(textureX, textureY);
+  sf::Color featureColor = m_tileTextures[tile->tileId].getPixel(textureX, textureY);
 
   if (!isWireframe && featureColor.a == 255)
   {
