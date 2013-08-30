@@ -104,11 +104,11 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
           buffer.setPixel(x, y, color);
 
           // This is slow and bad.
-          Tile* featureTile = m_tilemap->getTileAt(info.mapX, info.mapY, "feature");
-          if (featureTile && featureTile->tileId > -1)
-          {
-            drawWallFeature(buffer, wireframe, featureTile, info.textureX, textureY, info.wallDist, x, y);
-          }
+//          Tile* featureTile = m_tilemap->getTileAt(info.mapX, info.mapY, "feature");
+//          if (featureTile && featureTile->tileId > -1)
+//          {
+//            drawWallFeature(buffer, wireframe, featureTile, info.textureX, textureY, info.wallDist, x, y);
+//          }
         }
         else
         {
