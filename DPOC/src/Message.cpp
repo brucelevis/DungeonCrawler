@@ -201,6 +201,6 @@ void Message::update()
 
 void Message::draw(sf::RenderTarget& target)
 {
-  draw_frame(target, 0, config::GAME_RES_Y - 48, 256, 48);
-  draw_text_bmp(target, 8, config::GAME_RES_Y - 48 + 8, "%s", m_currentBuffer.c_str());
+  draw_frame(target, config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 48, 256, 48);
+  draw_text_bmp(target, 8 + config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 48 + 8, "%s", m_currentBuffer.c_str());
 }

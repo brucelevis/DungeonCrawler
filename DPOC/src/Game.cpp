@@ -41,7 +41,7 @@ Game::Game()
    m_transferInProgress(false),
    m_playerMoved(false),
    m_camera(Vec2(4.5f, 4.5f), Vec2(-1, 0), Vec2(0, -0.66f)),
-   m_raycaster(new Raycaster(config::GAME_RES_X, config::GAME_RES_Y)),
+   m_raycaster(new Raycaster(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y)),
 
    m_isRotating(false),
    m_angleToRotate(0),
@@ -51,9 +51,9 @@ Game::Game()
 
    m_rotKeyDown(false)
 {
-  m_raycasterBuffer.create(config::GAME_RES_X, config::GAME_RES_Y);
-  m_texture.create(config::GAME_RES_X, config::GAME_RES_Y);
-  m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
+  m_raycasterBuffer.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
+  m_texture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
+  m_targetTexture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
 
   // Clear all persistents when a new game is created.
   Persistent<int>::instance().clear();
@@ -220,9 +220,9 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
 void Game::draw(sf::RenderTarget& target)
 {
-  for (int y = 0; y < config::GAME_RES_Y; y++)
+  for (int y = 0; y < config::RAYCASTER_RES_Y; y++)
   {
-    for (int x = 0; x < config::GAME_RES_X; x++)
+    for (int x = 0; x < config::RAYCASTER_RES_X; x++)
     {
       m_raycasterBuffer.setPixel(x, y, sf::Color::Black);
     }
@@ -236,7 +236,108 @@ void Game::draw(sf::RenderTarget& target)
   m_targetTexture.display();
 
   sprite.setTexture(m_targetTexture.getTexture());
+  sprite.setPosition(32, 0);
   target.draw(sprite);
+
+  auto party = m_player->getParty();
+  for (size_t i = 0, j = 0; i < party.size(); i++)
+  {
+    PlayerCharacter* character = party[i];
+    const sf::Texture* faceTexture = character->getTexture();
+    sf::Sprite faceSprite;
+    faceSprite.setTexture(*faceTexture);
+
+    int xPos, yPos;
+
+    if ((i % 2) == 0)
+    {
+      xPos = 0;
+      yPos = (32 + 8) * j;
+    }
+    else
+    {
+      xPos = 32 + config::RAYCASTER_RES_X;
+      yPos = (32 + 8) * j;
+    }
+
+    faceSprite.setPosition(xPos, yPos);
+    target.draw(faceSprite);
+
+    float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
+    float mpPercent = (float)character->getAttribute("mp").current / (float)character->getAttribute("mp").max;
+
+    sf::RectangleShape hpRect;
+    sf::RectangleShape mpRect;
+    hpRect.setFillColor(sf::Color::Red);
+    mpRect.setFillColor(sf::Color::Blue);
+
+    hpRect.setSize(sf::Vector2f(32.0f * hpPercent, 4));
+    mpRect.setSize(sf::Vector2f(32.0f * mpPercent, 4));
+
+    hpRect.setPosition(xPos, yPos + 32);
+    mpRect.setPosition(xPos, yPos + 36);
+
+    target.draw(hpRect);
+    target.draw(mpRect);
+
+    if (i > 0 && (i % 2) == 1)
+    {
+      j++;
+    }
+  }
+
+  int minimapW = 64;
+  int minimapH = 48;
+  int minimapX = 1 + config::GAME_RES_X - minimapW;
+  int minimapY = 1 + config::GAME_RES_Y - minimapH;
+  int numberX = minimapW / 8;
+  int numberY = minimapH / 8;
+  for (int y = m_player->player()->y - numberY / 2, py = 0; y <= m_player->player()->y + numberY / 2; y++, py++)
+  {
+    for (int x = m_player->player()->x - numberX / 2, px = 0; x <= m_player->player()->x + numberX / 2; x++, px++)
+    {
+      Tile* tile = m_currentMap->getTileAt(x, y, "wall");
+      if (tile && tile->tileId > -1)
+      {
+        sf::RectangleShape dotRect;
+        dotRect.setSize(sf::Vector2f(8, 8));
+        dotRect.setFillColor(sf::Color::Blue);
+        dotRect.setPosition(minimapX + px * 8, minimapY + py * 8);
+        target.draw(dotRect);
+      }
+      if (x == (int)m_player->player()->x && y == (int)m_player->player()->y)
+      {
+        sf::RectangleShape dotRect;
+        dotRect.setSize(sf::Vector2f(8, 8));
+        dotRect.setFillColor(sf::Color::Green);
+        dotRect.setPosition(minimapX + px * 8, minimapY + py * 8);
+        target.draw(dotRect);
+      }
+    }
+  }
+  for (int y = 0; y < numberY; y++)
+  {
+    sf::RectangleShape rect;
+    rect.setSize(sf::Vector2f(minimapW, 1));
+    rect.setPosition(minimapX, minimapY + y * 8);
+    rect.setFillColor(sf::Color::White);
+    target.draw(rect);
+  }
+  for (int x = 0; x < numberX; x++)
+  {
+    sf::RectangleShape rect;
+    rect.setSize(sf::Vector2f(1, minimapH));
+    rect.setPosition(minimapX + x * 8, minimapY);
+    rect.setFillColor(sf::Color::White);
+    target.draw(rect);
+  }
+  sf::RectangleShape minimap;
+  minimap.setSize(sf::Vector2f(minimapW - 2, minimapH - 2));
+  minimap.setFillColor(sf::Color::Transparent);
+  minimap.setOutlineColor(sf::Color::White);
+  minimap.setOutlineThickness(1);
+  minimap.setPosition(minimapX, minimapY);
+  target.draw(minimap);
 
   if (m_menu.isVisible())
   {
