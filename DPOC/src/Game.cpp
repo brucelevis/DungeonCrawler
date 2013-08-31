@@ -49,7 +49,9 @@ Game::Game()
    m_accumulatedAngle(0),
    m_rotateDegs(0),
 
-   m_rotKeyDown(false)
+   m_rotKeyDown(false),
+
+   m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 44, 56, 40)
 {
   m_raycasterBuffer.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
   m_texture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
@@ -102,6 +104,9 @@ void Game::update()
     // Only check for warps if the player moved onto the tile this update step.
     if (m_playerMoved && !m_player->player()->isWalking())
     {
+      // Update minimap position only when player has finished moving.
+      m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y);
+
       if (!checkWarps())
       {
         // Also check encounters if no warps were taken.
@@ -286,58 +291,7 @@ void Game::draw(sf::RenderTarget& target)
     }
   }
 
-  int minimapW = 64;
-  int minimapH = 48;
-  int minimapX = 1 + config::GAME_RES_X - minimapW;
-  int minimapY = 1 + config::GAME_RES_Y - minimapH;
-  int numberX = minimapW / 8;
-  int numberY = minimapH / 8;
-  for (int y = m_player->player()->y - numberY / 2, py = 0; y <= m_player->player()->y + numberY / 2; y++, py++)
-  {
-    for (int x = m_player->player()->x - numberX / 2, px = 0; x <= m_player->player()->x + numberX / 2; x++, px++)
-    {
-      Tile* tile = m_currentMap->getTileAt(x, y, "wall");
-      if (tile && tile->tileId > -1)
-      {
-        sf::RectangleShape dotRect;
-        dotRect.setSize(sf::Vector2f(8, 8));
-        dotRect.setFillColor(sf::Color::Blue);
-        dotRect.setPosition(minimapX + px * 8, minimapY + py * 8);
-        target.draw(dotRect);
-      }
-      if (x == (int)m_player->player()->x && y == (int)m_player->player()->y)
-      {
-        sf::RectangleShape dotRect;
-        dotRect.setSize(sf::Vector2f(8, 8));
-        dotRect.setFillColor(sf::Color::Green);
-        dotRect.setPosition(minimapX + px * 8, minimapY + py * 8);
-        target.draw(dotRect);
-      }
-    }
-  }
-  for (int y = 0; y < numberY; y++)
-  {
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(minimapW, 1));
-    rect.setPosition(minimapX, minimapY + y * 8);
-    rect.setFillColor(sf::Color::White);
-    target.draw(rect);
-  }
-  for (int x = 0; x < numberX; x++)
-  {
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(1, minimapH));
-    rect.setPosition(minimapX + x * 8, minimapY);
-    rect.setFillColor(sf::Color::White);
-    target.draw(rect);
-  }
-  sf::RectangleShape minimap;
-  minimap.setSize(sf::Vector2f(minimapW - 2, minimapH - 2));
-  minimap.setFillColor(sf::Color::Transparent);
-  minimap.setOutlineColor(sf::Color::White);
-  minimap.setOutlineThickness(1);
-  minimap.setPosition(minimapX, minimapY);
-  target.draw(minimap);
+  m_minimap.draw(target);
 
   if (m_menu.isVisible())
   {
@@ -431,6 +385,9 @@ void Game::transferPlayer(const std::string& targetMap, int x, int y)
   }
 
   m_player->transfer(x, y);
+
+  // Also update minimap when player has transfered.
+  m_minimap.updatePosition(m_currentMap, x, y);
 }
 
 void Game::playMusic(const std::string& music)
@@ -590,4 +547,7 @@ void Game::setPlayer(Player* player)
   {
     m_camera.rotate(deg2rad(180));
   }
+
+  // So it shows up at beginning of game.
+  m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y);
 }

@@ -13,6 +13,8 @@
 #include "Map.h"
 #include "Camera.h"
 
+#include "Minimap.h"
+
 class Player;
 class Entity;
 class Raycaster;
@@ -94,6 +96,8 @@ private:
   sf::RenderTexture m_targetTexture;
 
   bool m_rotKeyDown;
+
+  Minimap m_minimap;
 };
 
 #endif
