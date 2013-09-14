@@ -109,6 +109,8 @@ static void check_death(Character* actor)
   if (actor->getAttribute("hp").current <= 0)
   {
     cause_status(actor, "Dead", true);
+
+    actor->flash().fadeOut(5);
   }
 }
 
@@ -978,7 +980,7 @@ bool Battle::effectInProgress() const
 {
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
-    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect())
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
       return true;
   }
 

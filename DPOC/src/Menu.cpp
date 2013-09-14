@@ -1861,7 +1861,8 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     const Character* monster = m_monsters[i];
 
-    if (monster->getStatus() == "Dead")
+    // If monster is fading out, still draw it during that time.
+    if (monster->getStatus() == "Dead" && !monster->flash().isFading())
       continue;
 
     int posX = config::GAME_RES_X / 2;
