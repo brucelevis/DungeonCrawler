@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include "random_pick.h"
 #include "Game.h"
+#include "Cache.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -118,7 +119,8 @@ Battle::Battle(const std::vector<Character*>& monsters)
    m_monsters(monsters),
    m_currentActor(0),
    m_turnDelay(0),
-   m_canEscape(true)
+   m_canEscape(true),
+   m_battleBackground(0)
 {
 }
 
@@ -128,6 +130,8 @@ Battle::~Battle()
   {
     delete *it;
   }
+
+  cache::releaseTexture(m_battleBackground);
 }
 
 void Battle::start(bool canEscape)
@@ -809,6 +813,13 @@ void Battle::draw(sf::RenderTarget& target)
     battleMenuX = -40;
   }
 
+  if (m_battleBackground)
+  {
+    sf::Sprite bgSprite;
+    bgSprite.setTexture(*m_battleBackground);
+    target.draw(bgSprite);
+  }
+
   m_battleMenu.draw(target, battleMenuX, 152);
 
   if (Message::instance().isVisible())
@@ -1222,5 +1233,19 @@ void Battle::postFade(FadeType fadeType)
     Game::instance().close();
 
     SceneManager::instance().fadeIn(128);
+  }
+}
+
+void Battle::setBattleBackground(const std::string& file)
+{
+  if (m_battleBackground)
+  {
+    cache::releaseTexture(m_battleBackground);
+    m_battleBackground = 0;
+  }
+
+  if (file.size() > 0)
+  {
+    m_battleBackground = cache::loadTexture("Resources/Backgrounds/" + file);
   }
 }

@@ -57,6 +57,8 @@ public:
   void endBattle();
 
   void postFade(FadeType fadeType);
+
+  void setBattleBackground(const std::string& file);
 private:
   void executeActions();
   void showAction();
@@ -110,6 +112,8 @@ private:
   sf::Music m_battleMusic;
 
   bool m_canEscape;
+
+  sf::Texture* m_battleBackground;
 };
 
 #endif

@@ -81,6 +81,13 @@ void draw_battle_message(sf::RenderTarget& target)
 {
   for (size_t i = 0; i < battleMessage.size(); i++)
   {
+    // Draw a transparent "underlay" so text is easier to make out on background
+    sf::RectangleShape rect;
+    rect.setPosition(0, 6 + i * 12);
+    rect.setSize(sf::Vector2f(config::GAME_RES_X, 12));
+    rect.setFillColor(sf::Color(0, 0, 0, 128));
+    target.draw(rect);
+
     draw_text_bmp(target, 8, 8 + i * 12, "%s", battleMessage[i].c_str());
   }
 }

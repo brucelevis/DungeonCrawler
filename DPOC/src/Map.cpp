@@ -279,6 +279,8 @@ Map* Map::loadTiledFile(const std::string& filename)
       map->m_encounterRate = fromString<int>(loader.getProperty("encounterRate"));
     }
 
+    map->m_battleBackground = loader.getProperty("battleBackground");
+
     TRACE("Map: Loading tilesets");
 
     std::vector<std::string> tilesets = loader.getTilesets();
