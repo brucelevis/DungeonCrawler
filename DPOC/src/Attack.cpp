@@ -202,6 +202,12 @@ bool cause_status(Character* target, const std::string& status, bool forceStatus
   {
     target->afflictStatus(status, duration);
 
+    // Set hp to 0 if the status to cause is "Dead"
+    if (status == "Dead")
+    {
+      target->getAttribute("hp").current = 0;
+    }
+
     battle_message("%s %s",
         target->getName().c_str(), get_status_effect(status)->verb.c_str());
   }
