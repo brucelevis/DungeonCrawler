@@ -253,10 +253,10 @@ void Battle::executeActions()
   }
 
   clear_message();
-  if (isMonster(m_currentActor))
-  {
-    m_currentActor->flash().start(2, 3);
-  }
+//  if (isMonster(m_currentActor))
+//  {
+  m_currentActor->flash().start(2, 3);
+//  }
 
   /////////////////////////////////////////////////////////////////////////////
   // Check status effects.
@@ -557,10 +557,10 @@ void Battle::actionEffect()
       Character* currentTarget = m_currentTargets.front();
       m_currentTargets.erase(m_currentTargets.begin());
 
-      if (isMonster(currentTarget))
-      {
-        currentTarget->flash().start(6, 3);
-      }
+//      if (isMonster(currentTarget))
+//      {
+      currentTarget->flash().start(6, 3);
+//      }
 
       int damage = 0;
 
@@ -785,10 +785,10 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
 
   if (didProcess)
   {
-    if (isMonster(actor))
-    {
-      actor->flash().start(6, 3);
-    }
+//    if (isMonster(actor))
+//    {
+    actor->flash().start(6, 3);
+//    }
   }
 
   return didProcess;
@@ -871,6 +871,35 @@ void Battle::draw(sf::RenderTarget& target)
   }
 
   m_battleMenu.draw(target, battleMenuX, 152);
+  if (m_state != STATE_SELECT_ACTIONS && m_battleMenu.isVisible())
+  {
+    for (size_t i = 0; i < get_player()->getParty().size(); i++)
+    {
+      PlayerCharacter* actor = get_player()->getParty()[i];
+
+      int posX;
+      int posY = config::GAME_RES_Y - 64;
+
+      // adjust for lower portraits
+      if (i == 2 || i == 3) posY += 32;
+
+      if ((i % 2) == 0) posX = 4;
+      else posX = config::GAME_RES_X - 32 - 4;
+
+      actor->draw(target, posX, posY);
+
+      if (actor == m_currentActor)
+      {
+        sf::RectangleShape rect;
+        rect.setFillColor(sf::Color::Transparent);
+        rect.setOutlineColor(sf::Color::Red);
+        rect.setOutlineThickness(1.0f);
+        rect.setPosition(posX + 1, posY + 1);
+        rect.setSize(sf::Vector2f(30, 30));
+        target.draw(rect);
+      }
+    }
+  }
 
   if (Message::instance().isVisible())
   {
@@ -1008,6 +1037,10 @@ void Battle::updateEffects()
   {
     (*it)->flash().update();
   }
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+  {
+    (*it)->flash().update();
+  }
 
   for (auto it = m_activeEffects.begin(); it != m_activeEffects.end();)
   {
@@ -1027,6 +1060,11 @@ void Battle::updateEffects()
 bool Battle::effectInProgress() const
 {
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+  {
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
+      return true;
+  }
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
   {
     if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
       return true;
