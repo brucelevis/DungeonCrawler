@@ -312,11 +312,48 @@ void Battle::executeActions()
 
     if (action.target)
     {
-      battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+      bool regularMessage = true;
+
+      if (!isMonster(m_currentActor))
+      {
+        Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("weapon");
+        if (weapon && weapon->useVerb.size() > 0)
+        {
+          battle_message("%s %s %s!",
+              m_currentActor->getName().c_str(),
+              weapon->useVerb.c_str(),
+              action.target->getName().c_str());
+
+          regularMessage = false;
+        }
+      }
+
+      if (regularMessage)
+      {
+        battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+      }
     }
     else
     {
-      battle_message("%s attacks the enemies!", m_currentActor->getName().c_str());
+      bool regularMessage = true;
+
+      if (!isMonster(m_currentActor))
+      {
+        Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("weapon");
+        if (weapon && weapon->useVerb.size() > 0)
+        {
+          battle_message("%s %s!",
+              m_currentActor->getName().c_str(),
+              weapon->useVerb.c_str());
+
+          regularMessage = false;
+        }
+      }
+
+      if (regularMessage)
+      {
+        battle_message("%s attacks the enemies!", m_currentActor->getName().c_str());
+      }
     }
   }
   else if (action.actionName == "Spell")
