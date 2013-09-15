@@ -310,7 +310,14 @@ void Battle::executeActions()
       play_sound(config::get("SOUND_ATTACK"));
     //}
 
-    battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+    if (action.target)
+    {
+      battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+    }
+    else
+    {
+      battle_message("%s attacks the enemies!", m_currentActor->getName().c_str());
+    }
   }
   else if (action.actionName == "Spell")
   {
@@ -488,6 +495,10 @@ void Battle::showAction()
         Item& item = item_ref(m_battleActions[m_currentActor].front().objectName);
 
         setCurrentTargets(item.target);
+      }
+      else if (m_battleActions[m_currentActor].front().actionName == "Attack")
+      {
+        setCurrentTargets(TARGET_ALL_ENEMY);
       }
     }
 
