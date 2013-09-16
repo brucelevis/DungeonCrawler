@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 
-#include "logger.h"
+#include <BGL/logger.h>
 
 template <typename T>
 class Persistent

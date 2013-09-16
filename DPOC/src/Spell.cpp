@@ -1,10 +1,12 @@
 #include <vector>
 #include <stdexcept>
 
+#include <BGL/Sound.h>
+#include <BGL/Strings.h>
+#include <BGL/logger.h>
+#include <BGL/Random.h>
+
 #include "Config.h"
-#include "Sound.h"
-#include "Utility.h"
-#include "logger.h"
 
 #include "Attack.h"
 #include "Message.h"
@@ -62,13 +64,13 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   if (descElem)
     spell.description = descElem->GetText();
   if (costElem)
-    spell.mpCost = fromString<int>(costElem->GetText());
+    spell.mpCost = bgl::str::fromString<int>(costElem->GetText());
   if (targElem)
     spell.target = targetFromString(targElem->GetText());
   if (battElem)
-    spell.battleOnly = fromString<bool>(battElem->GetText());
+    spell.battleOnly = bgl::str::fromString<bool>(battElem->GetText());
   if (powrElem)
-    spell.power = fromString<int>(powrElem->GetText());
+    spell.power = bgl::str::fromString<int>(powrElem->GetText());
   if (effeElem)
     spell.effect = effeElem->GetText();
   if (elemElem)
@@ -76,7 +78,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   if (verbElem)
     spell.verb = verbElem->GetText();
   if (physElem)
-    spell.isPhysical = fromString<bool>(physElem->GetText());
+    spell.isPhysical = bgl::str::fromString<bool>(physElem->GetText());
 
   const XMLElement* typeElem = spellElement->FirstChildElement("spellType");
   if (typeElem)
@@ -99,14 +101,14 @@ static Spell parse_spell_element(const XMLElement* spellElement)
       const XMLAttribute* chanceAttr = element->FindAttribute("chance");
       if (chanceAttr)
       {
-        chance = fromString<int>(chanceAttr->Value());
+        chance = bgl::str::fromString<int>(chanceAttr->Value());
       }
 
       int duration = -1;
       const XMLAttribute* durAttr = element->FindAttribute("duration");
       if (durAttr)
       {
-        duration = fromString<int>(durAttr->Value());
+        duration = bgl::str::fromString<int>(durAttr->Value());
       }
 
       spell.causeStatus[name].chance = chance;
@@ -192,7 +194,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
     for (auto it = spell->causeStatus.begin(); it != spell->causeStatus.end(); ++it)
     {
-      int range = random_range(0, 100);
+      int range = bgl::rnd::random_range(0, 100);
       if (range < it->second.chance)
       {
         if (cause_status(target, it->first, false, it->second.duration))
@@ -215,7 +217,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
     if (damage == 0 && !soundToPlay.empty())
     {
-      play_sound("Resources/Audio/" + soundToPlay);
+      bgl::play_sound("Resources/Audio/" + soundToPlay);
     }
   }
 
@@ -231,7 +233,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     // Play sound if the previous effects differ from current.
     if (damage == 0 && effects.size() != target->getStatusEffects().size())
     {
-      play_sound(config::get("SOUND_RECOVERY"));
+      bgl::play_sound(config::get("SOUND_RECOVERY"));
     }
   }
 
@@ -246,11 +248,11 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     {
       if (spell->power > 0)
       {
-        play_sound(config::get("SOUND_BUFF"));
+        bgl::play_sound(config::get("SOUND_BUFF"));
       }
       else if (spell->power < 0)
       {
-        play_sound(config::get("SOUND_DEBUFF"));
+        bgl::play_sound(config::get("SOUND_DEBUFF"));
       }
     }
   }

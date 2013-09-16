@@ -1,4 +1,5 @@
-#include "logger.h"
+#include <BGL/logger.h>
+
 #include "Direction.h"
 
 Direction directionFromString(const std::string& dirStr)

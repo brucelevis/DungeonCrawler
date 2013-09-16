@@ -9,7 +9,8 @@ struct EntityData;
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-#include "coord.h"
+#include <BGL/coord.h>
+
 #include "Item.h"
 #include "Character.h"
 #include "PlayerCharacter.h"
@@ -22,7 +23,7 @@ public:
   Entity* player();
 
   void update();
-  void draw(sf::RenderTarget& target, const coord_t& view);
+  void draw(sf::RenderTarget& target, const bgl::coord_t& view);
 
   const std::vector<Item>& getInventory() const { return m_inventory; }
   const std::vector<PlayerCharacter*>& getParty() const { return m_party; }
@@ -68,7 +69,7 @@ private:
   std::vector<Item> m_inventory;
   std::vector<PlayerCharacter*> m_party;
 
-  std::map<Entity*, coord_t> m_trainCoords;
+  std::map<Entity*, bgl::coord_t> m_trainCoords;
 
   int m_gold;
 

@@ -4,11 +4,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Sound.h"
-#include "logger.h"
-#include "floodfill.h"
-#include "draw_text.h"
-#include "Cache.h"
+#include <BGL/Sound.h>
+#include <BGL/logger.h>
+#include <BGL/floodfill.h>
+#include <BGL/Text.h>
+#include <BGL/Cache.h>
+
 #include "EntityDef.h"
 #include "Editor.h"
 
@@ -28,7 +29,7 @@ Editor::Editor()
 {
   m_window.create(sf::VideoMode(640, 480), "DPOC Editor");
 
-  m_tileset = cache::loadTexture("Resources/DqTileset.png");
+  m_tileset = bgl::cache::loadTexture("Resources/DqTileset.png");
 
   if (!m_tileset)
   {
@@ -61,7 +62,7 @@ Editor::Editor()
 Editor::~Editor()
 {
   m_window.close();
-  cache::releaseTexture("Resources/DqTileset.png");
+  bgl::cache::releaseTexture("Resources/DqTileset.png");
 
   clear();
 
@@ -451,26 +452,26 @@ void Editor::draw()
 
   if (m_textInputState == TEXT_INPUT_RESIZE)
   {
-    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+    bgl::draw_text_bmp(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Current size (%d %d) New size: %s_", m_mapW, m_mapH, m_currentInput.c_str());
   }
   else if (m_textInputState == TEXT_INPUT_SELECT_MUSIC)
   {
-    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+    bgl::draw_text_bmp(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Current music (%s) New music: %s_", m_music.c_str(), m_currentInput.c_str());
   }
   else if (m_textInputState == TEXT_INPUT_SAVE_MAP || m_textInputState == TEXT_INPUT_LOAD_MAP)
   {
-    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+    bgl::draw_text_bmp(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Enter map name (no ext): %s_", m_currentInput.c_str());
   }
   else if (m_textInputState == TEXT_INPUT_WARP)
   {
-    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
+    bgl::draw_text_bmp(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4,
         "Enter new warp ToX ToY ToMap: %s_", m_currentInput.c_str());
   }
 
-  draw_text(m_window, m_window.getSize().x - editStateToString().size() * 9, 8, "%s", editStateToString().c_str());
+  bgl::draw_text_bmp(m_window, m_window.getSize().x - editStateToString().size() * 9, 8, "%s", editStateToString().c_str());
 
   m_window.display();
 }
@@ -585,7 +586,7 @@ void Editor::drawAvailableEntities()
       rect.setOutlineThickness(2.0f);
       m_window.draw(rect);
 
-      draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4, "Entity: %s", (*it)->getName().c_str());
+      bgl::draw_text_bmp(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_tilesetArea.top + 4, "Entity: %s", (*it)->getName().c_str());
     }
 
     x++;
@@ -619,7 +620,7 @@ void Editor::drawZones()
     tmpRect.setFillColor(sf::Color::Blue);
     tmpRect.setOutlineColor(sf::Color::Transparent);
     m_window.draw(tmpRect);
-    draw_text(m_window, posX, posY, "%d", i);
+    bgl::draw_text_bmp(m_window, posX, posY, "%d", i);
 
     if (i == m_currentZone)
     {
@@ -702,7 +703,7 @@ void Editor::drawEditArea()
             rect.setOutlineColor(sf::Color(0, 0, 0, 127));
             m_window.draw(rect);
 
-            draw_text(m_window, posX, posY, "%d", tp->zone);
+            bgl::draw_text_bmp(m_window, posX, posY, "%d", tp->zone);
           }
 
           if (m_editState == EDIT_STATE_PLACE_SOLID && tp->solid)
@@ -761,7 +762,7 @@ void Editor::drawEditArea()
       tmpRect.setOutlineColor(sf::Color::Transparent);
       m_window.draw(tmpRect);
 
-      draw_text(m_window, posX, posY, "W");
+      bgl::draw_text_bmp(m_window, posX, posY, "W");
     }
   }
 
@@ -818,7 +819,7 @@ void Editor::drawEditArea()
       }
     }
 
-    draw_text(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_editArea.top + m_editArea.height + 8,
+    bgl::draw_text_bmp(m_window, m_tilesetArea.left + m_tilesetArea.width + 8, m_editArea.top + m_editArea.height + 8,
         "%s   %s", statusText.str().c_str(), m_currentMapName.c_str());
   }
 
@@ -894,7 +895,7 @@ void Editor::doFloodFill(int px, int py)
     }
   }
 
-  floodfill(floodMap, m_mapW, m_mapH, px, py, 2);
+  bgl::floodfill(floodMap, m_mapW, m_mapH, px, py, 2);
 
   for (int y = 0; y < m_mapH; y++)
   {
@@ -1085,7 +1086,7 @@ void Editor::saveMap(const std::string& name)
   m_currentMapName = map->getName();
   delete map;
 
-  play_sound(config::get("SOUND_SUCCESS"));
+  bgl::play_sound(config::get("SOUND_SUCCESS"));
 }
 
 Map* Editor::createMap() const

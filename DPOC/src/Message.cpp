@@ -2,10 +2,11 @@
 #include <vector>
 #include <cstdarg>
 
-#include "Sound.h"
+#include <BGL/Sound.h>
+#include <BGL/Text.h>
+#include <BGL/Strings.h>
+
 #include "Config.h"
-#include "draw_text.h"
-#include "Utility.h"
 #include "Frame.h"
 #include "Message.h"
 
@@ -52,7 +53,7 @@ void battle_message(const char* fmt, ...)
 
   va_end(args);
 
-  std::vector<std::string> strings = split_string(buffer, ' ');
+  std::vector<std::string> strings = bgl::str::split_string(buffer, ' ');
 
   static const size_t WORDS = 256 / 8 - 2;
 
@@ -88,7 +89,7 @@ void draw_battle_message(sf::RenderTarget& target)
     rect.setFillColor(sf::Color(0, 0, 0, 128));
     target.draw(rect);
 
-    draw_text_bmp(target, 8, 8 + i * 12, "%s", battleMessage[i].c_str());
+    bgl::draw_text_bmp(target, 8, 8 + i * 12, "%s", battleMessage[i].c_str());
   }
 }
 
@@ -107,11 +108,11 @@ void Message::show(const std::string& msg, bool append)
 
   if (!append)
   {
-    strings = split_string(msg, ' ');
+    strings = bgl::str::split_string(msg, ' ');
   }
   else
   {
-    strings = split_string(m_pages.front() + "\n" + msg, ' ');
+    strings = bgl::str::split_string(m_pages.front() + "\n" + msg, ' ');
     m_pages.front().clear();
   }
 
@@ -199,7 +200,7 @@ void Message::update()
 
     if (!m_quiet && !config::get("SOUND_MESSAGE_INCREMENT").empty())
     {
-      play_sound(config::get("SOUND_MESSAGE_INCREMENT"));
+      bgl::play_sound(config::get("SOUND_MESSAGE_INCREMENT"));
     }
 
     m_currentIndex++;
@@ -209,5 +210,5 @@ void Message::update()
 void Message::draw(sf::RenderTarget& target)
 {
   draw_frame(target, 0, config::GAME_RES_Y - 48, 256, 48);
-  draw_text_bmp(target, 8, config::GAME_RES_Y - 48 + 8, "%s", m_currentBuffer.c_str());
+  bgl::draw_text_bmp(target, 8, config::GAME_RES_Y - 48 + 8, "%s", m_currentBuffer.c_str());
 }

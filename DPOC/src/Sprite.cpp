@@ -1,5 +1,6 @@
-#include "logger.h"
-#include "Cache.h"
+#include <BGL/logger.h>
+#include <BGL/Cache.h>
+
 #include "Config.h"
 #include "Sprite.h"
 
@@ -20,7 +21,7 @@ Sprite::~Sprite()
 {
   TRACE("Deleting sprite %s", m_textureName.c_str());
 
-  cache::releaseTexture(m_textureName);
+  bgl::cache::releaseTexture(m_textureName);
 }
 
 void Sprite::create(const std::string& spriteId,
@@ -30,7 +31,7 @@ void Sprite::create(const std::string& spriteId,
   if (!m_textureName.empty())
   {
     TRACE("Recreating sprite %s with new textureName=%s", m_textureName.c_str(), spriteId.c_str());
-    cache::releaseTexture(m_textureName);
+    bgl::cache::releaseTexture(m_textureName);
   }
   else
   {
@@ -47,7 +48,7 @@ void Sprite::create(const std::string& spriteId,
   m_width = width;
   m_height = height;
 
-  sf::Texture* spriteTexture = cache::loadTexture(m_textureName);
+  sf::Texture* spriteTexture = bgl::cache::loadTexture(m_textureName);
 
   if (spriteTexture)
   {

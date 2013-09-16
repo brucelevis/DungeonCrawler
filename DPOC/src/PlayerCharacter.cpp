@@ -1,10 +1,12 @@
 #include <sstream>
 
+#include <BGL/Cache.h>
+#include <BGL/Strings.h>
+
 #include "SaveLoad.h"
 
 #include "Config.h"
 #include "Utility.h"
-#include "Cache.h"
 #include "Message.h"
 #include "StatusEffect.h"
 
@@ -23,17 +25,17 @@ void PlayerCharacter::equip(const std::string& equipmentSlot, const std::string&
 {
   if (itemName.empty())
   {
-    m_equipment.erase(to_lower(equipmentSlot));
+    m_equipment.erase(bgl::str::to_lower(equipmentSlot));
   }
   else
   {
-    m_equipment[to_lower(equipmentSlot)] = create_item(itemName, 1);
+    m_equipment[bgl::str::to_lower(equipmentSlot)] = create_item(itemName, 1);
   }
 }
 
 Item* PlayerCharacter::getEquipment(const std::string& equipmentSlot)
 {
-  auto it = m_equipment.find(to_lower(equipmentSlot));
+  auto it = m_equipment.find(bgl::str::to_lower(equipmentSlot));
 
   if (it != m_equipment.end())
   {
@@ -114,7 +116,7 @@ void PlayerCharacter::setAttributes()
     if (base == 0)
       continue;
 
-    float percent = (float)level / fromString<float>(config::get("MAX_LEVEL"));
+    float percent = (float)level / bgl::str::fromString<float>(config::get("MAX_LEVEL"));
     int attrib = base + percent * (float)max;
 
     // TODO: Take into account attribute enhancing things.
@@ -148,7 +150,7 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
       int increase = it->second.max - attributesTemp[it->first].max;
 
       if (it->first != "level" && it->first != "exp")
-        buffer += capitalize(it->first) + " +" + toString(increase) + "! ";
+        buffer += bgl::str::capitalize(it->first) + " +" + bgl::str::toString(increase) + "! ";
     }
 
     if (display)
@@ -193,7 +195,7 @@ std::string PlayerCharacter::xmlDump() const
   xml << " <class>" << m_class.name << "</class>\n";
 
   xml << " <texture name=\""
-      << cache::getTextureName(m_faceTexture)
+      << bgl::cache::getTextureName(m_faceTexture)
       << "\" x=\""
       << m_textureRect.left
       << "\" y=\""
@@ -259,7 +261,7 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
   character->m_name = name;
   character->m_class = player_class_ref(className);
 
-  character->m_faceTexture = cache::loadTexture(character->m_class.faceTexture);
+  character->m_faceTexture = bgl::cache::loadTexture(character->m_class.faceTexture);
   character->m_textureRect = character->m_class.textureRect;
 
   character->m_status.push_back(get_status_effect("Normal"));
@@ -290,7 +292,7 @@ PlayerCharacter* PlayerCharacter::createFromSaveData(CharacterData* data)
   PlayerCharacter* character = new PlayerCharacter;
 
   character->m_name = data->name;
-  character->m_faceTexture = cache::loadTexture(data->textureName);
+  character->m_faceTexture = bgl::cache::loadTexture(data->textureName);
   character->m_textureRect = sf::IntRect(data->textureX, data->textureY, data->textureW, data->textureH);
 
   character->m_class = player_class_ref(data->className);

@@ -1,12 +1,14 @@
 #include <iterator>
 
-#include "SceneManager.h"
+#include <BGL/SceneManager.h>
+#include <BGL/Random.h>
+#include <BGL/Cache.h>
+#include <BGL/Sound.h>
+#include <BGL/Strings.h>
 
 #include "Config.h"
 #include "Utility.h"
-#include "random_pick.h"
 #include "Game.h"
-#include "Cache.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -17,7 +19,6 @@
 #include "Character.h"
 #include "PlayerCharacter.h"
 #include "Message.h"
-#include "Sound.h"
 
 #include "Battle.h"
 
@@ -133,7 +134,7 @@ Battle::~Battle()
     delete *it;
   }
 
-  cache::releaseTexture(m_battleBackground);
+  bgl::cache::releaseTexture(m_battleBackground);
 }
 
 void Battle::start(bool canEscape)
@@ -260,7 +261,7 @@ void Battle::executeActions()
 
   /////////////////////////////////////////////////////////////////////////////
   // Check status effects.
-  if (m_currentActor->hasStatusType(STATUS_FUMBLE) && coinflip())
+  if (m_currentActor->hasStatusType(STATUS_FUMBLE) && bgl::rnd::coinflip())
   {
     action.actionName = "Fumble";
     action.target = 0;
@@ -269,15 +270,15 @@ void Battle::executeActions()
   {
     battle_message("%s is confused!", m_currentActor->getName().c_str());
 
-    if (coinflip())
+    if (bgl::rnd::coinflip())
     {
       action.actionName = "Attack";
       action.target = m_currentActor;
     }
 
-    if (action.target && coinflip())
+    if (action.target && bgl::rnd::coinflip())
     {
-      if (coinflip())
+      if (bgl::rnd::coinflip())
       {
         action.target = selectRandomFriendlyTarget(m_currentActor);
       }
@@ -286,7 +287,7 @@ void Battle::executeActions()
         action.target = selectRandomTarget(m_currentActor);
       }
     }
-    else if (coinflip())
+    else if (bgl::rnd::coinflip())
     {
       action.actionName = "Fumble";
       action.target = 0;
@@ -307,7 +308,7 @@ void Battle::executeActions()
     // TODO: Uncomment when effects are used.
     //if (isMonster(m_currentActor))
     //{
-      play_sound(config::get("SOUND_ATTACK"));
+      bgl::play_sound(config::get("SOUND_ATTACK"));
     //}
 
     if (action.target)
@@ -358,7 +359,7 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Spell")
   {
-    play_sound(config::get("SOUND_SPELL"));
+    bgl::play_sound(config::get("SOUND_SPELL"));
 
     if (action.target)
     {
@@ -409,7 +410,7 @@ void Battle::executeActions()
   {
     if (get_player()->getItem(action.objectName))
     {
-      play_sound(config::get("SOUND_USE_ITEM"));
+      bgl::play_sound(config::get("SOUND_USE_ITEM"));
 
       Item& item = item_ref(action.objectName);
 
@@ -431,7 +432,7 @@ void Battle::executeActions()
     }
     else
     {
-      play_sound(config::get("SOUND_CANCEL"));
+      bgl::play_sound(config::get("SOUND_CANCEL"));
 
       battle_message("%s tries to use %s... But there are none left!",
           m_currentActor->getName().c_str(), action.objectName.c_str());
@@ -449,9 +450,9 @@ void Battle::executeActions()
   {
     if (m_canEscape)
     {
-      if (random_range(0, 10) >= 2)
+      if (bgl::rnd::random_range(0, 10) >= 2)
       {
-        play_sound(config::get("SOUND_ESCAPE"));
+        bgl::play_sound(config::get("SOUND_ESCAPE"));
         m_battleMenu.setVisible(false);
         show_message("You run away.");
       }
@@ -469,12 +470,12 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Fumble")
   {
-    play_sound(config::get("SOUND_MISS"));
+    bgl::play_sound(config::get("SOUND_MISS"));
     battle_message("%s is fumbling and loses its turn!", m_currentActor->getName().c_str());
   }
   else if (action.actionName == "Silence")
   {
-    play_sound(config::get("SOUND_MISS"));
+    bgl::play_sound(config::get("SOUND_MISS"));
     battle_message("%s can't utter a word!", m_currentActor->getName().c_str());
   }
   else if (action.actionName == "Summon")
@@ -601,32 +602,32 @@ void Battle::actionEffect()
 
         if (criticalHit)
         {
-          play_sound(config::get("SOUND_CRITICAL"));
+          bgl::play_sound(config::get("SOUND_CRITICAL"));
 
-          SceneManager::instance().shakeScreen(16, 8, 8);
+          bgl::SceneManager::instance().shakeScreen(16, 8, 8);
         }
         else if (isMonster(m_currentActor))
         {
-          play_sound(config::get("SOUND_ENEMY_HIT"));
+          bgl::play_sound(config::get("SOUND_ENEMY_HIT"));
 
-          SceneManager::instance().shakeScreen(16, 4, 0);
+          bgl::SceneManager::instance().shakeScreen(16, 4, 0);
         }
         else
         {
-          play_sound(config::get("SOUND_HIT"));
+          bgl::play_sound(config::get("SOUND_HIT"));
         }
       }
       else if (damage == 0 && actionName == "Attack")
       {
         battle_message("Miss! %s takes no damage!", currentTarget->getName().c_str(), damage);
 
-        play_sound(config::get("SOUND_MISS"));
+        bgl::play_sound(config::get("SOUND_MISS"));
       }
       else if (damage < 0)
       {
         battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
 
-        play_sound(config::get("SOUND_HEAL"));
+        bgl::play_sound(config::get("SOUND_HEAL"));
       }
 
       check_death(currentTarget);
@@ -763,13 +764,13 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
           actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
 
       if (!status->sound.empty())
-        play_sound("Resources/Audio/" + status->sound);
+        bgl::play_sound("Resources/Audio/" + status->sound);
 
       didProcess = true;
       tookDamage = true;
     }
 
-    int range = random_range(0, 100);
+    int range = bgl::rnd::random_range(0, 100);
     if (range < status->recoveryChance)
     {
       cure_status(actor, status->name);
@@ -942,14 +943,14 @@ void Battle::doneSelectingActions()
       }
       else
       {
-        std::vector< rnd::random_pick_entry_t<size_t> > actionEntries;
+        std::vector< bgl::rnd::random_pick_entry_t<size_t> > actionEntries;
         for (size_t i = 0; i < def.actions.size(); i++)
         {
-          rnd::random_pick_entry_t<size_t> entry = { i, def.actions[i].weight };
+          bgl::rnd::random_pick_entry_t<size_t> entry = { i, def.actions[i].weight };
 
           actionEntries.push_back(entry);
         }
-        size_t actionIndex = rnd::random_pick(actionEntries);
+        size_t actionIndex = bgl::rnd::random_pick(actionEntries);
 
         action.actionName = def.actions[actionIndex].action;
         action.objectName = def.actions[actionIndex].objectName;
@@ -1001,7 +1002,7 @@ void Battle::doneSelectingActions()
   {
     tmpSpeeds[*it] = (*it)->getAttribute("speed").current;
 
-    float newSpeed = (float)(*it)->getAttribute("speed").current * rand_float(0.8f, 1.2f);
+    float newSpeed = (float)(*it)->getAttribute("speed").current * bgl::rnd::rand_float(0.8f, 1.2f);
     if (newSpeed <= 1)
     {
       newSpeed = (*it)->getAttribute("speed").current;
@@ -1070,13 +1071,13 @@ bool Battle::effectInProgress() const
       return true;
   }
 
-  if (sound_is_playing())
+  if (bgl::sound_is_playing())
     return true;
 
   if (m_activeEffects.size() > 0)
     return true;
 
-  if (SceneManager::instance().isShaking())
+  if (bgl::SceneManager::instance().isShaking())
     return true;
 
   return false;
@@ -1144,7 +1145,7 @@ Character* Battle::selectRandomTarget(Character* actor)
 
   do
   {
-    int targetIndex = random_range(0, actors.size());
+    int targetIndex = bgl::rnd::random_range(0, actors.size());
     target = actors[targetIndex];
   } while (target->getStatus() == "Dead");
 
@@ -1171,7 +1172,7 @@ Character* Battle::selectRandomFriendlyTarget(Character* actor)
 
   do
   {
-    int targetIndex = random_range(0, actors.size());
+    int targetIndex = bgl::rnd::random_range(0, actors.size());
     target = actors[targetIndex];
   } while (target->getStatus() == "Dead");
 
@@ -1305,7 +1306,7 @@ bool Battle::checkVictoryOrDefeat()
     m_battleMenu.setVisible(false);
 
     show_message("You have been defeated...");
-    SceneManager::instance().fadeOut(128);
+    bgl::SceneManager::instance().fadeOut(128);
 
     return true;
   }
@@ -1320,7 +1321,7 @@ void Battle::postFade(FadeType fadeType)
     endBattle();
     Game::instance().close();
 
-    SceneManager::instance().fadeIn(128);
+    bgl::SceneManager::instance().fadeIn(128);
   }
 }
 
@@ -1328,12 +1329,12 @@ void Battle::setBattleBackground(const std::string& file)
 {
   if (m_battleBackground)
   {
-    cache::releaseTexture(m_battleBackground);
+    bgl::cache::releaseTexture(m_battleBackground);
     m_battleBackground = 0;
   }
 
   if (file.size() > 0)
   {
-    m_battleBackground = cache::loadTexture("Resources/Backgrounds/" + file);
+    m_battleBackground = bgl::cache::loadTexture("Resources/Backgrounds/" + file);
   }
 }

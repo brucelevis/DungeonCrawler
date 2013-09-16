@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <sstream>
 
+#include <BGL/Strings.h>
+
 #include "SaveLoad.h"
-#include "Utility.h"
 
 #include "Direction.h"
 #include "Entity.h"
@@ -98,7 +99,7 @@ void Player::moveTrain()
     {
       if (m_trainCoords.count(prev) > 0)
       {
-        coord_t coordToFollow = m_trainCoords[prev];
+        bgl::coord_t coordToFollow = m_trainCoords[prev];
 
         if (coordToFollow.x < (int)curr->x) curr->step(DIR_LEFT);
         else if (coordToFollow.x > (int)curr->x) curr->step(DIR_RIGHT);
@@ -109,7 +110,7 @@ void Player::moveTrain()
   }
 }
 
-void Player::draw(sf::RenderTarget& target, const coord_t& view)
+void Player::draw(sf::RenderTarget& target, const bgl::coord_t& view)
 {
   for (auto it = m_playerTrain.begin(); it != m_playerTrain.end(); ++it)
   {
@@ -231,8 +232,8 @@ Player* Player::create()
   const XMLElement* start = root->FirstChildElement("start");
   if (start)
   {
-    startX = fromString<int>(start->FindAttribute("x")->Value());
-    startY = fromString<int>(start->FindAttribute("y")->Value());
+    startX = bgl::str::fromString<int>(start->FindAttribute("x")->Value());
+    startY = bgl::str::fromString<int>(start->FindAttribute("y")->Value());
     std::string startMap = start->FindAttribute("map")->Value();
 
     Game::instance().loadNewMap("Resources/Maps/" + startMap);
@@ -256,7 +257,7 @@ Player* Player::create()
     for (const XMLElement* element = inventory->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       std::string name = element->FindAttribute("name")->Value();
-      int amount = fromString<int>(element->FindAttribute("amount")->Value());
+      int amount = bgl::str::fromString<int>(element->FindAttribute("amount")->Value());
 
       player->m_inventory.push_back(create_item(name, amount));
     }

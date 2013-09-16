@@ -6,7 +6,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Scene.h"
+#include <BGL/Scene.h>
+
 #include "Direction.h"
 #include "Menu.h"
 
@@ -73,7 +74,7 @@ private:
   std::vector<std::string> m_inventory;
 };
 
-class Shop : public Scene
+class Shop : public bgl::Scene
 {
 public:
   Shop(const std::vector<std::string>& items);

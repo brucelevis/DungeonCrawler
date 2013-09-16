@@ -1,8 +1,9 @@
-#include "Cache.h"
+#include <BGL/Cache.h>
+
 #include "Picture.h"
 
 Picture::Picture(const std::string& name)
- : m_texture(cache::loadTexture("Resources/Pictures/" + name)),
+ : m_texture(bgl::cache::loadTexture("Resources/Pictures/" + name)),
    m_x(0),
    m_y(0)
 {
@@ -10,7 +11,7 @@ Picture::Picture(const std::string& name)
 
 Picture::~Picture()
 {
-  cache::releaseTexture(m_texture);
+  bgl::cache::releaseTexture(m_texture);
 }
 
 void Picture::draw(sf::RenderTarget& target) const

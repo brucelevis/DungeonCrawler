@@ -1,10 +1,11 @@
 #include <vector>
 #include <stdexcept>
 
+#include <BGL/logger.h>
+#include <BGL/Strings.h>
+
 #include "Attack.h"
-#include "logger.h"
 #include "Character.h"
-#include "Utility.h"
 #include "Message.h"
 #include "Item.h"
 
@@ -74,7 +75,7 @@ static Item parse_item_element(const XMLElement* itemElement)
   if (descElem)
     item.description = descElem->GetText();
   if (costElem)
-    item.cost = fromString<int>(costElem->GetText());
+    item.cost = bgl::str::fromString<int>(costElem->GetText());
   if (typeElem)
     item.type = itemTypeFromString(typeElem->GetText());
   if (targElem)
@@ -99,7 +100,7 @@ static Item parse_item_element(const XMLElement* itemElement)
       if (nameAttr && valueAttr)
       {
         std::string name = nameAttr->Value();
-        int value = fromString<int>(valueAttr->Value());
+        int value = bgl::str::fromString<int>(valueAttr->Value());
 
         item.attributeGain[name] = value;
       }
@@ -118,7 +119,7 @@ static Item parse_item_element(const XMLElement* itemElement)
     for (const XMLElement* element = elemElement->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       std::string name = element->FindAttribute("name")->Value();
-      float value = fromString<float>(element->FindAttribute("value")->Value());
+      float value = bgl::str::fromString<float>(element->FindAttribute("value")->Value());
       item.elements[name] = value;
     }
   }
@@ -154,7 +155,7 @@ Item create_item(const std::string& name, int stackSize)
 {
   for (auto it = itemDefinitions.begin(); it != itemDefinitions.end(); ++it)
   {
-    if (to_lower(it->name) == to_lower(name))
+    if (bgl::str::to_lower(it->name) == bgl::str::to_lower(name))
     {
       Item itemCopy = *it;
       itemCopy.stackSize = stackSize;
@@ -169,7 +170,7 @@ Item& item_ref(const std::string& name)
 {
   for (auto it = itemDefinitions.begin(); it != itemDefinitions.end(); ++it)
   {
-    if (to_lower(it->name) == to_lower(name))
+    if (bgl::str::to_lower(it->name) == bgl::str::to_lower(name))
       return *it;
   }
 

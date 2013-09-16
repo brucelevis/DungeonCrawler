@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "coord.h"
+#include <BGL/coord.h>
 #include "Config.h"
 #include "Entity.h"
 
@@ -39,7 +39,7 @@ public:
   int getHeight() const { return m_height; }
 
   void update();
-  void draw(sf::RenderTarget& target, const coord_t& view);
+  void draw(sf::RenderTarget& target, const bgl::coord_t& view);
 
   Tile* getTileAt(int x, int y, int layer);
   bool warpAt(int x, int y) const;
