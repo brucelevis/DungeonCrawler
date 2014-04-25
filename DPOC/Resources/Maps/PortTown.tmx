@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="16" tileheight="16">
+ <properties>
+  <property name="music" value="Village.ogg"/>
+ </properties>
+ <tileset firstgid="1" name="DqTileset" tilewidth="16" tileheight="16">
+  <image source="../DqTileset.png" width="96" height="320"/>
+ </tileset>
+ <tileset firstgid="121" name="Hero2" tilewidth="16" tileheight="16">
+  <image source="../Hero2.png" width="160" height="128"/>
+ </tileset>
+ <layer name="blocking" width="30" height="30">
+  <data encoding="csv">
+2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,
+0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,2,0,0,0,0,0,0,0,0,0,0,
+0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,2,2,2,2,2,2,0,
+0,2,0,2,2,2,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,2,
+0,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0,2,0,0,2,0,2,0,2,2,2,2,2,0,2,
+0,2,0,2,0,2,2,2,2,2,2,0,0,0,0,0,2,0,0,2,0,2,0,2,0,0,0,2,0,2,
+0,2,0,0,51,2,0,2,0,2,0,2,2,2,2,0,2,0,0,2,0,2,0,2,0,0,0,2,0,2,
+0,2,0,0,0,0,0,0,0,2,0,0,0,0,2,2,2,0,0,2,0,2,0,2,2,0,2,2,0,2,
+0,2,0,0,0,2,0,2,0,2,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,2,
+0,2,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,2,0,0,0,2,2,0,2,2,2,0,
+0,2,0,0,0,2,0,0,0,2,0,0,2,2,2,2,2,0,0,0,2,0,0,0,2,0,2,0,0,0,
+0,2,0,0,0,2,2,0,2,2,0,0,2,0,0,0,2,0,0,0,0,2,0,0,2,0,2,0,0,0,
+0,2,0,2,0,2,0,0,0,2,0,0,2,0,2,0,2,0,0,0,0,2,2,2,0,0,2,0,0,0,
+0,2,0,0,0,2,2,0,2,2,2,0,2,2,2,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,
+0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,
+0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,
+0,2,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
+0,2,0,0,0,0,2,2,2,0,2,2,2,0,0,0,2,2,2,2,2,2,0,2,0,0,0,0,0,0,
+0,2,0,0,0,0,2,0,0,0,0,0,2,0,0,0,2,0,0,0,2,0,0,0,2,0,0,0,0,0,
+0,2,0,0,2,0,2,0,0,2,0,0,2,0,0,0,2,2,0,2,2,0,0,0,0,2,0,0,0,0,
+0,2,0,0,0,0,2,0,0,0,0,0,2,0,0,0,2,0,0,0,2,0,0,0,0,2,0,0,0,0,
+0,2,0,0,0,0,2,2,2,0,2,2,2,0,0,0,2,2,0,2,2,2,0,0,0,0,2,0,0,0,
+0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,0,0,2,0,0,0,
+0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,
+0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,
+0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,
+0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,2,0,0,
+0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,
+0,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,2
+</data>
+ </layer>
+ <layer name="Tile Layer 1" width="30" height="30">
+  <data encoding="csv">
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,2,4,4,4,4,4,4,4,4,4,4,4,
+118,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,51,2,4,4,4,4,4,4,4,4,4,4,4,
+118,11,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,2,4,4,4,4,4,4,4,4,4,4,4,
+118,11,24,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,2,4,4,4,4,24,24,24,24,24,24,4,
+118,11,24,24,24,24,4,4,4,4,4,4,4,4,4,4,4,2,2,4,4,4,24,52,52,52,52,52,24,4,
+118,11,118,9,118,11,10,10,10,11,4,4,4,4,4,4,4,2,2,4,4,4,24,52,5,5,5,52,24,4,
+118,11,118,118,18,10,12,51,12,11,24,4,4,4,4,4,4,2,2,4,4,4,24,52,5,5,5,52,24,4,
+118,11,118,118,24,12,12,12,12,11,24,24,24,24,4,4,4,2,2,4,4,4,24,52,52,5,52,52,24,4,
+118,11,118,118,24,11,12,51,12,11,118,118,118,24,24,24,24,2,2,4,4,4,4,24,24,24,24,24,24,4,
+118,11,118,118,24,11,10,10,10,11,118,118,118,118,24,24,24,24,24,4,4,4,4,4,4,24,4,4,4,4,
+118,11,118,20,24,11,12,12,12,11,118,118,11,10,10,10,11,24,24,24,4,4,4,4,4,24,4,4,4,4,
+118,11,118,118,24,11,51,12,51,11,118,118,11,12,12,12,11,24,24,24,24,4,4,4,4,24,4,4,4,4,
+118,11,118,9,24,11,12,12,12,11,118,118,11,12,51,12,11,24,118,118,24,4,4,4,24,24,4,4,4,4,
+118,11,118,118,24,10,10,12,10,10,16,118,10,10,10,12,10,24,118,118,24,24,24,24,24,4,4,4,4,4,
+118,11,118,118,24,24,24,24,24,24,24,24,24,24,24,24,24,24,118,118,24,24,4,4,4,4,4,4,4,4,
+118,11,118,118,118,118,118,118,118,118,118,118,118,118,24,118,118,118,20,118,118,24,4,4,4,4,4,4,4,4,
+118,11,118,118,118,118,11,10,10,10,10,10,11,118,24,118,118,118,118,118,118,24,24,4,4,4,4,4,4,4,
+118,11,118,118,118,118,11,12,12,12,12,12,11,118,24,118,11,10,10,10,11,9,24,4,4,4,4,4,4,4,
+118,11,118,118,118,118,11,12,12,12,12,12,11,118,24,118,11,12,12,12,11,118,24,24,4,4,4,4,4,4,
+118,11,118,118,9,118,11,12,12,12,12,12,11,118,24,20,11,51,12,51,11,118,118,24,24,4,4,4,4,4,
+118,11,118,118,118,118,11,12,12,12,12,12,11,118,24,118,11,12,12,12,11,118,118,118,24,4,4,4,4,4,
+118,11,118,118,118,118,10,10,10,12,10,10,10,118,24,118,10,10,12,10,10,17,118,118,24,24,4,4,4,4,
+118,11,118,118,20,118,118,118,118,24,118,118,118,118,24,118,118,21,24,21,118,118,118,20,118,24,4,4,4,4,
+118,11,118,118,118,118,118,118,118,24,24,24,24,118,24,118,118,118,24,118,118,118,118,118,118,24,4,4,4,4,
+118,11,118,118,9,118,118,118,118,118,118,118,24,24,24,24,24,24,24,118,118,118,118,118,118,24,24,4,4,4,
+118,11,118,118,118,118,20,118,118,118,9,118,24,118,118,118,118,118,118,118,118,118,118,118,118,118,24,4,4,4,
+118,11,118,118,118,118,118,118,118,118,118,118,24,118,118,118,118,20,118,118,118,9,118,118,118,9,24,4,4,4,
+118,11,9,118,118,118,118,118,118,118,118,118,24,118,118,118,118,118,118,118,118,118,118,118,118,118,24,24,4,4,
+118,10,10,10,10,10,10,10,10,10,10,10,24,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,4,4,
+118,118,118,118,118,118,118,118,118,118,118,118,24,118,118,118,118,118,118,118,118,118,118,118,118,118,118,118,118,4
+</data>
+ </layer>
+ <layer name="Tile Layer 2" width="30" height="30">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,69,70,0,69,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,19,68,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="30" height="30">
+  <object name="SignPost" gid="59" x="256" y="144">
+   <properties>
+    <property name="talkScript" value="message Ship to Island"/>
+   </properties>
+  </object>
+  <object name="ShipMan" gid="195" x="288" y="32">
+   <properties>
+    <property name="stepScript">
+        if local[ship] == const[true]
+          set_walkthrough true
+          set_visible false
+        endif
+      </property>
+    <property name="talkScript">
+        if local[ship] == const[false]
+          if item[Ship_Parts] == const[0]
+            message Hello hello! I am the ship master of Port Town!
+            message Normally you would be able to take a ship to Island but I am afraid that the ship is broken.
+            message If you want to take the ship, please return with some ship parts from the nearby dungeon.
+          else
+            message Excellent! You have the ship parts. You may take the ship to Island then!
+            set_local ship true
+          endif
+        endif
+      </property>
+   </properties>
+  </object>
+  <object name="Girl" gid="157" x="144" y="288">
+   <properties>
+    <property name="stepScript">
+      walk DIR_RANDOM
+      wait 60
+    </property>
+    <property name="talkScript" value="message Welcome to Port Town."/>
+    <property name="walkSpeed" value="0.05"/>
+   </properties>
+  </object>
+  <object name="warp" x="192" y="464" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="29"/>
+    <property name="destY" value="11"/>
+   </properties>
+  </object>
+  <object name="innCounter" gid="51" x="288" y="320">
+   <properties>
+    <property name="talkScript">
+        message Welcome to the travellers inn! 25 gold for a room!
+        choice Stay,Leave
+        if global[sys:choice] == const[0]
+          if item[gold] &gt;= const[25]
+            recover_all
+            message Full recovery.
+            take_gold 25
+          else
+            message Not enough gold, sorry.
+          endif
+        endif
+      </property>
+   </properties>
+  </object>
+  <object name="InnMan" gid="195" x="288" y="304"/>
+  <object name="weaponShop" gid="51" x="112" y="192">
+   <properties>
+    <property name="talkScript">
+        message Welcome to the weapon shop.
+        shop Club,Mace,Magic Staff,Iron Sword,Boomerang
+        message Please come again!
+      </property>
+   </properties>
+  </object>
+  <object name="ShopMan" gid="195" x="112" y="176"/>
+  <object name="Kid" gid="163" x="128" y="320">
+   <properties>
+    <property name="talkScript" value="message Are you a hero?"/>
+   </properties>
+  </object>
+  <object name="secretDoor" gid="66" x="400" y="128">
+   <properties>
+    <property name="stepScript">
+        if local[open] == const[true]
+          set_tile_id 0
+          set_walkthrough true
+        endif
+    </property>
+    <property name="talkScript">
+        if item[Key] &gt;= const[1]
+          if local[open] == const[false]
+            play_sound Open1.wav
+            set_tile_id 0
+            set_local open true
+            take_item 1 Key
+            message You use a Key to open the door.
+          endif
+        else
+          if local[open] == const[false]
+            message This door is locked.
+          endif
+        endif
+    </property>
+   </properties>
+  </object>
+  <object name="secretChest" gid="129" x="400" y="96">
+   <properties>
+    <property name="fixedDirection" value="true"/>
+    <property name="stepScript">
+      if local[open] == const[true]
+        set_dir DIR_DOWN
+      endif
+    </property>
+    <property name="talkScript">
+      if local[open] == const[false]
+        play_sound Open1.wav
+        set_dir DIR_DOWN
+        message Found a Protect Ring!
+        give_item 1 Protect Ring
+        set_local open true
+      else
+        message Empty...
+      endif
+    </property>
+   </properties>
+  </object>
+  <object name="warp" x="288" y="0" width="16" height="16">
+   <properties>
+    <property name="destMap" value="IslandPort.tmx"/>
+    <property name="destX" value="7"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="secretKeyChest" gid="129" x="416" y="96">
+   <properties>
+    <property name="fixedDirection" value="true"/>
+    <property name="stepScript">
+      if local[open] == const[true]
+        set_dir DIR_DOWN
+      endif
+    </property>
+    <property name="talkScript">
+      if local[open] == const[false]
+        play_sound Open1.wav
+        set_dir DIR_DOWN
+        message Found a Key!
+        give_item 1 Key
+        set_local open true
+      else
+        message Empty...
+      endif
+    </property>
+   </properties>
+  </object>
+  <object name="ArmorShop" gid="51" x="112" y="128">
+    <properties>
+      <property name="talkScript">
+        message Welcome to the armor shop.
+        shop Leather Armor,Wood Shield,Iron Helmet,Bronze Shield,Pointy Cap
+        message Please come again!
+      </property>
+    </properties>
+  </object>
+  <object name="ArmorShopMan" gid="175" x="128" y="128"/>
+  <object name="ItemShopMan" gid="166" x="208" y="192"/>
+  <object name="itemShop" gid="51" x="224" y="192">
+    <properties>
+      <property name="talkScript">
+        message Welcome to the item shop.
+        shop Herb,Ether,Antidote,Eye Drops,Adrenaline
+        message Please come again!
+      </property>
+    </properties>
+  </object>
+ </objectgroup>
+</map>

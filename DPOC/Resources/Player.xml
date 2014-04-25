@@ -1,0 +1,10 @@
+<player>
+  <start map="ThroneRoom.tmx" x="7" y="3" />
+  <!--<start map="Dungeon.tmx" x="7" y="20" />-->
+  <party>
+    <character name="Aslan" class="Hero" />
+  </party>
+  <inventory>
+    <item name="Herb" amount="4" />
+  </inventory>
+</player>

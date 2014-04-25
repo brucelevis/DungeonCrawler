@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="DqTileset" tilewidth="16" tileheight="16">
+  <image source="../DqTileset.png" width="96" height="320"/>
+ </tileset>
+ <tileset firstgid="121" name="Hero2" tilewidth="16" tileheight="16">
+  <image source="../Hero2.png" width="160" height="128"/>
+ </tileset>
+ <layer name="blocking" width="20" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="Tile Layer 1" width="20" height="15">
+  <data encoding="csv">
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,
+15,15,15,15,15,15,15,15,15,11,15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,10,15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,11,15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,11,15,15,15,15,15,15,15,15,15,15,
+10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
+</data>
+ </layer>
+ <layer name="Tile Layer 2" width="20" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,45,41,44,0,0,0,0,0,0,0,0,0,0,45,41,44,0,0,
+0,0,45,41,44,0,0,0,0,0,0,0,0,0,0,45,41,44,0,0,
+0,0,43,41,42,0,0,0,0,0,0,0,0,0,0,43,41,42,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="20" height="15">
+  <object name="bridgeGuard" gid="177" x="144" y="128">
+   <properties>
+    <property name="stepScript">
+      if local[orb] == const[true]
+        set_walkthrough true
+        set_visible false
+      endif
+    </property>
+    <property name="talkScript">
+      if local[orb] == const[false]
+        if item[Orb_of_Light] == const[0]
+          message Halt! Only a hero possessing the Orb of Light may pass here!
+        else
+          message You possess the Orb of Light! You are the true hero!
+          message I shall let you pass...
+          set_local orb true
+        endif
+      endif
+    </property>
+   </properties>
+  </object>
+  <object name="warp" x="0" y="112" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="13"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="0" y="96" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="13"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="0" y="80" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="13"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="0" y="128" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="13"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="0" y="144" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="13"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="304" y="80" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="15"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="304" y="96" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="15"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="304" y="112" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="15"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="304" y="128" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="15"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="warp" x="304" y="144" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="15"/>
+    <property name="destY" value="13"/>
+   </properties>
+  </object>
+  <object name="TalkGuard" gid="197" x="80" y="96">
+   <properties>
+    <property name="talkScript" value="message I hear the key to the Dark Lord's domain is hidden in a cave on an island to the east of here."/>
+    <property name="walkSpeed" value="0.05"/>
+    <property name="stepScript">
+      walk DIR_RANDOM
+      wait 60
+    </property>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

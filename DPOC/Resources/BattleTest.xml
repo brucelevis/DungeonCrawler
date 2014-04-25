@@ -1,0 +1,36 @@
+<battle>
+  <character name="Aslan" class="Hero" level="15">
+    <weapon>Cleaver</weapon>
+    <shield>Bronze Shield</shield>
+    <armor>Leather Armor</armor>
+    <helm>Iron Helmet</helm>
+    <misc>Protect Ring</misc>
+  </character>
+  <character name="Bert" class="Wizard" level="15">
+    <weapon>Club</weapon>
+    <shield>Wood Shield</shield>
+    <armor>Leather Armor</armor>
+    <helm>Fancy Hat</helm>
+
+  </character>
+  <character name="Pete" class="Cleric" level="15">
+    <weapon>Magic Staff</weapon>
+    <shield>Wood Shield</shield>
+    <armor>Leather Armor</armor>
+    <helm>Pointy Cap</helm>
+  </character>
+  <character name="Ochun" class="Warrior" level="15">
+    <weapon>Cleaver</weapon>
+    <shield>Bronze Shield</shield>
+    <armor>Leather Armor</armor>
+    <helm>Iron Helmet</helm>
+    <misc>Protect Ring</misc>
+  </character>
+
+  <monsters>Dark Knight,Dark Knight,Dark Knight</monsters>
+
+  <items>
+    <item name="Herb" amount="4" />
+    <item name="Ether" amount="4" />
+  </items>
+</battle>
