@@ -1,17 +1,16 @@
 #include <algorithm>
 #include <sstream>
 
-#include <BGL/SceneManager.h>
-#include <BGL/Sound.h>
-#include <BGL/Strings.h>
-#include <BGL/Random.h>
-#include <BGL/logger.h>
+#include "SceneManager.h"
 
+#include "Sound.h"
+#include "Utility.h"
 #include "Map.h"
 #include "Player.h"
 #include "Game.h"
 #include "Persistent.h"
 #include "Message.h"
+#include "logger.h"
 #include "Config.h"
 #include "EntityDef.h"
 #include "Entity.h"
@@ -106,13 +105,13 @@ void Entity::loadScripts(const std::string& talkScript, const std::string& stepS
   if (!talkScript.empty())
   {
     std::istringstream ss(talkScript);
-    m_script.loadFromLines(bgl::str::get_lines(ss));
+    m_script.loadFromLines(get_lines(ss));
   }
 
   if (!stepScript.empty())
   {
     std::istringstream ss(stepScript);
-    m_stepScript.loadFromLines(bgl::str::get_lines(ss));
+    m_stepScript.loadFromLines(get_lines(ss));
     m_stepScript.execute();
   }
 }
@@ -267,7 +266,7 @@ void Entity::wait(int duration)
   }
 }
 
-void Entity::draw(sf::RenderTarget& target, const bgl::coord_t& view)
+void Entity::draw(sf::RenderTarget& target, const coord_t& view)
 {
   if (m_sprite && m_visible)
   {
@@ -454,7 +453,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
 
     for (int i = 0; i < data.data.choiceData.numberOfChoices; i++)
     {
-      choices.push_back(bgl::str::replace_string(data.data.choiceData.choices[i], '_', ' '));
+      choices.push_back(replace_string(data.data.choiceData.choices[i], '_', ' '));
     }
 
     Game::instance().openChoiceMenu(choices);
@@ -500,7 +499,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   else if (data.opcode == Script::OP_PLAY_SOUND)
   {
     std::string sound = data.data.playSoundData.sound;
-    bgl::play_sound("Resources/Audio/" + sound);
+    play_sound("Resources/Audio/" + sound);
   }
   else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
   {
@@ -549,7 +548,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   else if (data.opcode == Script::OP_END_GAME)
   {
     Game::instance().close();
-    bgl::SceneManager::instance().fadeIn(128);
+    SceneManager::instance().fadeIn(128);
   }
   else if (data.opcode == Script::OP_SET_CONFIG)
   {
@@ -577,13 +576,13 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
     float x = data.data.showPictureData.x;
     float y = data.data.showPictureData.y;
 
-    bgl::SceneManager::instance().showPicture(name, x, y);
+    SceneManager::instance().showPicture(name, x, y);
   }
   else if (data.opcode == Script::OP_HIDE_PICTURE)
   {
     std::string name = data.data.hidePictureData.name;
 
-    bgl::SceneManager::instance().hidePicture(name);
+    SceneManager::instance().hidePicture(name);
   }
 }
 
@@ -615,7 +614,7 @@ void Entity::getIfValue(const std::string& input, const std::string& key, int& v
   {
     if (key != "gold")
     {
-      Item* item = get_player()->getItem(bgl::str::replace_string(key, '_', ' '));
+      Item* item = get_player()->getItem(replace_string(key, '_', ' '));
       if (item)
       {
         value = item->stackSize;

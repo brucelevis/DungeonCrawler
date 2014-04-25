@@ -7,16 +7,15 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include <BGL/Scene.h>
-
 #include "Menu.h"
 #include "Target.h"
 #include "Effect.h"
+#include "Scene.h"
 
 class Character;
 class PlayerCharacter;
 
-class Battle : public bgl::Scene
+class Battle : public Scene
 {
   enum State
   {

@@ -1,9 +1,8 @@
 #include <vector>
 #include <stdexcept>
 
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-
+#include "logger.h"
+#include "Utility.h"
 #include "StatusEffect.h"
 
 #include "../dep/tinyxml2.h"
@@ -82,21 +81,21 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
     status.recoverVerb = recovElem->GetText();
   if (colorElem)
   {
-    int r = bgl::str::fromString<int>(colorElem->FindAttribute("r")->Value());
-    int g = bgl::str::fromString<int>(colorElem->FindAttribute("g")->Value());
-    int b = bgl::str::fromString<int>(colorElem->FindAttribute("b")->Value());
+    int r = fromString<int>(colorElem->FindAttribute("r")->Value());
+    int g = fromString<int>(colorElem->FindAttribute("g")->Value());
+    int b = fromString<int>(colorElem->FindAttribute("b")->Value());
     status.color = sf::Color(r, g, b);
   }
   if (battElem)
-    status.battleOnly = bgl::str::fromString<bool>(battElem->GetText());
+    status.battleOnly = fromString<bool>(battElem->GetText());
   if (recovChanceElem)
-    status.recoveryChance = bgl::str::fromString<int>(recovChanceElem->GetText());
+    status.recoveryChance = fromString<int>(recovChanceElem->GetText());
   if (incapElem)
-    status.incapacitate = bgl::str::fromString<bool>(incapElem->GetText());
+    status.incapacitate = fromString<bool>(incapElem->GetText());
   if (damageElem)
   {
     status.damageType = damageTypeFromString(damageElem->FindAttribute("type")->Value());
-    status.damagePerTurn = bgl::str::fromString<int>(damageElem->FindAttribute("amount")->Value());
+    status.damagePerTurn = fromString<int>(damageElem->FindAttribute("amount")->Value());
     status.damageStat = damageElem->FindAttribute("attr")->Value();
   }
   if (soundElem)
@@ -144,7 +143,7 @@ StatusEffect* get_status_effect(const std::string& status)
 {
   for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
   {
-    if (bgl::str::to_lower(it->name) == bgl::str::to_lower(status))
+    if (to_lower(it->name) == to_lower(status))
     {
       return &(*it);
     }

@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <BGL/coord.h>
+#include "coord.h"
 
 struct BaseAttr
 {

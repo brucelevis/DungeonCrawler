@@ -1,12 +1,11 @@
-#include <BGL/logger.h>
-#include <BGL/Cache.h>
-#include <BGL/Text.h>
-#include <BGL/Sound.h>
-#include <BGL/Strings.h>
-
 #include "Persistent.h"
 #include "Config.h"
+#include "logger.h"
+#include "Cache.h"
 #include "Frame.h"
+#include "draw_text.h"
+#include "Utility.h"
+#include "Sound.h"
 
 #include "StatusEffect.h"
 #include "Attack.h"
@@ -18,8 +17,6 @@
 #include "Spell.h"
 #include "Monster.h"
 #include "Battle.h"
-
-#include "Utility.h"
 
 #include "SaveLoad.h"
 #include "SaveMenu.h"
@@ -71,7 +68,7 @@ static bool isOKTarget(Character* target, Target targetType)
 }
 
 Menu::Menu()
- : m_arrowTexture(bgl::cache::loadTexture("Resources/Arrow.png")),
+ : m_arrowTexture(cache::loadTexture("Resources/Arrow.png")),
    m_visible(false),
    m_currentMenuChoice(0),
    m_maxVisible(-1),
@@ -83,7 +80,7 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-  bgl::cache::releaseTexture("Resources/Arrow.png");
+  cache::releaseTexture("Resources/Arrow.png");
 }
 
 void Menu::moveArrow(Direction dir)
@@ -162,7 +159,7 @@ void Menu::draw(sf::RenderTarget& target, int x, int y)
   {
     if (index < (int)m_menuChoices.size())
     {
-      bgl::draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_menuChoices[index].c_str());
+      draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_menuChoices[index].c_str());
     }
 
     if (m_currentMenuChoice == index && cursorVisible())
@@ -282,7 +279,7 @@ void MainMenu::handleConfirm()
         if (can_cast_spell(m_characterMenu->getSpellToUse(), m_characterMenu->getUser()) &&
             targetOK)
         {
-          bgl::play_sound(config::get("SOUND_USE_ITEM"));
+          play_sound(config::get("SOUND_USE_ITEM"));
 
           cast_spell(m_characterMenu->getSpellToUse(),
               m_characterMenu->getUser(),
@@ -294,7 +291,7 @@ void MainMenu::handleConfirm()
         }
         else
         {
-          bgl::play_sound(config::get("SOUND_CANCEL"));
+          play_sound(config::get("SOUND_CANCEL"));
         }
       }
       else
@@ -307,7 +304,7 @@ void MainMenu::handleConfirm()
         }
         else
         {
-          bgl::play_sound(config::get("SOUND_CANCEL"));
+          play_sound(config::get("SOUND_CANCEL"));
         }
       }
     }
@@ -323,7 +320,7 @@ void MainMenu::handleConfirm()
 
         if (m_characterMenu->getTarget() && targetOK)
         {
-          bgl::play_sound(config::get("SOUND_USE_ITEM"));
+          play_sound(config::get("SOUND_USE_ITEM"));
 
           Item* item = get_player()->getItem(m_characterMenu->getItemToUse());
           use_item(item, m_characterMenu->getUser(), m_characterMenu->getTarget());
@@ -334,7 +331,7 @@ void MainMenu::handleConfirm()
         }
         else
         {
-          bgl::play_sound(config::get("SOUND_CANCEL"));
+          play_sound(config::get("SOUND_CANCEL"));
         }
 
         // Close if no more items.
@@ -364,7 +361,7 @@ void MainMenu::handleConfirm()
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
   else if (currentState == STATE_ITEM_MENU)
@@ -379,7 +376,7 @@ void MainMenu::handleConfirm()
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
   else if (currentState == STATE_EQUIP_MENU)
@@ -571,12 +568,12 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     draw_frame(target, x, y, 80, 96);
     draw_frame(target, x, y + 208, 80, 32);
 
-    bgl::draw_text_bmp(target, x + 8, y + 13*16+7, "GP");
-    bgl::draw_text_bmp(target, x + 8, y + 13*16+19, "%d", get_player()->getGold());
+    draw_text_bmp(target, x + 8, y + 13*16+7, "GP");
+    draw_text_bmp(target, x + 8, y + 13*16+19, "%d", get_player()->getGold());
 
     for (int i = 0; i < getNumberOfChoice(); i++)
     {
-      bgl::draw_text_bmp(target, x + 18, y + 10 + i * 14, "%s", getChoice(i).c_str());
+      draw_text_bmp(target, x + 18, y + 10 + i * 14, "%s", getChoice(i).c_str());
       if (i == getCurrentChoiceIndex())
       {
         drawSelectArrow(target, x + 8, y + 10 + i * 14);
@@ -626,28 +623,28 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 
   character->draw(target, x, y);
 
-  bgl::draw_text_bmp_ex(target, x + 40, y,
+  draw_text_bmp_ex(target, x + 40, y,
       get_status_effect(character->getStatus())->color,
       "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-  bgl::draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-  bgl::draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
-  bgl::draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
-  bgl::draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
+  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
 
   y += 40;
 
-  bgl::draw_text_bmp(target, x, y,      "Strength: %d", character->computeCurrentAttribute("strength"));
-  bgl::draw_text_bmp(target, x, y + 12, "Defense:  %d", character->computeCurrentAttribute("defense"));
-  bgl::draw_text_bmp(target, x, y + 24, "Magic:    %d", character->computeCurrentAttribute("magic"));
-  bgl::draw_text_bmp(target, x, y + 36, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
-  bgl::draw_text_bmp(target, x, y + 48, "Speed:    %d", character->computeCurrentAttribute("speed"));
-  bgl::draw_text_bmp(target, x, y + 60, "Luck:     %d", character->computeCurrentAttribute("luck"));
+  draw_text_bmp(target, x, y,      "Strength: %d", character->computeCurrentAttribute("strength"));
+  draw_text_bmp(target, x, y + 12, "Defense:  %d", character->computeCurrentAttribute("defense"));
+  draw_text_bmp(target, x, y + 24, "Magic:    %d", character->computeCurrentAttribute("magic"));
+  draw_text_bmp(target, x, y + 36, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
+  draw_text_bmp(target, x, y + 48, "Speed:    %d", character->computeCurrentAttribute("speed"));
+  draw_text_bmp(target, x, y + 60, "Luck:     %d", character->computeCurrentAttribute("luck"));
 
   for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
   {
     Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
-    bgl::draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
   }
 }
 
@@ -680,7 +677,7 @@ void ItemMenu::refresh()
 
   for (auto it = items.begin(); it != items.end(); ++it)
   {
-    std::string stack = bgl::str::toString(it->stackSize);
+    std::string stack = toString(it->stackSize);
     std::string name = it->name;
 
     // Add some padding.
@@ -710,7 +707,7 @@ void ItemMenu::draw(sf::RenderTarget& target, int x, int y)
 
   if (cursorVisible() && hasItem(getSelectedItemName()))
   {
-    bgl::draw_text_bmp(target, x + 8, y + 8, "%s", getItem(getSelectedItemName())->description.c_str());
+    draw_text_bmp(target, x + 8, y + 8, "%s", getItem(getSelectedItemName())->description.c_str());
   }
 }
 
@@ -748,7 +745,7 @@ int ItemMenu::getHeight() const
 
 std::string ItemMenu::getSelectedItemName() const
 {
-  return bgl::str::get_string_after_first_space(getCurrentMenuChoice());
+  return get_string_after_first_space(getCurrentMenuChoice());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -773,7 +770,7 @@ void EquipItemMenu::refresh(const std::string& equipmentType)
   {
     if (equip_type_string(it->type) == equipmentType && m_character->canEquip(it->name))
     {
-      std::string stack = bgl::str::toString(it->stackSize);
+      std::string stack = toString(it->stackSize);
       std::string name = it->name;
 
       // Add some padding.
@@ -808,7 +805,7 @@ SpellMenu::SpellMenu(const std::string& characterName)
 
     if (spell)
     {
-      std::string costString = bgl::str::toString(spell->mpCost);
+      std::string costString = toString(spell->mpCost);
 
       // Add some padding
       if (costString.size() == 1)
@@ -833,7 +830,7 @@ const Spell* SpellMenu::getSelectedSpell() const
   if (getNumberOfChoice() == 0)
     return 0;
 
-  std::string spellName = bgl::str::get_string_after_first_space(getCurrentMenuChoice());
+  std::string spellName = get_string_after_first_space(getCurrentMenuChoice());
 
   return get_spell(spellName);
 }
@@ -844,7 +841,7 @@ void SpellMenu::draw(sf::RenderTarget& target, int x, int y)
 
   Menu::draw(target, x, y + 24);
 
-  bgl::draw_text_bmp(target, x + 8, y + 8, "%s", getSelectedSpell() ? getSelectedSpell()->description.c_str() : "");
+  draw_text_bmp(target, x + 8, y + 8, "%s", getSelectedSpell() ? getSelectedSpell()->description.c_str() : "");
 }
 
 int SpellMenu::getWidth() const
@@ -907,11 +904,11 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 
     character->draw(target, offX, offY + i * 48);
 
-    bgl::draw_text_bmp_ex(target, offX + 40, offY + i * 48,
+    draw_text_bmp_ex(target, offX + 40, offY + i * 48,
         get_status_effect(character->getStatus())->color,
         "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-    bgl::draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-    bgl::draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
     if (cursorVisible() && getCurrentChoiceIndex() == i)
     {
@@ -996,11 +993,11 @@ void EquipMenu::doEquip()
 
     m_state = STATE_SELECT_EQUIPMENT_TYPE;
 
-    bgl::play_sound(config::get("SOUND_EQUIP"));
+    play_sound(config::get("SOUND_EQUIP"));
   }
   else
   {
-    bgl::play_sound(config::get("SOUND_CANCEL"));
+    play_sound(config::get("SOUND_CANCEL"));
   }
 }
 
@@ -1018,11 +1015,11 @@ void EquipMenu::doUnEquip()
 
     m_state = STATE_SELECT_EQUIPMENT_TYPE;
 
-    bgl::play_sound(config::get("SOUND_EQUIP"));
+    play_sound(config::get("SOUND_EQUIP"));
   }
   else
   {
-    bgl::play_sound(config::get("SOUND_CANCEL"));
+    play_sound(config::get("SOUND_CANCEL"));
   }
 }
 
@@ -1060,7 +1057,7 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
   // Top.
   draw_frame(target, x, y, 256, 32);
   m_character->draw(target, x, y);
-  bgl::draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
+  draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
 
   m_itemMenu->draw(target, 0, 112);
 
@@ -1077,10 +1074,10 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 
     std::string typeShortName = get_equip_short_name(getChoice(i));
     std::string itemShortName = equipment ?
-        bgl::str::limit_string(equipment->name, 8) :
+        limit_string(equipment->name, 8) :
         "";
 
-    bgl::draw_text_bmp(target, offX, offY + 12 * i, "%s: %s", typeShortName.c_str(), itemShortName.c_str());
+    draw_text_bmp(target, offX, offY + 12 * i, "%s: %s", typeShortName.c_str(), itemShortName.c_str());
   }
 
   sf::RectangleShape rect = make_select_rect(offX - 1, offY - 1 + getCurrentChoiceIndex() * 12, 114, 10);
@@ -1130,12 +1127,12 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
     newLuk = m_character->computeCurrentAttribute("luck");
   }
 
-  bgl::draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
-  bgl::draw_text_bmp(target, x, y + 12, "Def: %d (%d)", m_character->computeCurrentAttribute("defense"), newDef);
-  bgl::draw_text_bmp(target, x, y + 24, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
-  bgl::draw_text_bmp(target, x, y + 36, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
-  bgl::draw_text_bmp(target, x, y + 48, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
-  bgl::draw_text_bmp(target, x, y + 60, "Luk: %d (%d)", m_character->computeCurrentAttribute("luck"), newLuk);
+  draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
+  draw_text_bmp(target, x, y + 12, "Def: %d (%d)", m_character->computeCurrentAttribute("defense"), newDef);
+  draw_text_bmp(target, x, y + 24, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
+  draw_text_bmp(target, x, y + 36, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
+  draw_text_bmp(target, x, y + 48, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
+  draw_text_bmp(target, x, y + 60, "Luk: %d (%d)", m_character->computeCurrentAttribute("luck"), newLuk);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1254,7 +1251,7 @@ void BattleMenu::handleConfirm()
 
     if (!isOKTarget(m_statusMenu->getCurrentSelectedActor(), targetType))
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
     else
     {
@@ -1271,7 +1268,7 @@ void BattleMenu::handleConfirm()
 
     if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
     else if (spell->target == TARGET_SINGLE_ENEMY)
     {
@@ -1322,7 +1319,7 @@ void BattleMenu::handleConfirm()
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
 }
@@ -1499,22 +1496,22 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
     {
       if (m_actionMenu->getCurrentMenuChoice() == "Spell")
       {
-        bgl::draw_text_bmp(target, x + 8, y + 8, "Casting: %s", m_spellMenu->getSelectedSpell()->name.c_str());
+        draw_text_bmp(target, x + 8, y + 8, "Casting: %s", m_spellMenu->getSelectedSpell()->name.c_str());
       }
       else if (m_actionMenu->getCurrentMenuChoice() == "Item")
       {
-        bgl::draw_text_bmp(target, x + 8, y + 8, "Using: %s", m_itemMenu->getSelectedItemName().c_str());
+        draw_text_bmp(target, x + 8, y + 8, "Using: %s", m_itemMenu->getSelectedItemName().c_str());
       }
     }
     else
     {
       if (!m_actionMenuHidden)
       {
-        bgl::draw_text_bmp(target, x + 8, y + 8, "Action");
-        bgl::draw_text_bmp(target, x + 88, y + 8, "Name");
-        bgl::draw_text_bmp(target, x + 136, y + 8, "Cond");
-        bgl::draw_text_bmp(target, x + 180, y + 8, "HP");
-        bgl::draw_text_bmp(target, x + 216, y + 8, "MP");
+        draw_text_bmp(target, x + 8, y + 8, "Action");
+        draw_text_bmp(target, x + 88, y + 8, "Name");
+        draw_text_bmp(target, x + 136, y + 8, "Cond");
+        draw_text_bmp(target, x + 180, y + 8, "HP");
+        draw_text_bmp(target, x + 216, y + 8, "MP");
       }
     }
 
@@ -1666,14 +1663,14 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 
     float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
 
-    bgl::draw_text_bmp(target, x + 8,  offY, "%s", bgl::str::limit_string(name, 5).c_str());
-    bgl::draw_text_bmp_ex(target, x + 56, offY,
+    draw_text_bmp(target, x + 8,  offY, "%s", limit_string(name, 5).c_str());
+    draw_text_bmp_ex(target, x + 56, offY,
         get_status_effect(character->getStatus())->color,
-        "%s", bgl::str::limit_string(character->getStatus(), 4).c_str());
-    bgl::draw_text_bmp_ex(target, x + 100, offY,
+        "%s", limit_string(character->getStatus(), 4).c_str());
+    draw_text_bmp_ex(target, x + 100, offY,
         hpPercent > 0.2 ? sf::Color::White : sf::Color::Red,
         "%d", character->getAttribute("hp").current);
-    bgl::draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
+    draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
 
     if (i == m_currentActor && !m_currenActorRectHidden)
     {
@@ -1911,14 +1908,14 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
       target.draw(rect);
 
       draw_frame(target, 0, 0, config::GAME_RES_X, 24);
-      bgl::draw_text_bmp(target, 8, 8, "%s", get_monster_description(monster->getName()).c_str());
+      draw_text_bmp(target, 8, 8, "%s", get_monster_description(monster->getName()).c_str());
 
       // Fix the position of the monster name so it doesn't go outside the screen.
       int textPosX = posX + monster->spriteWidth() / 2 - 8*(monster->getName().size() / 2);
       if (textPosX < 0) textPosX = 0;
       while (textPosX + (int)monster->getName().size() * 8 > config::GAME_RES_X) textPosX--;
 
-      bgl::draw_text_bmp(target,
+      draw_text_bmp(target,
           textPosX,
           posY + monster->spriteHeight() + 4,
           "%s", monster->getName().c_str());

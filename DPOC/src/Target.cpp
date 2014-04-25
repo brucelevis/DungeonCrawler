@@ -1,5 +1,4 @@
-#include <BGL/logger.h>
-
+#include "logger.h"
 #include "Target.h"
 
 std::string targetToString(Target target)

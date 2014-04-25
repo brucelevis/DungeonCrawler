@@ -4,9 +4,8 @@
 #include <map>
 #include <stdexcept>
 
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-
+#include "logger.h"
+#include "Utility.h"
 #include "Direction.h"
 
 #include "Game.h"
@@ -189,11 +188,11 @@ EntityData parseEntityElement(const XMLElement* entityElement)
 
   data.name = nameAttrib->Value();
   data.tag = tagAttrib->Value();
-  data.x = bgl::str::fromString<int>(xElem->GetText());
-  data.y = bgl::str::fromString<int>(yElem->GetText());
+  data.x = fromString<int>(xElem->GetText());
+  data.y = fromString<int>(yElem->GetText());
   data.dir = directionFromString(dirElem->GetText());
-  data.walkThrough = bgl::str::fromString<bool>(walkThroughElemt->GetText());
-  data.speed = bgl::str::fromString<float>(speedElem->GetText());
+  data.walkThrough = fromString<bool>(walkThroughElemt->GetText());
+  data.speed = fromString<float>(speedElem->GetText());
   data.spriteName = spriteElem->FindAttribute("name")->Value();
 
   TRACE(" - name=%s", data.name.c_str());
@@ -226,7 +225,7 @@ void parsePlayerElement(const XMLElement* playerElement)
     }
     else if (elemName == "gold")
     {
-      int gold = bgl::str::fromString<int>(element->GetText());
+      int gold = fromString<int>(element->GetText());
 
       TRACE(" - gold=%d", gold);
 
@@ -305,10 +304,10 @@ CharacterData parseCharacterElement(const XMLElement* characterElement)
 
   const XMLElement* textureElement = characterElement->FirstChildElement("texture");
   std::string textureName = textureElement->FindAttribute("name")->Value();
-  int tx = bgl::str::fromString<int>(textureElement->FindAttribute("x")->Value());
-  int ty = bgl::str::fromString<int>(textureElement->FindAttribute("y")->Value());
-  int tw = bgl::str::fromString<int>(textureElement->FindAttribute("w")->Value());
-  int th = bgl::str::fromString<int>(textureElement->FindAttribute("h")->Value());
+  int tx = fromString<int>(textureElement->FindAttribute("x")->Value());
+  int ty = fromString<int>(textureElement->FindAttribute("y")->Value());
+  int tw = fromString<int>(textureElement->FindAttribute("w")->Value());
+  int th = fromString<int>(textureElement->FindAttribute("h")->Value());
   data.textureName = textureName;
   data.textureX = tx;
   data.textureY = ty;
@@ -321,8 +320,8 @@ CharacterData parseCharacterElement(const XMLElement* characterElement)
   for (const XMLElement* element = attribElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     std::string attribName = element->FindAttribute("name")->Value();
-    int current = bgl::str::fromString<int>(element->FindAttribute("current")->Value());
-    int max = bgl::str::fromString<int>(element->FindAttribute("max")->Value());
+    int current = fromString<int>(element->FindAttribute("current")->Value());
+    int max = fromString<int>(element->FindAttribute("max")->Value());
 
     TRACE(" - attribute[%s]=[%d/%d]", attribName.c_str(), current, max);
 
@@ -353,7 +352,7 @@ void parseInventoryElement(const XMLElement* inventoryElement)
     const XMLAttribute* stackAttrib = element->FindAttribute("stackSize");
 
     std::string name = nameAttrib->Value();
-    int stackSize = bgl::str::fromString<int>(stackAttrib->Value());
+    int stackSize = fromString<int>(stackAttrib->Value());
 
     TRACE(" - ItemName=%s, stackSize=%d", name.c_str(), stackSize);
 
@@ -368,7 +367,7 @@ void parsePersistents(const XMLElement* persElement)
   for (const XMLElement* element = persElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     std::string key = element->FindAttribute("key")->Value();
-    int value = bgl::str::fromString<int>(element->FindAttribute("value")->Value());
+    int value = fromString<int>(element->FindAttribute("value")->Value());
 
     TRACE(" - key=%s, value=%d", key.c_str(), value);
 

@@ -1,10 +1,8 @@
 #include <vector>
 #include <stdexcept>
 
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-#include <BGL/Random.h>
-
+#include "Utility.h"
+#include "logger.h"
 #include "Monster.h"
 
 #include "../dep/tinyxml2.h"
@@ -38,14 +36,14 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     monster.description = descElem->GetText();
   if (colorElem)
   {
-    int r = bgl::str::fromString<int>(colorElem->FindAttribute("r")->Value());
-    int g = bgl::str::fromString<int>(colorElem->FindAttribute("g")->Value());
-    int b = bgl::str::fromString<int>(colorElem->FindAttribute("b")->Value());
+    int r = fromString<int>(colorElem->FindAttribute("r")->Value());
+    int g = fromString<int>(colorElem->FindAttribute("g")->Value());
+    int b = fromString<int>(colorElem->FindAttribute("b")->Value());
     monster.color = sf::Color(r, g, b);
   }
   if (numAttacksElem)
   {
-    monster.numberOfAttacks = bgl::str::fromString<int>(numAttacksElem->GetText());
+    monster.numberOfAttacks = fromString<int>(numAttacksElem->GetText());
   }
 
   if (textElem)
@@ -58,10 +56,10 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     if (nameAttr && xAttr && wAttr && yAttr && hAttr)
     {
       std::string name = nameAttr->Value();
-      int x = bgl::str::fromString<int>(xAttr->Value());
-      int y = bgl::str::fromString<int>(yAttr->Value());
-      int w = bgl::str::fromString<int>(wAttr->Value());
-      int h = bgl::str::fromString<int>(hAttr->Value());
+      int x = fromString<int>(xAttr->Value());
+      int y = fromString<int>(yAttr->Value());
+      int w = fromString<int>(wAttr->Value());
+      int h = fromString<int>(hAttr->Value());
 
       monster.texture = name;
       monster.textureRect = sf::IntRect(x, y, w, h);
@@ -83,7 +81,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
       if (nameAttr && valueAttr)
       {
         std::string name = nameAttr->Value();
-        int value = bgl::str::fromString<int>(valueAttr->Value());
+        int value = fromString<int>(valueAttr->Value());
 
         monster.attributeMap[name] = value;
       }
@@ -105,7 +103,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
       if (nameAttr && chanceAttr)
       {
         std::string name = nameAttr->Value();
-        int chance = bgl::str::fromString<int>(chanceAttr->Value());
+        int chance = fromString<int>(chanceAttr->Value());
         std::string spell;
 
         if (name == "Spell" || name == "Summon")
@@ -138,7 +136,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
       if (nameAttr && chanceAttr)
       {
         std::string name = nameAttr->Value();
-        int chance = bgl::str::fromString<int>(chanceAttr->Value());
+        int chance = fromString<int>(chanceAttr->Value());
 
         MonsterDropItem drop;
         drop.itemName = name;
@@ -159,7 +157,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     for (const XMLElement* element = resElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       std::string name = element->FindAttribute("name")->Value();
-      float resist = bgl::str::fromString<float>(element->FindAttribute("resist")->Value());
+      float resist = fromString<float>(element->FindAttribute("resist")->Value());
 
       monster.resistance[name] = resist;
     }
@@ -226,7 +224,7 @@ std::vector<std::string> monster_drop_items(const MonsterDef& monster)
 
   for (auto it = monster.itemDrop.begin(); it != monster.itemDrop.end(); ++it)
   {
-    int rnd = bgl::rnd::random_range(0, 100);
+    int rnd = random_range(0, 100);
     if (rnd <= it->chance)
     {
       items.push_back(it->itemName);

@@ -5,7 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <BGL/coord.h>
+#include "coord.h"
 
 #include "Direction.h"
 #include "Sprite.h"
@@ -44,7 +44,7 @@ public:
   Direction getDirection() const { return m_direction; }
   void step(Direction dir);
 
-  void draw(sf::RenderTarget& target, const bgl::coord_t& view);
+  void draw(sf::RenderTarget& target, const coord_t& view);
 
   void setPosition(int _x, int _y)
   {

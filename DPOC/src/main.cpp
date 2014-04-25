@@ -1,10 +1,14 @@
 #include <cstdlib>
 #include <string>
 
+#include "SceneManager.h"
+
+#include "logger.h"
 #include "SaveLoad.h"
 #include "BattleTest.h"
 
 #include "Config.h"
+#include "draw_text.h"
 #include "Spell.h"
 #include "Item.h"
 #include "Monster.h"
@@ -17,15 +21,11 @@
 #include "Editor.h"
 #include "Game.h"
 
-#include <BGL/Text.h>
-#include <BGL/logger.h>
-#include <BGL/SceneManager.h>
-
 int main(int argc, char* argv[])
 {
   START_LOG;
 
-  bgl::init_text_drawing(new bgl::Font("Resources/font_8x8.png", 8, 8, 0));
+  init_text_drawing();
 
   config::load_config();
 
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 
   srand(time(0));
 
-  bgl::SceneManager::instance().create(config::GAME_RES_X, config::GAME_RES_Y, 2, config::FPS);
+  SceneManager::instance().create();
 
   if (argc > 1)
   {
@@ -53,8 +53,8 @@ int main(int argc, char* argv[])
 
 //  SceneManager::instance().addScene(&Game::instance());
 
-  bgl::SceneManager::instance().addScene(new TitleScreen);
-  bgl::SceneManager::instance().run();
+  SceneManager::instance().addScene(new TitleScreen);
+  SceneManager::instance().run();
 
   return 0;
 }

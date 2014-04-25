@@ -1,10 +1,7 @@
 #include <algorithm>
 
-#include <BGL/logger.h>
-#include <BGL/Cache.h>
-#include <BGL/Strings.h>
-#include <BGL/Random.h>
-
+#include "logger.h"
+#include "Cache.h"
 #include "Utility.h"
 #include "Monster.h"
 #include "StatusEffect.h"
@@ -20,12 +17,12 @@ Character::Character()
 
 Character::~Character()
 {
-  bgl::cache::releaseTexture(m_faceTexture);
+  cache::releaseTexture(m_faceTexture);
 }
 
 Attribute& Character::getAttribute(const std::string& attribName)
 {
-  std::string lowerCase = bgl::str::to_lower(attribName);
+  std::string lowerCase = to_lower(attribName);
 
   auto it = m_attributes.find(lowerCase);
   if (it != m_attributes.end())
@@ -188,7 +185,7 @@ std::vector<StatusEffect*>::iterator Character::getStatusEffectIterator(const st
 {
   for (auto it = m_status.begin(); it != m_status.end(); ++it)
   {
-    if (bgl::str::to_lower((*it)->name) == bgl::str::to_lower(status))
+    if (to_lower((*it)->name) == to_lower(status))
       return it;
   }
   return m_status.end();
@@ -239,7 +236,7 @@ Character* Character::createMonster(const std::string& name)
   Character* character = new Character;
 
   character->m_name = def.name;
-  character->m_faceTexture = bgl::cache::loadTexture(def.texture);
+  character->m_faceTexture = cache::loadTexture(def.texture);
   character->m_textureRect = def.textureRect;
   character->m_color = def.color;
 
@@ -252,7 +249,7 @@ Character* Character::createMonster(const std::string& name)
     // Variance to monster stats.
     if (it->first != "exp" && it->first != "gold" && it->first != "level")
     {
-      float variance = bgl::rnd::rand_float(0.95, 1.05);
+      float variance = rand_float(0.95, 1.05);
       character->m_attributes[it->first].max *= variance;
 
       // Don't want too low stats.

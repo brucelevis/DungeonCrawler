@@ -1,7 +1,6 @@
 #include <algorithm>
 
-#include <BGL/Random.h>
-
+#include "Utility.h"
 #include "Message.h"
 #include "StatusEffect.h"
 
@@ -18,7 +17,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
   {
     int speedDelta = bSpeed - aSpeed;
 
-    int range = bgl::rnd::random_range(0, 255);
+    int range = random_range(0, 255);
     if (range < speedDelta)
     {
       damage = 0;
@@ -26,14 +25,14 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
   }
   else
   {
-    int range = bgl::rnd::random_range(0, 255);
+    int range = random_range(0, 255);
     if (range == 0)
     {
       damage = 0;
     }
   }
 
-  if (attacker->hasStatusType(STATUS_BLIND) && bgl::rnd::coinflip())
+  if (attacker->hasStatusType(STATUS_BLIND) && coinflip())
   {
     damage = 0;
   }
@@ -45,7 +44,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
 
   if (damage > 0)
   {
-    bool critical = attacker->computeCurrentAttribute("luck") >= bgl::rnd::random_range(0, 1024);
+    bool critical = attacker->computeCurrentAttribute("luck") >= random_range(0, 1024);
     wasCritical = critical;
 
     if (critical)
@@ -77,21 +76,21 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
 
   float damage = 0;
 
-  damage = (atk / 2.0f - def / 4.0f) * bgl::rnd::rand_float(0.8f, 1.2f);
+  damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
 
 //  if (atk >= (2 + def / 2.0f))
 //  {
-//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)bgl::rnd::random_range(0, 256)) / 256.0f) / 4.0f;
+//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
 //  }
 //  else
 //  {
 //    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-//    damage = ((b / 2.0f + 1.0f) * (float)bgl::rnd::random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+//    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
 //  }
 
   if ((int)damage <= 0)
   {
-    damage = bgl::rnd::random_range(0, 2);
+    damage = random_range(0, 2);
   }
 
   damage *= resist;
@@ -119,17 +118,17 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
 
     if (atk >= (2 + def / 2.0f))
     {
-      damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)bgl::rnd::random_range(0, 256)) / 256.0f) / 4.0f;
+      damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
     }
     else
     {
       float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-      damage = ((b / 2.0f + 1.0f) * (float)bgl::rnd::random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+      damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
     }
 
     if ((int)damage <= 0)
     {
-      damage = bgl::rnd::random_range(0, 2);
+      damage = random_range(0, 2);
     }
 
     if (usedItem->itemUseType == ITEM_HEAL)
@@ -165,16 +164,16 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
   float atk = (1.0f + str / 255.0f) * pow;
   float damage = 0;
 
-  damage = (atk / 2.0f - def / 4.0f) * bgl::rnd::rand_float(0.8f, 1.2f);
+  damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
 
 //  if (atk >= (2 + def))
 //  {
-//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)bgl::rnd::random_range(0, 256)) / 256.0f) / 4.0f;
+//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
 //  }
 //  else
 //  {
 //    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-//    damage = ((b / 2.0f + 1.0f) * (float)bgl::rnd::random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
+//    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
 //  }
 
   if ((int)damage <= 0)

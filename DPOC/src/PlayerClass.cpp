@@ -1,8 +1,6 @@
 #include <stdexcept>
 
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-
+#include "logger.h"
 #include "Utility.h"
 
 #include "PlayerClass.h"
@@ -36,8 +34,8 @@ PlayerClass parse_class_element(const XMLElement* classElement)
       if (nameAttr && baseAttr && maxAttr)
       {
         std::string name = nameAttr->Value();
-        int base = bgl::str::fromString<int>(baseAttr->Value());
-        int max = bgl::str::fromString<int>(maxAttr->Value());
+        int base = fromString<int>(baseAttr->Value());
+        int max = fromString<int>(maxAttr->Value());
 
         pc.baseAttributes[name].base = base;
         pc.baseAttributes[name].max  = max;
@@ -54,7 +52,7 @@ PlayerClass parse_class_element(const XMLElement* classElement)
   {
     for (const XMLElement* element = spellsElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
-      int level = bgl::str::fromString<int>(element->FindAttribute("num")->Value());
+      int level = fromString<int>(element->FindAttribute("num")->Value());
       std::vector<std::string> spells;
       for (const XMLElement* spell = element->FirstChildElement(); spell; spell = spell->NextSiblingElement())
       {
@@ -78,10 +76,10 @@ PlayerClass parse_class_element(const XMLElement* classElement)
   if (textElem)
   {
     std::string name = textElem->FindAttribute("name")->Value();
-    int x = bgl::str::fromString<int>(textElem->FindAttribute("x")->Value());
-    int y = bgl::str::fromString<int>(textElem->FindAttribute("y")->Value());
-    int w = bgl::str::fromString<int>(textElem->FindAttribute("w")->Value());
-    int h = bgl::str::fromString<int>(textElem->FindAttribute("h")->Value());
+    int x = fromString<int>(textElem->FindAttribute("x")->Value());
+    int y = fromString<int>(textElem->FindAttribute("y")->Value());
+    int w = fromString<int>(textElem->FindAttribute("w")->Value());
+    int h = fromString<int>(textElem->FindAttribute("h")->Value());
     pc.texture = name;
     pc.textureBlock.left = x;
     pc.textureBlock.top = y;
@@ -93,10 +91,10 @@ PlayerClass parse_class_element(const XMLElement* classElement)
   if (faceElem)
   {
     std::string name = faceElem->FindAttribute("name")->Value();
-    int x = bgl::str::fromString<int>(faceElem->FindAttribute("x")->Value());
-    int y = bgl::str::fromString<int>(faceElem->FindAttribute("y")->Value());
-    int w = bgl::str::fromString<int>(faceElem->FindAttribute("w")->Value());
-    int h = bgl::str::fromString<int>(faceElem->FindAttribute("h")->Value());
+    int x = fromString<int>(faceElem->FindAttribute("x")->Value());
+    int y = fromString<int>(faceElem->FindAttribute("y")->Value());
+    int w = fromString<int>(faceElem->FindAttribute("w")->Value());
+    int h = fromString<int>(faceElem->FindAttribute("h")->Value());
     pc.faceTexture = name;
     pc.textureRect = sf::IntRect(x, y, w, h);
   }

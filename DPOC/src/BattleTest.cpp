@@ -2,14 +2,14 @@
 #include <vector>
 #include <map>
 
-#include <BGL/Strings.h>
-#include <BGL/logger.h>
-#include <BGL/SceneManager.h>
+#include "Utility.h"
+#include "logger.h"
 
 #include "Game.h"
 #include "Player.h"
 #include "PlayerCharacter.h"
 #include "PlayerClass.h"
+#include "SceneManager.h"
 
 #include "BattleTest.h"
 
@@ -37,7 +37,7 @@ void start_test_battle()
     {
       std::string charName = elem->FindAttribute("name")->Value();
       std::string charClass = elem->FindAttribute("class")->Value();
-      int level = bgl::str::fromString<int>(elem->FindAttribute("level")->Value());
+      int level = fromString<int>(elem->FindAttribute("level")->Value());
 
       std::map<std::string, std::string> eqMap;
 
@@ -57,7 +57,7 @@ void start_test_battle()
     }
     else if (name == "monsters")
     {
-      monsters = bgl::str::split_string(elem->GetText(), ',');
+      monsters = split_string(elem->GetText(), ',');
 
       TRACE(" MONSTERS: %s", elem->GetText());
     }
@@ -66,7 +66,7 @@ void start_test_battle()
       for (const XMLElement* eq = elem->FirstChildElement(); eq; eq = eq->NextSiblingElement())
       {
         std::string item = eq->FindAttribute("name")->Value();
-        int quant = bgl::str::fromString<int>(eq->FindAttribute("amount")->Value());
+        int quant = fromString<int>(eq->FindAttribute("amount")->Value());
         player->addItemToInventory(item, quant);
 
         TRACE(" Adding %d %s to player inventory.", quant, item.c_str());
@@ -76,5 +76,5 @@ void start_test_battle()
 
   Game::instance().setPlayer(player);
   Game::instance().startBattle(monsters, false);
-  bgl::SceneManager::instance().run();
+  SceneManager::instance().run();
 }

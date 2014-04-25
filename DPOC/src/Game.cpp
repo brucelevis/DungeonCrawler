@@ -3,18 +3,17 @@
 
 #include <SFML/System.hpp>
 
-#include <BGL/SceneManager.h>
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-#include <BGL/Random.h>
-#include <BGL/Sound.h>
+#include "SceneManager.h"
 
 #include "Persistent.h"
+#include "logger.h"
 #include "Map.h"
 #include "Config.h"
 #include "Player.h"
 #include "Message.h"
 #include "Game.h"
+#include "Sound.h"
+#include "Utility.h"
 #include "Entity.h"
 
 #include "Shop.h"
@@ -186,12 +185,12 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 
   if (key == sf::Keyboard::B && config::get("DEBUG_MODE") == "true")
   {
-    std::vector<std::string> monsters = bgl::str::split_string(config::get("DEBUG_BATTLE"), ',');
+    std::vector<std::string> monsters = split_string(config::get("DEBUG_BATTLE"), ',');
     startBattle(monsters);
   }
   else if (key == sf::Keyboard::S && config::get("DEBUG_MODE") == "true")
   {
-    std::vector<std::string> items = bgl::str::split_string(config::get("DEBUG_SHOP"), ',');
+    std::vector<std::string> items = split_string(config::get("DEBUG_SHOP"), ',');
     openShop(items);
   }
 }
@@ -260,7 +259,7 @@ bool Game::checkWarps()
   {
     const Warp* warp = m_currentMap->getWarpAt(m_player->player()->x, m_player->player()->y);
 
-    bgl::play_sound(config::get("SOUND_MOVEMENT"));
+    play_sound(config::get("SOUND_MOVEMENT"));
 
     prepareTransfer(warp->destMap, warp->dstX, warp->dstY);
 
@@ -272,7 +271,7 @@ bool Game::checkWarps()
 
 void Game::prepareTransfer(const std::string& targetMap, int x, int y)
 {
-  bgl::SceneManager::instance().fadeOut(32);
+  SceneManager::instance().fadeOut(32);
 
   m_currentWarp.dstX = x;
   m_currentWarp.dstY = y;
@@ -328,7 +327,7 @@ void Game::loadNewMap(const std::string& file)
   if (!m_currentMap)
   {
     TRACE("Loading map failed! Quitting game...");
-    bgl::SceneManager::instance().close();
+    SceneManager::instance().close();
   }
 
   m_entitiesToDraw.clear();
@@ -362,7 +361,7 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape)
   battle->setBattleBackground(battleBackground);
   battle->start(canEscape);
 
-  bgl::SceneManager::instance().addScene(battle);
+  SceneManager::instance().addScene(battle);
 }
 
 void Game::postBattle()
@@ -396,7 +395,7 @@ void Game::postFade(FadeType fadeType)
 
       m_transferInProgress = false;
 
-      bgl::SceneManager::instance().fadeIn(32);
+      SceneManager::instance().fadeIn(32);
     }
   }
 }
@@ -404,5 +403,5 @@ void Game::postFade(FadeType fadeType)
 void Game::openShop(const std::vector<std::string>& items)
 {
   Shop* shop = new Shop(items);
-  bgl::SceneManager::instance().addScene(shop);
+  SceneManager::instance().addScene(shop);
 }

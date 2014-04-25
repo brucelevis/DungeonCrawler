@@ -7,16 +7,15 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include <BGL/coord.h>
-#include <BGL/Scene.h>
-
+#include "coord.h"
 #include "Menu.h"
+#include "Scene.h"
 #include "Map.h"
 
 class Player;
 class Entity;
 
-class Game : public bgl::Scene
+class Game : public Scene
 {
   static Game* theInstance;
 public:
@@ -62,7 +61,7 @@ private:
 private:
   Map* m_currentMap;
   Player* m_player;
-  bgl::coord_t m_view;
+  coord_t m_view;
 
   std::string m_currentMusicName;
   sf::Music m_currentMusic;

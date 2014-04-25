@@ -2,13 +2,11 @@
 #include <fstream>
 #include <set>
 
-#include <BGL/TiledLoader.h>
-#include <BGL/Cache.h>
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-#include <BGL/Random.h>
-
 #include "Direction.h"
+#include "Utility.h"
+#include "TiledLoader.h"
+#include "Cache.h"
+#include "logger.h"
 #include "Map.h"
 
 static std::string make_tag(int index, const std::string& name)
@@ -65,7 +63,7 @@ Map::Map()
 //    m_tiles[i] = 0;
 //  }
 
-  m_tileset = bgl::cache::loadTexture("Resources/DqTileset.png");
+  m_tileset = cache::loadTexture("Resources/DqTileset.png");
 }
 
 Map::~Map()
@@ -79,7 +77,7 @@ Map::~Map()
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
 
-  bgl::cache::releaseTexture("Resources/DqTileset.png");
+  cache::releaseTexture("Resources/DqTileset.png");
 }
 
 void Map::update()
@@ -88,7 +86,7 @@ void Map::update()
     (*it)->update();
 }
 
-void Map::draw(sf::RenderTarget& target, const bgl::coord_t& view)
+void Map::draw(sf::RenderTarget& target, const coord_t& view)
 {
   sf::Sprite sprite;
   sprite.setTexture(*m_tileset);
@@ -267,7 +265,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
   TRACE("Loading map %s", filename.c_str());
 
-  bgl::TiledLoader loader;
+  TiledLoader loader;
   if (loader.loadFromFile(filename))
   {
     map = new Map;
@@ -278,7 +276,7 @@ Map* Map::loadTiledFile(const std::string& filename)
     map->m_encounterRate = 30;
     if (!loader.getProperty("encounterRate").empty())
     {
-      map->m_encounterRate = bgl::str::fromString<int>(loader.getProperty("encounterRate"));
+      map->m_encounterRate = fromString<int>(loader.getProperty("encounterRate"));
     }
 
     map->m_battleBackground = loader.getProperty("battleBackground");
@@ -288,12 +286,12 @@ Map* Map::loadTiledFile(const std::string& filename)
     std::vector<std::string> tilesets = loader.getTilesets();
     for (auto it = tilesets.begin(); it != tilesets.end(); ++it)
     {
-      const bgl::TiledLoader::Tileset* tileset = loader.getTileset(*it);
+      const TiledLoader::Tileset* tileset = loader.getTileset(*it);
       if (tileset->startTileIndex == 1)
       {
         TRACE("Map: loading tileset %s", ("Resources/Maps/" + tileset->tilesetSource).c_str());
 
-        map->m_tileset = bgl::cache::loadTexture("Resources/Maps/" + tileset->tilesetSource);
+        map->m_tileset = cache::loadTexture("Resources/Maps/" + tileset->tilesetSource);
 
         if (!map->m_tileset)
         {
@@ -311,10 +309,10 @@ Map* Map::loadTiledFile(const std::string& filename)
     for (size_t i = 0; i < layers.size(); i++)
     {
       // Blocking layer is special.
-      if (bgl::str::to_lower(layers[i]) == "blocking")
+      if (to_lower(layers[i]) == "blocking")
         continue;
 
-      const bgl::TiledLoader::Layer* layer = loader.getLayer(layers[i]);
+      const TiledLoader::Layer* layer = loader.getLayer(layers[i]);
 
       map->m_width = layer->width;
       map->m_height = layer->height;
@@ -345,9 +343,9 @@ Map* Map::loadTiledFile(const std::string& filename)
     // Blocking layer
     for (auto it = layers.begin(); it != layers.end(); ++it)
     {
-      if (bgl::str::to_lower(*it) == "blocking")
+      if (to_lower(*it) == "blocking")
       {
-        const bgl::TiledLoader::Layer* layer = loader.getLayer(*it);
+        const TiledLoader::Layer* layer = loader.getLayer(*it);
 
         for (size_t i = 0; i < layer->tiles.size(); i++)
         {
@@ -360,19 +358,19 @@ Map* Map::loadTiledFile(const std::string& filename)
 
     for (size_t objectIndex = 0; objectIndex < loader.getNumberOfObjects(); objectIndex++)
     {
-      const bgl::TiledLoader::Object* object = loader.getObject(objectIndex);
+      const TiledLoader::Object* object = loader.getObject(objectIndex);
       if (object->tileId > 0)
       {
-        const bgl::TiledLoader::Tileset* tileset = loader.findTilesetMatchingTileIndex(object->tileId);
+        const TiledLoader::Tileset* tileset = loader.findTilesetMatchingTileIndex(object->tileId);
         int tileId = object->tileId - tileset->startTileIndex;
 
         if (tileset)
         {
           std::string spriteSheet = "Resources/Maps/" + tileset->tilesetSource;
-          sf::Texture* texture = bgl::cache::loadTexture(spriteSheet);
+          sf::Texture* texture = cache::loadTexture(spriteSheet);
 
           std::string name = object->name;
-          float walkSpeed = bgl::str::fromString<float>(loader.getObjectProperty(objectIndex, "walkSpeed"));
+          float walkSpeed = fromString<float>(loader.getObjectProperty(objectIndex, "walkSpeed"));
           std::string walkThroughProperty = loader.getObjectProperty(objectIndex, "walkThrough");
 
           int objX = object->x / config::TILE_W;
@@ -386,7 +384,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
           if (name.empty())
           {
-            name = "anonymous_object@[" + bgl::str::toString(objX) + "," + bgl::str::toString(objY) + "]";
+            name = "anonymous_object@[" + toString(objX) + "," + toString(objY) + "]";
           }
 
           Entity* entity = new Entity;
@@ -433,28 +431,28 @@ Map* Map::loadTiledFile(const std::string& filename)
 
           map->m_entities.push_back(entity);
 
-          bgl::cache::releaseTexture(texture);
+          cache::releaseTexture(texture);
         }
       }
       else
       {
         std::string name = object->name;
-        if (bgl::str::to_lower(name) == "warp")
+        if (to_lower(name) == "warp")
         {
           Warp warp;
           warp.srcX = object->x / config::TILE_W;
           warp.srcY = object->y / config::TILE_H;
-          warp.dstX = bgl::str::fromString<int>(loader.getObjectProperty(objectIndex, "destX"));
-          warp.dstY = bgl::str::fromString<int>(loader.getObjectProperty(objectIndex, "destY"));
+          warp.dstX = fromString<int>(loader.getObjectProperty(objectIndex, "destX"));
+          warp.dstY = fromString<int>(loader.getObjectProperty(objectIndex, "destY"));
           warp.destMap = loader.getObjectProperty(objectIndex, "destMap");
           map->m_warps.push_back(warp);
 
           TRACE("New warp: srcX=%d, srcY=%d, dstX=%d, dstY=%d, dstMap=%s",
               warp.srcX, warp.srcY, warp.dstX, warp.dstY, warp.destMap.c_str());
         }
-        else if (bgl::str::to_lower(name) == "zone")
+        else if (to_lower(name) == "zone")
         {
-          int zoneId = bgl::str::fromString<int>(loader.getObjectProperty(objectIndex, "zoneId"));
+          int zoneId = fromString<int>(loader.getObjectProperty(objectIndex, "zoneId"));
 
           zones.insert(zoneId);
 
@@ -481,11 +479,11 @@ Map* Map::loadTiledFile(const std::string& filename)
     TRACE("Reading encounters");
     for (auto it = zones.begin(); it != zones.end(); ++it)
     {
-      std::string enc = loader.getProperty("zone:" + bgl::str::toString(*it));
-      std::vector<std::string> groups = bgl::str::split_string(enc, '|');
+      std::string enc = loader.getProperty("zone:" + toString(*it));
+      std::vector<std::string> groups = split_string(enc, '|');
       for (auto groupIt = groups.begin(); groupIt != groups.end(); ++groupIt)
       {
-        std::vector<std::string> monsters = bgl::str::split_string(*groupIt, ',');
+        std::vector<std::string> monsters = split_string(*groupIt, ',');
         map->m_encounters.insert(std::make_pair(*it, monsters));
       }
     }
@@ -581,7 +579,7 @@ std::vector<std::string> Map::checkEncounter(int x, int y)
 {
   std::vector<std::string> monsters;
 
-  int range = bgl::rnd::random_range(0, m_encounterRate);
+  int range = random_range(0, m_encounterRate);
   if (range == 0)
   {
     int zone = getTileAt(x, y, 0)->zone;

@@ -1,11 +1,10 @@
 #include <string>
 #include <cstdio>
 
-#include <BGL/Sound.h>
-#include <BGL/Strings.h>
-
+#include "Sound.h"
 #include "Config.h"
 #include "SaveLoad.h"
+#include "Utility.h"
 #include "SaveMenu.h"
 
 static bool file_exists(const std::string& fileName)
@@ -32,7 +31,7 @@ void SaveMenu::handleConfirm()
   if (m_type == SAVE)
   {
     save_game(m_filenames[getCurrentChoiceIndex()]);
-    bgl::play_sound(config::get("SOUND_SUCCESS"));
+    play_sound(config::get("SOUND_SUCCESS"));
 
     refresh();
   }
@@ -46,7 +45,7 @@ void SaveMenu::handleConfirm()
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
 }
@@ -60,17 +59,17 @@ void SaveMenu::refresh()
 
   for (int i = 0; i < 16; i++)
   {
-    std::string filename = "Save" + bgl::str::toString(i) + ".xml";
+    std::string filename = "Save" + toString(i) + ".xml";
 
     m_filenames.push_back(filename);
 
-    std::string slotName = "Save Slot " + bgl::str::toString(i+1);
+    std::string slotName = "Save Slot " + toString(i+1);
 
     if (file_exists(path + filename))
     {
       CharacterData leader = get_party_leader_from_save(filename);
 
-      slotName += " {" + bgl::str::limit_string(leader.name, 3) + " L" + bgl::str::toString(leader.attributes["level"].max) + "}";
+      slotName += " {" + limit_string(leader.name, 3) + " L" + toString(leader.attributes["level"].max) + "}";
     }
 
     addEntry(slotName);

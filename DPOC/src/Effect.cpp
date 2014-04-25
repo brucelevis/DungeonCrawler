@@ -1,7 +1,7 @@
-#include <BGL/logger.h>
-#include <BGL/Cache.h>
-#include <BGL/Sound.h>
+#include "logger.h"
 
+#include "Cache.h"
+#include "Sound.h"
 #include "Effect.h"
 
 static const std::map<std::string, EffectDef> frames =
@@ -62,12 +62,12 @@ Effect::Effect()
 
 Effect::~Effect()
 {
-  bgl::cache::releaseTexture(m_texture);
+  cache::releaseTexture(m_texture);
 }
 
 void Effect::loadTexture(const std::string& texture, int spriteSize)
 {
-  m_texture = bgl::cache::loadTexture(texture);
+  m_texture = cache::loadTexture(texture);
   m_spriteSize = spriteSize;
   m_drawSprite.setTexture(*m_texture);
 }
@@ -84,7 +84,7 @@ void Effect::update()
     std::string sound = getCurrentFrame()->sound;
     if (!sound.empty())
     {
-      bgl::play_sound(sound);
+      play_sound(sound);
     }
   }
 

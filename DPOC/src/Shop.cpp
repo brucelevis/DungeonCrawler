@@ -1,10 +1,8 @@
-#include <BGL/Text.h>
-#include <BGL/Sound.h>
-#include <BGL/Strings.h>
-
 #include "Frame.h"
+#include "draw_text.h"
 #include "Config.h"
 #include "Utility.h"
+#include "Sound.h"
 
 #include "PlayerCharacter.h"
 #include "Player.h"
@@ -15,8 +13,6 @@
 #include "Item.h"
 
 #include "Shop.h"
-
-#include <BGL/Text.h>
 
 class ConfirmMenu : public Menu
 {
@@ -100,13 +96,13 @@ void ConfirmMenu::handleConfirm()
       get_player()->gainGold(-getSum());
       get_player()->addItemToInventory(m_itemName, m_quantity);
 
-      bgl::play_sound(config::get("SOUND_SHOP"));
+      play_sound(config::get("SOUND_SHOP"));
 
       setVisible(false);
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
   else if (choice == "Sell")
@@ -114,7 +110,7 @@ void ConfirmMenu::handleConfirm()
     get_player()->gainGold(getSum());
     get_player()->removeItemFromInventory(m_itemName, m_quantity);
 
-    bgl::play_sound(config::get("SOUND_SHOP"));
+    play_sound(config::get("SOUND_SHOP"));
 
     setVisible(false);
   }
@@ -133,9 +129,9 @@ void ConfirmMenu::draw(sf::RenderTarget& target, int x, int y)
   }
 
   draw_frame(target, x, y, getWidth(), 40);
-  bgl::draw_text_bmp(target, x + 8, y + 8,  "Quantity %d", m_quantity);
-  bgl::draw_text_bmp(target, x + 8, y + 16, "Owned    %d", owned);
-  bgl::draw_text_bmp(target, x + 8, y + 24, "Sum %d", getSum());
+  draw_text_bmp(target, x + 8, y + 8,  "Quantity %d", m_quantity);
+  draw_text_bmp(target, x + 8, y + 16, "Owned    %d", owned);
+  draw_text_bmp(target, x + 8, y + 24, "Sum %d", getSum());
 
   Menu::draw(target, x, y + 40);
 }
@@ -229,7 +225,7 @@ void ShopMenu::handleConfirm()
       }
       else
       {
-        bgl::play_sound(config::get("SOUND_CANCEL"));
+        play_sound(config::get("SOUND_CANCEL"));
       }
     }
     else if (choice == "Leave")
@@ -276,7 +272,7 @@ void ShopMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     Menu::draw(target, 0, config::GAME_RES_Y - getHeight());
 
-    bgl::draw_text_bmp(target, 8, 8, "What can I do you for?");
+    draw_text_bmp(target, 8, 8, "What can I do you for?");
   }
   else if (m_buyMenu)
   {
@@ -300,7 +296,7 @@ ShopBuyMenu::ShopBuyMenu(const std::vector<std::string>& inventory)
   {
     Item& item = item_ref(*it);
 
-    std::string price = bgl::str::toString(item.cost);
+    std::string price = toString(item.cost);
     while (price.size() < 5)
       price += ' ';
 
@@ -337,7 +333,7 @@ void ShopBuyMenu::handleConfirm()
   }
   else
   {
-    Item& item = item_ref(bgl::str::get_string_after_first_space(getCurrentMenuChoice()));
+    Item& item = item_ref(get_string_after_first_space(getCurrentMenuChoice()));
     if (item.cost <= get_player()->getGold())
     {
       m_confirmMenu = new ConfirmMenu(ConfirmMenu::BUY, item.name);
@@ -345,7 +341,7 @@ void ShopBuyMenu::handleConfirm()
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
 }
@@ -377,9 +373,9 @@ void ShopBuyMenu::moveArrow(Direction dir)
 
 void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  std::string itemName = bgl::str::get_string_after_first_space(getCurrentMenuChoice());
+  std::string itemName = get_string_after_first_space(getCurrentMenuChoice());
   Item& item = item_ref(itemName);
-  bgl::draw_text_bmp(target, 8, 8, "%s", item.description.c_str());
+  draw_text_bmp(target, 8, 8, "%s", item.description.c_str());
 
   std::vector<PlayerCharacter*> party = get_player()->getParty();
   std::vector<Entity*> playerEntites = get_player()->getTrain();
@@ -408,7 +404,7 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
   Menu::draw(target, x, y);
 
   draw_frame(target, 0, config::GAME_RES_Y - 16, config::GAME_RES_X, 16);
-  bgl::draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
+  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
 
   if (m_confirmMenu)
   {
@@ -457,27 +453,27 @@ void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* characte
     newLuk = character->computeCurrentAttribute("luck");
   }
 
-  bgl::draw_text_bmp(target, x, y,      "St%s%d",
+  draw_text_bmp(target, x, y,      "St%s%d",
       newStr > character->computeCurrentAttribute("strength") ? ">" :
           newStr < character->computeCurrentAttribute("strength") ? "<" : "=",
               newStr);
-  bgl::draw_text_bmp(target, x, y + 12, "Df%s%d",
+  draw_text_bmp(target, x, y + 12, "Df%s%d",
       newDef > character->computeCurrentAttribute("defense") ? ">" :
           newDef < character->computeCurrentAttribute("defense") ? "<" : "=",
       newDef);
-  bgl::draw_text_bmp(target, x, y + 24, "Mg%s%d",
+  draw_text_bmp(target, x, y + 24, "Mg%s%d",
       newMag > character->computeCurrentAttribute("magic") ? ">" :
           newMag < character->computeCurrentAttribute("magic") ? "<" : "=",
       newMag);
-  bgl::draw_text_bmp(target, x, y + 36, "Md%s%d",
+  draw_text_bmp(target, x, y + 36, "Md%s%d",
       newMdf > character->computeCurrentAttribute("mag.def") ? ">" :
           newMdf < character->computeCurrentAttribute("mag.def") ? "<" : "=",
       newMdf);
-  bgl::draw_text_bmp(target, x, y + 48, "Sp%s%d",
+  draw_text_bmp(target, x, y + 48, "Sp%s%d",
       newSpd > character->computeCurrentAttribute("speed") ? ">" :
           newSpd < character->computeCurrentAttribute("speed") ? "<" : "=",
       newSpd);
-  bgl::draw_text_bmp(target, x, y + 60, "Lu%s%d",
+  draw_text_bmp(target, x, y + 60, "Lu%s%d",
       newLuk > character->computeCurrentAttribute("luck") ? ">" :
           newLuk < character->computeCurrentAttribute("luck") ? "<" : "=",
       newLuk);
@@ -506,7 +502,7 @@ void ShopSellMenu::refresh()
   {
     std::string itemName = it->name;
 
-    std::string stack = bgl::str::toString(it->stackSize);
+    std::string stack = toString(it->stackSize);
     while (stack.size() < 2)
       stack += ' ';
 
@@ -553,7 +549,7 @@ void ShopSellMenu::handleConfirm()
   }
   else if (isVisible())
   {
-    Item& item = item_ref(bgl::str::get_string_after_first_space(getCurrentMenuChoice()));
+    Item& item = item_ref(get_string_after_first_space(getCurrentMenuChoice()));
     if (item.cost > 0)
     {
       m_confirmMenu = new ConfirmMenu(ConfirmMenu::SELL, item.name);
@@ -561,7 +557,7 @@ void ShopSellMenu::handleConfirm()
     }
     else
     {
-      bgl::play_sound(config::get("SOUND_CANCEL"));
+      play_sound(config::get("SOUND_CANCEL"));
     }
   }
 }
@@ -593,14 +589,14 @@ void ShopSellMenu::moveArrow(Direction dir)
 
 void ShopSellMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  std::string itemName = bgl::str::get_string_after_first_space(getCurrentMenuChoice());
+  std::string itemName = get_string_after_first_space(getCurrentMenuChoice());
   Item& item = item_ref(itemName);
-  bgl::draw_text_bmp(target, 8, 8, "%s", item.description.c_str());
+  draw_text_bmp(target, 8, 8, "%s", item.description.c_str());
 
   Menu::draw(target, x, y);
 
   draw_frame(target, 0, config::GAME_RES_Y - 16, config::GAME_RES_X, 16);
-  bgl::draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
+  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
 
   if (m_confirmMenu)
   {

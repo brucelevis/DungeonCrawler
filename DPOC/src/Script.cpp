@@ -7,9 +7,8 @@
 #include <cctype>
 #include <stdexcept>
 
-#include <BGL/logger.h>
-#include <BGL/Strings.h>
-
+#include "logger.h"
+#include "Utility.h"
 #include "Script.h"
 
 static bool is_comment(const std::string& str)
@@ -121,7 +120,7 @@ bool Script::loadFromFile(const std::string& file)
   std::ifstream infile(file.c_str());
   if (infile.is_open())
   {
-    std::vector<std::string> lines = bgl::str::get_lines(infile);
+    std::vector<std::string> lines = get_lines(infile);
 
     loadFromLines(lines);
 
@@ -206,7 +205,7 @@ bool Script::peekNext(ScriptData& out) const
 
 Script::ScriptData Script::parseLine(const std::string& line) const
 {
-  std::vector<std::string> strings = bgl::str::split_string(line, ' ');
+  std::vector<std::string> strings = split_string(line, ' ');
 
   Opcode opcode = getOpCode(strings[0]);
 
@@ -335,7 +334,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
         all += " ";
     }
 
-    std::vector<std::string> choices = bgl::str::split_string(all, ',');
+    std::vector<std::string> choices = split_string(all, ',');
 
     data.data.choiceData.numberOfChoices = choices.size();
     for (size_t i = 0; i < choices.size(); i++)
@@ -429,7 +428,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       throw std::runtime_error("Too long string for combat command!");
     }
 
-    std::vector<std::string> monsters = bgl::str::split_string(all, ',');
+    std::vector<std::string> monsters = split_string(all, ',');
 
     for (size_t i = 0; i < monsters.size(); i++)
     {
@@ -478,7 +477,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       throw std::runtime_error("Too long string for shop command!");
     }
 
-    std::vector<std::string> items = bgl::str::split_string(all, ',');
+    std::vector<std::string> items = split_string(all, ',');
 
     for (size_t i = 0; i < items.size(); i++)
     {

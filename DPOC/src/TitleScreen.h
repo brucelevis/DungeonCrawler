@@ -4,9 +4,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include <BGL/Scene.h>
-
 #include "Direction.h"
+#include "Scene.h"
 #include "Menu.h"
 #include "SaveMenu.h"
 
@@ -25,7 +24,7 @@ private:
   SaveMenu* m_saveMenu;
 };
 
-class TitleScreen : public bgl::Scene
+class TitleScreen : public Scene
 {
 public:
   TitleScreen();

@@ -1,9 +1,8 @@
 #include <string>
 
-#include <BGL/SceneManager.h>
-#include <BGL/Cache.h>
-
+#include "SceneManager.h"
 #include "Config.h"
+#include "Cache.h"
 
 #include "SaveLoad.h"
 #include "Game.h"
@@ -35,7 +34,7 @@ void TitleMenu::handleConfirm()
       m_saveMenu = 0;
 
       setVisible(false);
-      bgl::SceneManager::instance().fadeOut(32);
+      SceneManager::instance().fadeOut(32);
     }
   }
   else
@@ -47,7 +46,7 @@ void TitleMenu::handleConfirm()
       setVisible(false);
 
       Game::instance().setPlayer(Player::create());
-      bgl::SceneManager::instance().fadeOut(32);
+      SceneManager::instance().fadeOut(32);
     }
     else if (choice == "Load Game")
     {
@@ -56,7 +55,7 @@ void TitleMenu::handleConfirm()
     }
     else if (choice == "Exit")
     {
-      bgl::SceneManager::instance().close();
+      SceneManager::instance().close();
     }
   }
 }
@@ -107,14 +106,14 @@ TitleScreen::TitleScreen()
   m_menu.addEntry("Exit");
   m_menu.setVisible(true);
 
-  m_titleTexture = bgl::cache::loadTexture("Resources/Title/TitleScreen.png");
+  m_titleTexture = cache::loadTexture("Resources/Title/TitleScreen.png");
   m_titleMusic.openFromFile(config::get("MUSIC_TITLE"));
   m_titleMusic.play();
 }
 
 TitleScreen::~TitleScreen()
 {
-  bgl::cache::releaseTexture(m_titleTexture);
+  cache::releaseTexture(m_titleTexture);
 }
 
 void TitleScreen::update()
@@ -173,8 +172,8 @@ void TitleScreen::postFade(FadeType fadeType)
     //close();
     m_titleMusic.stop();
 
-    bgl::SceneManager::instance().fadeIn(32);
-    bgl::SceneManager::instance().addScene(&Game::instance());
+    SceneManager::instance().fadeIn(32);
+    SceneManager::instance().addScene(&Game::instance());
   }
   else if (fadeType == FADE_IN)
   {
