@@ -60,6 +60,7 @@ public:
   std::string xmlDump() const;
 
   std::vector<sf::Image> getTilesetImages() const;
+  std::string getBattleBackground() const { return m_battleBackground; }
 private:
   Map();
   Map(const Map&);
@@ -81,6 +82,8 @@ private:
 
   sf::Texture* m_tileset;
   std::string m_name;
+
+  std::string m_battleBackground;
 };
 
 #endif

@@ -5,7 +5,9 @@ Flash::Flash()
    m_speed(0),
    m_numberOfFlashes(0),
    m_currentFlash(0),
-   m_activeEffect(0)
+   m_activeEffect(0),
+   m_fadeSpeed(0),
+   m_fadeCounter(0)
 {
 
 }
@@ -43,6 +45,11 @@ void Flash::update()
     }
   }
 
+  if (isFading())
+  {
+    m_fadeCounter -= m_fadeSpeed;
+  }
+
   if (activeEffect())
   {
     if (!m_activeEffect->complete())
@@ -55,4 +62,10 @@ void Flash::update()
       m_activeEffect = 0;
     }
   }
+}
+
+void Flash::fadeOut(int speed)
+{
+  m_fadeCounter = 255;
+  m_fadeSpeed = speed;
 }

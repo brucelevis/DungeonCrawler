@@ -1,0 +1,309 @@
+<items>
+  <item>
+    <name>Herb</name>
+    <description>A medicine herb</description>
+    <cost>10</cost>
+    <type>ITEM_USE</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <attributes>
+      <attribute name="hp" value="25" />
+    </attributes>
+    <onUse>ITEM_HEAL_FIXED</onUse>
+  </item>
+
+  <item>
+    <name>Ether</name>
+    <description>Restores MP</description>
+    <cost>150</cost>
+    <type>ITEM_USE</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <attributes>
+      <attribute name="mp" value="25" />
+    </attributes>
+    <onUse>ITEM_RESTORE_MP_FIXED</onUse>
+  </item>
+
+  <item>
+    <name>Antidote</name>
+    <description>Cures poison</description>
+    <cost>15</cost>
+    <type>ITEM_USE</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_REMOVE_STATUS</onUse>
+    <status>Poison</status>
+  </item>
+
+  <item>
+    <name>Eye Drops</name>
+    <description>Cures blindness</description>
+    <cost>20</cost>
+    <type>ITEM_USE</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_REMOVE_STATUS</onUse>
+    <status>Blind</status>
+  </item>
+
+  <item>
+    <name>Adrenaline</name>
+    <description>Cures paralysis</description>
+    <cost>20</cost>
+    <type>ITEM_USE</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_REMOVE_STATUS</onUse>
+    <status>Paralyze</status>
+  </item>
+
+  <item>
+    <name>Phoenix</name>
+    <description>Restores lifes</description>
+    <cost>1000</cost>
+    <type>ITEM_USE</type>
+    <target>TARGET_DEAD</target>
+    <onUse>ITEM_REMOVE_STATUS</onUse>
+    <status>Dead</status>
+  </item>
+
+  <item>
+    <name>Firebomb</name>
+    <description>Explodes in flame</description>
+    <cost>2000</cost>
+    <type>ITEM_USE_BATTLE</type>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <attributes>
+      <attribute name="strength" value="120" />
+    </attributes>
+    <effect>Effect_Flame</effect>
+    <onUse>ITEM_DAMAGE</onUse>
+  </item>
+
+  <item>
+    <name>Steroids</name>
+    <description>Makes you mighty</description>
+    <cost>500</cost>
+    <type>ITEM_USE_MENU</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <attributes>
+      <attribute name="strength" value="4" />
+    </attributes>
+    <onUse>ITEM_BUFF</onUse>
+  </item>
+
+  <item>
+    <name>Rusty Knife</name>
+    <description>An old rusty knife</description>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="4" />
+    </attributes>
+    <effect>Effect_Slash</effect>
+    <elements>
+      <element name="fire" value="1" />
+    </elements>
+    <target>TARGET_ALL_ENEMY</target>
+  </item>
+
+  <!-- Key Items -->
+  <item>
+    <name>Key</name>
+    <description>Opens many doors</description>
+  </item>
+  <item>
+    <name>Orb of Light</name>
+    <description>The mark of a hero</description>
+  </item>
+  <item>
+    <name>Ship Parts</name>
+    <description>Required for a working ship</description>
+  </item>
+  <item>
+    <name>Dark Key</name>
+    <description>A foul and dark key</description>
+  </item>
+  <item>
+    <name>Dark Energy</name>
+    <description>It pulsates with evil power</description>
+  </item>
+
+  <!-- Weapons -->
+  <item>
+    <name>Club</name>
+    <description>A wooden club</description>
+    <cost>50</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="2" />
+    </attributes>
+    <verb>bashes at</verb>
+  </item>
+  <item>
+    <name>Copper Sword</name>
+    <description>A copper sword</description>
+    <cost>100</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="4" />
+    </attributes>
+    <verb>slashes at</verb>
+  </item>
+  <item>
+    <name>Hand Axe</name>
+    <description>A hand axe</description>
+    <cost>150</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="7" />
+    </attributes>
+    <verb>chops at</verb>
+  </item>
+  <item>
+    <name>Mace</name>
+    <description>A mace</description>
+    <cost>150</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="5" />
+    </attributes>
+    <verb>bashes at</verb>
+  </item>
+  <item>
+    <name>Magic Staff</name>
+    <description>Boosts magic power</description>
+    <cost>300</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="8" />
+      <attribute name="magic" value="4" />
+    </attributes>
+    <verb>bashes at</verb>
+  </item>
+  <item>
+    <name>Iron Sword</name>
+    <description>A sturdy weapon</description>
+    <cost>350</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="12" />
+    </attributes>
+    <verb>slashes at</verb>
+  </item>
+  <item>
+    <name>Cleaver</name>
+    <description>A mighty axe indeed</description>
+    <cost>800</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="20" />
+    </attributes>
+    <verb>chops at</verb>
+  </item>
+  <item>
+    <name>Boomerang</name>
+    <description>A wooden club</description>
+    <cost>800</cost>
+    <type>ITEM_WEAPON</type>
+    <attributes>
+      <attribute name="strength" value="14" />
+    </attributes>
+    <target>TARGET_ALL_ENEMY</target>
+    <verb>throws the boomerang</verb>
+  </item>
+
+  <!-- Armor -->
+  <!-- Shields -->
+  <item>
+    <name>Wood Shield</name>
+    <description>A wooden shield</description>
+    <cost>50</cost>
+    <type>ITEM_SHIELD</type>
+    <attributes>
+      <attribute name="defense" value="2" />
+    </attributes>
+  </item>
+  <item>
+    <name>Bronze Shield</name>
+    <description>A bronze shield</description>
+    <cost>300</cost>
+    <type>ITEM_SHIELD</type>
+    <attributes>
+      <attribute name="defense" value="6" />
+    </attributes>
+  </item>
+
+  <!-- Body -->
+  <item>
+    <name>Leather Armor</name>
+    <description>A leather armor</description>
+    <cost>100</cost>
+    <type>ITEM_ARMOR</type>
+    <attributes>
+      <attribute name="defense" value="3" />
+    </attributes>
+  </item>
+  <item>
+    <name>Dragon Armor</name>
+    <description>Protects against fire</description>
+    <cost>8000</cost>
+    <type>ITEM_ARMOR</type>
+    <attributes>
+      <attribute name="defense" value="15" />
+    </attributes>
+    <elements>
+      <element name="fire" value="0.5" />
+    </elements>
+  </item>
+  <item>
+    <name>Mage Robe</name>
+    <description>Robe for mages</description>
+    <cost>5000</cost>
+    <type>ITEM_ARMOR</type>
+    <attributes>
+      <attribute name="defense" value="12" />
+      <attribute name="mag.def" value="20" />
+    </attributes>
+    <elements>
+      <element name="fire" value="0.5" />
+    </elements>
+  </item>
+
+  <!-- Helmets -->
+  <item>
+    <name>Fancy Hat</name>
+    <description>A neat looking hat</description>
+    <cost>25</cost>
+    <type>ITEM_HELMET</type>
+    <attributes>
+      <attribute name="defense" value="1" />
+    </attributes>
+  </item>
+  <item>
+    <name>Pointy Cap</name>
+    <description>Hat for the mysterious</description>
+    <cost>175</cost>
+    <type>ITEM_HELMET</type>
+    <attributes>
+      <attribute name="defense" value="2" />
+      <attribute name="mag.def" value="2" />
+    </attributes>
+  </item>
+  <item>
+    <name>Iron Helmet</name>
+    <description>A good sturdy helmet</description>
+    <cost>450</cost>
+    <type>ITEM_HELMET</type>
+    <attributes>
+      <attribute name="defense" value="8" />
+    </attributes>
+  </item>
+
+  <!-- Accessories -->
+  <item>
+    <name>Protect Ring</name>
+    <description>Boosts defense and mag.def</description>
+    <cost>1500</cost>
+    <type>ITEM_MISC</type>
+    <attributes>
+      <attribute name="defense" value="5" />
+      <attribute name="mag.def" value="5" />
+    </attributes>
+  </item>
+</items>

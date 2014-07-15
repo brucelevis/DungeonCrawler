@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include "random_pick.h"
 #include "Game.h"
+#include "Cache.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -108,6 +109,8 @@ static void check_death(Character* actor)
   if (actor->getAttribute("hp").current <= 0)
   {
     cause_status(actor, "Dead", true);
+
+    actor->flash().fadeOut(5);
   }
 }
 
@@ -118,7 +121,8 @@ Battle::Battle(const std::vector<Character*>& monsters)
    m_monsters(monsters),
    m_currentActor(0),
    m_turnDelay(0),
-   m_canEscape(true)
+   m_canEscape(true),
+   m_battleBackground(0)
 {
 }
 
@@ -128,6 +132,8 @@ Battle::~Battle()
   {
     delete *it;
   }
+
+  cache::releaseTexture(m_battleBackground);
 }
 
 void Battle::start(bool canEscape)
@@ -247,10 +253,10 @@ void Battle::executeActions()
   }
 
   clear_message();
-  if (isMonster(m_currentActor))
-  {
-    m_currentActor->flash().start(2, 3);
-  }
+//  if (isMonster(m_currentActor))
+//  {
+  m_currentActor->flash().start(2, 3);
+//  }
 
   /////////////////////////////////////////////////////////////////////////////
   // Check status effects.
@@ -304,7 +310,51 @@ void Battle::executeActions()
       play_sound(config::get("SOUND_ATTACK"));
     //}
 
-    battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+    if (action.target)
+    {
+      bool regularMessage = true;
+
+      if (!isMonster(m_currentActor))
+      {
+        Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("weapon");
+        if (weapon && weapon->useVerb.size() > 0)
+        {
+          battle_message("%s %s %s!",
+              m_currentActor->getName().c_str(),
+              weapon->useVerb.c_str(),
+              action.target->getName().c_str());
+
+          regularMessage = false;
+        }
+      }
+
+      if (regularMessage)
+      {
+        battle_message("%s attacks %s!", m_currentActor->getName().c_str(), action.target->getName().c_str());
+      }
+    }
+    else
+    {
+      bool regularMessage = true;
+
+      if (!isMonster(m_currentActor))
+      {
+        Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("weapon");
+        if (weapon && weapon->useVerb.size() > 0)
+        {
+          battle_message("%s %s!",
+              m_currentActor->getName().c_str(),
+              weapon->useVerb.c_str());
+
+          regularMessage = false;
+        }
+      }
+
+      if (regularMessage)
+      {
+        battle_message("%s attacks the enemies!", m_currentActor->getName().c_str());
+      }
+    }
   }
   else if (action.actionName == "Spell")
   {
@@ -483,6 +533,10 @@ void Battle::showAction()
 
         setCurrentTargets(item.target);
       }
+      else if (m_battleActions[m_currentActor].front().actionName == "Attack")
+      {
+        setCurrentTargets(TARGET_ALL_ENEMY);
+      }
     }
 
     createEffects();
@@ -503,10 +557,10 @@ void Battle::actionEffect()
       Character* currentTarget = m_currentTargets.front();
       m_currentTargets.erase(m_currentTargets.begin());
 
-      if (isMonster(currentTarget))
-      {
-        currentTarget->flash().start(6, 3);
-      }
+//      if (isMonster(currentTarget))
+//      {
+      currentTarget->flash().start(6, 3);
+//      }
 
       int damage = 0;
 
@@ -731,10 +785,10 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
 
   if (didProcess)
   {
-    if (isMonster(actor))
-    {
-      actor->flash().start(6, 3);
-    }
+//    if (isMonster(actor))
+//    {
+    actor->flash().start(6, 3);
+//    }
   }
 
   return didProcess;
@@ -809,7 +863,43 @@ void Battle::draw(sf::RenderTarget& target)
     battleMenuX = -40;
   }
 
+  if (m_battleBackground)
+  {
+    sf::Sprite bgSprite;
+    bgSprite.setTexture(*m_battleBackground);
+    target.draw(bgSprite);
+  }
+
   m_battleMenu.draw(target, battleMenuX, 152);
+  if (m_state != STATE_SELECT_ACTIONS && m_battleMenu.isVisible())
+  {
+    for (size_t i = 0; i < get_player()->getParty().size(); i++)
+    {
+      PlayerCharacter* actor = get_player()->getParty()[i];
+
+      int posX;
+      int posY = config::GAME_RES_Y - 64;
+
+      // adjust for lower portraits
+      if (i == 2 || i == 3) posY += 32;
+
+      if ((i % 2) == 0) posX = 4;
+      else posX = config::GAME_RES_X - 32 - 4;
+
+      actor->draw(target, posX, posY);
+
+      if (actor == m_currentActor)
+      {
+        sf::RectangleShape rect;
+        rect.setFillColor(sf::Color::Transparent);
+        rect.setOutlineColor(sf::Color::Red);
+        rect.setOutlineThickness(1.0f);
+        rect.setPosition(posX + 1, posY + 1);
+        rect.setSize(sf::Vector2f(30, 30));
+        target.draw(rect);
+      }
+    }
+  }
 
   if (Message::instance().isVisible())
   {
@@ -947,6 +1037,10 @@ void Battle::updateEffects()
   {
     (*it)->flash().update();
   }
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+  {
+    (*it)->flash().update();
+  }
 
   for (auto it = m_activeEffects.begin(); it != m_activeEffects.end();)
   {
@@ -967,7 +1061,12 @@ bool Battle::effectInProgress() const
 {
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
-    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect())
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
+      return true;
+  }
+  for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
+  {
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
       return true;
   }
 
@@ -1222,5 +1321,19 @@ void Battle::postFade(FadeType fadeType)
     Game::instance().close();
 
     SceneManager::instance().fadeIn(128);
+  }
+}
+
+void Battle::setBattleBackground(const std::string& file)
+{
+  if (m_battleBackground)
+  {
+    cache::releaseTexture(m_battleBackground);
+    m_battleBackground = 0;
+  }
+
+  if (file.size() > 0)
+  {
+    m_battleBackground = cache::loadTexture("Resources/Backgrounds/" + file);
   }
 }

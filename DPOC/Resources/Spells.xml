@@ -1,0 +1,467 @@
+<spells>
+  <spell>
+    <name>Hurt</name>
+    <description>Low damage to one enemy</description>
+    <cost>2</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>40</power>
+  </spell>
+
+  <spell>
+    <name>Hurt More</name>
+    <description>Mid damage to one enemy</description>
+    <cost>5</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>80</power>
+  </spell>
+
+  <spell>
+    <name>Hurt Most</name>
+    <description>High damage to one enemy</description>
+    <cost>15</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>160</power>
+  </spell>
+
+  <spell>
+    <name>Hurt All</name>
+    <description>High damage to all enemies</description>
+    <cost>4</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>140</power>
+  </spell>
+
+  <spell>
+    <name>Heal</name>
+    <description>Heals ally</description>
+    <cost>2</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>30</power>
+  </spell>
+
+  <spell>
+    <name>Heal 2</name>
+    <description>Heals ally moderatly</description>
+    <cost>5</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>80</power>
+  </spell>
+
+  <spell>
+    <name>Heal 3</name>
+    <description>Heals ally a lot</description>
+    <cost>5</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>160</power>
+  </spell>
+
+  <spell>
+    <name>Heal All</name>
+    <description>Heals the entire party</description>
+    <cost>7</cost>
+    <target>TARGET_ALL_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>30</power>
+  </spell>
+
+  <spell>
+    <name>Multiheal</name>
+    <description>Heals party a lot</description>
+    <cost>10</cost>
+    <target>TARGET_ALL_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>85</power>
+  </spell>
+
+  <spell>
+    <name>Phoenix</name>
+    <description>Returns ally to life</description>
+    <cost>12</cost>
+    <target>TARGET_DEAD</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_REMOVE_STATUS</type>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <statusChange>
+      <status name="Dead" />
+    </statusChange>
+    <power>15</power>
+  </spell>
+
+  <spell>
+    <name>Poison</name>
+    <description>Poisons an enemy</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Poison" chance="100" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Sleep</name>
+    <description>Puts all enemies to sleep</description>
+    <cost>6</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Sleep" chance="35" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Paralyze</name>
+    <description>Paralyzes an enemy</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Paralyze" chance="75" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Blind</name>
+    <description>Blinds an enemy</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Blind" chance="75" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Murder</name>
+    <description>Kills an enemy</description>
+    <cost>16</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Dead" chance="50" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Buff</name>
+    <description>Increases power</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>100</power>
+    <buff>
+      <attribute name="strength" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Barrier</name>
+    <description>Increases party defense</description>
+    <cost>12</cost>
+    <target>TARGET_ALL_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>65</power>
+    <buff>
+      <attribute name="defense" />
+      <attribute name="mag.def" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Agility</name>
+    <description>Increases speed</description>
+    <cost>4</cost>
+    <target>TARGET_SELF</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>100</power>
+    <buff>
+      <attribute name="speed" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Cure Poison</name>
+    <description>Removes Poison status</description>
+    <cost>2</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_REMOVE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Poison" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Drain</name>
+    <description>Drains HP</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_DRAIN</type>
+    </spellType>
+    <power>50</power>
+  </spell>
+
+  <spell>
+    <name>Soften</name>
+    <description>Lowers enemies defense</description>
+    <cost>14</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>-35</power>
+    <buff>
+      <attribute name="defense" />
+      <attribute name="mag.def" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Power Up!</name>
+    <description>Oh! You will feel so good!</description>
+    <cost>32</cost>
+    <target>TARGET_SELF</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>140</power>
+    <buff>
+      <attribute name="strength" />
+      <attribute name="magic" />
+      <attribute name="speed" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Provoke</name>
+    <description>Draws attention for 3 turns</description>
+    <cost>8</cost>
+    <target>TARGET_SELF</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Provoke" chance="100" duration="4" />
+    </statusChange>
+  </spell>
+
+  <!-- Monster spells -->
+  <spell>
+    <name>Rake</name>
+    <verb>grazes the party!</verb>
+    <target>TARGET_ALL_ENEMY</target>
+    <spellType>
+        <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>15</power>
+    <isPhysical>1</isPhysical>
+  </spell>
+  
+  <spell>
+    <name>Firebreath</name>
+    <verb>coughs up a fireball.</verb>
+    <target>TARGET_ALL_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>40</power>
+    <element>fire</element>
+  </spell>
+
+  <spell>
+    <name>Slippy-Slopp</name>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <verb>flops around all silly-like at $!</verb>
+    <power>20</power>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <statusChange>
+      <status name="Confusion" chance="50" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Snore</name>
+    <verb>snores loudly at $!</verb>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <statusChange>
+      <status name="Sleep" chance="85" />
+    </statusChange>
+    <power>35</power>
+  </spell>
+
+  <spell>
+    <name>Devour</name>
+    <verb>attempts to devour $!</verb>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Dead" chance="15" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Slug</name>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <verb>releases foul-smelling slug at $!</verb>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <statusChange>
+      <status name="Poison" chance="65" />
+    </statusChange>
+    <power>60</power>
+  </spell>
+
+  <spell>
+    <name>Mimic Grab</name>
+    <verb>grabs hold of $!</verb>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <statusChange>
+      <status name="Paralyze" chance="75" />
+    </statusChange>
+    <power>45</power>
+  </spell>
+
+  <spell>
+    <name>Mad Bark</name>
+    <verb>barks madly!!</verb>
+    <target>TARGET_ALL_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Afraid" chance="65" duration="2" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Squid Ink</name>
+    <verb>releases a spray of ink!</verb>
+    <target>TARGET_ALL_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <statusChange>
+      <status name="Blind" chance="35" />
+    </statusChange>
+    <power>25</power>
+  </spell>
+
+  <spell>
+    <name>Self Heal</name>
+    <verb>gathers energy from the surroundings.</verb>
+    <target>TARGET_SELF</target>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>40</power>
+  </spell>
+
+  <spell>
+    <name>Dark Blade</name>
+    <verb>uses its sword of darkness!</verb>
+    <target>TARGET_ALL_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>85</power>
+    <statusChange>
+      <status name="Blind" chance="65" />
+    </statusChange>
+    <isPhysical>1</isPhysical>
+  </spell>
+
+  <spell>
+    <name>Crush</name>
+    <verb>crushes $!</verb>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>250</power>
+  </spell>
+</spells>

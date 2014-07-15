@@ -40,6 +40,8 @@ struct Item
   int cost;
   ItemType type;
 
+  std::string useVerb;
+
   Target target;
 
   std::map<std::string, int> attributeGain;

@@ -62,6 +62,7 @@ public:
   int spriteHeight() const { return m_textureRect.height; }
 
   Flash& flash() { return m_flash; }
+	const Flash& flash() const { return m_flash; }
 
   bool incapacitated() const;
 

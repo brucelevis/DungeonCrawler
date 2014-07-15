@@ -73,7 +73,13 @@ int PlayerCharacter::expForLevel()
 {
   int level = getAttribute("level").max;
 
-  return level * level * 10;
+//  return level * level * 10;
+
+  // TODO: Put in XML.
+  static const int base = 33;
+  static const int modifier = 38;
+
+  return base * level / 4 + modifier * level * level * level / 8;
 }
 
 int PlayerCharacter::checkLevelUp(bool display)

@@ -58,6 +58,12 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
     sprite.setTextureRect(m_textureRect);
     sprite.setColor(m_color);
     sprite.setPosition(x, y);
+    
+    if (m_flash.isFading())
+    {
+      sprite.setColor(sf::Color(255, 255, 255, m_flash.fadeCounter()));
+    }
+    
     target.draw(sprite);
   }
 

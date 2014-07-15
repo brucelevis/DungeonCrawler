@@ -354,8 +354,8 @@ public:
   /////////////////////////////////////////////////////////////////////////////
   bool nextActor();
 
-  Character* getCurrentActor();
-  Character* getCurrentSelectedActor();
+  PlayerCharacter* getCurrentActor();
+  PlayerCharacter* getCurrentSelectedActor();
 
   void resetActor();
 

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="16" height="15" tilewidth="16" tileheight="16">
+ <properties>
+  <property name="music" value="Village.ogg"/>
+ </properties>
+ <tileset firstgid="1" name="DqTileset" tilewidth="16" tileheight="16">
+  <image source="../DqTileset.png" width="96" height="320"/>
+ </tileset>
+ <tileset firstgid="121" name="Hero3" tilewidth="16" tileheight="16">
+  <image source="../Hero3.png" width="32" height="128"/>
+ </tileset>
+ <layer name="blocking" width="16" height="15">
+  <data encoding="csv">
+2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2,
+2,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,
+2,0,0,0,0,0,0,0,2,0,0,2,0,0,0,2,
+2,0,0,0,0,0,0,0,2,0,0,2,0,0,0,2,
+2,2,0,0,0,0,0,0,2,2,0,2,0,0,0,2,
+0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,
+0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,2,
+0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,2,
+0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,
+0,0,0,0,0,0,2,0,0,2,2,0,0,0,0,2,
+0,0,0,0,0,0,2,0,0,2,2,2,0,0,0,2,
+0,0,0,0,0,0,2,0,0,2,0,2,2,2,2,2,
+0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,
+0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,
+0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2
+</data>
+ </layer>
+ <layer name="Tile Layer 1" width="16" height="15">
+  <data encoding="csv">
+9,9,9,9,9,9,9,9,9,9,9,9,118,9,9,9,
+4,24,118,118,118,118,20,118,11,10,10,11,118,118,118,9,
+4,24,118,118,8,118,118,118,11,5,5,11,118,20,118,9,
+4,24,24,118,118,118,118,118,11,5,5,11,118,118,118,9,
+4,4,24,24,118,118,118,118,10,10,5,10,118,118,118,9,
+4,4,4,24,24,24,24,118,118,118,118,118,118,118,118,9,
+4,4,4,4,4,4,24,2,2,24,118,118,118,8,118,9,
+4,4,4,4,4,4,4,2,2,24,24,118,118,118,118,9,
+4,4,4,4,4,4,4,2,2,4,24,24,118,118,118,9,
+4,4,4,4,4,4,4,2,2,4,4,24,24,118,118,9,
+4,4,4,4,4,4,4,2,2,4,4,4,24,24,24,9,
+4,4,4,4,4,4,4,2,2,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,2,2,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,2,2,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,2,2,4,4,4,4,4,4,4
+</data>
+ </layer>
+ <layer name="Tile Layer 2" width="16" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="16" height="15">
+  <object name="warp" x="112" y="224" width="16" height="16">
+   <properties>
+    <property name="destMap" value="PortTown.tmx"/>
+    <property name="destX" value="18"/>
+    <property name="destY" value="1"/>
+   </properties>
+  </object>
+  <object name="warp" x="128" y="224" width="16" height="16">
+   <properties>
+    <property name="destMap" value="PortTown.tmx"/>
+    <property name="destX" value="18"/>
+    <property name="destY" value="1"/>
+   </properties>
+  </object>
+  <object name="Pete" gid="135" x="160" y="48">
+    <properties>
+      <property name="stepScript">
+        if local[joined] == const[true]
+          set_visible false
+          set_walkthrough true
+        endif
+      </property>
+      <property name="talkScript">
+        if local[joined] == const[false]
+          message Greetings and hello! My name is Pious Pete, the wandering priest.
+          message I have heard all about you hero. Allow me to lend my skills at healing to you!
+          add_member Pete Cleric 5
+          set_visible false
+          message Pious Pete has joined the party!
+          set_local joined true
+        endif
+      </property>
+    </properties>
+  </object>
+  <object name="warp" x="192" y="0" width="16" height="16">
+   <properties>
+    <property name="destMap" value="WorldMap.tmx"/>
+    <property name="destX" value="32"/>
+    <property name="destY" value="7"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

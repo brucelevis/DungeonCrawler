@@ -1171,7 +1171,18 @@ void BattleMenu::handleConfirm()
 
     if (action == "Attack")
     {
-      selectMonster();
+      PlayerCharacter* character = m_statusMenu->getCurrentActor();
+      Item* weapon = character->getEquipment("weapon");
+
+      if (weapon && weapon->target == TARGET_ALL_ENEMY)
+      {
+        prepareAction();
+        nextActor();
+      }
+      else
+      {
+        selectMonster();
+      }
     }
     else if (action == "Spell")
     {
@@ -1344,7 +1355,17 @@ void BattleMenu::prepareAction()
 
   if (action == "Attack")
   {
-    battleAction.target = m_monsterMenu->getCurrentMonster();
+    PlayerCharacter* character = m_statusMenu->getCurrentActor();
+    Item* weapon = character->getEquipment("weapon");
+
+    if (weapon && weapon->target == TARGET_ALL_ENEMY)
+    {
+      battleAction.target = 0;
+    }
+    else
+    {
+      battleAction.target = m_monsterMenu->getCurrentMonster();
+    }
   }
   else if (action == "Spell")
   {
@@ -1744,12 +1765,12 @@ bool BattleStatusMenu::nextActor()
   return true;
 }
 
-Character* BattleStatusMenu::getCurrentActor()
+PlayerCharacter* BattleStatusMenu::getCurrentActor()
 {
   return get_player()->getParty().at(m_currentActor);
 }
 
-Character* BattleStatusMenu::getCurrentSelectedActor()
+PlayerCharacter* BattleStatusMenu::getCurrentSelectedActor()
 {
   return get_player()->getParty().at(getCurrentChoiceIndex());
 }
@@ -1861,7 +1882,8 @@ void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     const Character* monster = m_monsters[i];
 
-    if (monster->getStatus() == "Dead")
+    // If monster is fading out, still draw it during that time.
+    if (monster->getStatus() == "Dead" && !monster->flash().isFading())
       continue;
 
     int posX = config::GAME_RES_X / 2;

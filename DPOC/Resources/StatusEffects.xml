@@ -1,0 +1,76 @@
+<statusEffects>
+  <statusEffect>
+    <name>Poison</name>
+    <verb>is poisoned!</verb>
+    <recoveryVerb>feels better.</recoveryVerb>
+    <color r="0" g="255" b="0" />
+    <battleOnly>0</battleOnly>
+    <recoveryChance>0</recoveryChance>
+    <incapacitate>0</incapacitate>
+    <damage type="DAMAGE_PERCENT" amount="4" attr="hp" />
+    <sound>Poison.wav</sound>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Paralyze</name>
+    <verb>is paralyzed!</verb>
+    <recoveryVerb>can move again.</recoveryVerb>
+    <color r="255" g="255" b="0" />
+    <battleOnly>1</battleOnly>
+    <recoveryChance>25</recoveryChance>
+    <incapacitate>1</incapacitate>
+    <sound>Numbness3.wav</sound>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Confusion</name>
+    <verb>is confused!</verb>
+    <recoveryVerb>Thinks straight again.</recoveryVerb>
+    <color r="0" g="0" b="255" />
+    <recoveryChance>15</recoveryChance>
+    <statusType>
+      <type>STATUS_CONFUSE</type>
+    </statusType>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Sleep</name>
+    <verb>falls asleep.</verb>
+    <recoveryVerb>wakes up.</recoveryVerb>
+    <color r="255" g="0" b="255" />
+    <recoveryChance>50</recoveryChance>
+    <incapacitate>1</incapacitate>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Afraid</name>
+    <verb>is too terrified to move!</verb>
+    <recoveryVerb>comes back to its senses.</recoveryVerb>
+    <color r="255" g="255" b="45" />
+    <recoveryChance>0</recoveryChance>
+    <incapacitate>1</incapacitate>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Blind</name>
+    <verb>is blinded!</verb>
+    <recoveryVerb>can see again.</recoveryVerb>
+    <battleOnly>1</battleOnly>
+    <color r="0" g="255" b="255" />
+    <recoveryChance>10</recoveryChance>
+    <statusType>
+      <type>STATUS_BLIND</type>
+    </statusType>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Provoke</name>
+    <verb>is taunting the enemies!</verb>
+    <recoveryVerb>stops taunting.</recoveryVerb>
+    <battleOnly>1</battleOnly>
+    <color r="127" g="255" b="127" />
+    <statusType>
+      <type>STATUS_PROVOKE</type>
+    </statusType>
+  </statusEffect>
+</statusEffects>

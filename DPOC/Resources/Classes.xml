@@ -1,0 +1,232 @@
+<classes>
+  <class>
+    <name>Hero</name>
+    <attributes>
+      <attr name="hp"       base="30" max="650" />
+      <attr name="mp"       base="10" max="275" />
+      <attr name="strength" base="20" max="190" />
+      <attr name="defense"  base="15"  max="180" />
+      <attr name="magic"    base="10"  max="145" />
+      <attr name="mag.def"  base="13"  max="150" />
+      <attr name="speed"    base="10"  max="120" />
+      <attr name="luck"     base="8"  max="100" />
+    </attributes>
+    <!--<texture name="Resources/Hero_Tall.png"
+      x="0" y="0" w="16" h="24" />-->
+    <texture name="Resources/Hero.png"
+      x="0" y="0" w="16" h="16" />
+    <face name="Resources/Faces/Face.png"
+      x="0" y="0" w="32" h="32" />
+    <spellsPerLevel>
+      <level num="1">
+        <spell>Heal</spell>
+      </level>
+      <level num="7">
+        <spell>Provoke</spell>
+      </level>
+      <level num="11">
+        <spell>Heal 2</spell>
+      </level>
+      <level num="15">
+        <spell>Power Up!</spell>
+      </level>
+    </spellsPerLevel>
+    <equipment>
+      <item>Rusty Knife</item>
+      <item>Copper Sword</item>
+      <item>Hand Axe</item>
+      <item>Iron Sword</item>
+      <item>Cleaver</item>
+
+      <item>Wood Shield</item>
+      <item>Bronze Shield</item>
+      
+      <item>Leather Armor</item>
+      <item>Dragon Armor</item>
+
+      <item>Fancy Hat</item>
+      <item>Iron Helmet</item>
+
+      <item>Protect Ring</item>
+    </equipment>
+  </class>
+
+  <class>
+    <name>Wizard</name>
+    <attributes>
+      <attr name="hp"       base="25" max="450" />
+      <attr name="mp"       base="15" max="350" />
+      <attr name="strength" base="10"  max="140" />
+      <attr name="defense"  base="13"  max="150" />
+      <attr name="magic"    base="20" max="235" />
+      <attr name="mag.def"  base="20" max="200" />
+      <attr name="speed"    base="15" max="165" />
+      <attr name="luck"     base="4"  max="75" />
+    </attributes>
+    <texture name="Resources/Hero2.png"
+      x="1" y="0" w="16" h="16" />
+    <!--<texture name="Resources/Hero_Tall.png"
+      x="3" y="0" w="16" h="24" />-->
+    <face name="Resources/Faces/Face.png"
+      x="0" y="0" w="32" h="32" />
+    <spellsPerLevel>
+      <level num="1">
+        <spell>Hurt</spell>
+      </level>
+      <level num="3">
+        <spell>Poison</spell>
+      </level>
+      <level num="5">
+        <spell>Paralyze</spell>
+      </level>
+      <level num="7">
+        <spell>Blind</spell>
+      </level>
+      <level num="9">
+        <spell>Hurt More</spell>
+      </level>
+      <level num="11">
+        <spell>Sleep</spell>
+      </level>
+      <level num="13">
+        <spell>Soften</spell>
+      </level>
+      <level num="15">
+        <spell>Hurt Most</spell>
+      </level>
+      <level num="17">
+        <spell>Murder</spell>
+      </level>
+      <level num="19">
+        <spell>Hurt All</spell>
+      </level>
+    </spellsPerLevel>
+    <equipment>
+      <item>Rusty Knife</item>
+      <item>Club</item>
+      <item>Mace</item>
+      <item>Magic Staff</item>
+
+      <item>Leather Armor</item>
+      <item>Mage Robe</item>
+
+      <item>Wood Shield</item>
+
+      <item>Fancy Hat</item>
+      <item>Pointy Cap</item>
+
+      <item>Protect Ring</item>
+      
+      <item>Boomerang</item>
+    </equipment>
+  </class>
+
+  <class>
+    <name>Cleric</name>
+    <attributes>
+      <attr name="hp"       base="25" max="500" />
+      <attr name="mp"       base="13" max="300" />
+      <attr name="strength" base="14" max="165" />
+      <attr name="defense"  base="15"  max="165" />
+      <attr name="magic"    base="17" max="200" />
+      <attr name="mag.def"  base="22" max="235" />
+      <attr name="speed"    base="13"  max="145" />
+      <attr name="luck"     base="6"  max="80" />
+    </attributes>
+    <!--<texture name="Resources/Hero_Tall.png"
+      x="2" y="0" w="16" h="24" />-->
+    <texture name="Resources/Hero3.png"
+      x="0" y="1" w="16" h="16" />
+    <face name="Resources/Faces/Face.png"
+      x="0" y="0" w="32" h="32" />
+    <spellsPerLevel>
+      <level num="1">
+        <spell>Heal</spell>
+      </level>
+      <level num="3">
+        <spell>Cure Poison</spell>
+      </level>
+      <level num="5">
+        <spell>Buff</spell>
+      </level>
+      <level num="7">
+        <spell>Heal All</spell>
+      </level>
+      <level num="9">
+        <spell>Heal 2</spell>
+      </level>
+      <level num="11">
+        <spell>Phoenix</spell>
+      </level>
+      <level num="13">
+        <spell>Barrier</spell>
+      </level>
+      <level num="15">
+        <spell>Multiheal</spell>
+      </level>
+      <level num="17">
+        <spell>Heal 3</spell>
+      </level>
+    </spellsPerLevel>
+    <equipment>
+      <item>Club</item>
+      <item>Mace</item>
+      <item>Magic Staff</item>
+
+      <item>Leather Armor</item>
+
+      <item>Wood Shield</item>
+      <item>Bronze Shield</item>
+
+      <item>Fancy Hat</item>
+      <item>Pointy Cap</item>
+      <item>Iron Helmet</item>
+
+      <item>Protect Ring</item>
+    </equipment>
+  </class>
+
+  <class>
+    <name>Warrior</name>
+    <attributes>
+      <attr name="hp"       base="35" max="700" />
+      <attr name="mp"       base="0"  max="0" />
+      <attr name="strength" base="25" max="225" />
+      <attr name="defense"  base="15" max="180" />
+      <attr name="magic"    base="10"  max="120" />
+      <attr name="mag.def"  base="10"  max="125" />
+      <attr name="speed"    base="10"  max="115" />
+      <attr name="luck"     base="8"  max="105" />
+    </attributes>
+    <texture name="Resources/Hero2.png"
+      x="4" y="1" w="16" h="16" />
+    <!--<texture name="Resources/Hero_Tall.png"
+      x="1" y="0" w="16" h="24" />-->
+    <face name="Resources/Faces/Face.png"
+      x="0" y="0" w="32" h="32" />
+    <equipment>
+      <item>Rusty Knife</item>
+      <item>Copper Sword</item>
+      <item>Hand Axe</item>
+      <item>Iron Sword</item>
+      <item>Cleaver</item>
+
+      <item>Wood Shield</item>
+      <item>Bronze Shield</item>
+      
+      <item>Leather Armor</item>
+      <item>Dragon Armor</item>
+
+      <item>Fancy Hat</item>
+      <item>Iron Helmet</item>
+
+      <item>Protect Ring</item>
+    </equipment>
+    <actions>
+      <action>Attack</action>
+      <action>Item</action>
+      <action>Guard</action>
+      <action>Run</action>
+    </actions>
+  </class>
+</classes>

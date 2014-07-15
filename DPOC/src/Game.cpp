@@ -461,7 +461,10 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape)
 
   TRACE("Starting combat with: %s", traceString.c_str());
 
+  std::string battleBackground = m_currentMap ? m_currentMap->getBattleBackground() : "";
+
   Battle* battle = new Battle(monsterChars);
+  battle->setBattleBackground(battleBackground);
   battle->start(canEscape);
 
   SceneManager::instance().addScene(battle);

@@ -1,0 +1,852 @@
+<monsters>
+  <!-- Skelington -->
+  <monster>
+    <name>Skelington</name>
+    <description>A spooky skeleton</description>
+    <attributes>
+      <attr name="hp"       value="30" />
+      <attr name="strength" value="14" />
+      <attr name="defense"  value="10" />
+      <attr name="magic"    value="8" />
+      <attr name="mag.def"  value="8" />
+      <attr name="speed"    value="12" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="1" />
+      <attr name="exp"      value="8" />
+      <attr name="gold"     value="4" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png" 
+      x="12" y="32" w="32" h="36" />
+    <actions>
+      <action name="Attack" chance="6" />
+      <action name="Spell" chance="3">Hurt All</action>
+      <action name="Spell" chance="3">Heal</action>
+      <action name="Summon" chance="1">Batty</action>
+    </actions>
+    <items>
+      <item name="Herb" chance="50" />
+    </items>
+  </monster>
+
+  <!-- MONSTERS PART 1 -->
+
+  <!-- Batty -->
+  <monster>
+    <name>Batty</name>
+    <description>A fluttering bat</description>
+    <attributes>
+      <attr name="hp"       value="12" />
+      <attr name="strength" value="12" />
+      <attr name="defense"  value="8" />
+      <attr name="magic"    value="8" />
+      <attr name="mag.def"  value="12" />
+      <attr name="speed"    value="20" />
+      <attr name="luck"     value="15" />
+      <attr name="level"    value="1" />
+      <attr name="exp"      value="2" />
+      <attr name="gold"     value="3" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="434" y="172" w="44" h="42" />
+    <actions>
+      <action name="Attack" chance="1" />
+    </actions>
+  </monster>
+
+  <!-- Centopode -->
+  <monster>
+    <name>Centopode</name>
+    <description>A creepy worm!</description>
+    <attributes>
+      <attr name="hp"       value="14" />
+      <attr name="strength" value="18" />
+      <attr name="defense"  value="12" />
+      <attr name="magic"    value="8" />
+      <attr name="mag.def"  value="13" />
+      <attr name="speed"    value="9" />
+      <attr name="luck"     value="8" />
+      <attr name="level"    value="1" />
+      <attr name="exp"      value="3" />
+      <attr name="gold"     value="4" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="535" y="181" w="36" h="32" />
+    <actions>
+      <action name="Attack" chance="1" />
+    </actions>
+    <resistance>
+      <element name="fire" resist="2" />
+    </resistance>
+  </monster>
+
+  <!-- Cave Dog -->
+  <monster>
+    <name>Cave Dog</name>
+    <description>A mangy cur!</description>
+    <attributes>
+      <attr name="hp"       value="20" />
+      <attr name="strength" value="18" />
+      <attr name="defense"  value="8" />
+      <attr name="magic"    value="8" />
+      <attr name="mag.def"  value="12" />
+      <attr name="speed"    value="16" />
+      <attr name="luck"     value="12" />
+      <attr name="level"    value="1" />
+      <attr name="exp"      value="6" />
+      <attr name="gold"     value="5" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="195" y="44" w="44" h="25" />
+    <actions>
+      <action name="Attack" chance="3" />
+      <action name="Spell" chance="1">Rake</action>
+    </actions>
+  </monster>
+
+  <!-- Snake -->
+  <monster>
+    <name>Snake</name>
+    <description>It appears to be a snake.</description>
+    <attributes>
+      <attr name="hp"       value="18" />
+      <attr name="strength" value="16" />
+      <attr name="defense"  value="11" />
+      <attr name="magic"    value="12" />
+      <attr name="mag.def"  value="16" />
+      <attr name="speed"    value="14" />
+      <attr name="luck"     value="12" />
+      <attr name="level"    value="1" />
+      <attr name="exp"      value="5" />
+      <attr name="gold"     value="3" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="104" y="110" w="36" h="30" />
+    <actions>
+      <action name="Attack" chance="1" />
+    </actions>
+    <items>
+      <item name="Herb" chance="15" />
+    </items>
+  </monster>
+
+  <!-- MONSTERS PART 2 -->
+
+  <!-- Raggedy Man -->
+  <monster>
+    <name>Raggedy Man</name>
+    <description>The smell is overwhelming.</description>
+    <attributes>
+      <attr name="hp"       value="36" />
+      <attr name="strength" value="31" />
+      <attr name="defense"  value="16" />
+      <attr name="magic"    value="12" />
+      <attr name="mag.def"  value="16" />
+      <attr name="speed"    value="18" />
+      <attr name="luck"     value="14" />
+      <attr name="level"    value="3" />
+      <attr name="exp"      value="10" />
+      <attr name="gold"     value="12" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="536" y="33" w="32" h="38" />
+    <actions>
+      <action name="Attack" chance="7" />
+      <action name="Spell" chance="1">Poison</action>
+    </actions>
+    <items>
+      <item name="Antidote" chance="10" />
+    </items>
+  </monster>
+
+  <!-- Robber -->
+  <monster>
+    <name>Robber</name>
+    <description>A robbin' racoon</description>
+    <attributes>
+      <attr name="hp"       value="38" />
+      <attr name="strength" value="33" />
+      <attr name="defense"  value="14" />
+      <attr name="magic"    value="14" />
+      <attr name="mag.def"  value="12" />
+      <attr name="speed"    value="24" />
+      <attr name="luck"     value="13" />
+      <attr name="level"    value="4" />
+      <attr name="exp"      value="12" />
+      <attr name="gold"     value="16" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="56" y="30" w="36" h="37" />
+    <actions>
+      <action name="Attack" chance="5" />
+    </actions>
+    <items>
+      <item name="Herb" chance="3" />
+    </items>
+  </monster>
+
+  <!-- Basshunter -->
+  <monster>
+    <name>Basshunter</name>
+    <description>It's a bass, that hunts.</description>
+    <attributes>
+      <attr name="hp"       value="37" />
+      <attr name="strength" value="32" />
+      <attr name="defense"  value="16" />
+      <attr name="magic"    value="16" />
+      <attr name="mag.def"  value="10" />
+      <attr name="speed"    value="27" />
+      <attr name="luck"     value="12" />
+      <attr name="level"    value="4" />
+      <attr name="exp"      value="13" />
+      <attr name="gold"     value="14" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="99" y="241" w="40" h="44" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="2">Slippy-Slopp</action>
+    </actions>
+  </monster>
+
+  <!-- MONSTERS PART 3 -->
+
+  <!-- Bleary -->
+  <monster>
+    <name>Bleary</name>
+    <description>A hulking bear</description>
+    <attributes>
+      <attr name="hp"       value="49" />
+      <attr name="strength" value="43" />
+      <attr name="defense"  value="28" />
+      <attr name="magic"    value="8" />
+      <attr name="mag.def"  value="12" />
+      <attr name="speed"    value="34" />
+      <attr name="luck"     value="18" />
+      <attr name="level"    value="5" />
+      <attr name="exp"      value="18" />
+      <attr name="gold"     value="19" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="289" y="178" w="47" h="35" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Snore</action>
+    </actions>
+  </monster>
+
+  <!-- Vapour -->
+  <monster>
+    <name>Vapour</name>
+    <description>A cloud of vapour</description>
+    <attributes>
+      <attr name="hp"       value="65" />
+      <attr name="strength" value="45" />
+      <attr name="defense"  value="16" />
+      <attr name="magic"    value="45" />
+      <attr name="mag.def"  value="29" />
+      <attr name="speed"    value="40" />
+      <attr name="luck"     value="10" />
+      <attr name="level"    value="7" />
+      <attr name="exp"      value="33" />
+      <attr name="gold"     value="21" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="392" y="828" w="31" h="37" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="5">Hurt</action>
+      <action name="Spell" chance="5">Self Heal</action>
+      <action name="Ponder" chance="5" />
+    </actions>
+  </monster>
+
+  <!-- Mangler -->
+  <monster>
+    <name>Mangler</name>
+    <description>A vicious wild dog</description>
+    <attributes>
+      <attr name="hp"       value="32" />
+      <attr name="strength" value="27" />
+      <attr name="defense"  value="12" />
+      <attr name="magic"    value="6" />
+      <attr name="mag.def"  value="13" />
+      <attr name="speed"    value="33" />
+      <attr name="luck"     value="21" />
+      <attr name="level"    value="4" />
+      <attr name="exp"      value="16" />
+      <attr name="gold"     value="9" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="435" y="116" w="44" h="25" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Mad Bark</action>
+      <action name="Summon" chance="1">Cave Dog</action>
+    </actions>
+  </monster>
+
+  <!-- MONSTERS PART 4 -->
+
+  <!-- Deranged -->
+  <monster>
+    <name>Deranged</name>
+    <description>An escaped madman</description>
+    <attributes>
+      <attr name="hp"       value="68" />
+      <attr name="strength" value="48" />
+      <attr name="defense"  value="21" />
+      <attr name="magic"    value="18" />
+      <attr name="mag.def"  value="14" />
+      <attr name="speed"    value="39" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="6" />
+      <attr name="exp"      value="23" />
+      <attr name="gold"     value="28" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="293" y="37" w="40" h="33" />
+    <actions>
+      <action name="Attack" chance="5" />
+    </actions>
+    <items>
+      <item name="Herb" chance="10" />
+    </items>
+  </monster>
+
+  <!-- Sorcerer -->
+  <monster>
+    <name>Sorcerer</name>
+    <description>Wielder of dark magics</description>
+    <attributes>
+      <attr name="hp"       value="63" />
+      <attr name="strength" value="31" />
+      <attr name="defense"  value="19" />
+      <attr name="magic"    value="53" />
+      <attr name="mag.def"  value="38" />
+      <attr name="speed"    value="25" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="6" />
+      <attr name="exp"      value="28" />
+      <attr name="gold"     value="34" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="201" y="245" w="33" h="40" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="5">Hurt</action>
+      <action name="Spell" chance="3">Hurt More</action>
+      <action name="Spell" chance="2">Heal</action>
+    </actions>
+    <items>
+      <item name="Herb" chance="10" />
+      <item name="Ether" chance="10" />
+    </items>
+  </monster>
+
+  <!-- Fungah -->
+  <monster>
+    <name>Fungah</name>
+    <description>It's a mushroom, but wait...</description>
+    <attributes>
+      <attr name="hp"       value="34" />
+      <attr name="strength" value="1" />
+      <attr name="defense"  value="15" />
+      <attr name="magic"    value="35" />
+      <attr name="mag.def"  value="120" />
+      <attr name="speed"    value="38" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="5" />
+      <attr name="exp"      value="31" />
+      <attr name="gold"     value="17" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="201" y="325" w="31" h="30" />
+    <actions>
+      <action name="Spell" chance="5">Poison</action>
+      <action name="Spell" chance="5">Sleep</action>
+      <action name="Spell" chance="5">Paralyze</action>
+    </actions>
+    <items>
+      <item name="Herb" chance="25" />
+      <item name="Ether" chance="25" />
+      <item name="Antidote" chance="25" />
+    </items>
+  </monster>
+
+  <!-- MONSTERS PART 5 -->
+
+  <!-- Hellnake -->
+  <monster>
+    <name>Hellnake</name>
+    <description>It's a snake from hell</description>
+    <attributes>
+      <attr name="hp"       value="74" />
+      <attr name="strength" value="43" />
+      <attr name="defense"  value="29" />
+      <attr name="magic"    value="37" />
+      <attr name="mag.def"  value="46" />
+      <attr name="speed"    value="45" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="9" />
+      <attr name="exp"      value="39" />
+      <attr name="gold"     value="19" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="438" y="398" w="38" h="30" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Hurt All</action>
+    </actions>
+  </monster>
+
+  <!-- Wingal -->
+  <monster>
+    <name>Wingal</name>
+    <description>A terrible bird</description>
+    <attributes>
+      <attr name="hp"       value="76" />
+      <attr name="strength" value="65" />
+      <attr name="defense"  value="25" />
+      <attr name="magic"    value="20" />
+      <attr name="mag.def"  value="35" />
+      <attr name="speed"    value="43" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="11" />
+      <attr name="exp"      value="36" />
+      <attr name="gold"     value="23" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="288" y="92" w="50" h="49" />
+    <actions>
+      <action name="Attack" chance="5" />
+    </actions>
+  </monster>
+
+  <!-- Dark Knight -->
+  <monster>
+    <name>Dark Knight</name>
+    <description>A warrior of darkness</description>
+    <attributes>
+      <attr name="hp"       value="75" />
+      <attr name="strength" value="75" />
+      <attr name="defense"  value="50" />
+      <attr name="magic"    value="25" />
+      <attr name="mag.def"  value="35" />
+      <attr name="speed"    value="50" />
+      <attr name="luck"     value="32" />
+      <attr name="level"    value="12" />
+      <attr name="exp"      value="32" />
+      <attr name="gold"     value="31" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="95" y="956" w="50" h="53" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="2">Hurt More</action>
+      <action name="Spell" chance="3">Dark Blade</action>
+    </actions>
+  </monster>
+
+  <!-- MONSTERS PART 6 -->
+
+  <!-- Bloodhunter -->
+  <monster>
+    <name>Bloodhunter</name>
+    <description>A fearsome bat</description>
+    <attributes>
+      <attr name="hp"       value="47" />
+      <attr name="strength" value="58" />
+      <attr name="defense"  value="35" />
+      <attr name="magic"    value="40" />
+      <attr name="mag.def"  value="45" />
+      <attr name="speed"    value="75" />
+      <attr name="luck"     value="43" />
+      <attr name="level"    value="8" />
+      <attr name="exp"      value="24" />
+      <attr name="gold"     value="0" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="435" y="174" w="43" h="39" />
+    <color r="255" g="0" b="64" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="2">Drain</action>
+    </actions>
+  </monster>
+
+  <!-- Vampire -->
+  <monster>
+    <name>Vampire</name>
+    <description>A hunter of the night</description>
+    <attributes>
+      <attr name="hp"       value="68" />
+      <attr name="strength" value="61" />
+      <attr name="defense"  value="32" />
+      <attr name="magic"    value="56" />
+      <attr name="mag.def"  value="32" />
+      <attr name="speed"    value="70" />
+      <attr name="luck"     value="42" />
+      <attr name="level"    value="12" />
+      <attr name="exp"      value="41" />
+      <attr name="gold"     value="23" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="145" y="962" w="41" h="46" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="2">Drain</action>
+      <action name="Summon" chance="2">Bloodhunter</action>
+      <action name="Guard" chance="3" />
+    </actions>
+  </monster>
+
+  <!-- Vampire Lord -->
+  <monster>
+    <name>Vampire Lord</name>
+    <description>A leader of vampires</description>
+    <attributes>
+      <attr name="hp"       value="90" />
+      <attr name="strength" value="65" />
+      <attr name="defense"  value="38" />
+      <attr name="magic"    value="60" />
+      <attr name="mag.def"  value="45" />
+      <attr name="speed"    value="75" />
+      <attr name="luck"     value="41" />
+      <attr name="level"    value="14" />
+      <attr name="exp"      value="43" />
+      <attr name="gold"     value="26" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="8" y="971" w="34" h="37" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Drain</action>
+      <action name="Spell" chance="2">Hurt More</action>
+      <action name="Spell" chance="1">Sleep</action>
+    </actions>
+  </monster>
+
+  <!-- Slug Fiend -->
+  <monster>
+    <name>Slug Fiend</name>
+    <description>Sentient goo</description>
+    <attributes>
+      <attr name="hp"       value="65" />
+      <attr name="strength" value="45" />
+      <attr name="defense"  value="80" />
+      <attr name="magic"    value="40" />
+      <attr name="mag.def"  value="85" />
+      <attr name="speed"    value="15" />
+      <attr name="luck"     value="24" />
+      <attr name="level"    value="9" />
+      <attr name="exp"      value="32" />
+      <attr name="gold"     value="8" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="483" y="603" w="42" h="42" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Slug</action>
+    </actions>
+  </monster>
+
+  <!-- Lich -->
+  <monster>
+    <name>Lich</name>
+    <description>An undead spellcaster</description>
+    <attributes>
+      <attr name="hp"       value="100" />
+      <attr name="strength" value="65" />
+      <attr name="defense"  value="55" />
+      <attr name="magic"    value="90" />
+      <attr name="mag.def"  value="90" />
+      <attr name="speed"    value="35" />
+      <attr name="luck"     value="22" />
+      <attr name="level"    value="16" />
+      <attr name="exp"      value="43" />
+      <attr name="gold"     value="26" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="55" y="102" w="35" h="40" />
+    <actions>
+      <action name="Attack" chance="1" />
+      <action name="Spell" chance="5">Hurt Most</action>
+      <action name="Spell" chance="2">Hurt All</action>
+      <action name="Spell" chance="3">Paralyze</action>
+      <action name="Spell" chance="1">Murder</action>
+    </actions>
+
+    <immunity>
+      <status name="Paralyze" />
+      <status name="Sleep" />
+    </immunity>
+  </monster>
+
+  <!-- Dark Angel -->
+  <monster>
+    <name>Dark Angel</name>
+    <description>A servant of darkness</description>
+    <attributes>
+      <attr name="hp"       value="83" />
+      <attr name="strength" value="68" />
+      <attr name="defense"  value="60" />
+      <attr name="magic"    value="46" />
+      <attr name="mag.def"  value="44" />
+      <attr name="speed"    value="40" />
+      <attr name="luck"     value="32" />
+      <attr name="level"    value="16" />
+      <attr name="exp"      value="45" />
+      <attr name="gold"     value="31" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="336" y="361" w="48" h="68" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Phoenix</action>
+      <action name="Spell" chance="3">Murder</action>
+      <action name="Spell" chance="5">Multiheal</action>
+    </actions>
+
+    <immunity>
+      <status name="Paralyze" />
+      <status name="Sleep" />
+    </immunity>
+  </monster>
+
+  <!-- Bosses -->
+  <!-- Demonus -->
+  <monster>
+    <name>Demonus</name>
+    <description>A scary demon! Watch out!</description>
+    <attributes>
+      <attr name="hp"       value="200" />
+      <attr name="strength" value="35" />
+      <attr name="defense"  value="15" />
+      <attr name="magic"    value="25" />
+      <attr name="mag.def"  value="20" />
+      <attr name="speed"    value="10" />
+      <attr name="luck"     value="15" />
+      <attr name="level"    value="5" />
+      <attr name="exp"      value="40" />
+      <attr name="gold"     value="100" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="484" y="162" w="41" h="53" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="2">Firebreath</action>
+      <action name="Spell" chance="2">Hurt</action>
+    </actions>
+    <items>
+      <item name="Orb of Light" chance="100" />
+    </items>
+    <resistance>
+      <element name="fire" resist="2" />
+    </resistance>
+    <immunity>
+      <status name="Paralyze" />
+      <status name="Sleep" />
+    </immunity>
+  </monster>
+
+  <!-- Squigler -->
+  <monster>
+    <name>Squigler</name>
+    <description>Don't tease the squid, kids</description>
+    <attributes>
+      <attr name="hp"       value="250" />
+      <attr name="strength" value="45" />
+      <attr name="defense"  value="20" />
+      <attr name="magic"    value="25" />
+      <attr name="mag.def"  value="15" />
+      <attr name="speed"    value="18" />
+      <attr name="luck"     value="24" />
+      <attr name="level"    value="8" />
+      <attr name="exp"      value="75" />
+      <attr name="gold"     value="35" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="240" y="739" w="49" h="48" />
+    <actions>
+      <action name="Attack" chance="8" />
+      <action name="Spell" chance="6">Squid Ink</action>
+      <action name="Spell" chance="3">Mimic Grab</action>
+    </actions>
+    <immunity>
+      <status name="Paralyze" />
+      <status name="Sleep" />
+    </immunity>
+  </monster>
+
+  <!-- Vorock -->
+  <monster>
+    <name>Vorock</name>
+    <description>A bizarre demon</description>
+    <attributes>
+      <attr name="hp"       value="300" />
+      <attr name="strength" value="60" />
+      <attr name="defense"  value="20" />
+      <attr name="magic"    value="35" />
+      <attr name="mag.def"  value="15" />
+      <attr name="speed"    value="28" />
+      <attr name="luck"     value="30" />
+      <attr name="level"    value="10" />
+      <attr name="exp"      value="100" />
+      <attr name="gold"     value="150" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="387" y="300" w="43" h="58" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Firebreath</action>
+      <action name="Spell" chance="1">Slug</action>
+    </actions>
+    <immunity>
+      <status name="Paralyze" />
+      <status name="Sleep" />
+    </immunity>
+  </monster>
+
+  <!-- Mimic -->
+  <monster>
+    <name>Mimic</name>
+    <description>A horrid beast</description>
+    <attributes>
+      <attr name="hp"       value="300" />
+      <attr name="strength" value="80" />
+      <attr name="defense"  value="45" />
+      <attr name="magic"    value="35" />
+      <attr name="mag.def"  value="35" />
+      <attr name="speed"    value="40" />
+      <attr name="luck"     value="1" />
+      <attr name="level"    value="5" />
+      <attr name="exp"      value="150" />
+      <attr name="gold"     value="0" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="383" y="680" w="51" h="37" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="1">Devour</action>
+      <action name="Spell" chance="1">Mimic Grab</action>
+    </actions>
+    <items>
+      <item name="Phoenix" chance="100" />
+    </items>
+    <immunity>
+      <status name="Poison" />
+      <status name="Dead" />
+    </immunity>
+  </monster>
+
+  <!-- Cell Keeper -->
+  <monster>
+    <name>Cell Keeper</name>
+    <description>A cyclops</description>
+    <attributes>
+      <attr name="hp"       value="700" />
+      <attr name="strength" value="120" />
+      <attr name="defense"  value="65" />
+      <attr name="magic"    value="90" />
+      <attr name="mag.def"  value="45" />
+      <attr name="speed"    value="75" />
+      <attr name="luck"     value="35" />
+      <attr name="level"    value="10" />
+      <attr name="exp"      value="300" />
+      <attr name="gold"     value="100" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="144" y="655" w="50" h="61" />
+    <actions>
+      <action name="Attack" chance="8" />
+      <action name="Spell" chance="6">Crush</action>
+    </actions>
+    <immunity>
+      <status name="Sleep" />
+      <status name="Paralyze" />
+      <status name="Poison" />
+      <status name="Dead" />
+      <status name="Blind" />
+    </immunity>
+    <items>
+      <item name="Dark Energy" chance="100" />
+    </items>
+  </monster>
+
+  <!-- Master Mimic -->
+  <monster>
+    <name>Master Mimic</name>
+    <description>The stuff of nightmares</description>
+    <numberOfAttacks>3</numberOfAttacks>
+    <attributes>
+      <attr name="hp"       value="750" />
+      <attr name="strength" value="120" />
+      <attr name="defense"  value="65" />
+      <attr name="magic"    value="90" />
+      <attr name="mag.def"  value="25" />
+      <attr name="speed"    value="90" />
+      <attr name="luck"     value="32" />
+      <attr name="level"    value="10" />
+      <attr name="exp"      value="400" />
+      <attr name="gold"     value="500" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="383" y="680" w="51" h="37" />
+    <color r="255" g="0" b="255" />
+    <actions>
+      <action name="Attack" chance="6" />
+      <action name="Spell" chance="2">Devour</action>
+      <action name="Spell" chance="2">Sleep</action>
+      <action name="Spell" chance="3">Mimic Grab</action>
+    </actions>
+    <items>
+      <item name="Phoenix" chance="100" />
+      <item name="Herb" chance="100" />
+      <item name="Ether" chance="100" />
+      <item name="Dark Energy" chance="100" />
+    </items>
+    <immunity>
+      <status name="Sleep" />
+      <status name="Paralyze" />
+      <status name="Poison" />
+      <status name="Dead" />
+      <status name="Blind" />
+    </immunity>
+  </monster>
+
+  <!-- Dark Lord -->
+  <monster>
+    <name>Dark Lord</name>
+    <description>The lord of all Darkness</description>
+    <numberOfAttacks>2</numberOfAttacks>
+    <attributes>
+      <attr name="hp"       value="2500" />
+      <attr name="strength" value="150" />
+      <attr name="defense"  value="75" />
+      <attr name="magic"    value="150" />
+      <attr name="mag.def"  value="75" />
+      <attr name="speed"    value="80" />
+      <attr name="luck"     value="45" />
+      <attr name="level"    value="20" />
+      <attr name="exp"      value="5000" />
+      <attr name="gold"     value="5000" />
+    </attributes>
+    <texture name="Resources/rpg_monster_set.png"
+      x="382" y="1092" w="41" h="58" />
+    <color r="255" g="0" b="255" />
+    <actions>
+      <action name="Attack" chance="5" />
+      <action name="Spell" chance="3">Hurt Most</action>
+      <action name="Spell" chance="3">Drain</action>
+      <action name="Spell" chance="2">Heal 3</action>
+      <action name="Spell" chance="2">Dark Blade</action>
+    </actions>
+    <immunity>
+      <status name="Sleep" />
+      <status name="Paralyze" />
+      <status name="Poison" />
+      <status name="Dead" />
+      <status name="Blind" />
+    </immunity>
+  </monster>
+</monsters>
