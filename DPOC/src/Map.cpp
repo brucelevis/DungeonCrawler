@@ -56,14 +56,9 @@ static void compute_sprite_data(sf::Texture* texture,
 Map::Map()
  : m_width(0),
    m_height(0),
-   m_encounterRate(0)
+   m_encounterRate(0),
+   m_tileset(0)
 {
-//  for (int i = 0; i < config::MAX_LAYERS; i++)
-//  {
-//    m_tiles[i] = 0;
-//  }
-
-  m_tileset = cache::loadTexture("Resources/DqTileset.png");
 }
 
 Map::~Map()
@@ -77,7 +72,7 @@ Map::~Map()
   for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
     delete *it;
 
-  cache::releaseTexture("Resources/DqTileset.png");
+  cache::releaseTexture(m_tileset);
 }
 
 void Map::update()
