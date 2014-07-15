@@ -12,7 +12,6 @@
 #include "Message.h"
 #include "logger.h"
 #include "Config.h"
-#include "EntityDef.h"
 #include "Entity.h"
 
 static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
