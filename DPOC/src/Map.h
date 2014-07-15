@@ -27,7 +27,7 @@ struct Warp
 
 static inline std::string getWarpTargetName(const Warp& warp)
 {
-  return "Resources/Maps/" + warp.destMap;
+  return "Maps/" + warp.destMap;
 }
 
 class Map

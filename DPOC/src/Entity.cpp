@@ -464,7 +464,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   else if (data.opcode == Script::OP_PLAY_SOUND)
   {
     std::string sound = data.data.playSoundData.sound;
-    play_sound("Resources/Audio/" + sound);
+    play_sound("Audio/" + sound);
   }
   else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
   {

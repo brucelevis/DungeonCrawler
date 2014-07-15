@@ -106,8 +106,8 @@ TitleScreen::TitleScreen()
   m_menu.addEntry("Exit");
   m_menu.setVisible(true);
 
-  m_titleTexture = cache::loadTexture("Resources/Title/TitleScreen.png");
-  m_titleMusic.openFromFile(config::get("MUSIC_TITLE"));
+  m_titleTexture = cache::loadTexture("Title/TitleScreen.png");
+  m_titleMusic.openFromFile(config::res_path(config::get("MUSIC_TITLE")));
   m_titleMusic.play();
 }
 

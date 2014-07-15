@@ -2,6 +2,7 @@
 #include <fstream>
 #include <set>
 
+#include "Config.h"
 #include "Direction.h"
 #include "Utility.h"
 #include "TiledLoader.h"
@@ -261,7 +262,7 @@ Map* Map::loadTiledFile(const std::string& filename)
   TRACE("Loading map %s", filename.c_str());
 
   TiledLoader loader;
-  if (loader.loadFromFile(filename))
+  if (loader.loadFromFile(config::res_path(filename)))
   {
     map = new Map;
     map->m_name = filename;
@@ -284,9 +285,9 @@ Map* Map::loadTiledFile(const std::string& filename)
       const TiledLoader::Tileset* tileset = loader.getTileset(*it);
       if (tileset->startTileIndex == 1)
       {
-        TRACE("Map: loading tileset %s", ("Resources/Maps/" + tileset->tilesetSource).c_str());
+        TRACE("Map: loading tileset %s", config::res_path("Maps/" + tileset->tilesetSource).c_str());
 
-        map->m_tileset = cache::loadTexture("Resources/Maps/" + tileset->tilesetSource);
+        map->m_tileset = cache::loadTexture("Maps/" + tileset->tilesetSource);
 
         if (!map->m_tileset)
         {
@@ -361,7 +362,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
         if (tileset)
         {
-          std::string spriteSheet = "Resources/Maps/" + tileset->tilesetSource;
+          std::string spriteSheet = "Maps/" + tileset->tilesetSource;
           sf::Texture* texture = cache::loadTexture(spriteSheet);
 
           std::string name = object->name;

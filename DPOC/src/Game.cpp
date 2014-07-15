@@ -296,7 +296,7 @@ void Game::playMusic(const std::string& music)
     m_currentMusicName = music;
 
     m_currentMusic.stop();
-    m_currentMusic.openFromFile("Resources/Music/" + music);
+    m_currentMusic.openFromFile(config::res_path("Music/" + music));
     m_currentMusic.setLoop(true);
     m_currentMusic.setVolume(75);
     m_currentMusic.play();

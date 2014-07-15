@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "Config.h"
 
 #include "Cache.h"
 #include "Sound.h"
@@ -9,10 +10,10 @@ static const std::map<std::string, EffectDef> frames =
   {
     "Effect_Flame",
     {
-      "Resources/Animations/effect_Flame.png",
+      "Animations/effect_Flame.png",
       16,
       {
-        { 0, 6, 0, 0, "Resources/Audio/boom.wav", 1, 0, sf::Color::White },
+        { 0, 6, 0, 0, "Audio/boom.wav", 1, 0, sf::Color::White },
         { 1, 6, 0, 0, "", 1.5, 0, sf::Color::White },
         { 2, 6, 0, 0, "", 2.0, 0, {255, 255, 255, 200 } },
         { 0, 6, 0, 0, "", 2.5, 0, {255, 255, 255, 150 } },
@@ -24,10 +25,10 @@ static const std::map<std::string, EffectDef> frames =
   {
     "Effect_Slash",
     {
-      "Resources/Animations/effect_Slash.png",
+      "Animations/effect_Slash.png",
       24,
       {
-        { 0, 6, 0, 0, "Resources/Audio/Sword1.wav", 1, 0, sf::Color::White },
+        { 0, 6, 0, 0, "Audio/Sword1.wav", 1, 0, sf::Color::White },
         { 1, 4, 0, 0, "", 1, 0, sf::Color::White },
         { 2, 3, 0, 0, "", 1, 0, sf::Color::White },
         { 3, 4, 0, 0, "", 1, 0, sf::Color::White },
@@ -38,10 +39,10 @@ static const std::map<std::string, EffectDef> frames =
   {
     "Effect_Hit",
     {
-      "Resources/Animations/effect_Hit.png",
+      "Animations/effect_Hit.png",
       64,
       {
-        { 0, 6, 0, 0, "Resources/Audio/Blow2.wav", 1, 0, sf::Color::White },
+        { 0, 6, 0, 0, "Audio/Blow2.wav", 1, 0, sf::Color::White },
         { 1, 6, 0, 0, "", 1, 0, sf::Color::White },
         { 2, 6, 0, 0, "", 1, 0, sf::Color::White }
       }

@@ -1,6 +1,7 @@
 #include <map>
 #include <stdexcept>
 
+#include "Config.h"
 #include "logger.h"
 #include "Cache.h"
 
@@ -24,7 +25,7 @@ namespace cache
       Entry<sf::Texture> newEntry;
       newEntry.resource = new sf::Texture;
 
-      if (!newEntry.resource->loadFromFile(textureName))
+      if (!newEntry.resource->loadFromFile(config::res_path(textureName)))
       {
         TRACE("Unable to load texture: %s", textureName.c_str());
         delete newEntry.resource;
@@ -103,7 +104,7 @@ namespace cache
     auto it = soundBuffers.find(sndFile);
     if (it == soundBuffers.end())
     {
-      if (soundBuffers[sndFile].loadFromFile(sndFile))
+      if (soundBuffers[sndFile].loadFromFile(config::res_path(sndFile)))
       {
         return soundBuffers[sndFile];
       }

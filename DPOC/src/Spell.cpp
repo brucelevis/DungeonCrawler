@@ -129,7 +129,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
 
 void load_spells()
 {
-  static const std::string database = "Resources/Spells.xml";
+  static const std::string database = config::res_path( "Spells.xml" );
 
   XMLDocument doc;
   if (doc.LoadFile(database.c_str()) != 0)
@@ -215,7 +215,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
     if (damage == 0 && !soundToPlay.empty())
     {
-      play_sound("Resources/Audio/" + soundToPlay);
+      play_sound("Audio/" + soundToPlay);
     }
   }
 
