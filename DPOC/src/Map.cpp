@@ -229,37 +229,11 @@ Map* Map::loadTiledFile(const std::string& filename)
               loader.getObjectProperty(objectIndex, "talkScript"),
               loader.getObjectProperty(objectIndex, "stepScript"));
 
-          if (texture == map->m_tileset)
-          {
-            TileSprite* tileSprite = new TileSprite(map->m_tileset, tileX, tileY);
-            entity->setSprite(tileSprite);
-          }
-          else
-          {
-            int spriteSheetX, spriteSheetY;
-            Direction startDirection;
-
-            compute_sprite_data(texture,
-                tileX, tileY,
-                spriteTileW, spriteTileH,
-                spriteSheetX, spriteSheetY, startDirection);
-
-            Sprite* entitySprite = new Sprite;
-            entitySprite->create(spriteSheet, spriteSheetX, spriteSheetY, spriteTileW, spriteTileH);
-            entitySprite->setDirection(startDirection);
-            entity->setSprite(entitySprite);
-            entity->setDirection(startDirection);
-
-            std::string fixDir = loader.getObjectProperty(objectIndex, "fixedDirection");
-            if (fixDir == "true")
-            {
-              entity->setFixedDirection(true);
-            }
-          }
-
+          TileSprite* tileSprite = new TileSprite(texture, tileX, tileY);
+          entity->setSprite(tileSprite);
           map->m_entities.push_back(entity);
 
-          cache::releaseTexture(texture);
+          // cache::releaseTexture(texture);
         }
       }
       else

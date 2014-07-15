@@ -168,6 +168,11 @@ TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)
   m_height = config::TILE_H;
 }
 
+TileSprite::~TileSprite()
+{
+  cache::releaseTexture(m_tileset);
+}
+
 void TileSprite::render(sf::RenderTarget& target, float x, float y)
 {
   m_sprite.setPosition(x, y);

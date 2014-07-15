@@ -55,6 +55,7 @@ class TileSprite : public Sprite
 {
 public:
   TileSprite(sf::Texture* tileset, int tileX, int tileY);
+   ~TileSprite();
 
   void render(sf::RenderTarget& target, float x, float y);
 
