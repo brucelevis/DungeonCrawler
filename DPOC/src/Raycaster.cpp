@@ -17,9 +17,19 @@
 
 float zbuffer[320];
 
+namespace
+{
+  const float INTENSITY = 0.75f;
+  const float MULTIPLIER = 2.0f;
+}
+
 sf::Color computeIntensity(const sf::Color& pixel, float objectIntensity, float multiplier, float distance) 
 {
     float intensity = objectIntensity / distance * multiplier;
+
+    sf::Uint8 orig_r = pixel.r;
+    sf::Uint8 orig_g = pixel.g;
+    sf::Uint8 orig_b = pixel.b;
 
     float fr = (float) pixel.r;
     float fg = (float) pixel.g;
@@ -28,6 +38,10 @@ sf::Color computeIntensity(const sf::Color& pixel, float objectIntensity, float 
     fr *= intensity;
     fg *= intensity;
     fb *= intensity;
+
+    if (fr > orig_r) fr = orig_r;
+    if (fg > orig_g) fg = orig_g;
+    if (fb > orig_b) fb = orig_b;
 
     return sf::Color((sf::Uint8) fr, (sf::Uint8) fg, (sf::Uint8) fb);
 }
@@ -99,7 +113,7 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
         {
           sf::Color color = computeIntensity(
               m_tileTextures[tileId].getPixel(info.textureX, textureY),
-              0.5, 1.0, info.wallDist);
+              INTENSITY, MULTIPLIER, info.wallDist);
 
           buffer.setPixel(x, y, color);
 
@@ -189,7 +203,7 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
       {
         sf::Color color = computeIntensity(
           m_tileTextures[floorIndex].getPixel(floorTextureX, floorTextureY),
-          0.5, 1.0, currentDist);
+          0.75, 1.0, currentDist);
         buffer.setPixel(x, y, color);
       }
       else
@@ -209,7 +223,7 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
       {
         sf::Color color = computeIntensity(
           m_tileTextures[ceilIndex].getPixel(floorTextureX, floorTextureY),
-          0.5, 1.0, currentDist);
+          INTENSITY, MULTIPLIER, currentDist);
         buffer.setPixel(x, m_height - y, color);
       }
       else
@@ -295,7 +309,7 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir, bool wireframe)
 
             if (!wireframe && color.a == 255)
             {
-              color = computeIntensity(color, 0.5, 1.0, transformY);
+              color = computeIntensity(color, INTENSITY, MULTIPLIER, transformY);
               buffer.setPixel(x, y, color);
             }
             else if (wireframe && color == sf::Color::White)
