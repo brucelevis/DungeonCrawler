@@ -149,7 +149,7 @@ sf::Image Sprite::getImage(Direction opposingDirection) const
   sf::Image tempImage = m_sprite.getTexture()->copyToImage();
   image.create(m_width, m_height);
   image.copy(tempImage, 0, 0, sf::IntRect(rectLeft, rectTop, m_width, m_height), true);
-  image.createMaskFromColor(sf::Color::Black);
+  image.createMaskFromColor(sf::Color(255, 0, 255));
   return image;
 }
 
@@ -188,6 +188,6 @@ sf::Image TileSprite::getImage(Direction opposingDirection) const
   sf::Image tempImage = m_sprite.getTexture()->copyToImage();
   image.create(m_width, m_height);
   image.copy(tempImage, 0, 0, sf::IntRect(m_tileX * config::TILE_W, m_tileY * config::TILE_H, config::TILE_W, config::TILE_H), true);
-  image.createMaskFromColor(sf::Color::Black);
+  image.createMaskFromColor(sf::Color(255, 0, 255));
   return image;
 }
