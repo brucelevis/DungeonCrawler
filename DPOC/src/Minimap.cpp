@@ -1,5 +1,24 @@
 #include "Map.h"
+#include "Player.h"
+#include "Game.h"
+#include "draw_text.h"
 #include "Minimap.h"
+
+namespace
+{
+  bool _entity_at(const std::vector<Entity*>& entities, int x, int y)
+  {
+    for (auto it = entities.begin(); it != entities.end(); ++it)
+    {
+      if ((int)(*it)->x == x && (int)(*it)->y == y)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
 
 Minimap::Minimap(int x, int y, int w, int h)
  : m_x(x),
@@ -27,26 +46,64 @@ void Minimap::draw(sf::RenderTarget& target) const
   int numberX = m_w / 8;
   int numberY = m_h / 8;
 
+  auto entities = m_currentMap->getEntities();
+
   for (int y = m_centerY - numberY / 2, py = 0; y <= m_centerY + numberY / 2; y++, py++)
   {
     for (int x = m_centerX - numberX / 2, px = 0; x <= m_centerX + numberX / 2; x++, px++)
     {
       Tile* tile = m_currentMap->getTileAt(x, y, "wall");
-      if (tile && tile->tileId > -1)
+
+      if (_entity_at(entities, x, y))
       {
-        sf::RectangleShape dotRect;
-        dotRect.setSize(sf::Vector2f(8, 8));
-        dotRect.setFillColor(sf::Color::Blue);
-        dotRect.setPosition(m_x + px * 8, m_y + py * 8);
-        target.draw(dotRect);
+        draw_text_bmp(target, m_x + px * 8, m_y + py * 8, "?");
       }
-      if (x == m_centerX && y == m_centerY)
+      else
       {
-        sf::RectangleShape dotRect;
-        dotRect.setSize(sf::Vector2f(8, 8));
-        dotRect.setFillColor(sf::Color::Green);
-        dotRect.setPosition(m_x + px * 8, m_y + py * 8);
-        target.draw(dotRect);
+        if (tile && tile->tileId > -1)
+        {
+          sf::RectangleShape dotRect;
+          dotRect.setSize(sf::Vector2f(8, 8));
+          dotRect.setFillColor(sf::Color::Blue);
+          dotRect.setPosition(m_x + px * 8, m_y + py * 8);
+          target.draw(dotRect);
+        }
+        if (x == m_centerX && y == m_centerY)
+        {
+          sf::RectangleShape dotRect;
+          dotRect.setSize(sf::Vector2f(8, 8));
+          dotRect.setFillColor(sf::Color::Green);
+          dotRect.setPosition(m_x + px * 8, m_y + py * 8);
+
+          target.draw(dotRect);
+
+          auto player = Game::instance().getPlayer()->player();
+          switch (player->getDirection())
+          {
+          case DIR_LEFT:
+            dotRect.setSize(sf::Vector2f(4, 1));
+            dotRect.setFillColor(sf::Color::Black);
+            dotRect.setPosition(m_x + px * 8, m_y + py * 8 + 4);
+            break;
+          case DIR_RIGHT:
+            dotRect.setSize(sf::Vector2f(4, 1));
+            dotRect.setFillColor(sf::Color::Black);
+            dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8 + 4);
+            break;
+          case DIR_UP:
+            dotRect.setSize(sf::Vector2f(1, 4));
+            dotRect.setFillColor(sf::Color::Black);
+            dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8);
+            break;
+          case DIR_DOWN:
+            dotRect.setSize(sf::Vector2f(1, 4));
+            dotRect.setFillColor(sf::Color::Black);
+            dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8 + 4);
+            break;
+          }
+
+          target.draw(dotRect);
+        }
       }
     }
   }

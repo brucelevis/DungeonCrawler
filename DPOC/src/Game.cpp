@@ -51,7 +51,7 @@ Game::Game()
 
    m_rotKeyDown(false),
 
-   m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 44, 56, 40)
+   m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 60, 56, 56)
 {
   m_raycasterBuffer.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
   m_texture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
