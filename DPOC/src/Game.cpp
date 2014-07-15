@@ -241,11 +241,15 @@ void Game::draw(sf::RenderTarget& target)
   m_targetTexture.display();
 
   sprite.setTexture(m_targetTexture.getTexture());
-  sprite.setPosition(32, 0);
+  sprite.setPosition(0, 0);
   target.draw(sprite);
 
+  ////////////////////////////////////////////////////////////////////////////
+  // Draw faces for characters under raycaster view.
+  ////////////////////////////////////////////////////////////////////////////
   auto party = m_player->getParty();
-  for (size_t i = 0, j = 0; i < party.size(); i++)
+  int partyPosX =  config::GAME_RES_X / 2 - party.size() * 16;
+  for (size_t i = 0; i < party.size(); i++)
   {
     PlayerCharacter* character = party[i];
     const sf::Texture* faceTexture = character->getTexture();
@@ -254,16 +258,8 @@ void Game::draw(sf::RenderTarget& target)
 
     int xPos, yPos;
 
-    if ((i % 2) == 0)
-    {
-      xPos = 0;
-      yPos = (32 + 8) * j;
-    }
-    else
-    {
-      xPos = 32 + config::RAYCASTER_RES_X;
-      yPos = (32 + 8) * j;
-    }
+    xPos = partyPosX + i * 32;
+    yPos = config::RAYCASTER_RES_Y;
 
     faceSprite.setPosition(xPos, yPos);
     target.draw(faceSprite);
@@ -284,11 +280,6 @@ void Game::draw(sf::RenderTarget& target)
 
     target.draw(hpRect);
     target.draw(mpRect);
-
-    if (i > 0 && (i % 2) == 1)
-    {
-      j++;
-    }
   }
 
   m_minimap.draw(target);

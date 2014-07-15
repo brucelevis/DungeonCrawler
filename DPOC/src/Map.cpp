@@ -374,9 +374,9 @@ const Warp* Map::getWarpAt(int x, int y) const
 
 bool Map::blocking(int x, int y)
 {
-  Tile* tile = getTileAt(x, y, "floor");
+  Tile* tile = getTileAt(x, y, "wall");
 
-  if (tile && tile->solid)
+  if (tile && tile->tileId > 0)
     return true;
 
   return false;

@@ -15,13 +15,13 @@ namespace config
 
   static const int FPS = 60;
 
-  static const int GAME_RES_X = 384;
-  static const int GAME_RES_Y = 248;
+  static const int GAME_RES_X = 256;
+  static const int GAME_RES_Y = 240;
 
-  static const int RAYCASTER_RES_X = 320;
-  static const int RAYCASTER_RES_Y = 200;
+  static const int RAYCASTER_RES_X = 256;
+  static const int RAYCASTER_RES_Y = 160;
 
-  static std::string RESOURCE_DIR = "Resources/";
+  static std::string RESOURCE_DIR = "Resources_2/";
 
   void load_config();
 
