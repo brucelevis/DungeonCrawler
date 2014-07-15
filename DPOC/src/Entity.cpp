@@ -12,7 +12,6 @@
 #include "Message.h"
 #include "logger.h"
 #include "Config.h"
-#include "EntityDef.h"
 #include "Entity.h"
 
 static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
@@ -57,40 +56,6 @@ Entity::Entity(const std::string& name)
    m_visible(true),
    m_fixedDirection(false)
 {
-//  auto it = std::find_if(ENTITY_DEF.begin(), ENTITY_DEF.end(),
-//      [=](const EntityDef& entity)
-//      {
-//        return entity.name == name;
-//      });
-//
-//  if (it != ENTITY_DEF.end())
-//  {
-//    m_name = name;
-//    if (!it->spriteSheet.empty())
-//    {
-//      m_sprite = new Sprite;
-//      m_sprite->create(it->spriteSheet, it->spriteSheetX, it->spriteSheetY);
-//    }
-//
-//    if (!it->scriptFile.empty())
-//    {
-//      m_script.loadFromFile(it->scriptFile);
-//    }
-//
-//    if (!it->stepScriptFile.empty())
-//    {
-//      if (m_stepScript.loadFromFile(it->stepScriptFile))
-//      {
-//        m_stepScript.execute();
-//      }
-//    }
-//
-//    m_speed = it->walkSpeed;
-//  }
-//  else
-//  {
-//    TRACE("Unable to create entity %s! Not found in def array.", name.c_str());
-//  }
 }
 
 Entity::~Entity()
@@ -499,7 +464,7 @@ void Entity::executeScriptLine(const Script::ScriptData& data, Script& executing
   else if (data.opcode == Script::OP_PLAY_SOUND)
   {
     std::string sound = data.data.playSoundData.sound;
-    play_sound("Resources/Audio/" + sound);
+    play_sound("Audio/" + sound);
   }
   else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
   {

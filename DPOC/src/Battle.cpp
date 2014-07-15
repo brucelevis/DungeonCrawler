@@ -142,7 +142,7 @@ void Battle::start(bool canEscape)
 
   m_battleOngoing = true;
 
-  m_battleMusic.openFromFile(config::get("MUSIC_BATTLE"));
+  m_battleMusic.openFromFile(config::res_path(config::get("MUSIC_BATTLE")));
   m_battleMusic.setVolume(50);
   m_battleMusic.setLoop(true);
   m_battleMusic.play();
@@ -662,7 +662,7 @@ void Battle::doVictory()
     clear_message();
     m_battleMenu.setVisible(false);
     m_battleMusic.stop();
-    m_battleMusic.openFromFile(config::get("MUSIC_VICTORY"));
+    m_battleMusic.openFromFile(config::res_path(config::get("MUSIC_VICTORY")));
     m_battleMusic.setLoop(false);
     m_battleMusic.play();
 
@@ -763,7 +763,7 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
           actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
 
       if (!status->sound.empty())
-        play_sound("Resources/Audio/" + status->sound);
+        play_sound("Audio/" + status->sound);
 
       didProcess = true;
       tookDamage = true;
@@ -827,7 +827,7 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
         if (message.currentMessage().find("level") != std::string::npos)
         {
           m_battleMusic.stop();
-          m_battleMusic.openFromFile(config::get("MUSIC_LEVELUP"));
+          m_battleMusic.openFromFile(config::res_path(config::get("MUSIC_LEVELUP")));
           m_battleMusic.setLoop(false);
           m_battleMusic.play();
         }
@@ -1334,6 +1334,6 @@ void Battle::setBattleBackground(const std::string& file)
 
   if (file.size() > 0)
   {
-    m_battleBackground = cache::loadTexture("Resources/Backgrounds/" + file);
+    m_battleBackground = cache::loadTexture("Backgrounds/" + file);
   }
 }

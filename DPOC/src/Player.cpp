@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 
+#include "Config.h"
 #include "SaveLoad.h"
 #include "Utility.h"
 
@@ -230,7 +231,7 @@ Player* Player::create()
   int startY = 0;
 
   XMLDocument doc;
-  doc.LoadFile("Resources/Player.xml");
+  doc.LoadFile(config::res_path("Player.xml").c_str());
 
   const XMLElement* root = doc.FirstChildElement("player");
   const XMLElement* start = root->FirstChildElement("start");
@@ -240,7 +241,7 @@ Player* Player::create()
     startY = fromString<int>(start->FindAttribute("y")->Value());
     std::string startMap = start->FindAttribute("map")->Value();
 
-    Game::instance().loadNewMap("Resources/Maps/" + startMap);
+    Game::instance().loadNewMap("Maps/" + startMap);
   }
 
   const XMLElement* party = root->FirstChildElement("party");

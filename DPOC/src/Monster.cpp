@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Config.h"
 #include "Utility.h"
 #include "logger.h"
 #include "Monster.h"
@@ -178,7 +179,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
 
 void load_monsters()
 {
-  static const std::string database = "Resources/Monsters.xml";
+  static const std::string database = config::res_path( "Monsters.xml");
 
   XMLDocument doc;
   if (doc.LoadFile(database.c_str()) != 0)

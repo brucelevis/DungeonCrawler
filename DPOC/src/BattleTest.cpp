@@ -4,6 +4,7 @@
 
 #include "Utility.h"
 #include "logger.h"
+#include "Config.h"
 
 #include "Game.h"
 #include "Player.h"
@@ -20,7 +21,7 @@ using namespace tinyxml2;
 void start_test_battle()
 {
   XMLDocument doc;
-  doc.LoadFile("Resources/BattleTest.xml");
+  doc.LoadFile(config::res_path("BattleTest.xml").c_str());
 
   TRACE("*** STARTING TEST BATTLE *** ");
 

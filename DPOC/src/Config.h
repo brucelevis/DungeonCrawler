@@ -21,10 +21,17 @@ namespace config
   static const int RAYCASTER_RES_X = 320;
   static const int RAYCASTER_RES_Y = 200;
 
+  static std::string RESOURCE_DIR = "Resources/";
+
   void load_config();
 
   std::string get(const std::string& key);
   void set(const std::string& key, const std::string& value);
+
+  inline std::string res_path(const std::string& path)
+  {
+    return RESOURCE_DIR + path;
+  }
 }
 
 #endif

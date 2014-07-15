@@ -2,7 +2,7 @@
 #include "Picture.h"
 
 Picture::Picture(const std::string& name)
- : m_texture(cache::loadTexture("Resources/Pictures/" + name)),
+ : m_texture(cache::loadTexture("Pictures/" + name)),
    m_x(0),
    m_y(0)
 {

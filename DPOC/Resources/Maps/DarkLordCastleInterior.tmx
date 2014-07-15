@@ -1225,9 +1225,9 @@
           message Greetings hero! I am the Dark Lord. Do you wish to join my army of the damned?
           choice Yes,No
           message Of course, I was just kidding! Now you will die.
-          set_config MUSIC_BATTLE Resources/Music/FinalBoss.ogg
+          set_config MUSIC_BATTLE Music/FinalBoss.ogg
           combat_no_escape Dark Lord
-          set_config MUSIC_BATTLE Resources/Music/Battle.ogg
+          set_config MUSIC_BATTLE Music/Battle.ogg
           message So this is how it ends...
           set_local dead true
           set_global wonGame true

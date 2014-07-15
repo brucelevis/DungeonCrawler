@@ -45,14 +45,14 @@ void save_game(const std::string& saveFile)
 
   TRACE("XmlSave:\n%s", xml.str().c_str());
 
-  std::ofstream ofile("Resources/Saves/" + saveFile);
+  std::ofstream ofile(config::res_path("Saves/" + saveFile));
   ofile << xml.str();
   ofile.close();
 }
 
 void load_game(const std::string& saveFile)
 {
-  std::string fullPath = "Resources/Saves/" + saveFile;
+  std::string fullPath = config::res_path("Saves/" + saveFile);
 
   TRACE("Loading game: %s", fullPath.c_str());
 
@@ -90,7 +90,7 @@ void load_game(const std::string& saveFile)
 
 CharacterData get_party_leader_from_save(const std::string& saveFile)
 {
-  std::string fullPath = "Resources/Saves/" + saveFile;
+  std::string fullPath = config::res_path("Saves/" + saveFile);
 
   XMLDocument doc;
   if (doc.LoadFile(fullPath.c_str()) != 0)

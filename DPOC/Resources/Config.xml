@@ -1,28 +1,28 @@
 <config>
-  <MUSIC_BATTLE>Resources/Music/Battle.ogg</MUSIC_BATTLE>
-  <MUSIC_VICTORY>Resources/Music/Victory.ogg</MUSIC_VICTORY>
-  <MUSIC_LEVELUP>Resources/Music/LevelUp.ogg</MUSIC_LEVELUP>
-  <MUSIC_TITLE>Resources/Music/Intro.ogg</MUSIC_TITLE>
+  <MUSIC_BATTLE>Music/Battle.ogg</MUSIC_BATTLE>
+  <MUSIC_VICTORY>Music/Victory.ogg</MUSIC_VICTORY>
+  <MUSIC_LEVELUP>Music/LevelUp.ogg</MUSIC_LEVELUP>
+  <MUSIC_TITLE>Music/Intro.ogg</MUSIC_TITLE>
 
-  <SOUND_CANCEL>Resources/Audio/Cancel1.wav</SOUND_CANCEL>
-  <SOUND_USE_ITEM>Resources/Audio/Item2.wav</SOUND_USE_ITEM>
-  <SOUND_SUCCESS>Resources/Audio/Success2.wav</SOUND_SUCCESS>
-  <SOUND_EQUIP>Resources/Audio/Equip1.ogg</SOUND_EQUIP>
-  <SOUND_ATTACK>Resources/Audio/attack.wav</SOUND_ATTACK>
-  <SOUND_HIT>Resources/Audio/hit.wav</SOUND_HIT>
-  <SOUND_ENEMY_HIT>Resources/Audio/enemy-hit.wav</SOUND_ENEMY_HIT>
-  <SOUND_CRITICAL>Resources/Audio/Critical.wav</SOUND_CRITICAL>
-  <SOUND_SPELL>Resources/Audio/spell.wav</SOUND_SPELL>
-  <SOUND_ESCAPE>Resources/Audio/Run.ogg</SOUND_ESCAPE>
-  <SOUND_MISS>Resources/Audio/Evasion1.wav</SOUND_MISS>
-  <SOUND_HEAL>Resources/Audio/blipp.wav</SOUND_HEAL>
-  <SOUND_POISON>Resources/Audio/Poison.wav</SOUND_POISON>
-  <SOUND_BUFF>Resources/Audio/Up.wav</SOUND_BUFF>
-  <SOUND_DEBUFF>Resources/Audio/Down.wav</SOUND_DEBUFF>
-  <SOUND_RECOVERY>Resources/Audio/Recovery3.wav</SOUND_RECOVERY>
-  <SOUND_MOVEMENT>Resources/Audio/Movement.wav</SOUND_MOVEMENT>
-  <SOUND_MESSAGE_INCREMENT>Resources/Audio/Test.wav</SOUND_MESSAGE_INCREMENT>
-  <SOUND_SHOP>Resources/Audio/Shop.ogg</SOUND_SHOP>
+  <SOUND_CANCEL>Audio/Cancel1.wav</SOUND_CANCEL>
+  <SOUND_USE_ITEM>Audio/Item2.wav</SOUND_USE_ITEM>
+  <SOUND_SUCCESS>Audio/Success2.wav</SOUND_SUCCESS>
+  <SOUND_EQUIP>Audio/Equip1.ogg</SOUND_EQUIP>
+  <SOUND_ATTACK>Audio/attack.wav</SOUND_ATTACK>
+  <SOUND_HIT>Audio/hit.wav</SOUND_HIT>
+  <SOUND_ENEMY_HIT>Audio/enemy-hit.wav</SOUND_ENEMY_HIT>
+  <SOUND_CRITICAL>Audio/Critical.wav</SOUND_CRITICAL>
+  <SOUND_SPELL>Audio/spell.wav</SOUND_SPELL>
+  <SOUND_ESCAPE>Audio/Run.ogg</SOUND_ESCAPE>
+  <SOUND_MISS>Audio/Evasion1.wav</SOUND_MISS>
+  <SOUND_HEAL>Audio/blipp.wav</SOUND_HEAL>
+  <SOUND_POISON>Audio/Poison.wav</SOUND_POISON>
+  <SOUND_BUFF>Audio/Up.wav</SOUND_BUFF>
+  <SOUND_DEBUFF>Audio/Down.wav</SOUND_DEBUFF>
+  <SOUND_RECOVERY>Audio/Recovery3.wav</SOUND_RECOVERY>
+  <SOUND_MOVEMENT>Audio/Movement.wav</SOUND_MOVEMENT>
+  <SOUND_MESSAGE_INCREMENT>Audio/Test.wav</SOUND_MESSAGE_INCREMENT>
+  <SOUND_SHOP>Audio/Shop.ogg</SOUND_SHOP>
 
   <DEBUG_MODE>true</DEBUG_MODE>
   <DEBUG_SHOP>Copper Sword,Herb,Magic Staff</DEBUG_SHOP>

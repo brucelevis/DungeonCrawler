@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Config.h"
 #include "logger.h"
 #include "Utility.h"
 
@@ -123,7 +124,7 @@ PlayerClass parse_class_element(const XMLElement* classElement)
 
 void load_classes()
 {
-  static const std::string database = "Resources/Classes.xml";
+  static const std::string database = config::res_path("Classes.xml");
 
   XMLDocument doc;
   if (doc.LoadFile(database.c_str()) != 0)

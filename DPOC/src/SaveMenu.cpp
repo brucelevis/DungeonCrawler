@@ -37,7 +37,7 @@ void SaveMenu::handleConfirm()
   }
   else
   {
-    if (file_exists("Resources/Saves/" + m_filenames[getCurrentChoiceIndex()]))
+    if (file_exists(config::res_path("Saves/" + m_filenames[getCurrentChoiceIndex()])))
     {
       load_game(m_filenames[getCurrentChoiceIndex()]);
 
@@ -52,7 +52,7 @@ void SaveMenu::handleConfirm()
 
 void SaveMenu::refresh()
 {
-  std::string path = "Resources/Saves/";
+  std::string path = config::res_path("Saves/");
 
   m_filenames.clear();
   clear();

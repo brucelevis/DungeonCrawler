@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Config.h"
 #include "logger.h"
 #include "Utility.h"
 #include "StatusEffect.h"
@@ -117,7 +118,7 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
 
 void load_status_effects()
 {
-  static const std::string database = "Resources/StatusEffects.xml";
+  static const std::string database = config::res_path("StatusEffects.xml");
 
   XMLDocument doc;
   if (doc.LoadFile(database.c_str()) != 0)

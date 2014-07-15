@@ -1,5 +1,6 @@
 #include <cstdarg>
 
+#include "Config.h"
 #include "logger.h"
 #include "draw_text.h"
 #include "Cache.h"
@@ -43,16 +44,16 @@ void init_text_drawing()
 {
   TRACE("Initialize text drawing.");
 
-  if (!font.loadFromFile("Resources/UI/arial.ttf"))
+  if (!font.loadFromFile(config::res_path("UI/arial.ttf")))
   {
-    TRACE("Unable to load font Resources/UI/arial.ttf");
+    TRACE("Unable to load font %s/UI/arial.ttf", config::RESOURCE_DIR.c_str());
   }
 
   text.setFont(font);
   text.setColor(sf::Color::White);
   text.setCharacterSize(14);
 
-  bmpFont = cache::loadTexture("Resources/UI/font_8x8.png");
+  bmpFont = cache::loadTexture("UI/font_8x8.png");
 }
 
 void draw_text(sf::RenderTarget& target, int x, int y, const char* fmt, ...)

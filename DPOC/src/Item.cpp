@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Config.h"
 #include "Attack.h"
 #include "logger.h"
 #include "Character.h"
@@ -128,7 +129,7 @@ static Item parse_item_element(const XMLElement* itemElement)
 
 void load_items()
 {
-  static const std::string itemDatabase = "Resources/Items.xml";
+  static const std::string itemDatabase = config::res_path("Items.xml");
 
   XMLDocument doc;
 

@@ -11,9 +11,9 @@
       <attr name="speed"    base="10"  max="120" />
       <attr name="luck"     base="8"  max="100" />
     </attributes>
-    <texture name="Resources/Spritesheets/Hero.png"
+    <texture name="Spritesheets/Hero.png"
       x="0" y="0" w="16" h="16" />
-    <face name="Resources/Faces/Face.png"
+    <face name="Faces/Face.png"
       x="0" y="0" w="32" h="32" />
     <spellsPerLevel>
       <level num="1">
@@ -61,9 +61,9 @@
       <attr name="speed"    base="15" max="165" />
       <attr name="luck"     base="4"  max="75" />
     </attributes>
-    <texture name="Resources/Spritesheets/Hero2.png"
+    <texture name="Spritesheets/Hero2.png"
       x="1" y="0" w="16" h="16" />
-    <face name="Resources/Faces/Face.png"
+    <face name="Faces/Face.png"
       x="0" y="0" w="32" h="32" />
     <spellsPerLevel>
       <level num="1">
@@ -129,9 +129,9 @@
       <attr name="speed"    base="13"  max="145" />
       <attr name="luck"     base="6"  max="80" />
     </attributes>
-    <texture name="Resources/Spritesheets/Hero3.png"
+    <texture name="Spritesheets/Hero3.png"
       x="0" y="1" w="16" h="16" />
-    <face name="Resources/Faces/Face.png"
+    <face name="Faces/Face.png"
       x="0" y="0" w="32" h="32" />
     <spellsPerLevel>
       <level num="1">
@@ -192,9 +192,9 @@
       <attr name="speed"    base="10"  max="115" />
       <attr name="luck"     base="8"  max="105" />
     </attributes>
-    <texture name="Resources/Spritesheets/Hero2.png"
+    <texture name="Spritesheets/Hero2.png"
       x="4" y="1" w="16" h="16" />
-    <face name="Resources/Faces/Face.png"
+    <face name="Faces/Face.png"
       x="0" y="0" w="32" h="32" />
     <equipment>
       <item>Rusty Knife</item>

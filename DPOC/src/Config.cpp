@@ -17,7 +17,7 @@ namespace config
 
   void load_config()
   {
-    static const std::string conf = "Resources/Config.xml";
+    static const std::string conf = RESOURCE_DIR + "Config.xml";
 
     XMLDocument doc;
     doc.LoadFile(conf.c_str());
