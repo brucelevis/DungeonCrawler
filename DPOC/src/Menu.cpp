@@ -68,7 +68,7 @@ static bool isOKTarget(Character* target, Target targetType)
 }
 
 Menu::Menu()
- : m_arrowTexture(cache::loadTexture("Resources/Arrow.png")),
+ : m_arrowTexture(cache::loadTexture("Resources/UI/Arrow.png")),
    m_visible(false),
    m_currentMenuChoice(0),
    m_maxVisible(-1),
@@ -80,7 +80,7 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-  cache::releaseTexture("Resources/Arrow.png");
+  cache::releaseTexture("Resources/UI/Arrow.png");
 }
 
 void Menu::moveArrow(Direction dir)

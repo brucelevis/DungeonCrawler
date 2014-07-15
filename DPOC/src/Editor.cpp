@@ -28,11 +28,11 @@ Editor::Editor()
 {
   m_window.create(sf::VideoMode(640, 480), "DPOC Editor");
 
-  m_tileset = cache::loadTexture("Resources/DqTileset.png");
+  m_tileset = cache::loadTexture("Resources/Tilesets/DqTileset.png");
 
   if (!m_tileset)
   {
-    TRACE("Unable to load tileset Resources/DqTileset.png");
+    TRACE("Unable to load tileset Resources/Tilesets/DqTileset.png");
   }
   else
   {
@@ -61,7 +61,7 @@ Editor::Editor()
 Editor::~Editor()
 {
   m_window.close();
-  cache::releaseTexture("Resources/DqTileset.png");
+  cache::releaseTexture("Resources/Tilesets/DqTileset.png");
 
   clear();
 

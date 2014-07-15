@@ -1,0 +1,15 @@
+# Testscript
+if local[talked] == const[false]
+  message Hello this is the message from the testscript.
+  message Here is another line of the message.
+  set_local talked true
+else
+  message You talked to me once.
+  
+  
+  
+  if local[talked2] == const[false]
+    message AAJAAJIAJ
+    set_local talked2 true
+  endif
+endif

@@ -6,13 +6,13 @@
   <property name="zone:1" value="Vapour|Bleary,Bleary|Mangler,Mangler,Mangler|Bleary,Mangler|Vapour,Mangler|Bleary,Bleary,Mangler|Vapour,Bleary,Mangler"/>
  </properties>
  <tileset firstgid="1" name="DqTileset" tilewidth="16" tileheight="16">
-  <image source="../DqTileset.png" width="96" height="320"/>
+  <image source="../Tilesets/DqTileset.png" width="96" height="320"/>
  </tileset>
  <tileset firstgid="121" name="Hero2" tilewidth="16" tileheight="16">
-  <image source="../Hero2.png" width="160" height="128"/>
+  <image source="../Spritesheets/Hero2.png" width="160" height="128"/>
  </tileset>
  <tileset firstgid="201" name="Hero3" tilewidth="16" tileheight="16">
-  <image source="../Hero3.png" width="32" height="128"/>
+  <image source="../Spritesheets/Hero3.png" width="32" height="128"/>
  </tileset>
  <layer name="blocking" width="30" height="30">
   <data encoding="csv">

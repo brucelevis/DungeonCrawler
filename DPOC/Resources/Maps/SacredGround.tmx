@@ -4,10 +4,10 @@
   <property name="music" value="Village.ogg"/>
  </properties>
  <tileset firstgid="1" name="DqTileset" tilewidth="16" tileheight="16">
-  <image source="../DqTileset.png" width="96" height="320"/>
+  <image source="../Tilesets/DqTileset.png" width="96" height="320"/>
  </tileset>
  <tileset firstgid="121" name="Hero2" tilewidth="16" tileheight="16">
-  <image source="../Hero2.png" width="160" height="128"/>
+  <image source="../Spritesheets/Hero2.png" width="160" height="128"/>
  </tileset>
  <layer name="blocking" width="16" height="15">
   <data encoding="csv">

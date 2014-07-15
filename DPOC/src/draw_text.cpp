@@ -43,16 +43,16 @@ void init_text_drawing()
 {
   TRACE("Initialize text drawing.");
 
-  if (!font.loadFromFile("Resources/arial.ttf"))
+  if (!font.loadFromFile("Resources/UI/arial.ttf"))
   {
-    TRACE("Unable to load font Resources/arial.ttf");
+    TRACE("Unable to load font Resources/UI/arial.ttf");
   }
 
   text.setFont(font);
   text.setColor(sf::Color::White);
   text.setCharacterSize(14);
 
-  bmpFont = cache::loadTexture("Resources/font_8x8.png");
+  bmpFont = cache::loadTexture("Resources/UI/font_8x8.png");
 }
 
 void draw_text(sf::RenderTarget& target, int x, int y, const char* fmt, ...)
