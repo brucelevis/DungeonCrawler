@@ -1,0 +1,3 @@
+# Step script.
+walk DIR_RANDOM
+wait 10

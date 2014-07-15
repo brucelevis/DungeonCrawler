@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="DqTileset" tilewidth="16" tileheight="16">
-  <image source="../DqTileset.png" width="96" height="320"/>
+  <image source="../Tilesets/DqTileset.png" width="96" height="320"/>
  </tileset>
  <tileset firstgid="121" name="Hero2" tilewidth="16" tileheight="16">
-  <image source="../Hero2.png" width="160" height="128"/>
+  <image source="../Spritesheets/Hero2.png" width="160" height="128"/>
  </tileset>
  <layer name="blocking" width="20" height="15">
   <data encoding="csv">

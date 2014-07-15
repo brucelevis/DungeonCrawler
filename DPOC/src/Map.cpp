@@ -56,12 +56,9 @@ static void compute_sprite_data(sf::Texture* texture,
 Map::Map()
  : m_width(0),
    m_height(0),
-   m_encounterRate(0)
+   m_encounterRate(0),
+   m_tileset(0)
 {
-//  for (int i = 0; i < config::MAX_LAYERS; i++)
-//  {
-//    m_tiles[i] = 0;
-//  }
 }
 
 Map::~Map()
