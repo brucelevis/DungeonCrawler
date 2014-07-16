@@ -597,7 +597,7 @@ void Battle::actionEffect()
 
       if (damage > 0)
       {
-        battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
+        //battle_message("%s takes %d damage!", currentTarget->getName().c_str(), damage);
 
         if (criticalHit)
         {
@@ -618,13 +618,13 @@ void Battle::actionEffect()
       }
       else if (damage == 0 && actionName == "Attack")
       {
-        battle_message("Miss! %s takes no damage!", currentTarget->getName().c_str(), damage);
+        //battle_message("Miss! %s takes no damage!", currentTarget->getName().c_str(), damage);
 
         play_sound(config::get("SOUND_MISS"));
       }
       else if (damage < 0)
       {
-        battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
+        //battle_message("%s is healed %d HP!", currentTarget->getName().c_str(), -damage);
 
         play_sound(config::get("SOUND_HEAL"));
       }
@@ -759,8 +759,10 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
 
       actor->takeDamage(status->damageStat, damage);
 
-      battle_message("%s takes %d %s damage from %s!",
-          actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
+      actor->flash().addDamageText(toString(damage) + " [" + status->damageStat + "]", sf::Color::Red);
+
+//      battle_message("%s takes %d %s damage from %s!",
+//          actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
 
       if (!status->sound.empty())
         play_sound("Audio/" + status->sound);
@@ -1070,8 +1072,8 @@ bool Battle::effectInProgress() const
       return true;
   }
 
-  if (sound_is_playing())
-    return true;
+//  if (sound_is_playing())
+//    return true;
 
   if (m_activeEffects.size() > 0)
     return true;

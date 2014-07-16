@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include "Config.h"
+#include "draw_text.h"
 #include "logger.h"
 #include "Cache.h"
 #include "Utility.h"
@@ -74,6 +76,21 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
 
     m_flash.activeEffect()->setOrigin(posX, posY);
     m_flash.activeEffect()->render(target);
+  }
+
+  auto damageText = m_flash.damageText();
+  for (auto it = damageText.begin(); it != damageText.end(); ++it)
+  {
+    int xPos = x + spriteWidth() / 2 - (8 * it->text.size()) / 2;
+    int yPos = y - it->life;
+
+    while (xPos < 4)
+      xPos++;
+
+    while ((xPos + it->text.size() * 8) > (config::GAME_RES_X - 4))
+      xPos--;
+
+    draw_text_bmp_ex(target, xPos, yPos, it->color, "%s", it->text.c_str());
   }
 }
 
