@@ -227,7 +227,14 @@ void Battle::endBattle()
     }
   }
 
-  SceneManager::instance().fadeOut(32);
+  if (m_state != STATE_DEFEAT)
+  {
+    SceneManager::instance().fadeOut(32);
+  }
+  else
+  {
+    close();
+  }
 }
 
 void Battle::executeActions()
