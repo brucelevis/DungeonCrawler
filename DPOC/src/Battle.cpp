@@ -1342,7 +1342,7 @@ void Battle::postFade(FadeType fadeType)
 
     SceneManager::instance().fadeIn(128);
   }
-  else if (fadeType == FADE_OUT && m_state == STATE_VICTORY_POST)
+  else if (fadeType == FADE_OUT && (m_state == STATE_VICTORY_POST || m_state == STATE_ESCAPE))
   {
     close();
 
