@@ -74,6 +74,8 @@ private:
   bool m_playerMoved;
 
   std::vector<Entity*> m_entitiesToDraw;
+
+  bool m_battleInProgress;
 };
 
 #endif

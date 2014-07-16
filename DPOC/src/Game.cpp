@@ -36,7 +36,8 @@ Game::Game()
    m_player(0),
    m_choiceMenu(0),
    m_transferInProgress(false),
-   m_playerMoved(false)
+   m_playerMoved(false),
+   m_battleInProgress(false)
 {
   // Clear all persistents when a new game is created.
   Persistent<int>::instance().clear();
@@ -361,6 +362,8 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape)
   battle->setBattleBackground(battleBackground);
   battle->start(canEscape);
 
+  m_battleInProgress = true;
+
   SceneManager::instance().addScene(battle);
 }
 
@@ -369,6 +372,9 @@ void Game::postBattle()
   Message::instance().setIsQuiet(false);
 
   m_currentMusic.play();
+  m_battleInProgress = false;
+
+  SceneManager::instance().fadeIn(32);
 }
 
 void Game::preFade(FadeType fadeType)

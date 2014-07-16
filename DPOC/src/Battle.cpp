@@ -227,9 +227,7 @@ void Battle::endBattle()
     }
   }
 
-  close();
-
-  Game::instance().postBattle();
+  SceneManager::instance().fadeOut(32);
 }
 
 void Battle::executeActions()
@@ -1343,6 +1341,12 @@ void Battle::postFade(FadeType fadeType)
     Game::instance().close();
 
     SceneManager::instance().fadeIn(128);
+  }
+  else if (fadeType == FADE_OUT && m_state == STATE_VICTORY_POST)
+  {
+    close();
+
+    Game::instance().postBattle();
   }
 }
 
