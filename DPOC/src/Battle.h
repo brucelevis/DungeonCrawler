@@ -19,6 +19,7 @@ class Battle : public Scene
 {
   enum State
   {
+    STATE_BATTLE_BEGINS,
     STATE_SELECT_ACTIONS,
     STATE_EXECUTE_ACTIONS,
     STATE_SHOW_ACTION,
@@ -114,6 +115,8 @@ private:
   bool m_canEscape;
 
   sf::Texture* m_battleBackground;
+
+  float m_battleBeginFade;
 };
 
 #endif

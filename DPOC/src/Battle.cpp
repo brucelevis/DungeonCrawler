@@ -116,13 +116,14 @@ static void check_death(Character* actor)
 
 Battle::Battle(const std::vector<Character*>& monsters)
  : m_battleOngoing(false),
-   m_state(STATE_SELECT_ACTIONS),
+   m_state(STATE_BATTLE_BEGINS),
    m_battleMenu(this, monsters),
    m_monsters(monsters),
    m_currentActor(0),
    m_turnDelay(0),
    m_canEscape(true),
-   m_battleBackground(0)
+   m_battleBackground(0),
+   m_battleBeginFade(1.0f)
 {
 }
 
@@ -157,6 +158,15 @@ void Battle::update()
 
   updateEffects();
 
+  if (m_state == STATE_BATTLE_BEGINS)
+  {
+    m_battleBeginFade -= 0.03f;
+
+    if (m_battleBeginFade <= 0)
+    {
+      m_state = STATE_SELECT_ACTIONS;
+    }
+  }
   if (m_state == STATE_EXECUTE_ACTIONS)
   {
     executeActions();
@@ -217,9 +227,7 @@ void Battle::endBattle()
     }
   }
 
-  close();
-
-  Game::instance().postBattle();
+  SceneManager::instance().fadeOut(32);
 }
 
 void Battle::executeActions()
@@ -860,7 +868,7 @@ void Battle::draw(sf::RenderTarget& target)
 {
   int battleMenuX = 0;
 
-  if (m_state != STATE_SELECT_ACTIONS)
+  if (m_state != STATE_SELECT_ACTIONS && m_state != STATE_BATTLE_BEGINS)
   {
     battleMenuX = -40;
   }
@@ -873,7 +881,7 @@ void Battle::draw(sf::RenderTarget& target)
   }
 
   m_battleMenu.draw(target, battleMenuX, 152);
-  if (m_state != STATE_SELECT_ACTIONS && m_battleMenu.isVisible())
+  if ((m_state != STATE_SELECT_ACTIONS && m_state != STATE_BATTLE_BEGINS) && m_battleMenu.isVisible())
   {
     for (size_t i = 0; i < get_player()->getParty().size(); i++)
     {
@@ -913,6 +921,16 @@ void Battle::draw(sf::RenderTarget& target)
   for (auto it = m_activeEffects.begin(); it != m_activeEffects.end(); ++it)
   {
     (*it)->render(target);
+  }
+
+  if (m_state == STATE_BATTLE_BEGINS)
+  {
+    sf::RectangleShape fade;
+    sf::Color fillColor = sf::Color::White;
+    fillColor.a = (float)255 * m_battleBeginFade;
+    fade.setFillColor(fillColor);
+    fade.setSize(sf::Vector2f(config::GAME_RES_X, config::GAME_RES_Y));
+    target.draw(fade);
   }
 }
 
@@ -1323,6 +1341,12 @@ void Battle::postFade(FadeType fadeType)
     Game::instance().close();
 
     SceneManager::instance().fadeIn(128);
+  }
+  else if (fadeType == FADE_OUT && (m_state == STATE_VICTORY_POST || m_state == STATE_ESCAPE))
+  {
+    close();
+
+    Game::instance().postBattle();
   }
 }
 

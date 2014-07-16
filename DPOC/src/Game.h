@@ -98,6 +98,7 @@ private:
   bool m_rotKeyDown;
 
   Minimap m_minimap;
+  bool m_battleInProgress;
 };
 
 #endif

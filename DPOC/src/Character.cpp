@@ -90,6 +90,7 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
     while ((xPos + it->text.size() * 8) > (config::GAME_RES_X - 4))
       xPos--;
 
+    draw_text_bmp_ex(target, xPos+1, yPos+1, sf::Color::Black, "%s", it->text.c_str());
     draw_text_bmp_ex(target, xPos, yPos, it->color, "%s", it->text.c_str());
   }
 }
