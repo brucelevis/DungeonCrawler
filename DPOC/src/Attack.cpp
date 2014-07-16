@@ -56,6 +56,8 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
 
   target->takeDamage("hp", damage);
 
+  target->flash().addDamageText(toString(damage), sf::Color::Red);
+
   return damage;
 }
 
@@ -186,6 +188,12 @@ int calculate_magical_damage(Character* attacker, Character* target, const Spell
   if (spell->spellType & SPELL_HEAL)
   {
     damage = -damage;
+
+    target->flash().addDamageText(toString(-(int)damage), sf::Color::Green);
+  }
+  else
+  {
+    target->flash().addDamageText(toString((int)damage), sf::Color::Red);
   }
 
   return damage;
@@ -208,8 +216,10 @@ bool cause_status(Character* target, const std::string& status, bool forceStatus
       target->getAttribute("hp").current = 0;
     }
 
-    battle_message("%s %s",
-        target->getName().c_str(), get_status_effect(status)->verb.c_str());
+//    battle_message("%s %s",
+//        target->getName().c_str(), get_status_effect(status)->verb.c_str());
+
+    target->flash().addDamageText(status, get_status_effect(status)->color);
   }
   else
   {
@@ -225,8 +235,10 @@ void cure_status(Character* target, const std::string& status)
   {
     target->cureStatus(status);
 
-    battle_message("%s %s",
-        target->getName().c_str(), get_status_effect(status)->recoverVerb.c_str());
+//    battle_message("%s %s",
+//        target->getName().c_str(), get_status_effect(status)->recoverVerb.c_str());
+
+    target->flash().addDamageText(status, sf::Color::Green);
   }
   else
   {
@@ -246,13 +258,17 @@ void buff(Character* target, const std::string& attr, int buffPower)
 
   if (delta > 0)
   {
-    battle_message("%s's %s increased by %d",
-        target->getName().c_str(), attr.c_str(), delta);
+//    battle_message("%s's %s increased by %d",
+//        target->getName().c_str(), attr.c_str(), delta);
+
+    target->flash().addDamageText("+" + attr, sf::Color::Green);
   }
   else if (delta < 0)
   {
-    battle_message("%s's %s decreased by %d",
-        target->getName().c_str(), attr.c_str(), delta);
+//    battle_message("%s's %s decreased by %d",
+//        target->getName().c_str(), attr.c_str(), delta);
+
+    target->flash().addDamageText("-" + attr, sf::Color::Green);
   }
   else
   {

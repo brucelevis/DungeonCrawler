@@ -2,8 +2,16 @@
 #define FLASH_H
 
 #include <string>
+#include <vector>
 
 #include "Effect.h"
+
+struct DamageText
+{
+  std::string text;
+  int life;
+  sf::Color color;
+};
 
 class Flash
 {
@@ -26,6 +34,9 @@ public:
 
   void fadeOut(int speed);
   int fadeCounter() const { return m_fadeCounter; }
+
+  void addDamageText(const std::string& text, const sf::Color& color);
+  const std::vector<DamageText>& damageText() const { return m_damageNumbers; }
 private:
   Flash(const Flash&);
   Flash& operator=(const Flash&);
@@ -37,6 +48,8 @@ private:
 
   int m_fadeSpeed;
   int m_fadeCounter;
+
+  std::vector<DamageText> m_damageNumbers;
 };
 
 #endif

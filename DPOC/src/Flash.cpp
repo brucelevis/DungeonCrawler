@@ -35,6 +35,19 @@ void Flash::startEffect(const std::string& effectName)
 
 void Flash::update()
 {
+  for (auto it = m_damageNumbers.begin(); it != m_damageNumbers.end();)
+  {
+    it->life++;
+    if (it->life == 32)
+    {
+      it = m_damageNumbers.erase(it);
+    }
+    else
+    {
+      ++it;
+    }
+  }
+
   if (isFlashing())
   {
     m_ticks++;
@@ -68,4 +81,20 @@ void Flash::fadeOut(int speed)
 {
   m_fadeCounter = 255;
   m_fadeSpeed = speed;
+}
+
+void Flash::addDamageText(const std::string& text, const sf::Color& color)
+{
+  DamageText dmgText { text, 0, color };
+  if (m_damageNumbers.size())
+  {
+    if (m_damageNumbers.back().life == 0)
+    {
+      for (auto it = m_damageNumbers.begin(); it != m_damageNumbers.end(); ++it)
+      {
+        it->life += 8;
+      }
+    }
+  }
+  m_damageNumbers.push_back(dmgText);
 }
