@@ -37,6 +37,7 @@ void Flash::update()
 {
   for (auto it = m_damageNumbers.begin(); it != m_damageNumbers.end();)
   {
+    it->color.a = 255 - (2 * it->life);
     it->life++;
     if (it->life == 32)
     {
