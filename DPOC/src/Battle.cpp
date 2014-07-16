@@ -1072,8 +1072,8 @@ bool Battle::effectInProgress() const
       return true;
   }
 
-  if (sound_is_playing())
-    return true;
+//  if (sound_is_playing())
+//    return true;
 
   if (m_activeEffects.size() > 0)
     return true;
