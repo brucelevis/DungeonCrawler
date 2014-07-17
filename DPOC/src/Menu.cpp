@@ -565,7 +565,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     draw_frame(target, x, y, config::GAME_RES_X, config::GAME_RES_Y);
 
-    draw_frame(target, x, y, 80, 96);
+    draw_frame(target, x, y, 80, getNumberOfChoice() * 16);
     draw_frame(target, x, y + 208, 80, 32);
 
     draw_text_bmp(target, x + 8, y + 13*16+7, "GP");
