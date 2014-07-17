@@ -114,11 +114,25 @@ void PlayerCharacter::setAttributes()
     if (base == 0)
       continue;
 
-    float percent = (float)level / fromString<float>(config::get("MAX_LEVEL"));
-    int attrib = base + percent * (float)max;
+    if (level > 1)
+    {
+      float base_percent = (float)level / fromString<float>(config::get("MAX_LEVEL"));
+      int   base_attrib  = base + base_percent * (float)max;
 
-    // TODO: Take into account attribute enhancing things.
-    m_attributes[it->first].max = attrib;
+      float prev_percent = (float)(level - 1) / fromString<float>(config::get("MAX_LEVEL"));
+      int   prev_attrib   = base + prev_percent * (float)max;
+
+      int delta = base_attrib - prev_attrib;
+
+      m_attributes[it->first].max += delta;
+    }
+    else
+    {
+      float percent = (float)level / fromString<float>(config::get("MAX_LEVEL"));
+      int attrib = base + percent * (float)max;
+
+      m_attributes[it->first].max = attrib;
+    }
 
     // HP/MP is not restores when leveling up.
     if (it->first != "hp" && it->first != "mp")
