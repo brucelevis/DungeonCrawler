@@ -1,9 +1,29 @@
+#include <vector>
+
 #include "Config.h"
 #include "Menu.h"
 #include "Frame.h"
 #include "Player.h"
+#include "PlayerClass.h"
 
 #include "CharGen.h"
+
+struct GenerateMenu : public Menu
+{
+  GenerateMenu() :
+   m_classes(get_all_classes())
+  {
+
+  }
+
+  void handleConfirm()
+  {
+
+  }
+
+private:
+  std::vector<PlayerClass> m_classes;
+};
 
 struct SelectMenu : public Menu
 {
