@@ -36,6 +36,16 @@ struct SelectClassMenu : public Menu
     PlayerClass currentClass = player_class_ref(getCurrentMenuChoice());
     draw_text_bmp(target, 8, 8, "%s", currentClass.description.c_str());
 
+    int yPos = 72;
+
+    draw_text_bmp(target, 8, yPos,  "Base attributes:");
+    draw_text_bmp(target, 8, yPos + 12, "Strength: %d", currentClass.baseAttributes["strength"]);
+    draw_text_bmp(target, 8, yPos + 24, "Defense:  %d", currentClass.baseAttributes["defense"]);
+    draw_text_bmp(target, 8, yPos + 36, "Magic:    %d", currentClass.baseAttributes["magic"]);
+    draw_text_bmp(target, 8, yPos + 48, "Mag.Def:  %d", currentClass.baseAttributes["mag.def"]);
+    draw_text_bmp(target, 8, yPos + 60, "Speed:    %d", currentClass.baseAttributes["speed"]);
+    draw_text_bmp(target, 8, yPos + 72, "Luck:     %d", currentClass.baseAttributes["luck"]);
+
     Menu::draw(target, 8, config::GAME_RES_Y - getHeight() - 8);
   }
 
