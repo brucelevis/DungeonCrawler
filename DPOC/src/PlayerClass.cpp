@@ -23,6 +23,12 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     pc.name = nameElem->GetText();
   }
 
+  const XMLElement* descElem = classElement->FirstChildElement("description");
+  if (descElem)
+  {
+    pc.description = descElem->GetText();
+  }
+
   const XMLElement* attributesElem = classElement->FirstChildElement("attributes");
   if (attributesElem)
   {

@@ -28,6 +28,8 @@ struct PlayerClass
 
   std::string faceTexture;
   sf::IntRect textureRect;
+
+  std::string description;
 };
 
 void load_classes();
