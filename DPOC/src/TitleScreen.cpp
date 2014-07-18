@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Message.h"
 
+#include "CharGen.h"
 #include "TitleScreen.h"
 
 TitleMenu::TitleMenu()
@@ -45,7 +46,7 @@ void TitleMenu::handleConfirm()
     {
       setVisible(false);
 
-      Game::instance().setPlayer(Player::create());
+      //Game::instance().setPlayer(Player::create());
       SceneManager::instance().fadeOut(32);
     }
     else if (choice == "Load Game")
@@ -173,7 +174,8 @@ void TitleScreen::postFade(FadeType fadeType)
     m_titleMusic.stop();
 
     SceneManager::instance().fadeIn(32);
-    SceneManager::instance().addScene(&Game::instance());
+    //SceneManager::instance().addScene(&Game::instance());
+    SceneManager::instance().addScene(new CharGen);
   }
   else if (fadeType == FADE_IN)
   {

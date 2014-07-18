@@ -1,5 +1,8 @@
 #include <vector>
 
+#include "draw_text.h"
+#include "Sound.h"
+
 #include "Config.h"
 #include "Menu.h"
 #include "Frame.h"
@@ -8,12 +11,17 @@
 
 #include "CharGen.h"
 
-struct GenerateMenu : public Menu
+struct SelectClassMenu : public Menu
 {
-  GenerateMenu() :
-   m_classes(get_all_classes())
+  SelectClassMenu(const std::vector<PlayerClass>& classes)
+   : m_classes(classes)
   {
+    setMaxVisible(4);
 
+    for (auto it = m_classes.begin(); it != m_classes.end(); ++it)
+    {
+      addEntry(it->name);
+    }
   }
 
   void handleConfirm()
@@ -21,8 +29,66 @@ struct GenerateMenu : public Menu
 
   }
 
+  void draw(sf::RenderTarget& target, int x, int y)
+  {
+    draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
+
+    PlayerClass currentClass = player_class_ref(getCurrentMenuChoice());
+    draw_text_bmp(target, 8, 8, "%s", currentClass.description.c_str());
+
+    Menu::draw(target, 8, config::GAME_RES_Y - getHeight() - 8);
+  }
+
+private:
+  const std::vector<PlayerClass>& m_classes;
+};
+
+struct GenerateMenu : public Menu
+{
+  GenerateMenu() :
+   m_classes(get_all_classes()),
+   m_selectClassMenu(m_classes)
+  {
+    m_selectClassMenu.setVisible(false);
+
+    addEntry("Enter name");
+    addEntry("Select class");
+    addEntry("Done");
+  }
+
+  void handleConfirm()
+  {
+    if (getCurrentMenuChoice() == "Select class")
+    {
+      m_selectClassMenu.setVisible(true);
+    }
+  }
+
+  void moveArrow(Direction dir)
+  {
+    if (m_selectClassMenu.isVisible())
+    {
+      m_selectClassMenu.moveArrow(dir);
+    }
+    else
+    {
+      Menu::moveArrow(dir);
+    }
+  }
+
+  void draw(sf::RenderTarget& target, int x, int y)
+  {
+    Menu::draw(target, x, y);
+
+    if (m_selectClassMenu.isVisible())
+    {
+      m_selectClassMenu.draw(target, x, y);
+    }
+  }
+
 private:
   std::vector<PlayerClass> m_classes;
+  SelectClassMenu m_selectClassMenu;
 };
 
 struct SelectMenu : public Menu
@@ -35,13 +101,17 @@ struct SelectMenu : public Menu
     STATE_REMOVE
   };
 
-  SelectMenu()
-   : m_state(STATE_DEFAULT)
+  SelectMenu(Player* player)
+   : m_state(STATE_DEFAULT),
+     m_player(player)
   {
     addEntry("Add");
     addEntry("Inspect");
     addEntry("Remove");
     addEntry("Done");
+
+    m_genMenu.setVisible(false);
+    m_characterMenu.setCursorVisible(false);
   }
 
   void handleConfirm()
@@ -56,16 +126,31 @@ struct SelectMenu : public Menu
       if (currentChoice == "Add")
       {
         m_state = STATE_ADD;
+        m_genMenu.setVisible(true);
       }
       else if (currentChoice == "Inspect")
       {
-        m_state = STATE_INSPECT;
-        m_characterMenu.setCursorVisible(true);
+        if (m_player->getParty().size())
+        {
+          m_state = STATE_INSPECT;
+          m_characterMenu.setCursorVisible(true);
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
+        }
       }
       else if (currentChoice == "Remove")
       {
-        m_state = STATE_REMOVE;
-        m_characterMenu.setCursorVisible(true);
+        if (m_player->getParty().size())
+        {
+          m_state = STATE_REMOVE;
+          m_characterMenu.setCursorVisible(true);
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
+        }
       }
       else if (currentChoice == "Done")
       {
@@ -73,6 +158,7 @@ struct SelectMenu : public Menu
 
       break;
     case STATE_ADD:
+      m_genMenu.handleConfirm();
       break;
     case STATE_INSPECT:
     case STATE_REMOVE:
@@ -102,6 +188,7 @@ struct SelectMenu : public Menu
       Menu::moveArrow(dir);
       break;
     case STATE_ADD:
+      m_genMenu.moveArrow(dir);
       break;
     case STATE_INSPECT:
     case STATE_REMOVE:
@@ -114,15 +201,36 @@ struct SelectMenu : public Menu
   {
     //draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
 
-    m_characterMenu.draw(target, 0, 0);
+    if (m_genMenu.isVisible())
+    {
+      m_genMenu.draw(target, x, y);
+    }
+    else
+    {
+      m_characterMenu.draw(target, 0, 0);
 
-    Menu::draw(target, x, y);
+      Menu::draw(target, x, y);
+    }
   }
 
 private:
   State m_state;
   CharacterMenu m_characterMenu;
+  GenerateMenu m_genMenu;
+  Player* m_player;
 };
+
+CharGen::CharGen()
+ : m_player(Player::createBlank()),
+   m_selectMenu(new SelectMenu(m_player))
+{
+  m_selectMenu->setVisible(true);
+}
+
+CharGen::~CharGen()
+{
+  delete m_selectMenu;
+}
 
 void CharGen::update()
 {
@@ -131,7 +239,7 @@ void CharGen::update()
 
 void CharGen::draw(sf::RenderTarget& target)
 {
-
+  m_selectMenu->draw(target, 8, config::GAME_RES_Y - m_selectMenu->getHeight() - 8);
 }
 
 void CharGen::handleEvent(sf::Event& event)
@@ -149,20 +257,20 @@ void CharGen::handleEvent(sf::Event& event)
 
 void CharGen::handleKeyPress(sf::Keyboard::Key key)
 {
-//  if (m_menu.isVisible())
-//  {
-//    if (key == sf::Keyboard::Space)
-//    {
-//      m_menu.handleConfirm();
-//    }
-//    else if (key == sf::Keyboard::Escape)
-//    {
-//      m_menu.handleEscape();
-//    }
-//
-//    if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
-//    else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
-//    else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
-//    else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
-//  }
+  if (m_selectMenu->isVisible())
+  {
+    if (key == sf::Keyboard::Space)
+    {
+      m_selectMenu->handleConfirm();
+    }
+    else if (key == sf::Keyboard::Escape)
+    {
+      m_selectMenu->handleEscape();
+    }
+
+    if (key == sf::Keyboard::Down) m_selectMenu->moveArrow(DIR_DOWN);
+    else if (key == sf::Keyboard::Up) m_selectMenu->moveArrow(DIR_UP);
+    else if (key == sf::Keyboard::Right) m_selectMenu->moveArrow(DIR_RIGHT);
+    else if (key == sf::Keyboard::Down) m_selectMenu->moveArrow(DIR_DOWN);
+  }
 }
