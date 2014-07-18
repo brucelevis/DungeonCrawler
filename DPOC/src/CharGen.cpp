@@ -12,6 +12,39 @@
 
 #include "CharGen.h"
 
+struct Proxy
+{
+  struct Listener
+  {
+    virtual ~Listener() {}
+    virtual void textEntered(char c) = 0;
+  };
+
+  static Proxy& get()
+  {
+    static Proxy instance;
+    return instance;
+  }
+
+  bool captureTyping;
+  Listener* listener;
+
+  void textEntered(char c)
+  {
+    if (listener)
+    {
+      listener->textEntered(c);
+    }
+  }
+
+private:
+  Proxy()
+   : captureTyping(false),
+     listener(0)
+  {
+  }
+};
+
 static sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color color = sf::Color::Red)
 {
   sf::RectangleShape rect;
@@ -97,8 +130,10 @@ private:
   const std::vector<PlayerClass>& m_classes;
 };
 
-struct GenerateMenu : public Menu
+struct GenerateMenu : public Menu, public Proxy::Listener
 {
+  static const size_t MAX_NAME_SIZE = 8;
+
   enum State
   {
     STATE_DEFAULT,
@@ -131,7 +166,11 @@ struct GenerateMenu : public Menu
       }
       else if (currentChoice == "Enter name")
       {
+        m_state = STATE_ENTER_NAME;
 
+        m_nameBuffer = "";
+        Proxy::get().captureTyping = true;
+        Proxy::get().listener = this;
       }
       else if (currentChoice == "Done")
       {
@@ -172,17 +211,18 @@ struct GenerateMenu : public Menu
     }
     else if (m_state == STATE_ENTER_NAME)
     {
-
+      clearProxy();
+      m_state = STATE_DEFAULT;
     }
   }
 
   void moveArrow(Direction dir)
   {
-    if (m_selectClassMenu.isVisible())
+    if (m_state == STATE_SELECT_CLASS)
     {
       m_selectClassMenu.moveArrow(dir);
     }
-    else
+    else if (m_state == STATE_DEFAULT)
     {
       Menu::moveArrow(dir);
     }
@@ -201,15 +241,64 @@ struct GenerateMenu : public Menu
     {
       m_selectClassMenu.draw(target, x, y);
     }
+
+    if (m_state == STATE_ENTER_NAME)
+    {
+      int width = MAX_NAME_SIZE * 8 + 16;
+      int height = 16;
+
+      int xPos = config::GAME_RES_X / 2 - width / 2;
+      int yPos = config::GAME_RES_Y / 2 - height / 2;
+
+      draw_frame(target, xPos, yPos, width, height);
+      draw_text_bmp(target, xPos + 8, yPos + 4, "%s%s",
+          m_nameBuffer.c_str(), m_nameBuffer.size() < 8 ? "_" : "");
+    }
+  }
+
+  void textEntered(char c)
+  {
+    if (c == '\n' || c == '\r')
+    {
+      clearProxy();
+      theName = m_nameBuffer;
+      m_state = STATE_DEFAULT;
+    }
+    else if (c == '\b')
+    {
+      if (m_nameBuffer.size())
+      {
+        m_nameBuffer.resize(m_nameBuffer.size() - 1);
+      }
+    }
+    else if (c == '\x1B')
+    {
+      clearProxy();
+      m_state = STATE_DEFAULT;
+    }
+    else if (c >= 32 && c <= 126)
+    {
+      if (m_nameBuffer.size() < MAX_NAME_SIZE)
+      {
+        m_nameBuffer += c;
+      }
+    }
   }
 
   std::string theClass;
   std::string theName;
-
+private:
+  void clearProxy()
+  {
+    Proxy::get().captureTyping = false;
+    Proxy::get().listener = 0;
+  }
 private:
   std::vector<PlayerClass> m_classes;
   SelectClassMenu m_selectClassMenu;
   State m_state;
+
+  std::string m_nameBuffer;
 };
 
 struct CharGenCharacterMenu : public Menu
@@ -490,14 +579,29 @@ void CharGen::draw(sf::RenderTarget& target)
 
 void CharGen::handleEvent(sf::Event& event)
 {
-  switch (event.type)
+  if (Proxy::get().captureTyping)
   {
-  case sf::Event::KeyPressed:
-    handleKeyPress(event.key.code);
+    if (event.type == sf::Event::TextEntered)
+    {
+      sf::Uint32 unicode = event.text.unicode;
 
-    break;
-  default:
-    break;
+      if (unicode < 128)
+      {
+        Proxy::get().textEntered(static_cast<char>(unicode));
+      }
+    }
+  }
+  else
+  {
+    switch (event.type)
+    {
+    case sf::Event::KeyPressed:
+      handleKeyPress(event.key.code);
+
+      break;
+    default:
+      break;
+    }
   }
 }
 
