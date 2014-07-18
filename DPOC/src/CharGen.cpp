@@ -418,12 +418,19 @@ struct SelectMenu : public Menu
 
       if (currentChoice == "Add")
       {
-        m_state = STATE_ADD;
-        m_genMenu.setVisible(true);
+        if (m_player->getParty().size() < 4)
+        {
+          m_state = STATE_ADD;
+          m_genMenu.setVisible(true);
 
-        m_genMenu.resetChoice();
-        m_genMenu.theClass = "";
-        m_genMenu.theName = "";
+          m_genMenu.resetChoice();
+          m_genMenu.theClass = "";
+          m_genMenu.theName = "";
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
+        }
       }
       else if (currentChoice == "Inspect")
       {
