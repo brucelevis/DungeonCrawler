@@ -33,5 +33,6 @@ struct PlayerClass
 void load_classes();
 
 PlayerClass player_class_ref(const std::string& className);
+std::vector<PlayerClass> get_all_classes();
 
 #endif

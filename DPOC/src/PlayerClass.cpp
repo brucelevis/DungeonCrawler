@@ -160,3 +160,8 @@ PlayerClass player_class_ref(const std::string& className)
 
   throw std::runtime_error("No class " + className + " defined");
 }
+
+std::vector<PlayerClass> get_all_classes()
+{
+  return classes;
+}
