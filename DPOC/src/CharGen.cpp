@@ -1,6 +1,7 @@
 #include "Config.h"
 #include "Menu.h"
 #include "Frame.h"
+#include "Player.h"
 
 #include "CharGen.h"
 
@@ -25,7 +26,52 @@ struct SelectMenu : public Menu
 
   void handleConfirm()
   {
+    std::string currentChoice;
 
+    switch (m_state)
+    {
+    case STATE_DEFAULT:
+      currentChoice = getCurrentMenuChoice();
+
+      if (currentChoice == "Add")
+      {
+        m_state = STATE_ADD;
+      }
+      else if (currentChoice == "Inspect")
+      {
+        m_state = STATE_INSPECT;
+        m_characterMenu.setCursorVisible(true);
+      }
+      else if (currentChoice == "Remove")
+      {
+        m_state = STATE_REMOVE;
+        m_characterMenu.setCursorVisible(true);
+      }
+      else if (currentChoice == "Done")
+      {
+      }
+
+      break;
+    case STATE_ADD:
+      break;
+    case STATE_INSPECT:
+    case STATE_REMOVE:
+      currentChoice = m_characterMenu.getCurrentMenuChoice();
+
+      if (m_state == STATE_INSPECT)
+      {
+        // TODO: Draw summary.
+      }
+      else if (m_state == STATE_REMOVE)
+      {
+        get_player()->removeCharacter(currentChoice);
+        m_characterMenu.refresh();
+        m_state = STATE_DEFAULT;
+        m_characterMenu.setCursorVisible(false);
+      }
+
+      break;
+    }
   }
 
   void moveArrow(Direction dir)
@@ -38,8 +84,8 @@ struct SelectMenu : public Menu
     case STATE_ADD:
       break;
     case STATE_INSPECT:
-      break;
     case STATE_REMOVE:
+      m_characterMenu.moveArrow(dir);
       break;
     }
   }
@@ -47,6 +93,8 @@ struct SelectMenu : public Menu
   void draw(sf::RenderTarget& target, int x, int y)
   {
     //draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
+
+    m_characterMenu.draw(target, 0, 0);
 
     Menu::draw(target, x, y);
   }
