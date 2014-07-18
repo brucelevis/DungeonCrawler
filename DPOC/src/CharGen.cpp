@@ -132,7 +132,7 @@ private:
 
 struct GenerateMenu : public Menu, public Proxy::Listener
 {
-  static const size_t MAX_NAME_SIZE = 8;
+  static const size_t MAX_NAME_SIZE = 6;
 
   enum State
   {
@@ -253,7 +253,7 @@ struct GenerateMenu : public Menu, public Proxy::Listener
 
       draw_frame(target, xPos, yPos, width, height);
       draw_text_bmp(target, xPos + 8, yPos + 4, "%s%s",
-          m_nameBuffer.c_str(), m_nameBuffer.size() < 8 ? "_" : "");
+          m_nameBuffer.c_str(), m_nameBuffer.size() < MAX_NAME_SIZE ? "_" : "");
     }
   }
 
@@ -358,20 +358,22 @@ struct CharGenCharacterMenu : public Menu
     {
       PlayerCharacter* character = m_player->getCharacter(getChoice(i));
 
+      static const int v_spacing = 40;
+
       int offX = 8;
       int offY = 8;
 
-      character->draw(target, offX, offY + i * 40);
+      character->draw(target, offX, offY + i * v_spacing);
 
-      draw_text_bmp_ex(target, offX + 40, offY + i * 40,
+      draw_text_bmp_ex(target, offX + 40, offY + i * v_spacing,
           get_status_effect(character->getStatus())->color,
           "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-      draw_text_bmp(target, offX + 40, offY + i * 40 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-      draw_text_bmp(target, offX + 40, offY + i * 40 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+      draw_text_bmp(target, offX + 40, offY + i * v_spacing + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+      draw_text_bmp(target, offX + 40, offY + i * v_spacing + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
       if (cursorVisible() && getCurrentChoiceIndex() == i)
       {
-        sf::RectangleShape rect = make_select_rect(offX - 2, offY + i * 40 - 2, 164, 36);
+        sf::RectangleShape rect = make_select_rect(offX - 2, offY + i * v_spacing - 2, 164, 36);
         target.draw(rect);
       }
     }
