@@ -69,8 +69,8 @@ static void draw_status(sf::RenderTarget& target, PlayerCharacter* character, in
   draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
   draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
-//  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
-//  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
+  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
 
   y += 40;
 
@@ -81,11 +81,11 @@ static void draw_status(sf::RenderTarget& target, PlayerCharacter* character, in
   draw_text_bmp(target, x, y + 48, "Speed:    %d", character->computeCurrentAttribute("speed"));
   draw_text_bmp(target, x, y + 60, "Luck:     %d", character->computeCurrentAttribute("luck"));
 
-//  for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
-//  {
-//    Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
-//    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
-//  }
+  for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
+  {
+    Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
+  }
 }
 
 struct SelectClassMenu : public Menu
@@ -162,6 +162,7 @@ struct GenerateMenu : public Menu, public Proxy::Listener
       if (currentChoice == "Select class")
       {
         m_selectClassMenu.setVisible(true);
+        m_selectClassMenu.resetChoice();
         m_state = STATE_SELECT_CLASS;
       }
       else if (currentChoice == "Enter name")
@@ -276,6 +277,14 @@ struct GenerateMenu : public Menu, public Proxy::Listener
       clearProxy();
       m_state = STATE_DEFAULT;
     }
+    else if (c == ' ')
+    {
+      // Fulhack
+      if (m_nameBuffer.size())
+      {
+        m_nameBuffer += c;
+      }
+    }
     else if (c >= 32 && c <= 126)
     {
       if (m_nameBuffer.size() < MAX_NAME_SIZE)
@@ -343,26 +352,26 @@ struct CharGenCharacterMenu : public Menu
 
   void draw(sf::RenderTarget& target, int x, int y)
   {
-    draw_frame(target, x + 72, y, 184, 240);
+    draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
 
     for (int i = 0; i < getNumberOfChoice(); i++)
     {
       PlayerCharacter* character = m_player->getCharacter(getChoice(i));
 
-      int offX = x + 8 + 5 * 16;
-      int offY = y + 8;
+      int offX = 8;
+      int offY = 8;
 
-      character->draw(target, offX, offY + i * 48);
+      character->draw(target, offX, offY + i * 40);
 
-      draw_text_bmp_ex(target, offX + 40, offY + i * 48,
+      draw_text_bmp_ex(target, offX + 40, offY + i * 40,
           get_status_effect(character->getStatus())->color,
           "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-      draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-      draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+      draw_text_bmp(target, offX + 40, offY + i * 40 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+      draw_text_bmp(target, offX + 40, offY + i * 40 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
 
       if (cursorVisible() && getCurrentChoiceIndex() == i)
       {
-        sf::RectangleShape rect = make_select_rect(offX - 2, offY + i * 48 - 2, 164, 36);
+        sf::RectangleShape rect = make_select_rect(offX - 2, offY + i * 40 - 2, 164, 36);
         target.draw(rect);
       }
     }
@@ -409,6 +418,10 @@ struct SelectMenu : public Menu
       {
         m_state = STATE_ADD;
         m_genMenu.setVisible(true);
+
+        m_genMenu.resetChoice();
+        m_genMenu.theClass = "";
+        m_genMenu.theName = "";
       }
       else if (currentChoice == "Inspect")
       {
@@ -466,6 +479,7 @@ struct SelectMenu : public Menu
       {
         m_player->removeCharacter(currentChoice);
         m_characterMenu.refresh();
+        m_characterMenu.resetChoice();
 
         if (m_player->getParty().empty())
         {
@@ -494,6 +508,7 @@ struct SelectMenu : public Menu
     case STATE_INSPECT:
       if (m_inspectChar.empty())
       {
+        m_characterMenu.handleEscape();
         m_state = STATE_DEFAULT;
       }
       else
@@ -542,7 +557,7 @@ struct SelectMenu : public Menu
 
     if (m_state == STATE_INSPECT && m_inspectChar.size())
     {
-      draw_status(target, m_player->getCharacter(m_inspectChar), 8, 8);
+      draw_status(target, m_player->getCharacter(m_inspectChar), 24, 24);
     }
   }
 
