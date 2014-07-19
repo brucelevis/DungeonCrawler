@@ -20,6 +20,7 @@ struct PlayerClass
   std::map<std::string, BaseAttr> baseAttributes;
   std::map<int, std::vector<std::string> > spells;
   std::vector<std::string> equipment;
+  std::vector<std::string> startingEquipment;
 
   std::vector<std::string> battleActions;
 

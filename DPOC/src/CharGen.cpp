@@ -7,6 +7,7 @@
 #include "draw_text.h"
 #include "Sound.h"
 
+#include "Item.h"
 #include "StatusEffect.h"
 #include "Config.h"
 #include "Menu.h"
@@ -803,12 +804,16 @@ struct SelectMenu : public Menu
 private:
   void defaultEquip(const std::string& charName)
   {
-    // TODO: This should be parsed from class XML
     PlayerCharacter* character = m_player->getCharacter(m_genMenu.theName);
-    character->equip("Weapon", "Copper Sword");
-    character->equip("Shield", "Wood Shield");
-    character->equip("Armour", "Leather Armor");
-    character->equip("Helmet", "Fancy Hat");
+
+    PlayerClass playerClass = character->getClass();
+    for (auto it = playerClass.startingEquipment.begin(); it != playerClass.startingEquipment.end(); ++it)
+    {
+      auto item = item_ref(*it);
+      std::string equipType = equip_type_string(item.type);
+
+      character->equip(equipType, item.name);
+    }
   }
 private:
   State m_state;

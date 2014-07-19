@@ -79,6 +79,16 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     }
   }
 
+  const XMLElement* startEqElem = classElement->FirstChildElement("startingEquipment");
+  if (startEqElem)
+  {
+    for (const XMLElement* element = startEqElem->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string item = element->GetText();
+      pc.startingEquipment.push_back(item);
+    }
+  }
+
   const XMLElement* textElem = classElement->FirstChildElement("texture");
   if (textElem)
   {
