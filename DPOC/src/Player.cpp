@@ -290,12 +290,15 @@ Player* Player::createFromSaveData(std::vector<CharacterData*> charData, std::ve
 
     Entity* entity = new Entity;
 
-    Sprite* sprite = new Sprite;
-    sprite->create(pc.texture,
-        pc.textureBlock.left, pc.textureBlock.top,
-        pc.textureBlock.width, pc.textureBlock.height);
+    if (entData[i]->spriteName.size())
+    {
+      Sprite* sprite = new Sprite;
+      sprite->create(pc.texture,
+          pc.textureBlock.left, pc.textureBlock.top,
+          pc.textureBlock.width, pc.textureBlock.height);
 
-    entity->setSprite(sprite);
+      entity->setSprite(sprite);
+    }
 
     entity->setDirection(entData[i]->dir);
     entity->setWalkSpeed(entData[i]->speed);
@@ -345,14 +348,11 @@ void Player::addNewCharacter(const std::string& name, const std::string& classNa
 {
   PlayerClass pc = player_class_ref(className);
 
-  if (m_playerTrain.empty())
-  {
-    Entity* entity = new Entity;
-    entity->setPosition(x, y);
-    entity->setWalkSpeed(0.1f);
+  Entity* entity = new Entity;
+  entity->setPosition(x, y);
+  entity->setWalkSpeed(0.1f);
 
-    m_playerTrain.push_back(entity);
-  }
+  m_playerTrain.push_back(entity);
 
   m_party.push_back(PlayerCharacter::create(name, className, face, level));
 }

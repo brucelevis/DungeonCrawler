@@ -193,7 +193,10 @@ EntityData parseEntityElement(const XMLElement* entityElement)
   data.dir = directionFromString(dirElem->GetText());
   data.walkThrough = fromString<bool>(walkThroughElemt->GetText());
   data.speed = fromString<float>(speedElem->GetText());
-  data.spriteName = spriteElem->FindAttribute("name")->Value();
+  if (spriteElem)
+  {
+    data.spriteName = spriteElem->FindAttribute("name")->Value();
+  }
 
   TRACE(" - name=%s", data.name.c_str());
   TRACE(" - tag=%s", data.tag.c_str());

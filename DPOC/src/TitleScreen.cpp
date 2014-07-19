@@ -174,8 +174,15 @@ void TitleScreen::postFade(FadeType fadeType)
     m_titleMusic.stop();
 
     SceneManager::instance().fadeIn(32);
-    //SceneManager::instance().addScene(&Game::instance());
-    SceneManager::instance().addScene(new CharGen);
+
+    if (m_menu.getCurrentMenuChoice() == "New Game")
+    {
+      SceneManager::instance().addScene(new CharGen);
+    }
+    else if (m_menu.getCurrentMenuChoice() == "Load Game")
+    {
+      SceneManager::instance().addScene(&Game::instance());
+    }
   }
   else if (fadeType == FADE_IN)
   {
