@@ -152,6 +152,16 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     }
   }
 
+  const XMLElement* stealElem = monsterElement->FirstChildElement("steal");
+  if (stealElem)
+  {
+    for (const XMLElement* element = stealElem->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string itemName = element->GetText();
+      monster.stealItems.push_back(itemName);
+    }
+  }
+
   const XMLElement* resElem = monsterElement->FirstChildElement("resistance");
   if (resElem)
   {

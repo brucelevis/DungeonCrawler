@@ -244,6 +244,21 @@ bool Character::hasStatusType(int statusType) const
   return false;
 }
 
+std::string Character::stealItem()
+{
+  std::string item;
+
+  if (m_itemsToSteal.size())
+  {
+    std::random_shuffle(m_itemsToSteal.begin(), m_itemsToSteal.end());
+    item = m_itemsToSteal.back();
+
+    m_itemsToSteal.pop_back();
+  }
+
+  return item;
+}
+
 Character* Character::createMonster(const std::string& name)
 {
   MonsterDef def = get_monster_definition(name);
@@ -279,6 +294,8 @@ Character* Character::createMonster(const std::string& name)
       reset_attribute(character->m_attributes[it->first]);
     }
   }
+
+  character->m_itemsToSteal = def.stealItems;
 
   character->m_resistance = def.resistance;
   character->m_statusImmunity = def.immunity;

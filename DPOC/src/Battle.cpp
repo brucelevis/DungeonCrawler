@@ -507,6 +507,12 @@ void Battle::executeActions()
   {
     battle_message("%s ponders the situation.", m_currentActor->getName().c_str());
   }
+  else if (action.actionName == "Steal")
+  {
+    battle_message("%s tries to steal from %s!",
+        m_currentActor->getName().c_str(),
+        action.target->getName().c_str());
+  }
 
   m_state = STATE_SHOW_ACTION;
 }
@@ -646,6 +652,39 @@ void Battle::actionEffect()
 
       check_death(currentTarget);
 
+    }
+    else if (actionName == "Steal")
+    {
+      Character* currentTarget = m_currentTargets.front();
+      m_currentTargets.erase(m_currentTargets.begin());
+
+      currentTarget->flash().start(6, 3);
+
+      if (random_range(0, m_currentActor->computeCurrentAttribute("luck")) >
+          random_range(0, currentTarget->computeCurrentAttribute("luck")))
+      {
+        std::string item = currentTarget->stealItem();
+
+        if (item.size())
+        {
+          play_sound(config::get("SOUND_SUCCESS"));
+
+          battle_message("Stole the %s!", item.c_str());
+          get_player()->addItemToInventory(item, 1);
+        }
+        else
+        {
+          play_sound(config::get("SOUND_MISS"));
+
+          battle_message("Found nothing!");
+        }
+      }
+      else
+      {
+        play_sound(config::get("SOUND_MISS"));
+
+        battle_message("Got caught!");
+      }
     }
 
     m_turnDelay = TURN_DELAY_TIME;

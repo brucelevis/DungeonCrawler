@@ -34,6 +34,7 @@ struct MonsterDef
 
   std::vector<MonsterActionEntry> actions;
   std::vector<MonsterDropItem> itemDrop;
+  std::vector<std::string> stealItems;
 
   std::map<std::string, float> resistance;
 

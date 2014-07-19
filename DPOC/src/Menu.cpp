@@ -1222,6 +1222,10 @@ void BattleMenu::handleConfirm()
 
       nextActor();
     }
+    else if (action == "Steal")
+    {
+      selectMonster();
+    }
     else
     {
       // Undefined action.
@@ -1388,6 +1392,10 @@ void BattleMenu::prepareAction()
   else if (action == "Run")
   {
     battleAction.target = 0;
+  }
+  else if (action == "Steal")
+  {
+    battleAction.target = m_monsterMenu->getCurrentMonster();
   }
   else
   {

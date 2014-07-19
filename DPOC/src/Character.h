@@ -72,6 +72,8 @@ public:
   virtual bool isImmune(const std::string& status) const;
 
   bool hasStatusType(int statusType) const;
+
+  std::string stealItem();
 private:
   std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:
@@ -88,6 +90,8 @@ protected:
 
   std::map<std::string, float> m_resistance;
   std::vector<std::string> m_statusImmunity;
+
+  std::vector<std::string> m_itemsToSteal;
 
   // Flash data
   Flash m_flash;
