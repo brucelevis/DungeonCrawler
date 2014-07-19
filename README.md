@@ -112,6 +112,8 @@ XML Formats
 * `<immunity>`
  - `<status name>`*
 * `<numberOfAttacks>` number of attacks each turn.
+* `<steal>` Items that can be stolen from this monster.
+ -  `<item>...</item>*`
 
 ### Config.xml (`<config>`) ###
 Just a key-value store.
@@ -133,6 +135,9 @@ Example:
  - `<item>ItemName</item>`*
 * `<actions>` (actions class can use in battle. default is attack, spell, item, guard, run).
  - `<action>ActionName</action>`*
+* `<description>` Description of this class
+* `<startingEquipment>` Default equipment for the class
+ -  `<item>...</item>*`
 
 ### Player.xml (`<player>`) ###
 Initial values for the player.
