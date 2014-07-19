@@ -46,6 +46,8 @@ public:
   void prepareTransfer(const std::string& targetMap, int x, int y);
 
   void openShop(const std::vector<std::string>& items);
+
+  bool battleInProgress() const { return m_battleInProgress; }
 private:
   Game();
   ~Game();
