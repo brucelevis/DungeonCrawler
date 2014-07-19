@@ -219,6 +219,7 @@ struct SelectFaceMenu : public Menu
   {
     m_faceIndex = 0;
     setCurrentChoice(m_faceIndex);
+    reloadTexture();
   }
 
   void draw(sf::RenderTarget& target, int x, int y)
