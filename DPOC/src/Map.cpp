@@ -353,6 +353,10 @@ bool Map::blocking(int x, int y)
   if (tile && tile->tileId > 0)
     return true;
 
+  tile = getTileAt(x, y, "floor");
+  if (tile && tile->solid)
+    return true;
+
   return false;
 }
 
