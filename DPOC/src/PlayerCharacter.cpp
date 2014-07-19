@@ -12,7 +12,7 @@
 
 std::vector<std::string> PlayerCharacter::equipNames =
 {
-  "Weapon", "Shield", "Armour", "Helmet", "Others", "Others"
+  "Weapon", "Shield", "Armour", "Helmet", "Boots", "Others"
 };
 
 PlayerCharacter::PlayerCharacter()
