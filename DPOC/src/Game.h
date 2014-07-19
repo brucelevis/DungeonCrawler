@@ -25,6 +25,8 @@ class Game : public Scene
 public:
   static Game& instance();
 
+  void start(Player* thePlayer);
+
   void update();
   void draw(sf::RenderTarget& target);
   void handleEvent(sf::Event& event);

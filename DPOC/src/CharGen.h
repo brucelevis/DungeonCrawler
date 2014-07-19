@@ -15,6 +15,8 @@ public:
   void update();
   void draw(sf::RenderTarget& target);
   void handleEvent(sf::Event& event);
+
+  void postFade(FadeType fadeType);
 private:
   void handleKeyPress(sf::Keyboard::Key key);
 private:

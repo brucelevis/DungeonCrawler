@@ -70,15 +70,18 @@ void SceneManager::run()
 void SceneManager::cleanUp()
 {
   // Clean up closed scenes.
-  auto removeBegin = std::remove_if(m_scenes.begin(), m_scenes.end(),
-      [=](Scene* scene) { return scene->isClosed(); });
-
-  for (auto it = removeBegin; it != m_scenes.end(); ++it)
+  for (auto it = m_scenes.begin(); it != m_scenes.end();)
   {
-    delete *it;
+    if ((*it)->isClosed())
+    {
+      delete *it;
+      it = m_scenes.erase(it);
+    }
+    else
+    {
+      ++it;
+    }
   }
-
-  m_scenes.erase(removeBegin, m_scenes.end());
 }
 
 void SceneManager::draw()

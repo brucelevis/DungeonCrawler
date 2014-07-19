@@ -7,6 +7,9 @@
 #include "draw_text.h"
 #include "Sound.h"
 
+#include "Game.h"
+#include "SceneManager.h"
+
 #include "Item.h"
 #include "StatusEffect.h"
 #include "Config.h"
@@ -676,6 +679,15 @@ struct SelectMenu : public Menu
       }
       else if (currentChoice == "Done")
       {
+        if (m_player->getParty().size() == 4)
+        {
+          setVisible(false);
+          SceneManager::instance().fadeOut(32);
+        }
+        else
+        {
+          play_sound(config::get("SOUND_CANCEL"));
+        }
       }
 
       break;
@@ -891,5 +903,19 @@ void CharGen::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Up) m_selectMenu->moveArrow(DIR_UP);
     else if (key == sf::Keyboard::Right) m_selectMenu->moveArrow(DIR_RIGHT);
     else if (key == sf::Keyboard::Left) m_selectMenu->moveArrow(DIR_LEFT);
+  }
+}
+
+void CharGen::postFade(FadeType fadeType)
+{
+  if (fadeType == FADE_OUT)
+  {
+    close();
+    //m_titleMusic.stop();
+
+    SceneManager::instance().fadeIn(32);
+
+    Game::instance().start(m_player);
+    SceneManager::instance().addScene(&Game::instance());
   }
 }

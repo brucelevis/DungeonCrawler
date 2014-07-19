@@ -22,6 +22,10 @@
 #include "Shop.h"
 #include "Battle.h"
 
+#include "../dep/tinyxml2.h"
+
+using namespace tinyxml2;
+
 Game* Game::theInstance = 0;
 
 Game& Game::instance()
@@ -69,6 +73,48 @@ Game::~Game()
   delete m_choiceMenu;
 
   theInstance = 0;
+}
+
+void Game::start(Player* thePlayer)
+{
+  int startX = 0;
+  int startY = 0;
+
+  XMLDocument doc;
+  doc.LoadFile(config::res_path("Init.xml").c_str());
+
+  const XMLElement* root = doc.FirstChildElement("init");
+  const XMLElement* start = root->FirstChildElement("start");
+  if (start)
+  {
+    startX = fromString<int>(start->FindAttribute("x")->Value());
+    startY = fromString<int>(start->FindAttribute("y")->Value());
+    std::string startMap = start->FindAttribute("map")->Value();
+
+    loadNewMap("Maps/" + startMap);
+  }
+
+  const XMLElement* inventory = root->FirstChildElement("inventory");
+  if (inventory)
+  {
+    for (const XMLElement* element = inventory->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string name = element->FindAttribute("name")->Value();
+      int amount = fromString<int>(element->FindAttribute("amount")->Value());
+
+      thePlayer->addItemToInventory(name, amount);
+    }
+  }
+
+  const XMLElement* goldElem = root->FirstChildElement("gold");
+  if (goldElem)
+  {
+    thePlayer->gainGold(fromString<int>(goldElem->GetText()));
+  }
+
+  thePlayer->player()->setPosition(startX, startY);
+
+  setPlayer(thePlayer);
 }
 
 void Game::update()
