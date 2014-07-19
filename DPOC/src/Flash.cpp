@@ -1,3 +1,4 @@
+#include "Game.h"
 #include "Flash.h"
 
 Flash::Flash()
@@ -86,6 +87,12 @@ void Flash::fadeOut(int speed)
 
 void Flash::addDamageText(const std::string& text, const sf::Color& color)
 {
+  // Only add damage text if we are in combat.
+  if (!Game::instance().battleInProgress())
+  {
+    return;
+  }
+
   DamageText dmgText { text, 0, color };
   if (m_damageNumbers.size())
   {
