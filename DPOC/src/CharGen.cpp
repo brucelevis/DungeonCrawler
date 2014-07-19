@@ -736,6 +736,11 @@ struct SelectMenu : public Menu
     case STATE_INSPECT:
     case STATE_REMOVE:
       m_characterMenu.moveArrow(dir);
+
+      if (m_state == STATE_INSPECT && m_inspectChar.size())
+      {
+        m_inspectChar = m_characterMenu.getCurrentMenuChoice();
+      }
       break;
     }
   }
