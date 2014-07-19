@@ -682,12 +682,21 @@ struct SelectMenu : public Menu
 
       if (!m_genMenu.isVisible())
       {
-        m_state = STATE_DEFAULT;
-
-        if (m_genMenu.theClass.size() && m_genMenu.theName.size())
+        if (m_player->getCharacter(m_genMenu.theName))
         {
-          m_player->addNewCharacter(m_genMenu.theName, m_genMenu.theClass, "Faces/" + m_genMenu.theFace, 0, 0, 1);
-          m_characterMenu.refresh();
+          // Disallow several characters with the same name.
+          m_genMenu.setVisible(true);
+          play_sound(config::get("SOUND_CANCEL"));
+        }
+        else
+        {
+          m_state = STATE_DEFAULT;
+
+          if (m_genMenu.theClass.size() && m_genMenu.theName.size())
+          {
+            m_player->addNewCharacter(m_genMenu.theName, m_genMenu.theClass, "Faces/" + m_genMenu.theFace, 0, 0, 1);
+            m_characterMenu.refresh();
+          }
         }
       }
       break;
