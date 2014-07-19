@@ -17,6 +17,7 @@ enum ItemType
   ITEM_SHIELD,
   ITEM_ARMOR,
   ITEM_HELMET,
+  ITEM_BOOTS,
   ITEM_MISC
 };
 

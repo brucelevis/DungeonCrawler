@@ -237,6 +237,7 @@ std::string equip_type_string(ItemType itemType)
   else if (itemType == ITEM_SHIELD) return "Shield";
   else if (itemType == ITEM_ARMOR) return "Armour";
   else if (itemType == ITEM_HELMET) return "Helmet";
+  else if (itemType == ITEM_BOOTS) return "Boots";
   else if (itemType == ITEM_MISC) return "Others";
   return "";
 }

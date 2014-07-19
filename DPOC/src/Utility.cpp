@@ -74,6 +74,10 @@ std::string get_equip_short_name(const std::string& equipName)
   {
     return "Helm";
   }
+  else if (equipName == "Boots")
+  {
+    return "Boot";
+  }
   else if (equipName == "Others")
   {
     return "Misc";
