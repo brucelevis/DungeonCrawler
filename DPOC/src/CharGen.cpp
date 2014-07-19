@@ -165,7 +165,8 @@ struct SelectFaceMenu : public Menu
   SelectFaceMenu()
    : m_faces(get_faces()),
      m_faceIndex(0),
-     m_faceTexture(0)
+     m_faceTexture(0),
+     m_arrowTexture(cache::loadTexture("UI/Arrow.png"))
   {
     for (auto it = m_faces.begin(); it != m_faces.end(); ++it)
     {
@@ -178,6 +179,7 @@ struct SelectFaceMenu : public Menu
   ~SelectFaceMenu()
   {
     cache::releaseTexture(m_faceTexture);
+    cache::releaseTexture(m_arrowTexture);
   }
 
   void handleConfirm()
@@ -233,6 +235,19 @@ struct SelectFaceMenu : public Menu
     faceSprite.setTexture(*m_faceTexture);
     faceSprite.setPosition(xPos + 2, yPos + 2);
     target.draw(faceSprite);
+
+    sf::Sprite arrowLeft;
+    arrowLeft.setTexture(*m_arrowTexture);
+    arrowLeft.setTextureRect(sf::IntRect(0, 0, 8, 8));
+    arrowLeft.rotate(180);
+    arrowLeft.setPosition(xPos - 2, yPos + height / 2 + 4);
+    target.draw(arrowLeft);
+
+    sf::Sprite arrowRight;
+    arrowRight.setTextureRect(sf::IntRect(0, 0, 8, 8));
+    arrowRight.setTexture(*m_arrowTexture);
+    arrowRight.setPosition(xPos + width + 2, yPos + height / 2 - 4);
+    target.draw(arrowRight);
   }
 private:
   void reloadTexture()
@@ -248,6 +263,7 @@ private:
   std::vector<std::string> m_faces;
   int m_faceIndex;
   sf::Texture* m_faceTexture;
+  sf::Texture* m_arrowTexture;
 };
 
 struct GenerateMenu : public Menu, public Proxy::Listener
@@ -274,6 +290,14 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     addEntry("Class");
     addEntry("Avatar");
     addEntry("Done");
+  }
+
+  ~GenerateMenu()
+  {
+    if (m_faceTexture)
+    {
+      cache::releaseTexture(m_faceTexture);
+    }
   }
 
   void handleConfirm()
@@ -304,7 +328,7 @@ struct GenerateMenu : public Menu, public Proxy::Listener
       }
       else if (currentChoice == "Done")
       {
-        if (theName.size() && theClass.size())
+        if (theName.size() && theClass.size() && theFace.size())
         {
           setVisible(false);
         }
