@@ -341,6 +341,22 @@ void Player::addNewCharacter(const std::string& name, const std::string& classNa
   m_party.push_back(PlayerCharacter::create(name, className, level));
 }
 
+void Player::addNewCharacter(const std::string& name, const std::string& className, const std::string& face, int x, int y, int level)
+{
+  PlayerClass pc = player_class_ref(className);
+
+  if (m_playerTrain.empty())
+  {
+    Entity* entity = new Entity;
+    entity->setPosition(x, y);
+    entity->setWalkSpeed(0.1f);
+
+    m_playerTrain.push_back(entity);
+  }
+
+  m_party.push_back(PlayerCharacter::create(name, className, face, level));
+}
+
 void Player::removeCharacter(const std::string& name)
 {
   int index = 0;

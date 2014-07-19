@@ -1,5 +1,9 @@
 #include <vector>
+#include <cstdio>
+#include <dirent.h>
 
+#include "Cache.h"
+#include "logger.h"
 #include "draw_text.h"
 #include "Sound.h"
 
@@ -44,6 +48,32 @@ private:
   {
   }
 };
+
+static std::vector<std::string> get_faces()
+{
+  std::vector<std::string> faces;
+  DIR* dir = opendir(config::res_path("Faces").c_str());
+
+  if (dir)
+  {
+    while (dirent* dir_entry = readdir(dir))
+    {
+      std::string face_name = dir_entry->d_name;
+
+      if (face_name.find(".png") != std::string::npos)
+      {
+        faces.push_back(face_name);
+      }
+    }
+    closedir(dir);
+  }
+  else
+  {
+    perror("opendir");
+  }
+
+  return faces;
+}
 
 static sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color color = sf::Color::Red)
 {
@@ -130,6 +160,96 @@ private:
   const std::vector<PlayerClass>& m_classes;
 };
 
+struct SelectFaceMenu : public Menu
+{
+  SelectFaceMenu()
+   : m_faces(get_faces()),
+     m_faceIndex(0),
+     m_faceTexture(0)
+  {
+    for (auto it = m_faces.begin(); it != m_faces.end(); ++it)
+    {
+      addEntry(*it);
+    }
+
+    reloadTexture();
+  }
+
+  ~SelectFaceMenu()
+  {
+    cache::releaseTexture(m_faceTexture);
+  }
+
+  void handleConfirm()
+  {
+    setVisible(false);
+  }
+
+  void handleEscape()
+  {
+    Menu::handleEscape();
+  }
+
+  void moveArrow(Direction dir)
+  {
+    int oldIndex = m_faceIndex;
+
+    if (dir == DIR_LEFT)
+    {
+      m_faceIndex--;
+      if (m_faceIndex < 0) m_faceIndex = m_faces.size() - 1;
+    }
+    else if (dir == DIR_RIGHT)
+    {
+      m_faceIndex++;
+      if ((size_t)m_faceIndex >= m_faces.size()) m_faceIndex = 0;
+    }
+
+    if (oldIndex != m_faceIndex)
+    {
+      reloadTexture();
+    }
+
+    setCurrentChoice(m_faceIndex);
+  }
+
+  void resetChoice()
+  {
+    m_faceIndex = 0;
+    setCurrentChoice(m_faceIndex);
+  }
+
+  void draw(sf::RenderTarget& target, int x, int y)
+  {
+    int width = 36;
+    int height = 36;
+
+    int xPos = config::GAME_RES_X / 2 - width / 2;
+    int yPos = config::GAME_RES_Y / 2 - height / 2;
+
+    draw_frame(target, xPos, yPos, width, height);
+
+    sf::Sprite faceSprite;
+    faceSprite.setTexture(*m_faceTexture);
+    faceSprite.setPosition(xPos + 2, yPos + 2);
+    target.draw(faceSprite);
+  }
+private:
+  void reloadTexture()
+  {
+    if (m_faceTexture)
+    {
+      cache::releaseTexture(m_faceTexture);
+    }
+
+    m_faceTexture = cache::loadTexture("Faces/" + m_faces[m_faceIndex]);
+  }
+private:
+  std::vector<std::string> m_faces;
+  int m_faceIndex;
+  sf::Texture* m_faceTexture;
+};
+
 struct GenerateMenu : public Menu, public Proxy::Listener
 {
   static const size_t MAX_NAME_SIZE = 6;
@@ -138,18 +258,21 @@ struct GenerateMenu : public Menu, public Proxy::Listener
   {
     STATE_DEFAULT,
     STATE_ENTER_NAME,
-    STATE_SELECT_CLASS
+    STATE_SELECT_CLASS,
+    STATE_SELECT_AVATAR
   };
 
   GenerateMenu() :
     m_classes(get_all_classes()),
     m_selectClassMenu(m_classes),
-    m_state(STATE_DEFAULT)
+    m_state(STATE_DEFAULT),
+    m_faceTexture(0)
   {
     m_selectClassMenu.setVisible(false);
 
-    addEntry("Enter name");
-    addEntry("Select class");
+    addEntry("Name");
+    addEntry("Class");
+    addEntry("Avatar");
     addEntry("Done");
   }
 
@@ -159,19 +282,25 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     {
       std::string currentChoice = getCurrentMenuChoice();
 
-      if (currentChoice == "Select class")
+      if (currentChoice == "Class")
       {
         m_selectClassMenu.setVisible(true);
         m_selectClassMenu.resetChoice();
         m_state = STATE_SELECT_CLASS;
       }
-      else if (currentChoice == "Enter name")
+      else if (currentChoice == "Name")
       {
         m_state = STATE_ENTER_NAME;
 
         m_nameBuffer = "";
         Proxy::get().captureTyping = true;
         Proxy::get().listener = this;
+      }
+      else if (currentChoice == "Avatar")
+      {
+        m_selectFaceMenu.setVisible(true);
+        m_selectFaceMenu.resetChoice();
+        m_state = STATE_SELECT_AVATAR;
       }
       else if (currentChoice == "Done")
       {
@@ -194,6 +323,19 @@ struct GenerateMenu : public Menu, public Proxy::Listener
         m_state = STATE_DEFAULT;
       }
     }
+    else if (m_state == STATE_SELECT_AVATAR)
+    {
+      m_selectFaceMenu.handleConfirm();
+
+      if (!m_selectFaceMenu.isVisible())
+      {
+        theFace = m_selectFaceMenu.getCurrentMenuChoice();
+
+        reloadFace(theFace);
+
+        m_state = STATE_DEFAULT;
+      }
+    }
   }
 
   void handleEscape()
@@ -201,8 +343,8 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     if (m_state == STATE_DEFAULT)
     {
       setVisible(false);
-      theName = "";
-      theClass = "";
+      reset();
+
       resetChoice();
     }
     else if (m_state == STATE_SELECT_CLASS)
@@ -215,6 +357,11 @@ struct GenerateMenu : public Menu, public Proxy::Listener
       clearProxy();
       m_state = STATE_DEFAULT;
     }
+    else if (m_state == STATE_SELECT_AVATAR)
+    {
+      m_selectFaceMenu.handleEscape();
+      m_state = STATE_DEFAULT;
+    }
   }
 
   void moveArrow(Direction dir)
@@ -222,6 +369,10 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     if (m_state == STATE_SELECT_CLASS)
     {
       m_selectClassMenu.moveArrow(dir);
+    }
+    else if (m_state == STATE_SELECT_AVATAR)
+    {
+      m_selectFaceMenu.moveArrow(dir);
     }
     else if (m_state == STATE_DEFAULT)
     {
@@ -235,8 +386,17 @@ struct GenerateMenu : public Menu, public Proxy::Listener
 
     Menu::draw(target, x, y);
 
-    draw_text_bmp(target, 8, 8,  "Name:  %s", theName.c_str());
-    draw_text_bmp(target, 8, 20, "Class: %s", theClass.c_str());
+    draw_frame(target, 6, 6, 36, 36, 1);
+    if (m_faceTexture)
+    {
+      sf::Sprite sprite;
+      sprite.setTexture(*m_faceTexture);
+      sprite.setPosition(8, 8);
+      target.draw(sprite);
+    }
+
+    draw_text_bmp(target, 44, 8,  "Name:  %s", theName.c_str());
+    draw_text_bmp(target, 44, 20, "Class: %s", theClass.c_str());
 
     if (m_selectClassMenu.isVisible())
     {
@@ -254,6 +414,11 @@ struct GenerateMenu : public Menu, public Proxy::Listener
       draw_frame(target, xPos, yPos, width, height);
       draw_text_bmp(target, xPos + 8, yPos + 4, "%s%s",
           m_nameBuffer.c_str(), m_nameBuffer.size() < MAX_NAME_SIZE ? "_" : "");
+    }
+
+    if (m_state == STATE_SELECT_AVATAR)
+    {
+      m_selectFaceMenu.draw(target, x, y);
     }
   }
 
@@ -294,20 +459,47 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     }
   }
 
+  void reset()
+  {
+    theClass = "";
+    theName  = "";
+    theFace  = "";
+
+    if (m_faceTexture)
+    {
+      cache::releaseTexture(m_faceTexture);
+      m_faceTexture = 0;
+    }
+  }
+
   std::string theClass;
   std::string theName;
+  std::string theFace;
 private:
   void clearProxy()
   {
     Proxy::get().captureTyping = false;
     Proxy::get().listener = 0;
   }
+
+  void reloadFace(const std::string& name)
+  {
+    if (m_faceTexture)
+    {
+      cache::releaseTexture(m_faceTexture);
+    }
+
+    m_faceTexture = cache::loadTexture("Faces/" + theFace);
+  }
 private:
   std::vector<PlayerClass> m_classes;
   SelectClassMenu m_selectClassMenu;
+  SelectFaceMenu  m_selectFaceMenu;
   State m_state;
 
   std::string m_nameBuffer;
+
+  sf::Texture* m_faceTexture;
 };
 
 struct CharGenCharacterMenu : public Menu
@@ -424,8 +616,7 @@ struct SelectMenu : public Menu
           m_genMenu.setVisible(true);
 
           m_genMenu.resetChoice();
-          m_genMenu.theClass = "";
-          m_genMenu.theName = "";
+          m_genMenu.reset();
         }
         else
         {
@@ -471,7 +662,7 @@ struct SelectMenu : public Menu
 
         if (m_genMenu.theClass.size() && m_genMenu.theName.size())
         {
-          m_player->addNewCharacter(m_genMenu.theName, m_genMenu.theClass, 0, 0, 1);
+          m_player->addNewCharacter(m_genMenu.theName, m_genMenu.theClass, "Faces/" + m_genMenu.theFace, 0, 0, 1);
           m_characterMenu.refresh();
         }
       }
@@ -645,6 +836,6 @@ void CharGen::handleKeyPress(sf::Keyboard::Key key)
     if (key == sf::Keyboard::Down) m_selectMenu->moveArrow(DIR_DOWN);
     else if (key == sf::Keyboard::Up) m_selectMenu->moveArrow(DIR_UP);
     else if (key == sf::Keyboard::Right) m_selectMenu->moveArrow(DIR_RIGHT);
-    else if (key == sf::Keyboard::Down) m_selectMenu->moveArrow(DIR_DOWN);
+    else if (key == sf::Keyboard::Left) m_selectMenu->moveArrow(DIR_LEFT);
   }
 }

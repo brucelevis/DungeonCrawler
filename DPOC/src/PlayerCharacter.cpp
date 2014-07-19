@@ -299,6 +299,39 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
   return character;
 }
 
+PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className, const std::string& face, int level)
+{
+  PlayerCharacter* character = new PlayerCharacter;
+
+  character->m_name = name;
+  character->m_class = player_class_ref(className);
+
+  character->m_faceTexture = cache::loadTexture(face);
+  character->m_textureRect = sf::IntRect(0, 0, 32, 32);
+
+  character->m_status.push_back(get_status_effect("Normal"));
+
+  character->m_attributes["level"] = make_attribute(0);
+  character->m_attributes["exp"] = make_attribute(0);
+
+  for (int i = 1; i <= level; i++)
+  {
+    character->setLevel(i, false);
+
+    if (i < level)
+    {
+      // Gain enough exp for the current level.
+      character->getAttribute("exp").max = character->expForLevel();
+      reset_attribute(character->getAttribute("exp"));
+    }
+  }
+
+  reset_attribute(character->m_attributes["hp"]);
+  reset_attribute(character->m_attributes["mp"]);
+
+  return character;
+}
+
 PlayerCharacter* PlayerCharacter::createFromSaveData(CharacterData* data)
 {
   PlayerCharacter* character = new PlayerCharacter;
