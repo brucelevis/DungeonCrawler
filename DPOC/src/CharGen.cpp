@@ -696,6 +696,7 @@ struct SelectMenu : public Menu
           if (m_genMenu.theClass.size() && m_genMenu.theName.size())
           {
             m_player->addNewCharacter(m_genMenu.theName, m_genMenu.theClass, "Faces/" + m_genMenu.theFace, 0, 0, 1);
+            defaultEquip(m_genMenu.theName);
             m_characterMenu.refresh();
           }
         }
@@ -799,7 +800,16 @@ struct SelectMenu : public Menu
       draw_status(target, m_player->getCharacter(m_inspectChar), 24, 24);
     }
   }
-
+private:
+  void defaultEquip(const std::string& charName)
+  {
+    // TODO: This should be parsed from class XML
+    PlayerCharacter* character = m_player->getCharacter(m_genMenu.theName);
+    character->equip("Weapon", "Copper Sword");
+    character->equip("Shield", "Wood Shield");
+    character->equip("Armour", "Leather Armor");
+    character->equip("Helmet", "Fancy Hat");
+  }
 private:
   State m_state;
   GenerateMenu m_genMenu;
