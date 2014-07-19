@@ -148,7 +148,10 @@ void Entity::setDirection(Direction dir)
     m_direction = dir;
   }
 
-  m_sprite->setDirection(m_direction);
+  if (m_sprite)
+  {
+    m_sprite->setDirection(m_direction);
+  }
 }
 
 void Entity::step(Direction dir)
@@ -648,7 +651,10 @@ std::string Entity::xmlDump() const
 
   xml << "<entity name=\"" << m_name << "\" tag=\"" << getTag() << "\">\n";
 
-  xml << " <sprite name=\"" << m_sprite->getTextureName() << "\" />\n";
+  if (m_sprite)
+  {
+    xml << " <sprite name=\"" << m_sprite->getTextureName() << "\" />\n";
+  }
   xml << " <direction>" << directionToString(m_direction) << "</direction>\n";
   xml << " <speed>" << m_speed << "</speed>\n";
   xml << " <walkThrough>" << m_walkThrough << "</walkThrough>\n";
