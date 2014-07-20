@@ -27,6 +27,11 @@ Objects:
   - Objects with name set to "warp" are warp objects.
   - destX, destY and destMap properties required.
 
+ * Traps:
+  - Objects with name set to "trap" are traps.
+  - Type is the type of the trap (hardcoded): poison, ...
+  - luck property is the base "luck to beat" of the trap
+
  * Zones:
   - Objects with name set to "zone" represents a zone for encounters.
   - property zoneId required.
