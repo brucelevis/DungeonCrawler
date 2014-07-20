@@ -280,7 +280,7 @@ void Game::draw(sf::RenderTarget& target)
     }
   }
 
-  m_raycaster->raycast(&m_camera, m_raycasterBuffer, false, m_player->player()->getDirection());
+  m_raycaster->raycast(&m_camera, m_raycasterBuffer, m_player->player()->getDirection());
   m_texture.loadFromImage(m_raycasterBuffer);
 
   sf::Sprite sprite(m_texture);

@@ -18,7 +18,7 @@ class Raycaster
 public:
   Raycaster(int width, int height);
 
-  void raycast(Camera* camera, sf::Image& buffer, bool wireframe = false, Direction pDir = DIR_RANDOM);
+  void raycast(Camera* camera, sf::Image& buffer, Direction pDir = DIR_RANDOM);
   
   void setTilemap(Map* tilemap);
   
@@ -40,12 +40,10 @@ private:
 
   bool sameCoord(const RayInfo& a, const RayInfo& b) const;
 
-  void drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer, bool wireframe);
-  void drawSprites(sf::Image& buffer, Direction pDir, bool wireframe);
+  void drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer);
+  void drawSprites(sf::Image& buffer, Direction pDir);
 
   const Entity* getEntityAt(int x, int y) const;
-
-  void drawWallFeature(sf::Image& buffer, bool isWireframe, Tile* tile, int textureX, int textureY, int wallDist, int x, int y);
 private:
   int m_width, m_height;
 

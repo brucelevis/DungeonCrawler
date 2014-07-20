@@ -70,13 +70,11 @@ void Raycaster::removeEntity(const Entity* entity)
   m_entities.remove(entity);
 }
 
-void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direction pDir)
+void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
 {
   m_camera = camera;
 
   int x, y;
-
-  RayInfo prevInfo, nextInfo;
 
   for (x = 0; x < m_width; x++)
   {
@@ -84,10 +82,6 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
     int wallStart, wallEnd;
     
     RayInfo info = castRay(x, m_width, m_height);
-    if (wireframe)
-    {
-      nextInfo = castRay(x + 1, m_width, m_height);
-    }
 
     zbuffer[x] = info.wallDist;
     
@@ -109,43 +103,15 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
       {
         int tileId = tile ? tile->tileId : -1;
 
-        if (!wireframe)
-        {
-          sf::Color color = computeIntensity(
-              m_tileTextures[tileId].getPixel(info.textureX, textureY),
-              INTENSITY, MULTIPLIER, info.wallDist);
+        sf::Color color = computeIntensity(
+            m_tileTextures[tileId].getPixel(info.textureX, textureY),
+            INTENSITY, MULTIPLIER, info.wallDist);
 
-          buffer.setPixel(x, y, color);
-
-          // This is slow and bad.
-//          Tile* featureTile = m_tilemap->getTileAt(info.mapX, info.mapY, "feature");
-//          if (featureTile && featureTile->tileId > -1)
-//          {
-//            drawWallFeature(buffer, wireframe, featureTile, info.textureX, textureY, info.wallDist, x, y);
-//          }
-        }
-        else
-        {
-          sf::Color color = m_tileTextures[tileId].getPixel(info.textureX, textureY);
-          if (color == sf::Color::White)
-          {
-            buffer.setPixel(x, y, sf::Color::Red);
-          }
-        }
+        buffer.setPixel(x, y, color);
       }
       else
       {
         buffer.setPixel(x, y, sf::Color::Black);
-      }
-
-      if (wireframe && x > 0 && x < (m_width - 1))
-      {
-        if (!sameCoord(prevInfo, info))
-          buffer.setPixel(x, y, sf::Color::Red);
-        else if (info.side != nextInfo.side)
-          buffer.setPixel(x, y, sf::Color::Red);
-        else if (!sameCoord(info, nextInfo))
-          buffer.setPixel(x, y, sf::Color::Red);
       }
     }
   
@@ -154,22 +120,13 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, bool wireframe, Direc
       wallEnd = m_height;
     }
 
-    drawFloorsCeiling(info, x, wallEnd, buffer, wireframe);
-
-    if (wireframe && (wallEnd < m_height))
-    {
-      buffer.setPixel(x, wallEnd, sf::Color::Red);
-      buffer.setPixel(x, m_height - wallEnd, sf::Color::Red);
-    }
-
-    prevInfo = info;
+    drawFloorsCeiling(info, x, wallEnd, buffer);
   }
 
-  drawSprites(buffer, pDir, wireframe);
-
+  drawSprites(buffer, pDir);
 }
 
-void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer, bool wireframe)
+void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer)
 {
   float cameraDist = 0;
 
@@ -199,46 +156,24 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
     // Floor
     if (floorIndex > -1)
     {
-      if (!wireframe)
-      {
-        sf::Color color = computeIntensity(
+      sf::Color color = computeIntensity(
           m_tileTextures[floorIndex].getPixel(floorTextureX, floorTextureY),
           0.75, 1.0, currentDist);
-        buffer.setPixel(x, y, color);
-      }
-      else
-      {
-        sf::Color color = m_tileTextures[floorIndex].getPixel(floorTextureX, floorTextureY);
-        if (color == sf::Color::White)
-        {
-          buffer.setPixel(x, y, sf::Color::Red);
-        }
-      }
+      buffer.setPixel(x, y, color);
     }
 
     // Ceiling
     if (ceilIndex > -1)
     {
-      if (!wireframe)
-      {
-        sf::Color color = computeIntensity(
+      sf::Color color = computeIntensity(
           m_tileTextures[ceilIndex].getPixel(floorTextureX, floorTextureY),
           INTENSITY, MULTIPLIER, currentDist);
-        buffer.setPixel(x, m_height - y, color);
-      }
-      else
-      {
-        sf::Color color = m_tileTextures[ceilIndex].getPixel(floorTextureX, floorTextureY);
-        if (color == sf::Color::White)
-        {
-          buffer.setPixel(x, m_height - y, sf::Color::Red);
-        }
-      }
+      buffer.setPixel(x, m_height - y, color);
     }
   }
 }
 
-void Raycaster::drawSprites(sf::Image& buffer, Direction pDir, bool wireframe)
+void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
 {
   m_entities.sort([=](const Entity* lhs, const Entity* rhs) -> bool
     {
@@ -307,14 +242,10 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir, bool wireframe)
 
             sf::Color color = spriteImage.getPixel(texX, texY);
 
-            if (!wireframe && color.a == 255)
+            if (color.a == 255)
             {
               color = computeIntensity(color, INTENSITY, MULTIPLIER, transformY);
               buffer.setPixel(x, y, color);
-            }
-            else if (wireframe && color == sf::Color::White)
-            {
-              buffer.setPixel(x, y, sf::Color::Red);
             }
           }
         }
@@ -470,19 +401,4 @@ const Entity* Raycaster::getEntityAt(int x, int y) const
   }
 
   return 0;
-}
-
-void Raycaster::drawWallFeature(sf::Image& buffer, bool isWireframe, Tile* tile, int textureX, int textureY, int wallDist, int x, int y)
-{
-  sf::Color featureColor = m_tileTextures[tile->tileId].getPixel(textureX, textureY);
-
-  if (!isWireframe && featureColor.a == 255)
-  {
-    featureColor = computeIntensity(featureColor, 0.5, 1.0, wallDist);
-    buffer.setPixel(x, y, featureColor);
-  }
-  else if (isWireframe && featureColor == sf::Color::White)
-  {
-    buffer.setPixel(x, y, sf::Color::Red);
-  }
 }
