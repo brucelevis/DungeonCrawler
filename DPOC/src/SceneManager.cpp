@@ -25,7 +25,7 @@ SceneManager::SceneManager()
 
 void SceneManager::create()
 {
-  m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
+  m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
   m_window.setKeyRepeatEnabled(false);
 
   m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
@@ -109,7 +109,7 @@ void SceneManager::draw()
 
   sf::Sprite sprite;
   sprite.setTexture(m_targetTexture.getTexture());
-  //sprite.setScale(sf::Vector2f(2, 2));
+  sprite.setScale(sf::Vector2f(2, 2));
   sprite.setPosition(0, 0);
 
   if (m_shakeCounter > 0)
