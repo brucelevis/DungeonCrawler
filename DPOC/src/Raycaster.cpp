@@ -108,6 +108,21 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
             INTENSITY, MULTIPLIER, info.wallDist);
 
         buffer.setPixel(x, y, color);
+
+        Tile* featureTile = m_tilemap->getTileAt(info.mapX, info.mapY, "wallfeature");
+        if (featureTile && featureTile->tileId > -1)
+        {
+          color = m_tileTextures[featureTile->tileId].getPixel(info.textureX, textureY);
+
+          if (color.a == 255)
+          {
+            color = computeIntensity(
+                color,
+                INTENSITY, MULTIPLIER, info.wallDist);
+
+            buffer.setPixel(x, y, color);
+          }
+        }
       }
       else
       {
