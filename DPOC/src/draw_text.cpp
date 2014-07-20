@@ -35,7 +35,7 @@ static void draw_bmp_text(sf::RenderTarget& target, int x, int y, const sf::Colo
     else
     {
       px = x;
-      py += 8;
+      py += 9;
     }
   }
 }

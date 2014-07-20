@@ -147,7 +147,7 @@ struct SelectClassMenu : public Menu
     PlayerClass currentClass = player_class_ref(getCurrentMenuChoice());
     draw_text_bmp(target, 8, 8, "%s", currentClass.description.c_str());
 
-    int yPos = 72;
+    int yPos = 76;
 
     draw_text_bmp(target, 8, yPos,  "Base attributes:");
     draw_text_bmp(target, 8, yPos + 12, "Strength: %d", currentClass.baseAttributes["strength"]);

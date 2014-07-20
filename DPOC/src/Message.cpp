@@ -10,6 +10,7 @@
 #include "Message.h"
 
 static const size_t CHARS_PER_LINE = 30;
+static const size_t MAX_LINES = 8;
 
 static std::vector<std::string> battleMessage;
 
@@ -133,7 +134,7 @@ void Message::show(const std::string& msg, bool append)
       buffer.clear();
 
       lines++;
-      if (lines >= 4)
+      if (lines >= MAX_LINES)
       {
         lines = 0;
         if (!append) m_pages.push(complete);
@@ -208,6 +209,6 @@ void Message::update()
 
 void Message::draw(sf::RenderTarget& target)
 {
-  draw_frame(target, config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 48, 256, 48);
-  draw_text_bmp(target, 8 + config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 48 + 8, "%s", m_currentBuffer.c_str());
+  draw_frame(target, config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 80, 256, 80);
+  draw_text_bmp(target, 8 + config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 80 + 6, "%s", m_currentBuffer.c_str());
 }
