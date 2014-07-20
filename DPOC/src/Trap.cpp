@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include "Sound.h"
+#include "Config.h"
 #include "Game.h"
 #include "Player.h"
 #include "PlayerCharacter.h"
@@ -36,7 +38,8 @@ void Trap::checkTrap() const
 
   if (detector)
   {
-    show_message("%s found a trap!", detector->getName().c_str());
+    play_sound(config::get("SOUND_SUCCESS"));
+    show_message("%s found and disarmed a trap!", detector->getName().c_str());
   }
   else
   {
@@ -48,6 +51,8 @@ void Trap::checkTrap() const
 void Trap::applyTrap(const std::vector<PlayerCharacter*>& party) const
 {
   show_message("The party stumbled into a %s trap!", m_type.c_str());
+
+  play_sound(config::get("SOUND_TRAP"));
 
   if (m_type == "poison")
   {
