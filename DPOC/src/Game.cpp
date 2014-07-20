@@ -154,7 +154,7 @@ void Game::update()
       // Update minimap position only when player has finished moving.
       m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y);
 
-      if (!checkWarps())
+      if (!checkWarps() && !checkTraps())
       {
         // Also check encounters if no warps were taken.
 
@@ -398,6 +398,23 @@ bool Game::checkWarps()
     play_sound(config::get("SOUND_MOVEMENT"));
 
     prepareTransfer(warp->destMap, warp->dstX, warp->dstY);
+
+    return true;
+  }
+
+  return false;
+}
+
+bool Game::checkTraps()
+{
+  if (m_player && m_currentMap &&
+      !m_player->player()->isWalking() &&
+      m_currentMap->trapAt(m_player->player()->x, m_player->player()->y))
+  {
+    const Trap* trap = m_currentMap->getTrapAt(m_player->player()->x, m_player->player()->y);
+
+    trap->checkTrap();
+    m_currentMap->disableTrap(trap);
 
     return true;
   }

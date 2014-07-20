@@ -660,8 +660,8 @@ void Battle::actionEffect()
 
       currentTarget->flash().start(6, 3);
 
-      if (random_range(0, m_currentActor->computeCurrentAttribute("luck")) >
-          random_range(0, currentTarget->computeCurrentAttribute("luck")))
+      if (check_vs_luck(m_currentActor->computeCurrentAttribute("luck"),
+                        currentTarget->computeCurrentAttribute("luck")))
       {
         std::string item = currentTarget->stealItem();
 

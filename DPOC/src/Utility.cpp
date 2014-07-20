@@ -157,3 +157,8 @@ float deg2rad(float degs)
 {
   return PI_F * (float)degs / 180.0f;
 }
+
+bool check_vs_luck(int luck, int luckToBeat)
+{
+  return random_range(0, luck) > random_range(0, luckToBeat);
+}

@@ -60,6 +60,7 @@ private:
 
   void updatePlayer();
   bool checkWarps();
+  bool checkTraps();
 
   void transferPlayer(const std::string& targetMap, int x, int y);
 

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <set>
 
+#include "Persistent.h"
 #include "Config.h"
 #include "Direction.h"
 #include "Utility.h"
@@ -252,6 +253,19 @@ Map* Map::loadTiledFile(const std::string& filename)
           TRACE("New warp: srcX=%d, srcY=%d, dstX=%d, dstY=%d, dstMap=%s",
               warp.srcX, warp.srcY, warp.dstX, warp.dstY, warp.destMap.c_str());
         }
+        else if (to_lower(name) == "trap")
+        {
+          int trapX = object->x / config::TILE_W;
+          int trapY = object->y / config::TILE_H;
+
+          std::string trapType = loader.getObjectType(objectIndex);
+          int luckToBeat = fromString<int>(loader.getObjectProperty(objectIndex, "luck"));
+
+          map->m_traps.push_back( Trap { trapType, luckToBeat, trapX, trapY } );
+
+          TRACE("New trap: trapX=%d, trapY=%d, trapType=%s, luck=%d",
+              trapX, trapY, trapType.c_str(), luckToBeat);
+        }
         else if (to_lower(name) == "zone")
         {
           int zoneId = fromString<int>(loader.getObjectProperty(objectIndex, "zoneId"));
@@ -346,6 +360,39 @@ const Warp* Map::getWarpAt(int x, int y) const
   return 0;
 }
 
+bool Map::trapAt(int x, int y) const
+{
+  for (auto it = m_traps.begin(); it != m_traps.end(); ++it)
+  {
+    if (it->x == x && it->y == y && !Persistent<int>::instance().isSet(getTrapKey(&(*it))))
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+const Trap* Map::getTrapAt(int x, int y) const
+{
+  for (auto it = m_traps.begin(); it != m_traps.end(); ++it)
+  {
+    if (it->x == x && it->y == y)
+    {
+      return &(*it);
+    }
+  }
+
+  return 0;
+}
+
+void Map::disableTrap(const Trap* trap)
+{
+  // Mark this trap as "sprung" in the persistent storage so that it can be
+  // saved.
+  Persistent<int>::instance().set(getTrapKey(trap), 1);
+}
+
 bool Map::blocking(int x, int y)
 {
   Tile* tile = getTileAt(x, y, "wall");
@@ -432,4 +479,9 @@ std::vector<sf::Image> Map::getTilesetImages() const
   }
 
   return images;
+}
+
+std::string Map::getTrapKey(const Trap* trap) const
+{
+  return "Trap[" + getName() + "," + toString(trap->x) + "," + toString(trap->y) + "]";
 }

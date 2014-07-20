@@ -10,6 +10,7 @@
 #include "coord.h"
 #include "Config.h"
 #include "Entity.h"
+#include "Trap.h"
 
 struct Tile
 {
@@ -45,6 +46,10 @@ public:
   bool warpAt(int x, int y) const;
   const Warp* getWarpAt(int x, int y) const;
 
+  bool trapAt(int x, int y) const;
+  const Trap* getTrapAt(int x, int y) const;
+  void disableTrap(const Trap* trap);
+
   std::string getName() const { return m_name; }
   std::string getMusic() const { return m_music; }
 
@@ -70,12 +75,15 @@ private:
   {
     return m_width * m_height;
   }
+
+  std::string getTrapKey(const Trap* trap) const;
 private:
   std::map<std::string, Tile*> m_tiles;
   int m_width, m_height;
   std::vector<Entity*> m_entities;
   std::string m_music;
   std::vector<Warp> m_warps;
+  std::vector<Trap> m_traps;
 
   int m_encounterRate;
   std::multimap<int, std::vector<std::string> > m_encounters;
