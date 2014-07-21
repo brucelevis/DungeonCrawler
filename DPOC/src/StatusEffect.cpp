@@ -72,7 +72,7 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
   const XMLElement* recovChanceElem = statusElement->FirstChildElement("recoveryChance");
   const XMLElement* incapElem = statusElement->FirstChildElement("incapacitate");
   const XMLElement* damageElem = statusElement->FirstChildElement("damage");
-  const XMLElement* soundElem = statusElement->FirstChildElement("sound");
+  const XMLElement* effeElem = statusElement->FirstChildElement("effect");
 
   if (nameElem)
     status.name = nameElem->GetText();
@@ -99,8 +99,8 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
     status.damagePerTurn = fromString<int>(damageElem->FindAttribute("amount")->Value());
     status.damageStat = damageElem->FindAttribute("attr")->Value();
   }
-  if (soundElem)
-    status.sound = soundElem->GetText();
+  if (effeElem)
+    status.effect = Effect::createFromXmlElement(effeElem);
 
   const XMLElement* typesElem = statusElement->FirstChildElement("statusType");
   if (typesElem)

@@ -203,7 +203,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
         // Play the first applicable sound.
         if (soundToPlay.empty())
         {
-          soundToPlay = get_status_effect(it->first)->sound;
+          soundToPlay = get_status_effect(it->first)->effect.sound;
         }
       }
     }

@@ -811,6 +811,8 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
       {
         float percent = (float)status->damagePerTurn / 100.0f;
         damage = percent * (float)actor->getAttribute(status->damageStat).max;
+
+        if (damage == 0) damage = 1;
       }
 
       actor->takeDamage(status->damageStat, damage);
@@ -820,8 +822,8 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
 //      battle_message("%s takes %d %s damage from %s!",
 //          actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
 
-      if (!status->sound.empty())
-        play_sound("Audio/" + status->sound);
+      status->effect.playSfx();
+      status->effect.applyAnimation(actor);
 
       didProcess = true;
       tookDamage = true;

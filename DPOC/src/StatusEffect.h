@@ -5,6 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Effect.h"
+
 enum DamageType
 {
   DAMAGE_NONE,
@@ -45,7 +47,7 @@ struct StatusEffect
 
   int statusType;
 
-  std::string sound;
+  Effect effect;
 };
 
 void load_status_effects();
