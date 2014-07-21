@@ -375,7 +375,7 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Spell")
   {
-    play_sound(config::get("SOUND_SPELL"));
+//    play_sound(config::get("SOUND_SPELL"));
 
     if (action.target)
     {
@@ -1291,20 +1291,16 @@ void Battle::createEffects()
   }
   else if (action.actionName == "Spell")
   {
-//    const Spell* spell = get_spell(action.objectName);
+    const Spell* spell = get_spell(action.objectName);
 
-    // TODO: Uncomment when effects are used.
-    //effectName = spell->effect;
+    effect = spell->effect;
   }
   else if (action.actionName == "Item")
   {
-//    Item& item = item_ref(action.objectName);
+    Item& item = item_ref(action.objectName);
 
-    // TODO: Uncomment when effects are used.
-    //effectName = item.effect;
+    effect = item.effect;
   }
-
-  //effectName = config::res_path("Animations/effect_Sword.xml");
 
   effect.playSfx();
 

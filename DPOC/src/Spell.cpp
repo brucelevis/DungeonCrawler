@@ -70,7 +70,7 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   if (powrElem)
     spell.power = fromString<int>(powrElem->GetText());
   if (effeElem)
-    spell.effect = effeElem->GetText();
+    spell.effect = Effect::createFromXmlElement(effeElem);
   if (elemElem)
     spell.element = elemElem->GetText();
   if (verbElem)

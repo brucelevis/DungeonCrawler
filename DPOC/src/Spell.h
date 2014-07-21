@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Target.h"
+#include "Effect.h"
 
 class Character;
 
@@ -37,7 +38,7 @@ struct Spell
 
   bool battleOnly;
 
-  std::string effect;
+  Effect effect;
 
   int spellType;
 
