@@ -3,6 +3,11 @@
 
 #include <string>
 
+namespace tinyxml2
+{
+  class XMLElement;
+}
+
 class Character;
 
 struct Effect
@@ -12,6 +17,8 @@ struct Effect
 
   void playSfx() const;
   void applyAnimation(Character* character) const;
+
+  static Effect createFromXmlElement(const tinyxml2::XMLElement* element);
 };
 
 #endif

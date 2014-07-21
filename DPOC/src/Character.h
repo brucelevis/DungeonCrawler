@@ -9,6 +9,7 @@
 
 #include "Item.h"
 #include "Flash.h"
+#include "Effect.h"
 
 class StatusEffect;
 
@@ -74,6 +75,9 @@ public:
   bool hasStatusType(int statusType) const;
 
   std::string stealItem();
+
+  void setUnarmedAttackEffect(Effect effect) { m_unarmedAttackEffect = effect; }
+  const Effect& getUnarmedAttackEffect() const { return m_unarmedAttackEffect; }
 private:
   std::vector<StatusEffect*>::iterator getStatusEffectIterator(const std::string& status);
 protected:
@@ -92,6 +96,9 @@ protected:
   std::vector<std::string> m_statusImmunity;
 
   std::vector<std::string> m_itemsToSteal;
+
+  // Effect playing when no weapon is equipped, or the effect for monsters.
+  Effect m_unarmedAttackEffect;
 
   // Flash data
   Flash m_flash;

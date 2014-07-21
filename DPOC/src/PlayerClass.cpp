@@ -29,6 +29,12 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     pc.description = descElem->GetText();
   }
 
+  const XMLElement* effeElem = classElement->FirstChildElement("unarmedAttack");
+  if (effeElem)
+  {
+    pc.unarmedAttackEffect = Effect::createFromXmlElement(effeElem);
+  }
+
   const XMLElement* attributesElem = classElement->FirstChildElement("attributes");
   if (attributesElem)
   {

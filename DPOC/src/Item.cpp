@@ -87,13 +87,7 @@ static Item parse_item_element(const XMLElement* itemElement)
     item.status = statElem->GetText();
   if (effeElem)
   {
-    const XMLAttribute* animAttr = effeElem->FindAttribute("animation");
-    const XMLAttribute* sndAttr  = effeElem->FindAttribute("sound");
-
-    if (animAttr)
-      item.effect.animation = animAttr->Value();
-    if (sndAttr)
-      item.effect.sound = sndAttr->Value();
+    item.effect = Effect::createFromXmlElement(effeElem);
   }
   if (verbElem)
     item.useVerb = verbElem->GetText();

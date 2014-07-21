@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Effect.h"
 #include "coord.h"
 
 struct BaseAttr
@@ -31,6 +32,7 @@ struct PlayerClass
   sf::IntRect textureRect;
 
   std::string description;
+  Effect unarmedAttackEffect;
 };
 
 void load_classes();

@@ -44,6 +44,8 @@ public:
 private:
   void setAttributes();
   void setLevel(int levelReached, bool display = true);
+
+  void setClass(const std::string& className);
 private:
   std::map<std::string, Item> m_equipment;
   std::vector<std::string> m_spells;

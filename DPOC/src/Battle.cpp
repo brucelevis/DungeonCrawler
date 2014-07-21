@@ -1281,9 +1281,12 @@ void Battle::createEffects()
       }
       else
       {
-        // TODO: Uncomment when effects are used.
-        //effectName = "Effect_Hit";
+        effect = m_currentActor->getUnarmedAttackEffect();
       }
+    }
+    else
+    {
+      effect = m_currentActor->getUnarmedAttackEffect();
     }
   }
   else if (action.actionName == "Spell")

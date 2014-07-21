@@ -266,12 +266,18 @@ bool PlayerCharacter::isImmune(const std::string& status) const
   return Character::isImmune(status);
 }
 
+void PlayerCharacter::setClass(const std::string& className)
+{
+  m_class = player_class_ref(className);
+  setUnarmedAttackEffect(m_class.unarmedAttackEffect);
+}
+
 PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className, int level)
 {
   PlayerCharacter* character = new PlayerCharacter;
 
   character->m_name = name;
-  character->m_class = player_class_ref(className);
+  character->setClass(className);
 
   character->m_faceTexture = cache::loadTexture(character->m_class.faceTexture);
   character->m_textureRect = character->m_class.textureRect;
@@ -304,7 +310,7 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
   PlayerCharacter* character = new PlayerCharacter;
 
   character->m_name = name;
-  character->m_class = player_class_ref(className);
+  character->setClass(className);
 
   character->m_faceTexture = cache::loadTexture(face);
   character->m_textureRect = sf::IntRect(0, 0, 32, 32);
@@ -340,7 +346,7 @@ PlayerCharacter* PlayerCharacter::createFromSaveData(CharacterData* data)
   character->m_faceTexture = cache::loadTexture(data->textureName);
   character->m_textureRect = sf::IntRect(data->textureX, data->textureY, data->textureW, data->textureH);
 
-  character->m_class = player_class_ref(data->className);
+  character->setClass(data->className);
 
   for (auto it = data->statusEffects.begin(); it != data->statusEffects.end(); ++it)
   {

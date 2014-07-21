@@ -2,6 +2,9 @@
 #include "Character.h"
 #include "Flash.h"
 
+#include "../dep/tinyxml2.h"
+using namespace tinyxml2;
+
 void Effect::playSfx() const
 {
   if (sound.size())
@@ -16,4 +19,19 @@ void Effect::applyAnimation(Character* character) const
   {
     character->flash().startEffect(animation);
   }
+}
+
+Effect Effect::createFromXmlElement(const tinyxml2::XMLElement* element)
+{
+  Effect effect;
+
+  const XMLAttribute* animAttr = element->FindAttribute("animation");
+  const XMLAttribute* sndAttr  = element->FindAttribute("sound");
+
+  if (animAttr)
+    effect.animation = animAttr->Value();
+  if (sndAttr)
+    effect.sound = sndAttr->Value();
+
+  return effect;
 }
