@@ -33,7 +33,7 @@ T parseAttribute(const XMLElement* element, const std::string& attrName)
   return T();
 }
 
-void Effect::load(const std::string& file)
+void BattleAnimation::load(const std::string& file)
 {
   XMLDocument doc;
   if (doc.LoadFile(file.c_str()) != 0)
@@ -60,7 +60,7 @@ void Effect::load(const std::string& file)
   }
 }
 
-std::vector<Effect::Frame::Sprite> Effect::parseFrame(const tinyxml2::XMLElement* frameElement)
+std::vector<BattleAnimation::Frame::Sprite> BattleAnimation::parseFrame(const tinyxml2::XMLElement* frameElement)
 {
   std::vector<Frame::Sprite> sprites;
 
@@ -91,7 +91,7 @@ std::vector<Effect::Frame::Sprite> Effect::parseFrame(const tinyxml2::XMLElement
   return sprites;
 }
 
-Effect::Effect()
+BattleAnimation::BattleAnimation()
   : m_originX(0),
     m_originY(0),
     m_spriteWidth(0),
@@ -102,12 +102,12 @@ Effect::Effect()
 
 }
 
-Effect::~Effect()
+BattleAnimation::~BattleAnimation()
 {
   cache::releaseTexture(m_texture);
 }
 
-void Effect::update()
+void BattleAnimation::update()
 {
   if (complete())
   {
@@ -115,13 +115,13 @@ void Effect::update()
   }
 }
 
-void Effect::setOrigin(float x, float y)
+void BattleAnimation::setOrigin(float x, float y)
 {
   m_originX = x;
   m_originY = y;
 }
 
-void Effect::render(sf::RenderTarget& target)
+void BattleAnimation::render(sf::RenderTarget& target)
 {
   if (complete())
     return;
@@ -151,14 +151,14 @@ void Effect::render(sf::RenderTarget& target)
   m_currentFrameIndex++;
 }
 
-Effect::Frame* Effect::getCurrentFrame()
+BattleAnimation::Frame* BattleAnimation::getCurrentFrame()
 {
   return &m_frames[m_currentFrameIndex];
 }
 
-Effect* Effect::loadEffect(const std::string& filename)
+BattleAnimation* BattleAnimation::loadEffect(const std::string& filename)
 {
-  Effect* effect = new Effect;
+  BattleAnimation* effect = new BattleAnimation;
   effect->load(filename);
   return effect;
 }

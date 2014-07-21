@@ -11,7 +11,7 @@ namespace tinyxml2
   class XMLElement;
 }
 
-class Effect
+class BattleAnimation
 {
 public:
   struct Frame
@@ -26,8 +26,8 @@ public:
     std::vector<Sprite> sprites;
   };
 
-  Effect();
-  ~Effect();
+  BattleAnimation();
+  ~BattleAnimation();
 
   void update();
 
@@ -40,7 +40,7 @@ public:
     return m_currentFrameIndex >= m_frames.size();
   }
 
-  static Effect* loadEffect(const std::string& filename);
+  static BattleAnimation* loadEffect(const std::string& filename);
 private:
   Frame* getCurrentFrame();
 

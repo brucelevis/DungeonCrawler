@@ -31,7 +31,7 @@ void Flash::startEffect(const std::string& effectName)
 {
   if (!m_activeEffect && !effectName.empty())
   {
-    m_activeEffect = Effect::loadEffect(config::res_path("Animations/" + effectName));
+    m_activeEffect = BattleAnimation::loadEffect(config::res_path("Animations/" + effectName));
   }
 }
 
