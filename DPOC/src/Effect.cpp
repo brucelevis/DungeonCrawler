@@ -1,3 +1,6 @@
+#include <stdexcept>
+#include <sstream>
+
 #include "logger.h"
 #include "Config.h"
 

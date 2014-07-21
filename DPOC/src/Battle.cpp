@@ -1300,16 +1300,13 @@ void Battle::createEffects()
     //effectName = item.effect;
   }
 
+  effectName = config::res_path("Animations/effect_Sword.xml");
+
   for (auto it = m_currentTargets.begin(); it != m_currentTargets.end(); ++it)
   {
-    if (isMonster(*it) && !effectName.empty())
+    if (!effectName.empty())
     {
       (*it)->flash().startEffect(effectName);
-    }
-    else if (!effectName.empty())
-    {
-      // This effect will be heard but not seen.
-      //m_activeEffects.push_back(Effect::createEffect(effectName, -100, -100));
     }
   }
 }
