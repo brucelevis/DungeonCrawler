@@ -48,6 +48,7 @@ struct Item
   std::map<std::string, int> attributeGain;
 
   std::string effect;
+  std::string sound;
 
   ItemUseType itemUseType;
 

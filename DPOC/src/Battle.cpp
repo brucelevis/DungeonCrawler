@@ -322,7 +322,7 @@ void Battle::executeActions()
     // TODO: Uncomment when effects are used.
     //if (isMonster(m_currentActor))
     //{
-      play_sound(config::get("SOUND_ATTACK"));
+      //play_sound(config::get("SOUND_ATTACK"));
     //}
 
     if (action.target)
@@ -1267,6 +1267,7 @@ void Battle::createEffects()
   Action& action = m_battleActions[m_currentActor].front();
 
   std::string effectName;
+  std::string soundEffect;
 
   if (action.actionName == "Attack")
   {
@@ -1275,8 +1276,8 @@ void Battle::createEffects()
       Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("Weapon");
       if (weapon)
       {
-        // TODO: Uncomment when effects are used.
-        //effectName = weapon->effect;
+        effectName = weapon->effect;
+        soundEffect = weapon->sound;
       }
       else
       {
@@ -1300,7 +1301,12 @@ void Battle::createEffects()
     //effectName = item.effect;
   }
 
-  effectName = config::res_path("Animations/effect_Sword.xml");
+  //effectName = config::res_path("Animations/effect_Sword.xml");
+
+  if (soundEffect.size())
+  {
+    play_sound("Audio/" + soundEffect);
+  }
 
   for (auto it = m_currentTargets.begin(); it != m_currentTargets.end(); ++it)
   {

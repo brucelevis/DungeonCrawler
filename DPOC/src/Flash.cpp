@@ -1,3 +1,4 @@
+#include "Config.h"
 #include "Game.h"
 #include "Flash.h"
 
@@ -30,7 +31,7 @@ void Flash::startEffect(const std::string& effectName)
 {
   if (!m_activeEffect && !effectName.empty())
   {
-    m_activeEffect = Effect::loadEffect(effectName);
+    m_activeEffect = Effect::loadEffect(config::res_path("Animations/" + effectName));
   }
 }
 

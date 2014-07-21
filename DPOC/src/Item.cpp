@@ -68,6 +68,7 @@ static Item parse_item_element(const XMLElement* itemElement)
   const XMLElement* useElem  = itemElement->FirstChildElement("onUse");
   const XMLElement* statElem = itemElement->FirstChildElement("status");
   const XMLElement* effeElem = itemElement->FirstChildElement("effect");
+  const XMLElement* soundElem = itemElement->FirstChildElement("sound");
   const XMLElement* verbElem = itemElement->FirstChildElement("verb");
 
   if (nameElem)
@@ -86,6 +87,8 @@ static Item parse_item_element(const XMLElement* itemElement)
     item.status = statElem->GetText();
   if (effeElem)
     item.effect = effeElem->GetText();
+  if (soundElem)
+    item.sound = soundElem->GetText();
   if (verbElem)
     item.useVerb = verbElem->GetText();
 
