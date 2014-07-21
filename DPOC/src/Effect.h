@@ -6,25 +6,28 @@
 #include <vector>
 #include <string>
 
+namespace tinyxml2
+{
+  class XMLElement;
+}
+
 class Effect
 {
 public:
   struct Frame
   {
-    int index;
-    int time;
-    float displaceX, displaceY;
-    std::string sound;
-
-    float scale;
-    float rotate;
-    sf::Color blendColor;
+    struct Sprite
+    {
+      int index;
+      int x, y;
+      float scaleX, scaleY;
+      int alpha;
+    };
+    std::vector<Sprite> sprites;
   };
 
   Effect();
   ~Effect();
-
-  void loadTexture(const std::string& texture, int spriteSize);
 
   void update();
 
@@ -37,31 +40,24 @@ public:
     return m_currentFrameIndex >= m_frames.size();
   }
 
-  int spriteSize() const { return m_spriteSize; }
-
-  static Effect* createEffect(const std::string& effectName, int x = 0, int y = 0);
+  static Effect* loadEffect(const std::string& filename);
 private:
   Frame* getCurrentFrame();
 
   void initSprite();
+
+  void load(const std::string& filename);
+  std::vector<Frame::Sprite> parseFrame(const tinyxml2::XMLElement* frameElement);
 private:
   float m_originX, m_originY;
-  int m_spriteSize;
+
+  int m_spriteWidth;
+  int m_spriteHeight;
 
   sf::Texture* m_texture;
-  sf::Sprite m_drawSprite;
 
   std::vector<Frame> m_frames;
   size_t m_currentFrameIndex;
-  int m_currentTime;
-};
-
-struct EffectDef
-{
-  std::string texture;
-  int frameSize;
-
-  std::vector<Effect::Frame> frames;
 };
 
 #endif

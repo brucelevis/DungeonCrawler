@@ -30,7 +30,7 @@ void Flash::startEffect(const std::string& effectName)
 {
   if (!m_activeEffect && !effectName.empty())
   {
-    m_activeEffect = Effect::createEffect(effectName);
+    //m_activeEffect = Effect::createEffect(effectName);
   }
 }
 

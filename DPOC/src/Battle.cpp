@@ -1309,7 +1309,7 @@ void Battle::createEffects()
     else if (!effectName.empty())
     {
       // This effect will be heard but not seen.
-      m_activeEffects.push_back(Effect::createEffect(effectName, -100, -100));
+      //m_activeEffects.push_back(Effect::createEffect(effectName, -100, -100));
     }
   }
 }

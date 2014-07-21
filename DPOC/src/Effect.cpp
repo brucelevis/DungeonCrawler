@@ -5,58 +5,96 @@
 #include "Sound.h"
 #include "Effect.h"
 
-static const std::map<std::string, EffectDef> frames =
+#include "../dep/tinyxml2.h"
+using namespace tinyxml2;
+
+template <typename T>
+T parseAttribute(const XMLElement* element, const std::string& attrName)
 {
+  const XMLAttribute* attribute = element->FindAttribute(attrName.c_str());
+
+  if (attribute)
   {
-    "Effect_Flame",
-    {
-      "Animations/effect_Flame.png",
-      16,
-      {
-        { 0, 6, 0, 0, "Audio/boom.wav", 1, 0, sf::Color::White },
-        { 1, 6, 0, 0, "", 1.5, 0, sf::Color::White },
-        { 2, 6, 0, 0, "", 2.0, 0, {255, 255, 255, 200 } },
-        { 0, 6, 0, 0, "", 2.5, 0, {255, 255, 255, 150 } },
-        { 1, 6, 0, 0, "", 3.0, 0, {255, 255, 255, 100 } },
-        { 2, 6, 0, 0, "", 3.0, 0, {255, 255, 255, 50 } }
-      }
-    }
-  },
+    T t;
+
+    std::istringstream ss ( attribute->Value() );
+    ss >> t;
+
+    return t;
+  }
+  else
   {
-    "Effect_Slash",
-    {
-      "Animations/effect_Slash.png",
-      24,
-      {
-        { 0, 6, 0, 0, "Audio/Sword1.wav", 1, 0, sf::Color::White },
-        { 1, 4, 0, 0, "", 1, 0, sf::Color::White },
-        { 2, 3, 0, 0, "", 1, 0, sf::Color::White },
-        { 3, 4, 0, 0, "", 1, 0, sf::Color::White },
-        { 4, 6, 0, 0, "", 1, 0, sf::Color::White }
-      }
-    }
-  },
+    throw std::runtime_error("No attribute: " + attrName);
+  }
+
+  return T();
+}
+
+void Effect::load(const std::string& file)
+{
+  XMLDocument doc;
+  if (doc.LoadFile(file.c_str()) != 0)
   {
-    "Effect_Hit",
+    fprintf(stderr, "Couldn't find %s!\n", file.c_str());
+    exit(1);
+  }
+
+  const XMLElement* root = doc.FirstChildElement("animation");
+
+  m_texture = cache::loadTexture("Animations/" + parseAttribute<std::string>(root, "texture"));
+  m_spriteWidth = parseAttribute<int>(root, "textureW");
+  m_spriteHeight = parseAttribute<int>(root, "textureH");
+
+  for (const XMLElement* element = root->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    std::string name = element->Name();
+    if (name == "frame")
     {
-      "Animations/effect_Hit.png",
-      64,
-      {
-        { 0, 6, 0, 0, "Audio/Blow2.wav", 1, 0, sf::Color::White },
-        { 1, 6, 0, 0, "", 1, 0, sf::Color::White },
-        { 2, 6, 0, 0, "", 1, 0, sf::Color::White }
-      }
+      Frame frame;
+      frame.sprites = parseFrame(element);
+      m_frames.push_back(frame);
     }
   }
-};
+}
+
+std::vector<Effect::Frame::Sprite> Effect::parseFrame(const tinyxml2::XMLElement* frameElement)
+{
+  std::vector<Frame::Sprite> sprites;
+
+  for (const XMLElement* element = frameElement->FirstChildElement(); element; element = element->NextSiblingElement())
+  {
+    std::string name = element->Name();
+    if (name == "sprite")
+    {
+      int index = parseAttribute<int>(element, "index");
+      int x     = parseAttribute<int>(element, "x");
+      int y     = parseAttribute<int>(element, "y");
+      float scaleX = parseAttribute<float>(element, "scaleX");
+      float scaleY = parseAttribute<float>(element, "scaleY");
+      int alpha = parseAttribute<int>(element, "alpha");
+
+      Frame::Sprite sprite;
+      sprite.index = index;
+      sprite.x = x;
+      sprite.y = y;
+      sprite.scaleX = scaleX;
+      sprite.scaleY = scaleY;
+      sprite.alpha = alpha;
+
+      sprites.push_back(sprite);
+    }
+  }
+
+  return sprites;
+}
 
 Effect::Effect()
   : m_originX(0),
     m_originY(0),
-    m_spriteSize(0),
+    m_spriteWidth(0),
+    m_spriteHeight(0),
     m_texture(0),
-    m_currentFrameIndex(0),
-    m_currentTime(0)
+    m_currentFrameIndex(0)
 {
 
 }
@@ -66,41 +104,11 @@ Effect::~Effect()
   cache::releaseTexture(m_texture);
 }
 
-void Effect::loadTexture(const std::string& texture, int spriteSize)
-{
-  m_texture = cache::loadTexture(texture);
-  m_spriteSize = spriteSize;
-  m_drawSprite.setTexture(*m_texture);
-}
-
 void Effect::update()
 {
   if (complete())
   {
     return;
-  }
-
-  if (m_currentTime == 0)
-  {
-    std::string sound = getCurrentFrame()->sound;
-    if (!sound.empty())
-    {
-      play_sound(sound);
-    }
-  }
-
-  m_currentTime++;
-
-  Frame* currentFrame = getCurrentFrame();
-  if (m_currentTime >= currentFrame->time)
-  {
-    m_currentTime = 0;
-    m_currentFrameIndex++;
-
-    if (!complete())
-    {
-      initSprite();
-    }
   }
 }
 
@@ -108,13 +116,36 @@ void Effect::setOrigin(float x, float y)
 {
   m_originX = x;
   m_originY = y;
-
-  initSprite();
 }
 
 void Effect::render(sf::RenderTarget& target)
 {
-  target.draw(m_drawSprite);
+  if (complete())
+    return;
+
+  Frame* frame = getCurrentFrame();
+  for (auto it = frame->sprites.begin(); it != frame->sprites.end(); ++it)
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*m_texture);
+
+    int textureX = m_spriteWidth * (it->index % (m_texture->getSize().x / m_spriteWidth));
+    int textureY = m_spriteHeight * (it->index / (m_texture->getSize().x / m_spriteWidth));
+
+    sprite.setTextureRect(sf::IntRect(textureX, textureY, m_spriteWidth, m_spriteHeight));
+    sprite.setOrigin(m_spriteWidth / 2, m_spriteHeight / 2);
+    sprite.setScale(it->scaleX, it->scaleY);
+
+    sf::Color color = sprite.getColor();
+    color.a = it->alpha;
+    sprite.setColor(color);
+
+    sprite.setPosition(m_originX + it->x, m_originY + it->y);
+
+    target.draw(sprite);
+  }
+
+  m_currentFrameIndex++;
 }
 
 Effect::Frame* Effect::getCurrentFrame()
@@ -122,47 +153,9 @@ Effect::Frame* Effect::getCurrentFrame()
   return &m_frames[m_currentFrameIndex];
 }
 
-void Effect::initSprite()
+Effect* Effect::loadEffect(const std::string& filename)
 {
-  if (!m_texture)
-  {
-    TRACE("Effect::initSprite: Texture not loaded!\n");
-    return;
-  }
-
-  Frame* currentFrame = getCurrentFrame();
-
-  int sprX = m_spriteSize * (currentFrame->index % (m_texture->getSize().x / m_spriteSize));
-  int sprY = m_spriteSize * (currentFrame->index / (m_texture->getSize().x / m_spriteSize));
-
-  m_drawSprite.setTextureRect(sf::IntRect(sprX, sprY, m_spriteSize, m_spriteSize));
-  m_drawSprite.setColor(currentFrame->blendColor);
-  m_drawSprite.setScale(currentFrame->scale, currentFrame->scale);
-  m_drawSprite.setRotation(currentFrame->rotate);
-
-  float origX = m_originX - (m_spriteSize * (currentFrame->scale - 1)) / 2;
-  float origY = m_originY - (m_spriteSize * (currentFrame->scale - 1)) / 2;
-
-  m_drawSprite.setPosition(origX + currentFrame->displaceX, origY + currentFrame->displaceY);
-}
-
-Effect* Effect::createEffect(const std::string& effectName, int x, int y)
-{
-  auto it = frames.find(effectName);
-
-  if (it != frames.end())
-  {
-    Effect* effect = new Effect;
-    effect->loadTexture(it->second.texture, it->second.frameSize);
-    for (auto frameIt = it->second.frames.begin(); frameIt != it->second.frames.end(); ++frameIt)
-    {
-      effect->m_frames.push_back(*frameIt);
-    }
-    effect->initSprite();
-    effect->setOrigin(x, y);
-
-    return effect;
-  }
-
-  return 0;
+  Effect* effect = new Effect;
+  effect->load(filename);
+  return effect;
 }
