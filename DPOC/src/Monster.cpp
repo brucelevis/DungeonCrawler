@@ -30,6 +30,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
   const XMLElement* textElem = monsterElement->FirstChildElement("texture");
   const XMLElement* colorElem = monsterElement->FirstChildElement("color");
   const XMLElement* numAttacksElem = monsterElement->FirstChildElement("numberOfAttacks");
+  const XMLElement* effeElem = monsterElement->FirstChildElement("attackEffect");
 
   if (nameElem)
     monster.name = nameElem->GetText();
@@ -45,6 +46,10 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
   if (numAttacksElem)
   {
     monster.numberOfAttacks = fromString<int>(numAttacksElem->GetText());
+  }
+  if (effeElem)
+  {
+    monster.attackEffect = Effect::createFromXmlElement(effeElem);
   }
 
   if (textElem)

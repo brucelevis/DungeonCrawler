@@ -6,6 +6,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Effect.h"
+
 static const std::string BUG_MONSTER = "BUG_MONSTER";
 
 struct MonsterActionEntry
@@ -41,6 +43,8 @@ struct MonsterDef
   std::vector<std::string> immunity;
 
   int numberOfAttacks;
+
+  Effect attackEffect;
 };
 
 void load_monsters();

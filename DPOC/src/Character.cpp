@@ -273,6 +273,7 @@ Character* Character::createMonster(const std::string& name)
   character->m_faceTexture = cache::loadTexture(def.texture);
   character->m_textureRect = def.textureRect;
   character->m_color = def.color;
+  character->m_unarmedAttackEffect = def.attackEffect;
 
   character->m_status.push_back(get_status_effect("Normal"));
 
