@@ -18,6 +18,8 @@
 #include "PlayerCharacter.h"
 #include "Message.h"
 #include "Sound.h"
+#include "BattleAnimation.h"
+#include "Effect.h"
 
 #include "Battle.h"
 
@@ -964,7 +966,7 @@ void Battle::draw(sf::RenderTarget& target)
 
   draw_battle_message(target);
 
-  for (auto it = m_activeEffects.begin(); it != m_activeEffects.end(); ++it)
+  for (auto it = m_activeBattleAnimations.begin(); it != m_activeBattleAnimations.end(); ++it)
   {
     (*it)->render(target);
   }
@@ -1108,13 +1110,13 @@ void Battle::updateEffects()
     (*it)->flash().update();
   }
 
-  for (auto it = m_activeEffects.begin(); it != m_activeEffects.end();)
+  for (auto it = m_activeBattleAnimations.begin(); it != m_activeBattleAnimations.end();)
   {
     (*it)->update();
     if ((*it)->complete())
     {
     	delete *it;
-      it = m_activeEffects.erase(it);
+      it = m_activeBattleAnimations.erase(it);
     }
     else
     {
@@ -1127,19 +1129,19 @@ bool Battle::effectInProgress() const
 {
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
-    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeBattleAnimation() || (*it)->flash().isFading())
       return true;
   }
   for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
   {
-    if ((*it)->flash().isFlashing() || (*it)->flash().activeEffect() || (*it)->flash().isFading())
+    if ((*it)->flash().isFlashing() || (*it)->flash().activeBattleAnimation() || (*it)->flash().isFading())
       return true;
   }
 
 //  if (sound_is_playing())
 //    return true;
 
-  if (m_activeEffects.size() > 0)
+  if (m_activeBattleAnimations.size() > 0)
     return true;
 
   if (SceneManager::instance().isShaking())
@@ -1266,8 +1268,7 @@ void Battle::createEffects()
 {
   Action& action = m_battleActions[m_currentActor].front();
 
-  std::string effectName;
-  std::string soundEffect;
+  Effect effect;
 
   if (action.actionName == "Attack")
   {
@@ -1276,8 +1277,7 @@ void Battle::createEffects()
       Item* weapon = dynamic_cast<PlayerCharacter*>(m_currentActor)->getEquipment("Weapon");
       if (weapon)
       {
-        effectName = weapon->effect;
-        soundEffect = weapon->sound;
+        effect = weapon->effect;
       }
       else
       {
@@ -1303,17 +1303,11 @@ void Battle::createEffects()
 
   //effectName = config::res_path("Animations/effect_Sword.xml");
 
-  if (soundEffect.size())
-  {
-    play_sound("Audio/" + soundEffect);
-  }
+  effect.playSfx();
 
   for (auto it = m_currentTargets.begin(); it != m_currentTargets.end(); ++it)
   {
-    if (!effectName.empty())
-    {
-      (*it)->flash().startEffect(effectName);
-    }
+    effect.applyAnimation(*it);
   }
 }
 

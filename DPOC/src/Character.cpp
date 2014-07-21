@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "BattleAnimation.h"
 #include "Config.h"
 #include "draw_text.h"
 #include "logger.h"
@@ -69,13 +70,13 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
     target.draw(sprite);
   }
 
-  if (m_flash.activeEffect())
+  if (m_flash.activeBattleAnimation())
   {
     int posX = x + spriteWidth() / 2;
     int posY = y + spriteHeight() / 2;
 
-    m_flash.activeEffect()->setOrigin(posX, posY);
-    m_flash.activeEffect()->render(target);
+    m_flash.activeBattleAnimation()->setOrigin(posX, posY);
+    m_flash.activeBattleAnimation()->render(target);
   }
 
   auto damageText = m_flash.damageText();

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "Effect.h"
+class BattleAnimation;
 
 struct DamageText
 {
@@ -30,7 +30,7 @@ public:
   bool odd() const { return (m_currentFlash % 2) == 1; }
   bool even() const { return (m_currentFlash % 2) == 0; }
 
-  BattleAnimation *activeEffect() const { return m_activeEffect; }
+  BattleAnimation *activeBattleAnimation() const { return m_activeAnimation; }
 
   void fadeOut(int speed);
   int fadeCounter() const { return m_fadeCounter; }
@@ -44,7 +44,7 @@ private:
   int m_ticks, m_speed;
   int m_numberOfFlashes, m_currentFlash;
 
-  BattleAnimation* m_activeEffect;
+  BattleAnimation* m_activeAnimation;
 
   int m_fadeSpeed;
   int m_fadeCounter;

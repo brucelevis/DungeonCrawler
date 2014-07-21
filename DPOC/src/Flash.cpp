@@ -1,3 +1,4 @@
+#include "BattleAnimation.h"
 #include "Config.h"
 #include "Game.h"
 #include "Flash.h"
@@ -7,7 +8,7 @@ Flash::Flash()
    m_speed(0),
    m_numberOfFlashes(0),
    m_currentFlash(0),
-   m_activeEffect(0),
+   m_activeAnimation(0),
    m_fadeSpeed(0),
    m_fadeCounter(0)
 {
@@ -16,7 +17,7 @@ Flash::Flash()
 
 Flash::~Flash()
 {
-  delete m_activeEffect;
+  delete m_activeAnimation;
 }
 
 void Flash::start(int number, int speed)
@@ -29,9 +30,9 @@ void Flash::start(int number, int speed)
 
 void Flash::startEffect(const std::string& effectName)
 {
-  if (!m_activeEffect && !effectName.empty())
+  if (!m_activeAnimation && !effectName.empty())
   {
-    m_activeEffect = BattleAnimation::loadEffect(config::res_path("Animations/" + effectName));
+    m_activeAnimation = BattleAnimation::loadBattleAnimation(config::res_path("Animations/" + effectName));
   }
 }
 
@@ -66,16 +67,16 @@ void Flash::update()
     m_fadeCounter -= m_fadeSpeed;
   }
 
-  if (activeEffect())
+  if (activeBattleAnimation())
   {
-    if (!m_activeEffect->complete())
+    if (!m_activeAnimation->complete())
     {
-      m_activeEffect->update();
+      m_activeAnimation->update();
     }
     else
     {
-      delete m_activeEffect;
-      m_activeEffect = 0;
+      delete m_activeAnimation;
+      m_activeAnimation = 0;
     }
   }
 }

@@ -105,7 +105,7 @@ private:
   Character* m_currentActor;
 
   std::vector<Character*> m_currentTargets;
-  std::vector<BattleAnimation*> m_activeEffects;
+  std::vector<BattleAnimation*> m_activeBattleAnimations;
 
   // A short delay between "damage" and "next actor".
   int m_turnDelay;

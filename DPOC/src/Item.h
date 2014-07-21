@@ -5,6 +5,7 @@
 #include <map>
 
 #include "Target.h"
+#include "Effect.h"
 
 class Character;
 
@@ -47,8 +48,7 @@ struct Item
 
   std::map<std::string, int> attributeGain;
 
-  std::string effect;
-  std::string sound;
+  Effect effect;
 
   ItemUseType itemUseType;
 
