@@ -32,7 +32,7 @@ class Entity
 public:
   Entity();
   Entity(const std::string& name);
-  ~Entity();
+  virtual ~Entity();
 
   void update();
 
@@ -63,7 +63,7 @@ public:
 
   bool isWalking() const { return m_state == STATE_WALKING; }
 
-  void interact(const Entity* interactor);
+  virtual void interact(const Entity* interactor);
   void face(const Entity* entity);
   bool canInteractWith(const Entity* interactor) const;
 
