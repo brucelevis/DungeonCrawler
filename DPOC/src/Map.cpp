@@ -289,6 +289,32 @@ Map* Map::loadTiledFile(const std::string& filename)
           TRACE("New zone: x=%d, y=%d, width=%d, height=%d",
               x, y, w, h);
         }
+        else
+        {
+          // Entities without picture.
+          std::string name = object->name;
+
+          int objX = object->x / config::TILE_W;
+          int objY = object->y / config::TILE_H;
+
+          if (name.empty())
+          {
+            name = "anonymous_object@[" + toString(objX) + "," + toString(objY) + "]";
+          }
+
+          Entity* entity = new Entity;
+          entity->setPosition(objX, objY);
+          entity->setTag(name + "@@" + map->m_name);
+          entity->setWalkSpeed(0);
+          entity->setWalkThrough(true);
+          entity->setIsVisible(false);
+
+          entity->loadScripts(
+              loader.getObjectProperty(objectIndex, "talkScript"),
+              loader.getObjectProperty(objectIndex, "stepScript"));
+
+          map->m_entities.push_back(entity);
+        }
       }
     }
 

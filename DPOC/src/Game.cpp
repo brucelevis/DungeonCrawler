@@ -154,7 +154,7 @@ void Game::update()
       // Update minimap position only when player has finished moving.
       m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y);
 
-      if (!checkWarps() && !checkTraps())
+      if (!checkWarps() && !checkTraps() && !checkInteractions())
       {
         // Also check encounters if no warps were taken.
 
@@ -417,6 +417,36 @@ bool Game::checkTraps()
     m_currentMap->disableTrap(trap);
 
     return true;
+  }
+
+  return false;
+}
+
+bool Game::checkInteractions()
+{
+  auto entities = m_currentMap->getEntities();
+
+  if (m_player && m_currentMap &&
+      !m_player->player()->isWalking())
+  {
+    Entity* entity = 0;
+
+    for (auto it = entities.begin(); it != entities.end(); ++it)
+    {
+      if ((int)(*it)->x == (int)m_player->player()->x &&
+          (int)(*it)->y == (int)m_player->player()->y)
+      {
+        entity = *it;
+        break;
+      }
+    }
+
+    if (entity)
+    {
+      entity->interact(m_player->player());
+
+      return true;
+    }
   }
 
   return false;

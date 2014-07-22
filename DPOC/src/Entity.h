@@ -85,6 +85,7 @@ public:
   void turnRight();
 
   bool isVisible() const { return m_visible; }
+  void setIsVisible(bool visible) { m_visible = visible; }
 public:
   float x, y;
 private:

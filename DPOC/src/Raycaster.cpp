@@ -202,7 +202,7 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
 
   for (auto sprIter = m_entities.begin(); sprIter != m_entities.end(); ++sprIter)
   {
-    if (!(*sprIter)->isVisible())
+    if (!(*sprIter)->isVisible() || (*sprIter)->sprite() == 0)
     {
       continue;
     }

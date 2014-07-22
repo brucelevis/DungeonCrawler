@@ -10,7 +10,7 @@ namespace
   {
     for (auto it = entities.begin(); it != entities.end(); ++it)
     {
-      if ((int)(*it)->x == x && (int)(*it)->y == y)
+      if ((int)(*it)->x == x && (int)(*it)->y == y && (*it)->isVisible())
       {
         return true;
       }
@@ -99,6 +99,8 @@ void Minimap::draw(sf::RenderTarget& target) const
             dotRect.setSize(sf::Vector2f(1, 4));
             dotRect.setFillColor(sf::Color::Black);
             dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8 + 4);
+            break;
+          default:
             break;
           }
 
