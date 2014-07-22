@@ -198,7 +198,7 @@ void Message::update()
   {
     m_currentBuffer += m_pages.front()[m_currentIndex];
 
-    if (!m_quiet && !config::get("SOUND_MESSAGE_INCREMENT").empty())
+    if (!m_quiet && !config::get("SOUND_MESSAGE_INCREMENT").empty() && !sound_is_playing())
     {
       play_sound(config::get("SOUND_MESSAGE_INCREMENT"));
     }
