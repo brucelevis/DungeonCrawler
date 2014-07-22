@@ -520,7 +520,10 @@ void Game::loadNewMap(const std::string& file)
   m_raycaster->clearEntities();
   for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
   {
-    m_raycaster->addEntity(*it);
+    if ((*it)->sprite())
+    {
+      m_raycaster->addEntity(*it);
+    }
   }
 
   if (!m_currentMap->getMusic().empty())
