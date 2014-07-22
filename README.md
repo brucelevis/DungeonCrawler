@@ -23,6 +23,11 @@ Objects:
   - walkThrough (true/false)
   - fixedDirection (true/false)
 
+ * Chests:
+  - If object type is set to chest, it is a chest.
+  - items property: comma separated list of items the chest gives
+  - trap property: comma separated list with trap type and luck to beat, example: poison,25
+
  * Warps:
   - Objects with name set to "warp" are warp objects.
   - destX, destY and destMap properties required.
