@@ -2,6 +2,7 @@
 #include <fstream>
 #include <set>
 
+#include "Chest.h"
 #include "Persistent.h"
 #include "Config.h"
 #include "Direction.h"
@@ -208,15 +209,24 @@ Map* Map::loadTiledFile(const std::string& filename)
           int tileX = tileId % (texture->getSize().x / config::TILE_W);
           int tileY = tileId / (texture->getSize().x / config::TILE_H);
 
-          int spriteTileW = tileset->tileW;
-          int spriteTileH = tileset->tileH;
-
           if (name.empty())
           {
             name = "anonymous_object@[" + toString(objX) + "," + toString(objY) + "]";
           }
 
-          Entity* entity = new Entity;
+          Entity* entity = 0;
+
+          if (loader.getObjectType(objectIndex) == "chest")
+          {
+            std::string items = loader.getObjectProperty(objectIndex, "items");
+
+            entity = new Chest(split_string(items, ','));
+          }
+          else
+          {
+            entity = new Entity;
+          }
+
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
           entity->setWalkSpeed(walkSpeed);

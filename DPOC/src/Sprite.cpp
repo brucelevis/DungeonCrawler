@@ -187,6 +187,12 @@ void TileSprite::setTileNum(int tileNum)
   m_sprite.setTextureRect(sf::IntRect(m_tileX * config::TILE_W, m_tileY * config::TILE_H, config::TILE_W, config::TILE_H));
 }
 
+int TileSprite::getTileNum() const
+{
+  int width = m_tileset->getSize().x / config::TILE_W;
+  return m_tileY * width + m_tileX;
+}
+
 sf::Image TileSprite::getImage(Direction opposingDirection) const
 {
   sf::Image image;

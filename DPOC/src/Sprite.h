@@ -60,6 +60,7 @@ public:
   void render(sf::RenderTarget& target, float x, float y);
 
   void setTileNum(int tileNum);
+  int getTileNum() const;
 
   sf::Image getImage(Direction opposingDirection) const;
 private:
