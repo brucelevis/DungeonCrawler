@@ -34,7 +34,7 @@ public:
   Entity(const std::string& name);
   virtual ~Entity();
 
-  void update();
+  virtual void update();
 
   std::string getName() const { return m_name; }
   Sprite* sprite() { return m_sprite; }
