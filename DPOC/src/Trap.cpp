@@ -27,7 +27,7 @@ Trap::Trap(const std::string& type, int luck, int _x, int _y)
 
 }
 
-void Trap::checkTrap() const
+PlayerCharacter* Trap::triggerTrap() const
 {
   std::vector<PlayerCharacter*> party = get_player()->getParty();
   std::random_shuffle(party.begin(), party.end());
@@ -43,6 +43,13 @@ void Trap::checkTrap() const
     }
   }
 
+  return detector;
+}
+
+void Trap::checkTrap() const
+{
+  PlayerCharacter* detector = triggerTrap();
+
   if (detector)
   {
     play_sound(config::get("SOUND_SUCCESS"));
@@ -50,17 +57,15 @@ void Trap::checkTrap() const
   }
   else
   {
-    applyTrap(party);
-  }
+    show_message("The party stumbled into a %s trap!", m_type.c_str());
+    play_sound(config::get("SOUND_TRAP"));
 
+    applyTrap(get_player()->getParty());
+  }
 }
 
 void Trap::applyTrap(const std::vector<PlayerCharacter*>& party) const
 {
-  show_message("The party stumbled into a %s trap!", m_type.c_str());
-
-  play_sound(config::get("SOUND_TRAP"));
-
   if (m_type == "poison")
   {
     for (auto it = party.begin(); it != party.end(); ++it)

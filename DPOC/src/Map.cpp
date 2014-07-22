@@ -219,8 +219,20 @@ Map* Map::loadTiledFile(const std::string& filename)
           if (loader.getObjectType(objectIndex) == "chest")
           {
             std::string items = loader.getObjectProperty(objectIndex, "items");
+            std::string trap = loader.getObjectProperty(objectIndex, "trap");
 
-            entity = new Chest(split_string(items, ','));
+            if (trap.empty())
+            {
+              entity = new Chest(split_string(items, ','));
+            }
+            else
+            {
+              std::vector<std::string> trapData = split_string(trap, ',');
+              std::string trapType = trapData[0];
+              int luckToBeat = fromString<int>(trapData[1]);
+
+              entity = new Chest(split_string(items, ','), trapType, luckToBeat);
+            }
           }
           else
           {

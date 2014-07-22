@@ -13,8 +13,8 @@ struct Trap
   Trap();
   Trap(const std::string& type, int luck, int _x, int _y);
 
+  PlayerCharacter* triggerTrap() const;
   void checkTrap() const;
-private:
   void applyTrap(const std::vector<PlayerCharacter*>& party) const;
 private:
   std::string m_type;

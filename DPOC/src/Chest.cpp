@@ -1,6 +1,7 @@
 #include "Utility.h"
 #include "Item.h"
 #include "Player.h"
+#include "PlayerCharacter.h"
 #include "Message.h"
 #include "Sound.h"
 #include "Config.h"
@@ -10,9 +11,17 @@
 
 Chest::Chest(const std::vector<std::string> items)
  : m_items(items),
-   m_spriteChanged(false)
+   m_spriteChanged(false),
+   m_isTrapped(false)
 {
+}
 
+Chest::Chest(const std::vector<std::string> items, const std::string& trapType, int luckToBeat)
+ : m_items(items),
+   m_spriteChanged(false),
+   m_isTrapped(true),
+   m_trap(trapType, luckToBeat, 0, 0)
+{
 }
 
 void Chest::update()
@@ -29,13 +38,35 @@ void Chest::interact(const Entity* interactor)
 
   if (!Persistent<int>::instance().isSet(key))
   {
-    play_sound(config::get("SOUND_CHEST"));
-
     changeSprite();
     Persistent<int>::instance().set(key, 1);
 
-    show_message("You carefully open the lid of the chest, finding %s!",
-        getItemsString().c_str());
+    if (!m_isTrapped)
+    {
+      play_sound(config::get("SOUND_CHEST"));
+
+      show_message("You carefully open the lid of the chest, finding %s!",
+          getItemsString().c_str());
+    }
+    else
+    {
+      PlayerCharacter* character = m_trap.triggerTrap();
+      if (character)
+      {
+        play_sound(config::get("SOUND_CHEST"));
+
+        show_message("Upon opening the chest, %s spots and disarms a trap! Inside you find %s!",
+            character->getName().c_str(), getItemsString().c_str());
+      }
+      else
+      {
+        play_sound(config::get("SOUND_TRAP"));
+
+        show_message("Upon opening the chest, you trigger a trap!");
+        m_trap.applyTrap(get_player()->getParty());
+        show_message("For your troubles, you find %s!", getItemsString().c_str());
+      }
+    }
     for (auto it = m_items.begin(); it != m_items.end(); ++it)
     {
       if (isdigit(it->at(0)) && it->find("gold") != std::string::npos)

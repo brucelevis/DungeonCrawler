@@ -5,11 +5,13 @@
 #include <string>
 
 #include "Entity.h"
+#include "Trap.h"
 
 class Chest : public Entity
 {
 public:
   Chest(const std::vector<std::string> items);
+  Chest(const std::vector<std::string> items, const std::string& trapType, int luckToBeat);
   void update();
   void interact(const Entity* interactor);
 private:
@@ -18,6 +20,9 @@ private:
 private:
   std::vector<std::string> m_items;
   bool m_spriteChanged;
+
+  bool m_isTrapped;
+  Trap m_trap;
 };
 
 #endif
