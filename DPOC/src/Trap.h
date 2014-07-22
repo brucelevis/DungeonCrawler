@@ -10,6 +10,7 @@ struct Trap
 {
   int x, y;
 
+  Trap();
   Trap(const std::string& type, int luck, int _x, int _y);
 
   void checkTrap() const;
