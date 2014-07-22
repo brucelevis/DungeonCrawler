@@ -265,6 +265,12 @@ void Entity::interact(const Entity* interactor)
   if (m_script.isLoaded() && !m_script.active())
   {
     m_script.execute();
+
+    if (m_script.active())
+    {
+      executeScriptLine(m_script.getCurrentData(), m_script);
+      m_script.advance();
+    }
   }
 }
 
