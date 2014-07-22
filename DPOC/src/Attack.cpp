@@ -248,30 +248,38 @@ void cure_status(Character* target, const std::string& status)
 
 void buff(Character* target, const std::string& attr, int buffPower)
 {
+  int currAttr = target->getAttribute(attr).current;
   int baseAttr = target->getAttribute(attr).max;
   float power = 1.0f + (float)buffPower / 100.0f;
   int newAttr = (float)baseAttr * power;
-
-  target->getAttribute(attr).current = newAttr;
 
   int delta = newAttr - baseAttr;
 
   if (delta > 0)
   {
-//    battle_message("%s's %s increased by %d",
-//        target->getName().c_str(), attr.c_str(), delta);
+    // Max positive attribute change is 100% of base attribute.
+    if (currAttr >= baseAttr * 2)
+    {
+      delta = 0;
+    }
+  }
+  else if (delta < 0)
+  {
+    // Max negative attribute change is 50% of base attribute.
+    if (currAttr <= baseAttr / 2)
+    {
+      delta = 0;
+    }
+  }
 
+  if (delta > 0)
+  {
+    target->getAttribute(attr).current += delta;
     target->flash().addDamageText("+" + attr, sf::Color::Green);
   }
   else if (delta < 0)
   {
-//    battle_message("%s's %s decreased by %d",
-//        target->getName().c_str(), attr.c_str(), delta);
-
+    target->getAttribute(attr).current += delta;
     target->flash().addDamageText("-" + attr, sf::Color::Green);
-  }
-  else
-  {
-    battle_message("No effect...");
   }
 }
