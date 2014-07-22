@@ -46,7 +46,7 @@ struct Spell
 
   // Status name/attribute name for buffs.
   std::map<std::string, SpellStatusEntry> causeStatus;
-  std::vector<std::string> attributeBuffs;
+  std::map<std::string, int> attributeBuffs;
 
   std::string element;
 

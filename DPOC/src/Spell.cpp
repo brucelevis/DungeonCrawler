@@ -120,7 +120,17 @@ static Spell parse_spell_element(const XMLElement* spellElement)
     for (const XMLElement* element = buffElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       std::string name = element->FindAttribute("name")->Value();
-      spell.attributeBuffs.push_back(name);
+
+      // Default to use generic spell power, if power attribute does not exist.
+      int power = spell.power;
+
+      const XMLAttribute* powerAttribute = element->FindAttribute("power");
+      if (powerAttribute)
+      {
+        power = fromString<int>(element->FindAttribute("power")->Value());
+      }
+
+      spell.attributeBuffs[name] = power;
     }
   }
 
@@ -239,7 +249,7 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
   {
     for (auto it = spell->attributeBuffs.begin(); it != spell->attributeBuffs.end(); ++it)
     {
-      buff(target, *it, spell->power);
+      buff(target, it->first, it->second);
     }
 
     if (damage == 0)
