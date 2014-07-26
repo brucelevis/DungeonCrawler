@@ -378,27 +378,45 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
   draw_text_bmp(target, 8, 8, "%s", item.description.c_str());
 
   std::vector<PlayerCharacter*> party = get_player()->getParty();
-  std::vector<Entity*> playerEntites = get_player()->getTrain();
+
+  static int bump = 0;
+  static int bumpCount = 10;
+  if (bumpCount > 0)
+  {
+    bumpCount--;
+    if (bumpCount == 0)
+    {
+      bump = !bump;
+      bumpCount = 10;
+    }
+  }
 
   for (size_t i = 0; i < party.size(); i++)
   {
-    Sprite* sprite = playerEntites[i]->sprite()->clone();
-    sprite->setFrame(0);
-    sprite->setDirection(DIR_DOWN);
+    const sf::Texture* texture = party[i]->getTexture();
+    sf::Sprite sprite;
+    sprite.setTexture(*texture);
+    sprite.setScale(0.5, 0.5);
 
-    int posX = 8 + (i * (sprite->getWidth() + 48));
+    int posX = 8 + (i * (sprite.getGlobalBounds().width + 48));
     int posY = y + getHeight() + 4;
 
     sf::Color color = sf::Color::White;
-    if (!party[i]->canEquip(itemName))
+    int _bump = 0;
+    if (!party[i]->canEquip(itemName) && (item.type != ITEM_USE && item.type != ITEM_USE_BATTLE && item.type != ITEM_USE_MENU))
     {
       color = sf::Color(127, 127, 127);
     }
+    else
+    {
+      _bump = bump;
+    }
 
-    sprite->render_ex(target, posX, posY, color);
-    delete sprite;
+    sprite.setPosition(posX, posY - _bump);
+    sprite.setColor(color);
+    target.draw(sprite);
 
-    drawDeltas(target, party[i], itemName, posX, posY + 4 + sprite->getHeight());
+    drawDeltas(target, party[i], itemName, posX, posY + 4 + sprite.getGlobalBounds().height);
   }
 
   Menu::draw(target, x, y);
