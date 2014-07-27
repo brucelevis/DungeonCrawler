@@ -318,7 +318,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.data.waitData.duration = atoi(strings[1].c_str());
   }
-  else if (opcode == OP_SET_GLOBAL)
+  else if (opcode == OP_SET_GLOBAL || opcode == OP_SET_LOCAL)
   {
     std::string key = strings[1];
     int value;
@@ -332,29 +332,10 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       value = atoi(strings[2].c_str());
     }
 
-    memset(data.data.setGlobalData.key, 0, MAX_SCRIPT_KEY_SIZE);
+    memset(data.data.setPersistentData.key, 0, MAX_SCRIPT_KEY_SIZE);
 
-    strcpy(data.data.setGlobalData.key, key.c_str());
-    data.data.setGlobalData.value = value;
-  }
-  else if (opcode == OP_SET_LOCAL)
-  {
-    std::string key = strings[1];
-    int value;
-
-    if (strings[2] == "true" || strings[2] == "false")
-    {
-      value = strings[2] == "true";
-    }
-    else
-    {
-      value = atoi(strings[2].c_str());
-    }
-
-    memset(data.data.setLocalData.key, 0, MAX_SCRIPT_KEY_SIZE);
-
-    strcpy(data.data.setLocalData.key, key.c_str());
-    data.data.setLocalData.value = value;
+    strcpy(data.data.setPersistentData.key, key.c_str());
+    data.data.setPersistentData.value = value;
   }
   else if (opcode == OP_IF)
   {
@@ -701,13 +682,13 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_SET_GLOBAL)
   {
-    Persistent<int>::instance().set(data.data.setGlobalData.key, data.data.setGlobalData.value);
+    Persistent<int>::instance().set(data.data.setPersistentData.key, data.data.setPersistentData.value);
   }
   else if (data.opcode == Script::OP_SET_LOCAL)
   {
     if (m_callingEntity)
     {
-      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + data.data.setLocalData.key, data.data.setLocalData.value);
+      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + data.data.setPersistentData.key, data.data.setPersistentData.value);
     }
   }
   else if (data.opcode == Script::OP_IF)

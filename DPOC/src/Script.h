@@ -75,13 +75,7 @@ public:
       {
         char key[MAX_SCRIPT_KEY_SIZE];
         int value;
-      } setGlobalData;
-
-      struct
-      {
-        char key[MAX_SCRIPT_KEY_SIZE];
-        int value;
-      } setLocalData;
+      } setPersistentData;
 
       struct
       {
