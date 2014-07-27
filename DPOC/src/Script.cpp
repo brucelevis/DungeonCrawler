@@ -14,6 +14,7 @@
 #include "Message.h"
 #include "Persistent.h"
 #include "Sound.h"
+#include "Encounter.h"
 
 #include "logger.h"
 #include "Utility.h"
@@ -517,6 +518,19 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     data.data.combatData.number = monsters.size();
   }
+  else if (opcode == OP_ENCOUNTER)
+  {
+    memset(data.data.encounterData.encounterName, '\0', MAX_SCRIPT_KEY_SIZE);
+    std::string buffer;
+    for (size_t i = 1; i < strings.size(); i++)
+    {
+      buffer += strings[i];
+      if (i < strings.size() - 1)
+        buffer += " ";
+    }
+
+    strcpy(data.data.encounterData.encounterName, buffer.c_str());
+  }
   else if (opcode == OP_END_GAME)
   {
     // Nothing
@@ -614,6 +628,7 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "recover_all",  OP_RECOVER_ALL },
     { "combat",       OP_COMBAT },
     { "combat_no_escape", OP_COMBAT_NO_ESAPE },
+    { "encounter",    OP_ENCOUNTER },
     { "end_game",     OP_END_GAME },
     { "set_config",   OP_SET_CONFIG },
     { "transfer",     OP_TRANSFER },
@@ -856,6 +871,16 @@ void Script::executeScriptLine()
     }
 
     Game::instance().startBattle(monsters, data.data.combatData.canEscape);
+  }
+  else if (data.opcode == Script::OP_ENCOUNTER)
+  {
+    std::string encounterName = data.data.encounterData.encounterName;
+
+    const Encounter* encounter = get_encounter(encounterName);
+    if (encounter)
+    {
+      encounter->start();
+    }
   }
   else if (data.opcode == Script::OP_END_GAME)
   {
