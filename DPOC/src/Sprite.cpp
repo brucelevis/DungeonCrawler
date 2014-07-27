@@ -106,7 +106,7 @@ Sprite* Sprite::clone() const
   return rhs;
 }
 
-sf::Image Sprite::getImage(Direction opposingDirection) const
+const sf::Image& Sprite::getImage(Direction opposingDirection) const
 {
   int direction = m_direction;
 
@@ -145,7 +145,7 @@ sf::Image Sprite::getImage(Direction opposingDirection) const
   int rectLeft = m_spriteSheetX * m_width * config::NUM_SPRITES_X + m_frame * m_width;
   int rectTop = m_spriteSheetY * m_height * config::NUM_SPRITES_Y + direction * m_height;
 
-  sf::Image image;
+  static sf::Image image;
   sf::Image tempImage = m_sprite.getTexture()->copyToImage();
   image.create(m_width, m_height);
   image.copy(tempImage, 0, 0, sf::IntRect(rectLeft, rectTop, m_width, m_height), true);
@@ -158,7 +158,8 @@ sf::Image Sprite::getImage(Direction opposingDirection) const
 TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)
  : m_tileX(tileX),
    m_tileY(tileY),
-   m_tileset(tileset)
+   m_tileset(tileset),
+   m_image(new sf::Image)
 {
   TRACE("Creating new TileSprite. tileX=%d, tileY=%d", tileX, tileY);
 
@@ -166,10 +167,13 @@ TileSprite::TileSprite(sf::Texture* tileset, int tileX, int tileY)
   m_sprite.setTextureRect(sf::IntRect(tileX * config::TILE_W, tileY * config::TILE_H, config::TILE_W, config::TILE_H));
   m_width = config::TILE_W;
   m_height = config::TILE_H;
+
+  updateImage();
 }
 
 TileSprite::~TileSprite()
 {
+  delete m_image;
   cache::releaseTexture(m_tileset);
 }
 
@@ -185,6 +189,8 @@ void TileSprite::setTileNum(int tileNum)
   m_tileY = tileNum / (m_tileset->getSize().x / config::TILE_H);
 
   m_sprite.setTextureRect(sf::IntRect(m_tileX * config::TILE_W, m_tileY * config::TILE_H, config::TILE_W, config::TILE_H));
+
+  updateImage();
 }
 
 int TileSprite::getTileNum() const
@@ -193,12 +199,14 @@ int TileSprite::getTileNum() const
   return m_tileY * width + m_tileX;
 }
 
-sf::Image TileSprite::getImage(Direction opposingDirection) const
+const sf::Image& TileSprite::getImage(Direction opposingDirection) const
 {
-  sf::Image image;
+  return *m_image;
+}
+
+void TileSprite::updateImage()
+{
   sf::Image tempImage = m_sprite.getTexture()->copyToImage();
-  image.create(m_width, m_height, sf::Color::Transparent);
-  image.copy(tempImage, 0, 0, sf::IntRect(m_tileX * config::TILE_W, m_tileY * config::TILE_H, config::TILE_W, config::TILE_H), true);
-  //image.createMaskFromColor(sf::Color(255, 0, 255));
-  return image;
+  m_image->create(m_width, m_height, sf::Color::Transparent);
+  m_image->copy(tempImage, 0, 0, sf::IntRect(m_tileX * m_width, m_tileY * m_height, m_width, m_height), true);
 }

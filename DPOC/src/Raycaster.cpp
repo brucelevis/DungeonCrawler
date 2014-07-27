@@ -240,7 +240,7 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
 
     if (drawStartX < drawEndX)
     {
-      sf::Image spriteImage = (*sprIter)->sprite()->getImage(pDir);
+      const sf::Image& spriteImage = (*sprIter)->sprite()->getImage(pDir);
       
       for (int x = drawStartX; x < drawEndX; x++)
       {
