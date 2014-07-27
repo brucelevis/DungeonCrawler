@@ -192,6 +192,17 @@ void Battle::update()
   {
     doVictory();
   }
+  else if (m_state == STATE_DEFEAT_PRE)
+  {
+    if (!effectInProgress())
+    {
+      // clear_message();
+      battle_message("You have been defeated...");
+      SceneManager::instance().fadeOut(128);
+
+      m_state = STATE_DEFEAT;
+    }
+  }
   else if (m_state == STATE_DEFEAT)
   {
 
@@ -1367,13 +1378,7 @@ bool Battle::checkVictoryOrDefeat()
   }
   else if (all_dead(get_player()->getParty()))
   {
-    m_state = STATE_DEFEAT;
-
-    // clear_message();
-    m_battleMenu.setVisible(false);
-
-    show_message("You have been defeated...");
-    SceneManager::instance().fadeOut(128);
+    m_state = STATE_DEFEAT_PRE;
 
     return true;
   }
