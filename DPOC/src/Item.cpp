@@ -27,6 +27,7 @@ static ItemType itemTypeFromString(const std::string& type)
   E_S(type, ITEM_ARMOR);
   E_S(type, ITEM_HELMET);
   E_S(type, ITEM_MISC);
+  E_S(type, ITEM_BOOTS);
 
   TRACE("Unknown item type %s", type.c_str());
 
