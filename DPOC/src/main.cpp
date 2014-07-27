@@ -14,6 +14,7 @@
 #include "Monster.h"
 #include "PlayerClass.h"
 #include "StatusEffect.h"
+#include "Encounter.h"
 
 #include "TitleScreen.h"
 
@@ -34,6 +35,7 @@ int main(int argc, char* argv[])
   load_monsters();
   load_classes();
   load_status_effects();
+  load_encounters();
 
   srand(time(0));
 
