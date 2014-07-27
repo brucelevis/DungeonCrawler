@@ -311,6 +311,16 @@ void PlayerCharacter::draw(sf::RenderTarget& target, int x, int y) const
   }
   else
   {
+    if (isDead)
+    {
+      sf::Sprite sprite;
+      sprite.setTexture(*m_skullTexture);
+      sprite.setTextureRect(sf::IntRect(0, 0, m_skullTexture->getSize().x, m_skullTexture->getSize().y));
+      sprite.setPosition(x, y);
+      sprite.setColor(sf::Color(255, 255, 255, 255 - flash().fadeCounter()));
+      target.draw(sprite);
+    }
+
     Character::draw(target, x, y);
   }
 }
