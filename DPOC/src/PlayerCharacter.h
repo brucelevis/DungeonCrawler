@@ -16,6 +16,7 @@ public:
   static std::vector<std::string> equipNames;
 
   PlayerCharacter();
+  ~PlayerCharacter();
 
   const std::vector<std::string>& getSpells() const { return m_spells; }
 
@@ -38,6 +39,8 @@ public:
 
   const PlayerClass& getClass() const { return m_class; }
 
+  void draw(sf::RenderTarget& target, int x, int y) const;
+
   static PlayerCharacter* create(const std::string& name, const std::string& className, int level = 1);
   static PlayerCharacter* create(const std::string& name, const std::string& className, const std::string& face, int level = 1);
   static PlayerCharacter* createFromSaveData(CharacterData* data);
@@ -51,6 +54,8 @@ private:
   std::vector<std::string> m_spells;
 
   PlayerClass m_class;
+
+  sf::Texture* m_skullTexture;
 };
 
 #endif

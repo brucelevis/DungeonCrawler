@@ -40,7 +40,7 @@ public:
   static Character* createMonster(const std::string& name);
 
   const sf::Texture* getTexture() const { return m_faceTexture; }
-  void draw(sf::RenderTarget& target, int x, int y) const;
+  virtual void draw(sf::RenderTarget& target, int x, int y) const;
 
   Attribute& getAttribute(const std::string& attribName);
 

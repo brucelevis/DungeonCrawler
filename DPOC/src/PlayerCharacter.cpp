@@ -2,6 +2,7 @@
 
 #include "SaveLoad.h"
 
+#include "BattleAnimation.h"
 #include "Config.h"
 #include "Utility.h"
 #include "Cache.h"
@@ -16,7 +17,13 @@ std::vector<std::string> PlayerCharacter::equipNames =
 };
 
 PlayerCharacter::PlayerCharacter()
+ : m_skullTexture(cache::loadTexture("Pictures/Death.png"))
 {
+}
+
+PlayerCharacter::~PlayerCharacter()
+{
+  cache::releaseTexture(m_skullTexture);
 }
 
 void PlayerCharacter::equip(const std::string& equipmentSlot, const std::string& itemName)
@@ -270,6 +277,42 @@ void PlayerCharacter::setClass(const std::string& className)
 {
   m_class = player_class_ref(className);
   setUnarmedAttackEffect(m_class.unarmedAttackEffect);
+}
+
+void PlayerCharacter::draw(sf::RenderTarget& target, int x, int y) const
+{
+  bool isDead = false;
+
+  for (auto it = m_status.begin(); it != m_status.end(); ++it)
+  {
+    if (to_lower((*it)->name) == "dead")
+    {
+      isDead = true;
+      break;
+    }
+  }
+
+  if (isDead && !flash().isFading())
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*m_skullTexture);
+    sprite.setTextureRect(sf::IntRect(0, 0, m_skullTexture->getSize().x, m_skullTexture->getSize().y));
+    sprite.setPosition(x, y);
+    target.draw(sprite);
+
+    if (m_flash.activeBattleAnimation())
+    {
+      int posX = x + m_skullTexture->getSize().x / 2;
+      int posY = y + m_skullTexture->getSize().y / 2;
+
+      m_flash.activeBattleAnimation()->setOrigin(posX, posY);
+      m_flash.activeBattleAnimation()->render(target);
+    }
+  }
+  else
+  {
+    Character::draw(target, x, y);
+  }
 }
 
 PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className, int level)
