@@ -541,6 +541,12 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape,
     config::set("MUSIC_BATTLE", "Music/" + music);
   }
 
+  std::string startBattleSound = config::get("SOUND_BATTLE");
+  if (startBattleSound.size())
+  {
+    play_sound(startBattleSound);
+  }
+
   m_currentMusic.pause();
 
   Message::instance().setIsQuiet(true);
