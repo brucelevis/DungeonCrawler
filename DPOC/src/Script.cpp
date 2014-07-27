@@ -213,6 +213,69 @@ static Script::ArithmOp get_arithm_op(const std::string& str)
   return Script::ARITHM_OP_UNKNOWN;
 }
 
+static std::string replace_variables_in_string(const std::string& str, const Entity* callingEntity)
+{
+  std::string buffer = str;
+
+  std::vector<std::string> variables;
+
+  bool parseVar = false;
+  std::string variable;
+  for (size_t i = 0; i < str.size(); i++)
+  {
+    if (!parseVar)
+    {
+      if (str[i] == '$' || (str[i] == '%' && callingEntity))
+      {
+        parseVar = true;
+        variable += str[i];
+      }
+    }
+    else
+    {
+      if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || isdigit(str[i]) || str[i] == '_')
+      {
+        variable += str[i];
+
+        if (i == str.size() - 1)
+        {
+          variables.push_back(variable);
+        }
+      }
+      else
+      {
+        parseVar = false;
+        variables.push_back(variable);
+        variable = "";
+
+        // if we have something like: %var1$var2
+        if (i > 0) i--;
+      }
+    }
+  }
+
+  for (auto it = variables.begin(); it != variables.end(); ++it)
+  {
+    const std::string& variable = *it;
+    std::string key = variable;
+
+    if (variable[0] == '%')
+    {
+      key = callingEntity->getTag() + "@@" + variable;
+    }
+
+    if (Persistent<int>::instance().isSet(key))
+    {
+      std::string value = toString(Persistent<int>::instance().get(key));
+
+      size_t pos = buffer.find(variable);
+      buffer.replace(pos, variable.size(), value);
+    }
+  }
+
+  return buffer;
+}
+
 Script::Script()
  : m_currentIndex(0),
    m_running(false),
@@ -711,7 +774,8 @@ void Script::executeScriptLine()
 
   if (data.opcode == Script::OP_MESSAGE)
   {
-    Message::instance().show(data.data.messageData.message);
+    std::string msg = replace_variables_in_string(data.data.messageData.message, m_callingEntity);
+    Message::instance().show(msg);
 
     Script::ScriptData nextLine;
     if (peekNext(nextLine))
