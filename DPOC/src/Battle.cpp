@@ -887,10 +887,13 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
         // Haha.
         if (message.currentMessage().find("level") != std::string::npos)
         {
-          m_battleMusic.stop();
-          m_battleMusic.openFromFile(config::res_path(config::get("MUSIC_LEVELUP")));
-          m_battleMusic.setLoop(false);
-          m_battleMusic.play();
+          if (config::get("MUSIC_LEVELUP").size())
+          {
+            m_battleMusic.stop();
+            m_battleMusic.openFromFile(config::res_path(config::get("MUSIC_LEVELUP")));
+            m_battleMusic.setLoop(false);
+            m_battleMusic.play();
+          }
         }
 
         if (!message.isVisible())
