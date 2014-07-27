@@ -5,6 +5,8 @@
 #include <vector>
 #include "Direction.h"
 
+class Entity;
+
 static const int MAX_SCRIPT_MESSAGE_BUFFER_SIZE = 512;
 static const int MAX_SCRIPT_KEY_SIZE = 32;
 static const int MAX_CHOICES = 4;
@@ -191,13 +193,18 @@ public:
   bool isLoaded() const { return m_loaded; }
 
   void execute();
-  void advance();
-  void stepBack();
+  void next();
   bool active() const;
-  ScriptData getCurrentData() const;
 
-  bool peekNext(ScriptData& out) const;
+  void setCallingEntity(Entity* entity);
 private:
+  void advance();
+  void executeScriptLine();
+
+  void stepBack();
+  ScriptData getCurrentData() const;
+  bool peekNext(ScriptData& out) const;
+
   ScriptData parseLine(const std::string& line) const;
   Opcode getOpCode(const std::string& opStr) const;
 private:
@@ -205,6 +212,8 @@ private:
   size_t m_currentIndex;
   bool m_running;
   bool m_loaded;
+
+  Entity* m_callingEntity;
 };
 
 #endif

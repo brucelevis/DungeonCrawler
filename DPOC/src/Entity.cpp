@@ -14,20 +14,6 @@
 #include "Config.h"
 #include "Entity.h"
 
-static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
-{
-  if (operation == "==") return lhs == rhs;
-  if (operation == "!=") return lhs != rhs;
-  if (operation == "<") return lhs < rhs;
-  if (operation == ">") return lhs > rhs;
-  if (operation == "<=") return lhs <= rhs;
-  if (operation == ">=") return lhs >= rhs;
-
-  TRACE("Unknown operation '%s'", operation.c_str());
-
-  return false;
-}
-
 Entity::Entity()
 : x(0),
   y(0),
@@ -71,12 +57,14 @@ void Entity::loadScripts(const std::string& talkScript, const std::string& stepS
   {
     std::istringstream ss(talkScript);
     m_script.loadFromLines(get_lines(ss));
+    m_script.setCallingEntity(this);
   }
 
   if (!stepScript.empty())
   {
     std::istringstream ss(stepScript);
     m_stepScript.loadFromLines(get_lines(ss));
+    m_stepScript.setCallingEntity(this);
     m_stepScript.execute();
   }
 }
@@ -115,16 +103,12 @@ void Entity::update()
   {
     if (m_script.active() && m_scriptWaitMap[&m_script] == 0)
     {
-      executeScriptLine(m_script.getCurrentData(), m_script);
-
-      m_script.advance();
+      m_script.next();
     }
 
     if (!m_script.active() && m_stepScript.active() && m_scriptWaitMap[&m_stepScript] == 0)
     {
-      executeScriptLine(m_stepScript.getCurrentData(), m_stepScript);
-
-      m_stepScript.advance();
+      m_stepScript.next();
 
       if (!m_stepScript.active())
       {
@@ -265,12 +249,6 @@ void Entity::interact(const Entity* interactor)
   if (m_script.isLoaded() && !m_script.active())
   {
     m_script.execute();
-
-    if (m_script.active())
-    {
-      executeScriptLine(m_script.getCurrentData(), m_script);
-      m_script.advance();
-    }
   }
 }
 
@@ -321,292 +299,6 @@ bool Entity::canInteractWith(const Entity* interactor) const
   }
 
   return false;
-}
-
-void Entity::executeScriptLine(const Script::ScriptData& data, Script& executingScript)
-{
-  if (data.opcode == Script::OP_MESSAGE)
-  {
-    Message::instance().show(data.data.messageData.message);
-
-    Script::ScriptData next;
-    if (executingScript.peekNext(next))
-    {
-      if (next.opcode == Script::OP_MESSAGE || next.opcode == Script::OP_CHOICE)
-      {
-        executingScript.advance();
-        executeScriptLine(next, executingScript);
-      }
-    }
-  }
-  else if (data.opcode == Script::OP_WALK)
-  {
-    step(data.data.walkData.dir);
-  }
-  else if (data.opcode == Script::OP_SET_DIR)
-  {
-    // Script should override fixed direction property.
-    bool fixTemp = m_fixedDirection;
-    setFixedDirection(false);
-
-    setDirection(data.data.walkData.dir);
-
-    setFixedDirection(fixTemp);
-  }
-  else if (data.opcode == Script::OP_WAIT)
-  {
-    // wait(data.data.waitData.duration);
-    m_scriptWaitMap[&executingScript] = data.data.waitData.duration;
-  }
-  else if (data.opcode == Script::OP_SET_GLOBAL)
-  {
-    Persistent<int>::instance().set(data.data.setGlobalData.key, data.data.setGlobalData.value);
-  }
-  else if (data.opcode == Script::OP_SET_LOCAL)
-  {
-    Persistent<int>::instance().set(getTag() + "@@" + data.data.setLocalData.key, data.data.setLocalData.value);
-  }
-  else if (data.opcode == Script::OP_IF)
-  {
-    std::string lhs = data.data.ifData.lhs;
-    std::string rhs = data.data.ifData.rhs;
-    std::string lhsKey = data.data.ifData.lhsKey;
-    std::string rhsKey = data.data.ifData.rhsKey;
-    std::string operation = data.data.ifData.boolOperation;
-
-    int lhsValue, rhsValue;
-
-    getIfValue(lhs, lhsKey, lhsValue);
-    getIfValue(rhs, rhsKey, rhsValue);
-
-    bool result = exec_bool_operation(operation, lhsValue, rhsValue);
-
-    if (!result)
-    {
-      // Find matching end_if or else, in case the expression was false.
-      int ifCount = 1;
-      while (ifCount > 0)
-      {
-        executingScript.advance();
-        if (executingScript.getCurrentData().opcode == Script::OP_IF)
-        {
-          ifCount++;
-        }
-        else if (executingScript.getCurrentData().opcode == Script::OP_END_IF)
-        {
-          ifCount--;
-        }
-        else if (executingScript.getCurrentData().opcode == Script::OP_ELSE && ifCount == 1)
-        {
-          // IfCount == 1 means it is the original IF, so enter this ELSE branch.
-          ifCount--;
-        }
-      }
-    }
-  }
-  else if (data.opcode == Script::OP_ELSE)
-  {
-    // In case we advanced into an ELSE opcode, continue until we find the matching END.
-    int ifCount = 1;
-    while (ifCount > 0)
-    {
-      executingScript.advance();
-      if (executingScript.getCurrentData().opcode == Script::OP_IF)
-      {
-        ifCount++;
-      }
-      else if (executingScript.getCurrentData().opcode == Script::OP_END_IF)
-      {
-        ifCount--;
-      }
-    }
-  }
-  else if (data.opcode == Script::OP_CHOICE)
-  {
-    std::vector<std::string> choices;
-
-    for (int i = 0; i < data.data.choiceData.numberOfChoices; i++)
-    {
-      choices.push_back(replace_string(data.data.choiceData.choices[i], '_', ' '));
-    }
-
-    Game::instance().openChoiceMenu(choices);
-  }
-  else if (data.opcode == Script::OP_SET_TILE_ID)
-  {
-    int tileId = data.data.setTileIdData.tileId;
-
-    TileSprite* tileSprite = dynamic_cast<TileSprite*>(m_sprite);
-    if (tileSprite)
-    {
-      tileSprite->setTileNum(tileId);
-    }
-    else
-    {
-      TRACE("Attempting to call set_tile_id on entity not using tileSprite.");
-    }
-  }
-  else if (data.opcode == Script::OP_GIVE_ITEM)
-  {
-    int amount = data.data.giveItemData.amount;
-    std::string itemName = data.data.giveItemData.itemName;
-
-    get_player()->addItemToInventory(itemName, amount);
-  }
-  else if (data.opcode == Script::OP_TAKE_ITEM)
-  {
-    int amount = data.data.giveItemData.amount;
-    std::string itemName = data.data.giveItemData.itemName;
-
-    get_player()->removeItemFromInventory(itemName, amount);
-  }
-  else if (data.opcode == Script::OP_GIVE_GOLD)
-  {
-    int amount = data.data.giveGoldData.amount;
-    get_player()->gainGold(amount);
-  }
-  else if (data.opcode == Script::OP_TAKE_GOLD)
-  {
-    int amount = data.data.giveGoldData.amount;
-    get_player()->removeGold(amount);
-  }
-  else if (data.opcode == Script::OP_PLAY_SOUND)
-  {
-    std::string sound = data.data.playSoundData.sound;
-    play_sound("Audio/" + sound);
-  }
-  else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
-  {
-    int level = data.data.addPartyMemberData.level; // TODO
-    std::string name = data.data.addPartyMemberData.name;
-    std::string className = data.data.addPartyMemberData.className;
-
-    int x = get_player()->getTrain().back()->x;
-    int y = get_player()->getTrain().back()->y;
-
-    get_player()->addNewCharacter(name, className, x, y, level);
-  }
-  else if (data.opcode == Script::OP_REMOVE_PARTY_MEMBER)
-  {
-    std::string name = data.data.removePartyMemberData.name;
-
-    get_player()->removeCharacter(name);
-  }
-  else if (data.opcode == Script::OP_SET_VISIBLE)
-  {
-    m_visible = data.data.setVisibleData.visibility;
-  }
-  else if (data.opcode == Script::OP_SET_WALKTHROUGH)
-  {
-    m_walkThrough = data.data.setWalkthroughData.walkthrough;
-  }
-  else if (data.opcode == Script::OP_ENABLE_CONTROLS)
-  {
-    get_player()->setControlsEnabled(data.data.enableControlsData.enabled);
-  }
-  else if (data.opcode == Script::OP_RECOVER_ALL)
-  {
-    get_player()->recoverAll();
-  }
-  else if (data.opcode == Script::OP_COMBAT || data.opcode == Script::OP_COMBAT_NO_ESAPE)
-  {
-    std::vector<std::string> monsters;
-
-    for (int i = 0; i < data.data.combatData.number; i++)
-    {
-      monsters.push_back(data.data.combatData.monsters[i]);
-    }
-
-    Game::instance().startBattle(monsters, data.data.combatData.canEscape);
-  }
-  else if (data.opcode == Script::OP_END_GAME)
-  {
-    Game::instance().close();
-    SceneManager::instance().fadeIn(128);
-  }
-  else if (data.opcode == Script::OP_SET_CONFIG)
-  {
-    config::set(data.data.setConfigData.key, data.data.setConfigData.value);
-  }
-  else if (data.opcode == Script::OP_TRANSFER)
-  {
-    std::string targetMap = data.data.transferData.targetMap;
-    Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y);
-  }
-  else if (data.opcode == Script::OP_SHOP)
-  {
-    std::vector<std::string> items;
-
-    for (int i = 0; i < data.data.shopData.number; i++)
-    {
-      items.push_back(data.data.shopData.inventory[i]);
-    }
-
-    Game::instance().openShop(items);
-  }
-  else if (data.opcode == Script::OP_SHOW_PICTURE)
-  {
-    std::string name = data.data.showPictureData.name;
-    float x = data.data.showPictureData.x;
-    float y = data.data.showPictureData.y;
-
-    SceneManager::instance().showPicture(name, x, y);
-  }
-  else if (data.opcode == Script::OP_HIDE_PICTURE)
-  {
-    std::string name = data.data.hidePictureData.name;
-
-    SceneManager::instance().hidePicture(name);
-  }
-}
-
-void Entity::getIfValue(const std::string& input, const std::string& key, int& value) const
-{
-  std::string fixedKey = key;
-
-  if (input == "local")
-  {
-    fixedKey = getTag() + "@@" + fixedKey;
-  }
-
-  if (input == "local" || input == "global")
-  {
-    value = Persistent<int>::instance().get(fixedKey);
-  }
-  else if (input == "const")
-  {
-    if (fixedKey == "true" || fixedKey == "false")
-    {
-      value = fixedKey == "true";
-    }
-    else
-    {
-      value = atoi(key.c_str());
-    }
-  }
-  else if (input == "item")
-  {
-    if (key != "gold")
-    {
-      Item* item = get_player()->getItem(replace_string(key, '_', ' '));
-      if (item)
-      {
-        value = item->stackSize;
-      }
-      else
-      {
-        value = 0;
-      }
-    }
-    else
-    {
-      value = get_player()->getGold();
-    }
-  }
-  else
-  {
-    TRACE("Entity[%s]: Unknown input value %s from script.", getTag().c_str(), input.c_str());
-  }
 }
 
 bool Entity::checkPlayerCollision() const

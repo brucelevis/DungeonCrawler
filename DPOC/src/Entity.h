@@ -23,6 +23,8 @@ struct EntityDef
 
 class Entity
 {
+  friend class Script;
+
   enum State
   {
     STATE_NORMAL,
@@ -93,9 +95,6 @@ private:
   Entity& operator=(const Entity&);
 
   void walk();
-  void executeScriptLine(const Script::ScriptData& data, Script& executingScript);
-
-  void getIfValue(const std::string& input, const std::string& key, int& value) const;
 
   bool checkPlayerCollision() const;
   bool checkEntityCollision() const;
