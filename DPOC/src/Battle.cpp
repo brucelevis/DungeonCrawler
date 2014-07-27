@@ -376,6 +376,7 @@ void Battle::executeActions()
   else if (action.actionName == "Spell")
   {
 //    play_sound(config::get("SOUND_SPELL"));
+    m_turnDelay = TURN_DELAY_TIME;
 
     if (action.target)
     {
