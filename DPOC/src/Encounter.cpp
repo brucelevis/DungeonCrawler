@@ -19,22 +19,41 @@ Encounter::Encounter()
 }
 
 template <typename T>
-T parseAttribute(const XMLElement* element, const std::string& attrName)
+struct xml_parse_attribute
 {
-  const XMLAttribute* attribute = element->FindAttribute(attrName.c_str());
-
-  if (attribute)
+  static T parse(const XMLElement* element, const std::string& attrName)
   {
-    T t;
+    const XMLAttribute* attribute = element->FindAttribute(attrName.c_str());
 
-    std::istringstream ss ( attribute->Value() );
-    ss >> t;
+    if (attribute)
+    {
+      T t;
 
-    return t;
+      std::istringstream ss ( attribute->Value() );
+      ss >> t;
+
+      return t;
+    }
+
+    return T();
   }
+};
 
-  return T();
-}
+template <>
+struct xml_parse_attribute<std::string>
+{
+  static std::string parse(const XMLElement* element, const std::string& attrName)
+  {
+    const XMLAttribute* attribute = element->FindAttribute(attrName.c_str());
+
+    if (attribute)
+    {
+      return attribute->Value();
+    }
+
+    return "";
+  }
+};
 
 template <typename Func>
 void xml_for_each(const XMLElement* startElement, Func func)
@@ -55,7 +74,7 @@ static std::vector<std::string> parse_group_element(const XMLElement* groupEleme
       std::string elementName = element->Name();
       if (elementName == "monster")
       {
-        std::string monsterName = parseAttribute<std::string>(element, "name");
+        std::string monsterName = xml_parse_attribute<std::string>::parse(element, "name");
         monsters.push_back(monsterName);
       }
     });
@@ -67,10 +86,10 @@ static Encounter parse_encounter_element(const XMLElement* encounterElement)
 {
   Encounter encounter;
 
-  encounter.name = parseAttribute<std::string>(encounterElement, "name");
-  encounter.music = parseAttribute<std::string>(encounterElement, "music");
+  encounter.name = xml_parse_attribute<std::string>::parse(encounterElement, "name");
+  encounter.music = xml_parse_attribute<std::string>::parse(encounterElement, "music");
 
-  std::string canEscape = parseAttribute<std::string>(encounterElement, "canEscape");
+  std::string canEscape = xml_parse_attribute<std::string>::parse(encounterElement, "canEscape");
   if (canEscape == "true" || canEscape.empty())
   {
     encounter.canEscape = true;
