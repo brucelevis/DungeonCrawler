@@ -42,7 +42,7 @@ public:
 
   void loadNewMap(const std::string& file);
 
-  void startBattle(const std::vector<std::string>& monsters, bool canEscape = true);
+  void startBattle(const std::vector<std::string>& monsters, bool canEscape = true, const std::string& music = "");
 
   void preFade(FadeType fadeType);
   void postFade(FadeType fadeType);
@@ -105,6 +105,8 @@ private:
 
   Minimap m_minimap;
   bool m_battleInProgress;
+
+  std::string m_savedBattleMusic;
 };
 
 #endif

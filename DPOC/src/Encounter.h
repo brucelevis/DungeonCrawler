@@ -12,9 +12,11 @@ struct Encounter
   std::string music;
   std::vector<std::string> monsters;
   bool canEscape;
+
+  void start() const;
 };
 
 void load_encounters();
-const Encounter& get_encounter(const std::string& encounterName);
+const Encounter* get_encounter(const std::string& encounterName);
 
 #endif

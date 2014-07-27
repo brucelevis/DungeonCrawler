@@ -18,6 +18,7 @@
 #include "Entity.h"
 #include "Direction.h"
 #include "Raycaster.h"
+#include "Encounter.h"
 
 #include "Shop.h"
 #include "Battle.h"
@@ -158,11 +159,11 @@ void Game::update()
       {
         // Also check encounters if no warps were taken.
 
-        std::vector<std::string> monsters =
+        const Encounter* encounter =
             m_currentMap->checkEncounter(m_player->player()->x, m_player->player()->y);
-        if (!monsters.empty())
+        if (encounter)
         {
-          startBattle(monsters);
+          encounter->start();
         }
       }
     }
@@ -532,8 +533,14 @@ void Game::loadNewMap(const std::string& file)
   }
 }
 
-void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape)
+void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape, const std::string& music)
 {
+  if (music.size())
+  {
+    m_savedBattleMusic = config::get("MUSIC_BATTLE");
+    config::set("MUSIC_BATTLE", "Music/" + music);
+  }
+
   m_currentMusic.pause();
 
   Message::instance().setIsQuiet(true);
@@ -563,6 +570,12 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape)
 void Game::postBattle()
 {
   Message::instance().setIsQuiet(false);
+
+  if (m_savedBattleMusic.size())
+  {
+    config::set("MUSIC_BATTLE", m_savedBattleMusic);
+    m_savedBattleMusic = "";
+  }
 
   m_currentMusic.play();
   m_battleInProgress = false;

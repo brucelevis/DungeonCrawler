@@ -12,10 +12,11 @@
 #include "Entity.h"
 #include "Trap.h"
 
+class Encounter;
+
 struct Tile
 {
   int tileX, tileY;
-  int zone;
   bool solid;
   int tileId;
 };
@@ -60,7 +61,7 @@ public:
   bool blocking(int x, int y);
   bool inside(int x, int y) const;
 
-  std::vector<std::string> checkEncounter(int x, int y);
+  const Encounter* checkEncounter(int x, int y);
 
   std::string xmlDump() const;
 
@@ -86,7 +87,7 @@ private:
   std::vector<Trap> m_traps;
 
   int m_encounterRate;
-  std::multimap<int, std::vector<std::string> > m_encounters;
+  std::vector< std::string > m_encounters;
 
   sf::Texture* m_tileset;
   std::string m_name;

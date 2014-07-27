@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "logger.h"
 
+#include "Game.h"
 #include "Encounter.h"
 
 #include "../dep/tinyxml2.h"
@@ -16,6 +17,11 @@ Encounter::Encounter()
  : canEscape(true)
 {
 
+}
+
+void Encounter::start() const
+{
+  Game::instance().startBattle(monsters, canEscape, music);
 }
 
 template <typename T>
@@ -143,14 +149,14 @@ void load_encounters()
   }
 }
 
-const Encounter& get_encounter(const std::string& encounterName)
+const Encounter* get_encounter(const std::string& encounterName)
 {
   auto it = _encounters.find(encounterName);
 
   if (it != _encounters.end())
   {
-    return it->second;
+    return &it->second;
   }
 
-  throw std::runtime_error("Could not find encounter: " + encounterName);
+  return 0;
 }

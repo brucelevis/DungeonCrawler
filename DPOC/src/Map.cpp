@@ -10,51 +10,9 @@
 #include "TiledLoader.h"
 #include "Cache.h"
 #include "logger.h"
+#include "Encounter.h"
+
 #include "Map.h"
-
-static std::string make_tag(int index, const std::string& name)
-{
-  std::ostringstream ss;
-  ss << index << "@@" << name;
-  return ss.str();
-}
-
-static void compute_sprite_data(sf::Texture* texture,
-    int tileX, int tileY,
-    int tileWidth, int tileHeight,
-    int& spriteSheetX, int& spriteSheetY, Direction& startDirection)
-{
-  int numberOfTilesX = texture->getSize().x / tileWidth;
-  int numberOfTilesY = texture->getSize().y / tileHeight;
-
-  int numberOfBlocksX = (texture->getSize().x / (tileWidth * config::NUM_SPRITES_X));
-  int numberOfBlocksY = (texture->getSize().y / (tileHeight * config::NUM_SPRITES_Y));
-
-  spriteSheetX = 0;
-  spriteSheetY = 0;
-
-  startDirection = DIR_DOWN;
-
-  // haha.
-  for (int blockY = 0; blockY < numberOfBlocksY; blockY++)
-  {
-    for (int blockX = 0; blockX < numberOfBlocksX; blockX++)
-    {
-      int sx = blockX * config::NUM_SPRITES_X;
-      int sy = blockY * config::NUM_SPRITES_Y;
-
-      if (tileX >= sx && tileY >= sy &&
-          tileX < (sx + config::NUM_SPRITES_X) && tileY < (sy + config::NUM_SPRITES_Y))
-      {
-        spriteSheetX = blockX;
-        spriteSheetY = blockY;
-        startDirection = (Direction)(tileY % 4);
-
-        return;
-      }
-    }
-  }
-}
 
 Map::Map()
  : m_width(0),
@@ -100,7 +58,6 @@ Map* Map::loadTiledFile(const std::string& filename)
     config::TILE_W = loader.getTileWidth();
     config::TILE_H = loader.getTileHeight();
 
-    std::set<int> zones;
     map->m_encounterRate = 30;
     if (!loader.getProperty("encounterRate").empty())
     {
@@ -155,7 +112,6 @@ Map* Map::loadTiledFile(const std::string& filename)
 
         Tile tile;
         tile.solid = false;
-        tile.zone = 0;
         tile.tileX = 0;
         tile.tileY = 0;
 
@@ -288,29 +244,6 @@ Map* Map::loadTiledFile(const std::string& filename)
           TRACE("New trap: trapX=%d, trapY=%d, trapType=%s, luck=%d",
               trapX, trapY, trapType.c_str(), luckToBeat);
         }
-        else if (to_lower(name) == "zone")
-        {
-          int zoneId = fromString<int>(loader.getObjectProperty(objectIndex, "zoneId"));
-
-          zones.insert(zoneId);
-
-          int x = object->x / config::TILE_W;
-          int y = object->y / config::TILE_H;
-          int w = object->width / config::TILE_W;
-          int h = object->height / config::TILE_H;
-
-          for (int py = y; py < y + h; py++)
-          {
-            for (int px = x; px < x + w; px++)
-            {
-              int index = py * map->m_width + px;
-              map->m_tiles["floor"][index].zone = zoneId;
-            }
-          }
-
-          TRACE("New zone: x=%d, y=%d, width=%d, height=%d",
-              x, y, w, h);
-        }
         else
         {
           // Entities without picture.
@@ -341,25 +274,11 @@ Map* Map::loadTiledFile(const std::string& filename)
     }
 
     TRACE("Reading encounters");
-    for (auto it = zones.begin(); it != zones.end(); ++it)
-    {
-      std::string enc = loader.getProperty("zone:" + toString(*it));
-      std::vector<std::string> groups = split_string(enc, '|');
-      for (auto groupIt = groups.begin(); groupIt != groups.end(); ++groupIt)
-      {
-        std::vector<std::string> monsters = split_string(*groupIt, ',');
-        map->m_encounters.insert(std::make_pair(*it, monsters));
-      }
-    }
-    for (auto it = map->m_encounters.begin(); it != map->m_encounters.end(); ++it)
-    {
-      std::string buff;
-      for (auto jit = it->second.begin(); jit != it->second.end(); ++jit)
-      {
-        buff += (*jit) + " ";
-      }
-      TRACE(" - %d: %s", it->first, buff.c_str());
-    }
+    std::string encounters_str = loader.getProperty("encounters");
+    std::vector<std::string> encounters = split_string(encounters_str, ',');
+    map->m_encounters = encounters;
+
+    TRACE(" -> %s", encounters_str.c_str());
 
     TRACE("Map loading completed!");
   }
@@ -473,31 +392,23 @@ std::string Map::xmlDump() const
   return xml.str();
 }
 
-std::vector<std::string> Map::checkEncounter(int x, int y)
+const Encounter* Map::checkEncounter(int x, int y)
 {
-  std::vector<std::string> monsters;
+  std::string encounter;
 
   int range = random_range(0, m_encounterRate);
   if (range == 0)
   {
-    int zone = getTileAt(x, y, "floor")->zone;
+    std::vector<std::string> encountersCopy = m_encounters;
 
-    std::vector< std::vector<std::string> > potentials;
-
-    auto itPair = m_encounters.equal_range(zone);
-    for (auto it = itPair.first; it != itPair.second; ++it)
+    if (encountersCopy.size() > 0)
     {
-      potentials.push_back(it->second);
-    }
-
-    if (potentials.size() > 0)
-    {
-      std::random_shuffle(potentials.begin(), potentials.end());
-      monsters = potentials.front();
+      std::random_shuffle(encountersCopy.begin(), encountersCopy.end());
+      encounter = encountersCopy.front();
     }
   }
 
-  return monsters;
+  return get_encounter(encounter);
 }
 
 bool Map::inside(int x, int y) const
