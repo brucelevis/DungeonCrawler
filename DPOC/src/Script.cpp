@@ -174,6 +174,45 @@ static std::string get_value_in_bracket(const std::string& str)
   return buffer;
 }
 
+static void get_if_statement_input(const std::string& data, std::string& key, std::string& type)
+{
+  if (data[0] == '$' || data[0] == '%' || isdigit(data[0]) || data == "true" || data == "false")
+  {
+    key = data;
+
+    if (data[0] == '$')
+    {
+      type = "global";
+    }
+    else if (data[0] == '%')
+    {
+      type = "local";
+    }
+    else if (isdigit(data[0]) || data == "true" || data == "false")
+    {
+      type = "const";
+    }
+  }
+  else
+  {
+    type = get_value_to_bracket(data);
+    if (data == "item")
+    {
+      key = get_value_in_bracket(data);
+    }
+  }
+}
+
+static Script::ArithmOp get_arithm_op(const std::string& str)
+{
+  if (str == "+=") return Script::ARITHM_OP_ADD;
+  if (str == "-=") return Script::ARITHM_OP_SUB;
+  if (str == "*=") return Script::ARITHM_OP_MUL;
+  if (str == "/=") return Script::ARITHM_OP_DIV;
+
+  return Script::ARITHM_OP_UNKNOWN;
+}
+
 Script::Script()
  : m_currentIndex(0),
    m_running(false),
@@ -288,7 +327,34 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 {
   std::vector<std::string> strings = split_string(line, ' ');
 
-  Opcode opcode = getOpCode(strings[0]);
+  Opcode opcode;
+
+  if (strings[0][0] == '$' || strings[0][0] == '%')
+  {
+    // Variable operations. $ == global, % == local
+    if (strings.size() <= 2)
+    {
+      TRACE("ERROR: Parse error for line: %s", line.c_str());
+      throw std::runtime_error("Parse error for line: " + line);
+    }
+
+    if (strings[1] == "=")
+    {
+      opcode = OP_ASSIGNMENT;
+    }
+    else if (strings[1] == "+=" ||
+             strings[1] == "-=" ||
+             strings[1] == "*=" ||
+             strings[1] == "/=")
+    {
+      opcode = OP_ARITHMETIC;
+    }
+  }
+  else
+  {
+    // "Function call"
+    opcode = getOpCode(strings[0]);
+  }
 
   ScriptData data;
   data.opcode = opcode;
@@ -318,24 +384,37 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.data.waitData.duration = atoi(strings[1].c_str());
   }
-  else if (opcode == OP_SET_GLOBAL || opcode == OP_SET_LOCAL)
+  else if (opcode == OP_ASSIGNMENT || opcode == OP_ARITHMETIC)
   {
-    std::string key = strings[1];
-    int value;
+    std::string key = strings[0];
+    std::string value = strings[2];
 
-    if (strings[2] == "true" || strings[2] == "false")
+    std::string assign_key;
+    std::string assign_type;
+
+    get_if_statement_input(value, assign_key, assign_type);
+
+    if (opcode == OP_ASSIGNMENT)
     {
-      value = strings[2] == "true";
+      memset(data.data.setPersistentData.key, 0, MAX_SCRIPT_KEY_SIZE);
+      memset(data.data.setPersistentData.type, 0, MAX_SCRIPT_KEY_SIZE);
+      memset(data.data.setPersistentData.value, 0, MAX_SCRIPT_KEY_SIZE);
+
+      strcpy(data.data.setPersistentData.key, key.c_str());
+      strcpy(data.data.setPersistentData.type, assign_type.c_str());
+      strcpy(data.data.setPersistentData.value, assign_key.c_str());
     }
-    else
+    else if (opcode == OP_ARITHMETIC)
     {
-      value = atoi(strings[2].c_str());
+      memset(data.data.arithmeticData.key, 0, MAX_SCRIPT_KEY_SIZE);
+      memset(data.data.arithmeticData.type, 0, MAX_SCRIPT_KEY_SIZE);
+      memset(data.data.arithmeticData.value, 0, MAX_SCRIPT_KEY_SIZE);
+
+      data.data.arithmeticData.operation = get_arithm_op(strings[1]);
+      strcpy(data.data.arithmeticData.key, key.c_str());
+      strcpy(data.data.arithmeticData.type, assign_type.c_str());
+      strcpy(data.data.arithmeticData.value, assign_key.c_str());
     }
-
-    memset(data.data.setPersistentData.key, 0, MAX_SCRIPT_KEY_SIZE);
-
-    strcpy(data.data.setPersistentData.key, key.c_str());
-    data.data.setPersistentData.value = value;
   }
   else if (opcode == OP_IF)
   {
@@ -352,17 +431,8 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     memset(data.data.ifData.lhsKey, 0, MAX_SCRIPT_KEY_SIZE);
     memset(data.data.ifData.boolOperation, 0, MAX_SCRIPT_KEY_SIZE);
 
-    lhs_what = get_value_to_bracket(lhs);
-    if (lhs_what == "global" || lhs_what == "local" || lhs_what == "const" || lhs_what == "item")
-    {
-      lhs_key = get_value_in_bracket(lhs);
-    }
-
-    rhs_what = get_value_to_bracket(rhs);
-    if (rhs_what == "global" || rhs_what == "local" || rhs_what == "const" || rhs_what == "item")
-    {
-      rhs_key = get_value_in_bracket(rhs);
-    }
+    get_if_statement_input(lhs, lhs_key, lhs_what);
+    get_if_statement_input(rhs, rhs_key, rhs_what);
 
     TRACE("OP_IF: (%s %s %s), lhs_what=%s, rhs_what=%s, lhs_key=%s, rhs_key=%s, operation='%s'",
         lhs.c_str(), operation.c_str(), rhs.c_str(), lhs_what.c_str(), rhs_what.c_str(), lhs_key.c_str(), rhs_key.c_str(), operation.c_str());
@@ -589,8 +659,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "walk",         OP_WALK },
     { "set_dir",      OP_SET_DIR },
     { "wait",         OP_WAIT },
-    { "set_global",   OP_SET_GLOBAL },
-    { "set_local",    OP_SET_LOCAL },
+//    { "set_global",   OP_SET_GLOBAL },
+//    { "set_local",    OP_SET_LOCAL },
     { "if",           OP_IF },
     { "endif",        OP_END_IF },
     { "else",         OP_ELSE },
@@ -643,10 +713,10 @@ void Script::executeScriptLine()
   {
     Message::instance().show(data.data.messageData.message);
 
-    Script::ScriptData next;
-    if (peekNext(next))
+    Script::ScriptData nextLine;
+    if (peekNext(nextLine))
     {
-      if (next.opcode == Script::OP_MESSAGE || next.opcode == Script::OP_CHOICE)
+      if (nextLine.opcode == Script::OP_MESSAGE || nextLine.opcode == Script::OP_CHOICE)
       {
         advance();
         executeScriptLine();
@@ -680,16 +750,64 @@ void Script::executeScriptLine()
       m_callingEntity->m_scriptWaitMap[this] = data.data.waitData.duration;
     }
   }
-  else if (data.opcode == Script::OP_SET_GLOBAL)
+  else if (data.opcode == Script::OP_ASSIGNMENT)
   {
-    Persistent<int>::instance().set(data.data.setPersistentData.key, data.data.setPersistentData.value);
-  }
-  else if (data.opcode == Script::OP_SET_LOCAL)
-  {
-    if (m_callingEntity)
+    std::string key = data.data.setPersistentData.key;
+    std::string assign_key = data.data.setPersistentData.value;
+    std::string assign_type = data.data.setPersistentData.type;
+
+    int value;
+
+    get_if_value(m_callingEntity, assign_type, assign_key, value);
+
+    if (key[0] == '$')
     {
-      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + data.data.setPersistentData.key, data.data.setPersistentData.value);
+      Persistent<int>::instance().set(key, value);
     }
+    else if (key[0] == '%')
+    {
+      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + key, value);
+    }
+
+    advance();
+    executeScriptLine();
+  }
+  else if (data.opcode == Script::OP_ARITHMETIC)
+  {
+    std::string key = data.data.arithmeticData.key;
+    std::string assign_key = data.data.arithmeticData.value;
+    std::string assign_type = data.data.arithmeticData.type;
+    ArithmOp operation = data.data.arithmeticData.operation;
+
+    int value;
+
+    get_if_value(m_callingEntity, assign_type, assign_key, value);
+
+    if (key[0] == '$')
+    {
+      int current = Persistent<int>::instance().get(key);
+
+      if (operation == ARITHM_OP_ADD) current += value;
+      if (operation == ARITHM_OP_SUB) current -= value;
+      if (operation == ARITHM_OP_MUL) current *= value;
+      if (operation == ARITHM_OP_DIV) current /= value;
+
+      Persistent<int>::instance().set(key, current);
+    }
+    else if (key[0] == '%')
+    {
+      int current = Persistent<int>::instance().get(m_callingEntity->getTag() + "@@" + key);
+
+      if (operation == ARITHM_OP_ADD) current += value;
+      if (operation == ARITHM_OP_SUB) current -= value;
+      if (operation == ARITHM_OP_MUL) current *= value;
+      if (operation == ARITHM_OP_DIV) current /= value;
+
+      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + key, current);
+    }
+
+    advance();
+    executeScriptLine();
   }
   else if (data.opcode == Script::OP_IF)
   {
@@ -728,6 +846,9 @@ void Script::executeScriptLine()
         }
       }
     }
+
+    advance();
+    executeScriptLine();
   }
   else if (data.opcode == Script::OP_ELSE)
   {

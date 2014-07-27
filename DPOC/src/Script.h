@@ -21,8 +21,8 @@ public:
     OP_WALK,
     OP_SET_DIR,
     OP_WAIT,
-    OP_SET_GLOBAL,
-    OP_SET_LOCAL,
+    OP_ASSIGNMENT,
+    OP_ARITHMETIC,
     OP_IF,
     OP_END_IF,
     OP_ELSE,
@@ -50,6 +50,15 @@ public:
     OP_HIDE_PICTURE
   };
 
+  enum ArithmOp
+  {
+    ARITHM_OP_ADD,
+    ARITHM_OP_SUB,
+    ARITHM_OP_MUL,
+    ARITHM_OP_DIV,
+    ARITHM_OP_UNKNOWN
+  };
+
   struct ScriptData
   {
     Opcode opcode;
@@ -74,8 +83,17 @@ public:
       struct
       {
         char key[MAX_SCRIPT_KEY_SIZE];
-        int value;
+        char value[MAX_SCRIPT_KEY_SIZE];
+        char type[MAX_SCRIPT_KEY_SIZE];
       } setPersistentData;
+
+      struct
+      {
+        char key[MAX_SCRIPT_KEY_SIZE];
+        char value[MAX_SCRIPT_KEY_SIZE];
+        char type[MAX_SCRIPT_KEY_SIZE];
+        ArithmOp operation;
+      } arithmeticData;
 
       struct
       {
