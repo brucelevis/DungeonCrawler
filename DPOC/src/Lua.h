@@ -77,6 +77,15 @@ namespace lua
     };
 
     template <>
+    struct assert_and_get<const std::string&>
+    {
+      static std::string get(lua_State* L, int index)
+      {
+        return luaL_checkstring(L, index);
+      }
+    };
+
+    template <>
     struct assert_and_get<const char*>
     {
       static const char* get(lua_State* L, int index)
@@ -89,42 +98,42 @@ namespace lua
   namespace detail
   {
     template <typename T>
-    void push(lua_State* L, T val)
+    inline void push(lua_State* L, T val)
     {
       lua_pushlightuserdata(L, (void* )val);
     }
 
-    void push(lua_State* L, int val)
+    inline void push(lua_State* L, int val)
     {
       lua_pushinteger(L, val);
     }
 
-    void push(lua_State* L, size_t val)
+    inline void push(lua_State* L, size_t val)
     {
       lua_pushinteger(L, val);
     }
 
-    void push(lua_State* L, const std::string& val)
+    inline void push(lua_State* L, const std::string& val)
     {
       lua_pushstring(L, val.c_str());
     }
 
-    void push(lua_State* L, const char* val)
+    inline void push(lua_State* L, const char* val)
     {
       lua_pushstring(L, val);
     }
 
-    void push(lua_State* L, float val)
+    inline void push(lua_State* L, float val)
     {
       lua_pushnumber(L, val);
     }
 
-    void push(lua_State* L, double val)
+    inline void push(lua_State* L, double val)
     {
       lua_pushnumber(L, val);
     }
 
-    void push(lua_State* L, bool val)
+    inline void push(lua_State* L, bool val)
     {
       lua_pushboolean(L, val);
     }
@@ -234,7 +243,7 @@ namespace lua
 
   namespace detail
   {
-    base_wrapper* _get_function(lua_State* L)
+    inline base_wrapper* _get_function(lua_State* L)
     {
       return (base_wrapper* )lua_touserdata(L, lua_upvalueindex(1));
     }
@@ -246,7 +255,7 @@ namespace lua
       return func->call(L);
     }
 
-    void _register_function(lua_State* L, const char* func_name, base_wrapper* wrap)
+    inline void _register_function(lua_State* L, const char* func_name, base_wrapper* wrap)
     {
       //lua_pushstring(L, func_name);
       lua_pushlightuserdata(L, (void*)wrap);
@@ -257,6 +266,16 @@ namespace lua
 
   namespace detail
   {
+    // From selene. Not sure how this works exactly.
+    template <typename T>
+    struct lambda_traits : public lambda_traits<decltype(&T::operator())> {};
+
+    template <typename T, typename ReturnValue, typename ... Args>
+    struct lambda_traits<ReturnValue(T::*)(Args...) const>
+    {
+      using Function = std::function<ReturnValue(Args...)>;
+    };
+
     class LuaEnv
     {
     public:
@@ -274,6 +293,14 @@ namespace lua
         detail::_register_function(m_state, func_name, wrap);
       }
 
+      template <typename Functor>
+      void register_function(const char* func_name, Functor functor)
+      {
+        auto function = (typename lambda_traits<Functor>::Function)(functor);
+
+        register_function(func_name, function);
+      }
+
       template <typename ReturnValue, typename ... Args>
       void register_function(const char* func_name, ReturnValue (*funcPtr) (Args...))
       {
@@ -284,6 +311,14 @@ namespace lua
 
       template <typename ReturnValue, typename Type, typename ... Args>
       void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
+      {
+        std::function<ReturnValue(Type*, Args...)> func { funcPtr };
+
+        register_function(func_name, func);
+      }
+
+      template <typename ReturnValue, typename Type, typename ... Args>
+      void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...) const)
       {
         std::function<ReturnValue(Type*, Args...)> func { funcPtr };
 
@@ -322,6 +357,14 @@ namespace lua
       return reg{};
     }
 
+    template <typename Functor>
+    reg operator()(const char* func_name, Functor func)
+    {
+      detail::LuaEnv::instance().register_function<Functor>(func_name, func);
+
+      return reg{};
+    }
+
     // Function pointers.
     template <typename ReturnValue, typename ... Args>
     reg operator()(const char* func_name, ReturnValue (*funcPtr) (Args...))
@@ -339,9 +382,17 @@ namespace lua
 
       return reg{};
     }
+
+    template <typename ReturnValue, typename Type, typename ... Args>
+    reg operator()(const char* func_name, ReturnValue (Type::*funcPtr) (Args...) const)
+    {
+      detail::LuaEnv::instance().register_function<ReturnValue, Type, Args...>(func_name, funcPtr);
+
+      return reg{};
+    }
   };
 
-  bool run(const std::string& filename)
+  inline bool run(const std::string& filename)
   {
     return detail::LuaEnv::instance().executeFile(filename);
   }
