@@ -241,58 +241,96 @@ namespace lua
     }
   }
 
-  class LuaEnv
+  namespace detail
   {
-  public:
-    static LuaEnv& instance()
+    class LuaEnv
     {
-      static LuaEnv env;
-      return env;
-    }
-
-    template <typename ReturnValue, typename ... Args>
-    void register_function(const char* func_name, std::function<ReturnValue(Args...)> func)
-    {
-      auto wrap = new detail::function_wrapper<ReturnValue, Args...>(func);
-
-      detail::_register_function(m_state, func_name, wrap);
-    }
-
-    template <typename ReturnValue, typename ... Args>
-    void register_function(const char* func_name, ReturnValue (*funcPtr) (Args...))
-    {
-      std::function<ReturnValue(Args...)> func { funcPtr };
-
-      register_function(func_name, func);
-    }
-
-    template <typename ReturnValue, typename Type, typename ... Args>
-    void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
-    {
-      std::function<ReturnValue(Type*, Args...)> func { funcPtr };
-
-      register_function(func_name, func);
-    }
-
-    bool executeFile(const std::string& filename)
-    {
-      if (luaL_dofile(m_state, filename.c_str()) != 0)
+    public:
+      static LuaEnv& instance()
       {
-        return false;
+        static LuaEnv env;
+        return env;
       }
 
-      return true;
-    }
-  private:
-    LuaEnv()
-     : m_state(luaL_newstate())
+      template <typename ReturnValue, typename ... Args>
+      void register_function(const char* func_name, std::function<ReturnValue(Args...)> func)
+      {
+        auto wrap = new detail::function_wrapper<ReturnValue, Args...>(func);
+
+        detail::_register_function(m_state, func_name, wrap);
+      }
+
+      template <typename ReturnValue, typename ... Args>
+      void register_function(const char* func_name, ReturnValue (*funcPtr) (Args...))
+      {
+        std::function<ReturnValue(Args...)> func { funcPtr };
+
+        register_function(func_name, func);
+      }
+
+      template <typename ReturnValue, typename Type, typename ... Args>
+      void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
+      {
+        std::function<ReturnValue(Type*, Args...)> func { funcPtr };
+
+        register_function(func_name, func);
+      }
+
+      bool executeFile(const std::string& filename)
+      {
+        if (luaL_dofile(m_state, filename.c_str()) != 0)
+        {
+          return false;
+        }
+
+        return true;
+      }
+    private:
+      LuaEnv()
+       : m_state(luaL_newstate())
+      {
+        luaopen_base(m_state);
+        luaopen_math(m_state);
+      }
+    private:
+      lua_State* m_state;
+    };
+  }
+
+  struct reg
+  {
+    // std::function.
+    template <typename ReturnValue, typename ... Args>
+    reg operator()(const char* func_name, std::function<ReturnValue(Args...)> func)
     {
-      luaopen_base(m_state);
-      luaopen_math(m_state);
+      detail::LuaEnv::instance().register_function<ReturnValue, Args...>(func_name, func);
+
+      return reg{};
     }
-  private:
-    lua_State* m_state;
+
+    // Function pointers.
+    template <typename ReturnValue, typename ... Args>
+    reg operator()(const char* func_name, ReturnValue (*funcPtr) (Args...))
+    {
+      detail::LuaEnv::instance().register_function<ReturnValue, Args...>(func_name, funcPtr);
+
+      return reg{};
+    }
+
+    // Member function pointers.
+    template <typename ReturnValue, typename Type, typename ... Args>
+    reg operator()(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
+    {
+      detail::LuaEnv::instance().register_function<ReturnValue, Type, Args...>(func_name, funcPtr);
+
+      return reg{};
+    }
   };
+
+  bool run(const std::string& filename)
+  {
+    return detail::LuaEnv::instance().executeFile(filename);
+  }
 }
 
 #endif
