@@ -9,6 +9,7 @@
 
 #include "Utility.h"
 
+#include "LuaBindings.h"
 #include "Trap.h"
 
 Trap::Trap()
@@ -77,5 +78,6 @@ void Trap::applyTrap(const std::vector<PlayerCharacter*>& party) const
         show_message("%s was poisoned!", (*it)->getName().c_str());
       }
     }
+    //run_lua_script("Scripts/PoisonTrap.lua");
   }
 }

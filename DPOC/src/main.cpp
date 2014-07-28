@@ -21,6 +21,8 @@
 #include "Player.h"
 #include "Game.h"
 
+#include "LuaBindings.h"
+
 int main(int argc, char* argv[])
 {
   START_LOG;
@@ -38,6 +40,8 @@ int main(int argc, char* argv[])
   load_encounters();
 
   srand(time(0));
+
+  register_lua_bindings();
 
   SceneManager::instance().create();
 
