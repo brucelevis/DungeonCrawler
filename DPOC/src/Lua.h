@@ -76,14 +76,18 @@ namespace lua
       }
     };
 
-    template <>
-    struct assert_and_get<const std::string&>
-    {
-      static std::string get(lua_State* L, int index)
-      {
-        return luaL_checkstring(L, index);
-      }
-    };
+//    template <>
+//    struct assert_and_get<const std::string&>
+//    {
+//      static std::string get(lua_State* L, int index)
+//      {
+//        static_assert(false, "const std::string& doesn't work and I'm not sure"
+//                             " how to fix it, wrap it in a lambda with regular"
+//                             " std::string instead...");
+//
+//        return "";
+//      }
+//    };
 
     template <>
     struct assert_and_get<const char*>
