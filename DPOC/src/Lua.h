@@ -329,10 +329,19 @@ namespace lua
       {
         if (luaL_dofile(m_state, filename.c_str()) != 0)
         {
+          m_error = lua_tostring(m_state, -1);
+
           return false;
         }
 
+        m_error.clear();
+
         return true;
+      }
+
+      const std::string& getError() const
+      {
+        return m_error;
       }
     private:
       LuaEnv()
@@ -343,6 +352,7 @@ namespace lua
       }
     private:
       lua_State* m_state;
+      std::string m_error;
     };
   }
 
@@ -395,6 +405,11 @@ namespace lua
   inline bool run(const std::string& filename)
   {
     return detail::LuaEnv::instance().executeFile(filename);
+  }
+
+  inline const std::string& error()
+  {
+    return detail::LuaEnv::instance().getError();
   }
 }
 
