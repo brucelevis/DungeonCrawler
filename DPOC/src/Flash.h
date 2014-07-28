@@ -37,6 +37,10 @@ public:
 
   void addDamageText(const std::string& text, const sf::Color& color);
   const std::vector<DamageText>& damageText() const { return m_damageNumbers; }
+
+  void shake(int duration, int power);
+  bool isShaking() const { return m_shakeCounter > 0; }
+  int shakePower() const { return m_shakePower; }
 private:
   Flash(const Flash&);
   Flash& operator=(const Flash&);
@@ -50,6 +54,9 @@ private:
   int m_fadeCounter;
 
   std::vector<DamageText> m_damageNumbers;
+
+  int m_shakeCounter;
+  int m_shakePower;
 };
 
 #endif

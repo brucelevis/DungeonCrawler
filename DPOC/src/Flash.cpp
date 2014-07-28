@@ -10,7 +10,9 @@ Flash::Flash()
    m_currentFlash(0),
    m_activeAnimation(0),
    m_fadeSpeed(0),
-   m_fadeCounter(0)
+   m_fadeCounter(0),
+   m_shakeCounter(0),
+   m_shakePower(0)
 {
 
 }
@@ -79,6 +81,11 @@ void Flash::update()
       m_activeAnimation = 0;
     }
   }
+
+  if (isShaking())
+  {
+    m_shakeCounter--;
+  }
 }
 
 void Flash::fadeOut(int speed)
@@ -107,4 +114,10 @@ void Flash::addDamageText(const std::string& text, const sf::Color& color)
     }
   }
   m_damageNumbers.push_back(dmgText);
+}
+
+void Flash::shake(int duration, int power)
+{
+  m_shakeCounter = duration;
+  m_shakePower = power;
 }

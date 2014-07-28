@@ -7,6 +7,9 @@
 #include "SaveLoad.h"
 #include "Utility.h"
 
+#include "StatusEffect.h"
+#include "Flash.h"
+
 #include "Direction.h"
 #include "Entity.h"
 #include "Sprite.h"
@@ -90,6 +93,29 @@ void Player::update()
     else if (dir == DIR_RIGHT) dir = DIR_LEFT;
 
     player()->setDirection(dir);
+  }
+
+  if (wasWalking && !player()->isWalking())
+  {
+    for (PlayerCharacter* pc : m_party)
+    {
+      std::vector<StatusEffect*> statusEffects = pc->getStatusEffects();
+      for (StatusEffect* effect : statusEffects)
+      {
+        if (effect->damageType != DAMAGE_NONE)
+        {
+          pc->flash().shake(10, 4);
+        }
+      }
+    }
+  }
+
+  for (PlayerCharacter* pc : m_party)
+  {
+    if (pc->flash().isShaking())
+    {
+      pc->flash().update();
+    }
   }
 }
 

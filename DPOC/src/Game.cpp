@@ -300,17 +300,13 @@ void Game::draw(sf::RenderTarget& target)
   for (size_t i = 0; i < party.size(); i++)
   {
     PlayerCharacter* character = party[i];
-    const sf::Texture* faceTexture = character->getTexture();
-    sf::Sprite faceSprite;
-    faceSprite.setTexture(*faceTexture);
 
     int xPos, yPos;
 
     xPos = partyPosX + i * 32;
     yPos = config::RAYCASTER_RES_Y;
 
-    faceSprite.setPosition(xPos, yPos);
-    target.draw(faceSprite);
+    character->draw(target, xPos, yPos);
 
     float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
     float mpPercent = (float)character->getAttribute("mp").current / (float)character->getAttribute("mp").max;

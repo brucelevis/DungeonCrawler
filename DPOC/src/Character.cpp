@@ -67,6 +67,14 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
       sprite.setColor(sf::Color(255, 255, 255, m_flash.fadeCounter()));
     }
     
+    if (m_flash.isShaking())
+    {
+      int xPow = random_range(-m_flash.shakePower(), m_flash.shakePower());
+      int yPow = random_range(-m_flash.shakePower(), m_flash.shakePower());
+
+      sprite.setPosition(x + xPow, y + yPow);
+    }
+
     target.draw(sprite);
   }
 
