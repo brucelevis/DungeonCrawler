@@ -32,11 +32,11 @@ void register_lua_bindings()
     ("message", [](std::string msg) { show_message(msg.c_str()); })
 
     // Character functions
-    ("afflict_status", [](Character* chr, std::string status, int duration) {chr->afflictStatus(status, duration); })
-    ("cure_status", [](Character* chr, std::string status) { chr->cureStatus(status); })
+    ("afflict_status", &Character::afflictStatus)
+    ("cure_status", &Character::cureStatus)
     ("check_vs_luck", check_vs_luck)
-    ("get_attribute", [](Character* chr, std::string attribute) { return chr->computeCurrentAttribute(attribute); })
-    ("deal_damage", [](Character* chr, int amount) { chr->takeDamage("hp", amount); })
+    ("get_attribute", &Character::computeCurrentAttribute)
+    ("deal_damage", &Character::takeDamage)
     ("get_character_name", &Character::getName)
 
     // Player functions

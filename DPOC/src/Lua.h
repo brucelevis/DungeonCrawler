@@ -4,6 +4,7 @@
 #include <string>
 #include <tuple>
 #include <functional>
+#include <map>
 #include <lua.hpp>
 
 // Lots of this adapted from this excellent article:
@@ -76,18 +77,16 @@ namespace lua
       }
     };
 
-//    template <>
-//    struct assert_and_get<const std::string&>
-//    {
-//      static std::string get(lua_State* L, int index)
-//      {
-//        static_assert(false, "const std::string& doesn't work and I'm not sure"
-//                             " how to fix it, wrap it in a lambda with regular"
-//                             " std::string instead...");
-//
-//        return "";
-//      }
-//    };
+    template <>
+    struct assert_and_get<const std::string&>
+    {
+      static const std::string& get(lua_State* L, int index)
+      {
+        static std::map<int, std::string> _storage_map = {};
+        _storage_map[index] = luaL_checkstring(L, index);
+        return _storage_map[index];
+      }
+    };
 
     template <>
     struct assert_and_get<const char*>
@@ -171,7 +170,8 @@ namespace lua
     template <typename ... Args, size_t ... Index>
     std::tuple<Args ...> pack_arguments(lua_State* L, parameter_pack<Index...>)
     {
-      return std::make_tuple( assert_and_get<Args>::get(L, Index+1)... );
+      // forward_as_tuple seems to be required to preserve rvalues.
+      return std::forward_as_tuple( assert_and_get<Args>::get(L, Index+1)... );
     }
 
     template <typename ... Args>
