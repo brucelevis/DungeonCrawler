@@ -45,7 +45,16 @@ namespace lua
     {
       static int get(lua_State* L, int index)
       {
-        return luaL_checknumber(L, index);
+        return luaL_checkinteger(L, index);
+      }
+    };
+
+    template <>
+    struct assert_and_get<size_t>
+    {
+      static int get(lua_State* L, int index)
+      {
+        return luaL_checkinteger(L, index);
       }
     };
 
@@ -86,6 +95,11 @@ namespace lua
     }
 
     void push(lua_State* L, int val)
+    {
+      lua_pushinteger(L, val);
+    }
+
+    void push(lua_State* L, size_t val)
     {
       lua_pushinteger(L, val);
     }
