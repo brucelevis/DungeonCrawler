@@ -10,6 +10,7 @@
 #include "StatusEffect.h"
 #include "Flash.h"
 
+#include "Sound.h"
 #include "Direction.h"
 #include "Entity.h"
 #include "Sprite.h"
@@ -414,6 +415,8 @@ void Player::handleStep()
 
   if (steps == 4)
   {
+    bool playSound = false;
+
     for (PlayerCharacter* pc : m_party)
     {
       std::vector<StatusEffect*> statusEffects = pc->getStatusEffects();
@@ -422,7 +425,17 @@ void Player::handleStep()
         if (effect->damageType != DAMAGE_NONE)
         {
           pc->flash().shake(10, 4);
+          playSound = true;
         }
+      }
+    }
+
+    if (playSound)
+    {
+      std::string sound = config::get("SOUND_FIELD_DAMAGE");
+      if (sound.size())
+      {
+        play_sound(sound);
       }
     }
 
