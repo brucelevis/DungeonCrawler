@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <sstream>
 
+#include "SceneManager.h"
+
 #include "Config.h"
 #include "SaveLoad.h"
 #include "Utility.h"
@@ -432,6 +434,8 @@ void Player::handleStep()
 
     if (playSound)
     {
+      SceneManager::instance().flashScreen(4, sf::Color::Red);
+
       std::string sound = config::get("SOUND_FIELD_DAMAGE");
       if (sound.size())
       {
