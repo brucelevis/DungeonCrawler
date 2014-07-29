@@ -428,7 +428,7 @@ void Player::handleStep()
         {
           effect->applyDamage(pc);
 
-          pc->flash().shake(10, 4);
+          pc->flash().shake(6, 4);
           playSound = true;
         }
       }
