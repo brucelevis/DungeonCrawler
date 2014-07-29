@@ -64,6 +64,7 @@ private:
   Player();
 
   void moveTrain();
+  void handleStep();
 private:
   std::vector<Entity*> m_playerTrain;
   std::vector<Item> m_inventory;

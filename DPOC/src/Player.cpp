@@ -97,17 +97,7 @@ void Player::update()
 
   if (wasWalking && !player()->isWalking())
   {
-    for (PlayerCharacter* pc : m_party)
-    {
-      std::vector<StatusEffect*> statusEffects = pc->getStatusEffects();
-      for (StatusEffect* effect : statusEffects)
-      {
-        if (effect->damageType != DAMAGE_NONE)
-        {
-          pc->flash().shake(10, 4);
-        }
-      }
-    }
+    handleStep();
   }
 
   for (PlayerCharacter* pc : m_party)
@@ -414,5 +404,28 @@ void Player::recoverAll()
     reset_attribute((*it)->getAttribute("hp"));
     reset_attribute((*it)->getAttribute("mp"));
     (*it)->resetStatus();
+  }
+}
+
+void Player::handleStep()
+{
+  static int steps = 0;
+  steps++;
+
+  if (steps == 4)
+  {
+    for (PlayerCharacter* pc : m_party)
+    {
+      std::vector<StatusEffect*> statusEffects = pc->getStatusEffects();
+      for (StatusEffect* effect : statusEffects)
+      {
+        if (effect->damageType != DAMAGE_NONE)
+        {
+          pc->flash().shake(10, 4);
+        }
+      }
+    }
+
+    steps = 0;
   }
 }
