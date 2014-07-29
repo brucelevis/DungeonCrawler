@@ -426,6 +426,8 @@ void Player::handleStep()
       {
         if (effect->damageType != DAMAGE_NONE)
         {
+          effect->applyDamage(pc);
+
           pc->flash().shake(10, 4);
           playSound = true;
         }
