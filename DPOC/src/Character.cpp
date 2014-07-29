@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "Game.h"
 #include "BattleAnimation.h"
 #include "Config.h"
 #include "draw_text.h"
@@ -222,6 +223,12 @@ void Character::takeDamage(const std::string& attr, int amount)
 {
   getAttribute(attr).current -= amount;
   clamp_attribute(getAttribute(attr));
+
+  // Never die if we are outside battle.
+  if (!Game::instance().battleInProgress() && getAttribute(attr).current <= 0)
+  {
+    getAttribute(attr).current = 1;
+  }
 }
 
 float Character::getResistance(const std::string& element) const
