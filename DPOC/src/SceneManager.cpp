@@ -19,7 +19,9 @@ SceneManager::SceneManager()
    m_shakeStrengthY(0),
    m_fade(Scene::Scene::FADE_NONE),
    m_fadeCounter(0),
-   m_fadeDuration(0)
+   m_fadeDuration(0),
+   m_flashCounter(0),
+   m_flashDuration(0)
 {
 }
 
@@ -47,6 +49,11 @@ void SceneManager::run()
       if (m_shakeCounter > 0)
       {
         m_shakeCounter--;
+      }
+
+      if (m_flashCounter > 0)
+      {
+        m_flashCounter--;
       }
 
       pollEvents();
@@ -105,6 +112,20 @@ void SceneManager::draw()
     it->second->draw(m_targetTexture);
   }
 
+  if (m_flashCounter > 0)
+  {
+    float percent = (float)m_flashCounter / (float)m_flashDuration;
+    float opacity = 255 - 255 * percent;
+
+    sf::Color fillColor = m_flashColor;
+    fillColor.a = opacity;
+
+    sf::RectangleShape flashRect;
+    flashRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
+    flashRect.setFillColor(fillColor);
+    m_targetTexture.draw(flashRect);
+  }
+
   m_targetTexture.display();
 
   sf::Sprite sprite;
@@ -144,6 +165,13 @@ void SceneManager::shakeScreen(int duration, int shakeStrengthX, int shakeStreng
   m_shakeCounter = duration;
   m_shakeStrengthX = shakeStrengthX;
   m_shakeStrengthY = shakeStrengthY;
+}
+
+void SceneManager::flashScreen(int duration, sf::Color color)
+{
+  m_flashCounter = duration;
+  m_flashDuration = duration;
+  m_flashColor = color;
 }
 
 void SceneManager::fadeIn(int duration)

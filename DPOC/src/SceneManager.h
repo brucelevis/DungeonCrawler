@@ -24,6 +24,8 @@ public:
   void shakeScreen(int duration, int shakeStrengthX, int shakeStrengthY);
   bool isShaking() const { return m_shakeCounter > 0; }
 
+  void flashScreen(int duration, sf::Color color);
+
   void close();
 
   void fadeIn(int duration);
@@ -55,6 +57,10 @@ private:
   int m_fadeDuration;
 
   std::map<std::string, Picture*> m_pictures;
+
+  int m_flashDuration;
+  int m_flashCounter;
+  sf::Color m_flashColor;
 };
 
 #endif
