@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Character.h"
 #include "Config.h"
 #include "logger.h"
 #include "Utility.h"
@@ -26,6 +27,27 @@ static std::vector<StatusEffect> statusEffects =
     DAMAGE_NONE
   }
 };
+
+int StatusEffect::applyDamage(Character* character) const
+{
+  int damage = 0;
+
+  if (damageType == DAMAGE_FIXED)
+  {
+    damage = damagePerTurn;
+  }
+  else if (damageType == DAMAGE_PERCENT)
+  {
+    float percent = (float)damagePerTurn / 100.0f;
+    damage = percent * (float)character->getAttribute(damageStat).max;
+
+    if (damage == 0) damage = 1;
+  }
+
+  character->takeDamage(damageStat, damage);
+
+  return damage;
+}
 
 static DamageType damageTypeFromString(const std::string& type)
 {

@@ -7,6 +7,8 @@
 
 #include "Effect.h"
 
+class Character;
+
 enum DamageType
 {
   DAMAGE_NONE,
@@ -48,6 +50,8 @@ struct StatusEffect
   int statusType;
 
   Effect effect;
+
+  int applyDamage(Character* character) const;
 };
 
 void load_status_effects();

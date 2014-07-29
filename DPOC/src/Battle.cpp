@@ -806,21 +806,7 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
 
     if (status->damageType != DAMAGE_NONE)
     {
-      int damage = 0;
-
-      if (status->damageType == DAMAGE_FIXED)
-      {
-        damage = status->damagePerTurn;
-      }
-      else if (status->damageType == DAMAGE_PERCENT)
-      {
-        float percent = (float)status->damagePerTurn / 100.0f;
-        damage = percent * (float)actor->getAttribute(status->damageStat).max;
-
-        if (damage == 0) damage = 1;
-      }
-
-      actor->takeDamage(status->damageStat, damage);
+      int damage = status->applyDamage(actor);
 
       actor->flash().addDamageText(toString(damage) + " [" + status->damageStat + "]", sf::Color::Red);
 
