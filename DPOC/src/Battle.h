@@ -12,6 +12,7 @@
 #include "Effect.h"
 #include "Scene.h"
 
+class BattleBackground;
 class Character;
 class PlayerCharacter;
 
@@ -60,7 +61,7 @@ public:
 
   void postFade(FadeType fadeType);
 
-  void setBattleBackground(const std::string& file);
+  void setBattleBackground(BattleBackground* battleBackground);
 private:
   void executeActions();
   void showAction();
@@ -115,7 +116,8 @@ private:
 
   bool m_canEscape;
 
-  sf::Texture* m_battleBackground;
+  BattleBackground* m_battleBackground;
+  sf::Texture m_battleBackgroundTexture;
 
   float m_battleBeginFade;
 };

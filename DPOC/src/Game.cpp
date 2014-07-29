@@ -19,6 +19,7 @@
 #include "Direction.h"
 #include "Raycaster.h"
 #include "Encounter.h"
+#include "BattleBackground.h"
 
 #include "Shop.h"
 #include "Battle.h"
@@ -583,10 +584,14 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape,
 
   TRACE("Starting combat with: %s", traceString.c_str());
 
-  std::string battleBackground = m_currentMap ? m_currentMap->getBattleBackground() : "";
+  BattleBackground* battleBg = new BattleBackground(
+      m_currentMap,
+      m_player->player()->x,
+      m_player->player()->y,
+      m_player->player()->getDirection());
 
   Battle* battle = new Battle(monsterChars);
-  battle->setBattleBackground(battleBackground);
+  battle->setBattleBackground(battleBg);
   battle->start(canEscape);
 
   m_battleInProgress = true;

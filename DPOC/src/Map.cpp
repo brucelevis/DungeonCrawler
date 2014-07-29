@@ -76,6 +76,7 @@ Map* Map::loadTiledFile(const std::string& filename)
       {
         TRACE("Map: loading tileset %s", config::res_path("Maps/" + tileset->tilesetSource).c_str());
 
+        map->m_tilesetName = "Maps/" + tileset->tilesetSource;
         map->m_tileset = cache::loadTexture("Maps/" + tileset->tilesetSource);
 
         if (!map->m_tileset)
@@ -290,6 +291,46 @@ Map* Map::loadTiledFile(const std::string& filename)
   return map;
 }
 
+Map* Map::createEmptyFrom(const Map* other, int width, int height)
+{
+  Map* map = new Map;
+  map->m_width = width;
+  map->m_height = height;
+  map->m_tileset = cache::loadTexture(other->m_tilesetName);
+  map->m_tilesetName = other->m_tilesetName;
+
+  if (!map->m_tileset)
+  {
+    TRACE("Unable to load tileset: %s", other->m_tilesetName.c_str());
+    return 0;
+  }
+
+  auto addLayer = [map](const std::string& layerName)
+    {
+      map->m_tiles[layerName] = new Tile[map->m_width * map->m_height]();
+
+      for (size_t j = 0; j < (size_t)(map->m_width * map->m_height); j++)
+      {
+        int tileId = -1;
+
+        Tile tile;
+        tile.solid = false;
+        tile.tileX = 0;
+        tile.tileY = 0;
+
+        tile.tileId = tileId;
+
+        map->m_tiles[layerName][j] = tile;
+      }
+    };
+
+  addLayer("wall");
+  addLayer("floor");
+  addLayer("ceiling");
+
+  return map;
+}
+
 Tile* Map::getTileAt(int x, int y, const std::string& layer)
 {
   if (x < 0 || y < 0 || x >= m_width || y >= m_height || m_tiles.count(layer) == 0)
@@ -301,6 +342,18 @@ Tile* Map::getTileAt(int x, int y, const std::string& layer)
     return &m_tiles[layer][index];
   }
   return 0;
+}
+
+void Map::setTileAt(int x, int y, const std::string& layer, int tileId)
+{
+  Tile* tile = getTileAt(x, y, layer);
+
+  if (tile)
+  {
+    tile->tileId = tileId;
+    tile->tileX = tileId % (m_tileset->getSize().x / config::TILE_W);
+    tile->tileY = tileId / (m_tileset->getSize().x / config::TILE_H);
+  }
 }
 
 bool Map::warpAt(int x, int y) const

@@ -20,6 +20,7 @@
 #include "Sound.h"
 #include "BattleAnimation.h"
 #include "Effect.h"
+#include "BattleBackground.h"
 
 #include "Battle.h"
 
@@ -136,7 +137,7 @@ Battle::~Battle()
     delete *it;
   }
 
-  cache::releaseTexture(m_battleBackground);
+  delete m_battleBackground;
 }
 
 void Battle::start(bool canEscape)
@@ -917,7 +918,7 @@ void Battle::draw(sf::RenderTarget& target)
   if (m_battleBackground)
   {
     sf::Sprite bgSprite;
-    bgSprite.setTexture(*m_battleBackground);
+    bgSprite.setTexture(m_battleBackgroundTexture);
     target.draw(bgSprite);
   }
 
@@ -1379,16 +1380,8 @@ void Battle::postFade(FadeType fadeType)
   }
 }
 
-void Battle::setBattleBackground(const std::string& file)
+void Battle::setBattleBackground(BattleBackground* battleBackground)
 {
-  if (m_battleBackground)
-  {
-    cache::releaseTexture(m_battleBackground);
-    m_battleBackground = 0;
-  }
-
-  if (file.size() > 0)
-  {
-    m_battleBackground = cache::loadTexture("Backgrounds/" + file);
-  }
+  m_battleBackground = battleBackground;
+  m_battleBackgroundTexture = battleBackground->getBackgroundTexture();
 }

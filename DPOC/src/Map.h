@@ -43,6 +43,7 @@ public:
 
   void update();
 
+  void setTileAt(int x, int y, const std::string& layer, int tileId);
   Tile* getTileAt(int x, int y, const std::string& layer);
   bool warpAt(int x, int y) const;
   const Warp* getWarpAt(int x, int y) const;
@@ -55,6 +56,7 @@ public:
   std::string getMusic() const { return m_music; }
 
   static Map* loadTiledFile(const std::string& filename);
+  static Map* createEmptyFrom(const Map* other, int width, int height);
 
   const std::vector<Entity*>& getEntities() const { return m_entities; }
 
@@ -89,6 +91,7 @@ private:
   int m_encounterRate;
   std::vector< std::string > m_encounters;
 
+  std::string m_tilesetName;
   sf::Texture* m_tileset;
   std::string m_name;
 
