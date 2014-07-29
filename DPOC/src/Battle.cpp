@@ -281,10 +281,8 @@ void Battle::executeActions()
   }
 
   clear_message();
-//  if (isMonster(m_currentActor))
-//  {
+
   m_currentActor->flash().start(2, 3);
-//  }
 
   /////////////////////////////////////////////////////////////////////////////
   // Check status effects.
@@ -332,12 +330,6 @@ void Battle::executeActions()
 
   if (action.actionName == "Attack")
   {
-    // TODO: Uncomment when effects are used.
-    //if (isMonster(m_currentActor))
-    //{
-      //play_sound(config::get("SOUND_ATTACK"));
-    //}
-
     if (action.target)
     {
       bool regularMessage = true;
@@ -386,7 +378,11 @@ void Battle::executeActions()
   }
   else if (action.actionName == "Spell")
   {
-//    play_sound(config::get("SOUND_SPELL"));
+    if (config::get("SOUND_SPELL").size())
+    {
+      play_sound(config::get("SOUND_SPELL"));
+    }
+
     m_turnDelay = TURN_DELAY_TIME;
 
     if (action.target)
@@ -592,10 +588,7 @@ void Battle::actionEffect()
       Character* currentTarget = m_currentTargets.front();
       m_currentTargets.erase(m_currentTargets.begin());
 
-//      if (isMonster(currentTarget))
-//      {
       currentTarget->flash().start(6, 3);
-//      }
 
       int damage = 0;
 
@@ -830,9 +823,6 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
       actor->takeDamage(status->damageStat, damage);
 
       actor->flash().addDamageText(toString(damage) + " [" + status->damageStat + "]", sf::Color::Red);
-
-//      battle_message("%s takes %d %s damage from %s!",
-//          actor->getName().c_str(), damage, status->damageStat.c_str(), status->name.c_str());
 
       status->effect.playSfx();
       status->effect.applyAnimation(actor);
