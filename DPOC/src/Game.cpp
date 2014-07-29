@@ -295,36 +295,7 @@ void Game::draw(sf::RenderTarget& target)
   ////////////////////////////////////////////////////////////////////////////
   // Draw faces for characters under raycaster view.
   ////////////////////////////////////////////////////////////////////////////
-  auto party = m_player->getParty();
-  int partyPosX =  config::GAME_RES_X / 2 - party.size() * 16;
-  for (size_t i = 0; i < party.size(); i++)
-  {
-    PlayerCharacter* character = party[i];
-
-    int xPos, yPos;
-
-    xPos = partyPosX + i * 32;
-    yPos = config::RAYCASTER_RES_Y;
-
-    character->draw(target, xPos, yPos);
-
-    float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
-    float mpPercent = (float)character->getAttribute("mp").current / (float)character->getAttribute("mp").max;
-
-    sf::RectangleShape hpRect;
-    sf::RectangleShape mpRect;
-    hpRect.setFillColor(sf::Color::Red);
-    mpRect.setFillColor(sf::Color::Blue);
-
-    hpRect.setSize(sf::Vector2f(32.0f * hpPercent, 4));
-    mpRect.setSize(sf::Vector2f(32.0f * mpPercent, 4));
-
-    hpRect.setPosition(xPos, yPos + 32);
-    mpRect.setPosition(xPos, yPos + 36);
-
-    target.draw(hpRect);
-    target.draw(mpRect);
-  }
+  drawParty(target);
 
   m_minimap.draw(target);
 
@@ -341,6 +312,60 @@ void Game::draw(sf::RenderTarget& target)
   if (m_choiceMenu && m_choiceMenu->isVisible())
   {
     m_choiceMenu->draw(target, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
+  }
+}
+
+void Game::drawParty(sf::RenderTarget& target) const
+{
+  auto party = m_player->getParty();
+  int partyPosX =  config::GAME_RES_X / 2 - party.size() * 16;
+  for (size_t i = 0; i < party.size(); i++)
+  {
+    PlayerCharacter* character = party[i];
+
+    int xPos, yPos;
+
+    xPos = partyPosX + i * 32;
+    yPos = config::RAYCASTER_RES_Y;
+
+    character->draw(target, xPos, yPos);
+
+    float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
+    float mpPercent = (float)character->getAttribute("mp").current / (float)character->getAttribute("mp").max;
+
+    //////////////////////////////////////////////////////////////////////////
+    // Draw darker rectangles to display lost HP/MP.
+    //////////////////////////////////////////////////////////////////////////
+    sf::RectangleShape hpFullRect;
+    sf::RectangleShape mpFullRect;
+    hpFullRect.setFillColor(sf::Color(127, 0, 0));
+    mpFullRect.setFillColor(sf::Color(0, 0, 127));
+
+    hpFullRect.setSize(sf::Vector2f(32, 4));
+    mpFullRect.setSize(sf::Vector2f(32, 4));
+
+    hpFullRect.setPosition(xPos, yPos + 32);
+    mpFullRect.setPosition(xPos, yPos + 36);
+
+    target.draw(hpFullRect);
+    target.draw(mpFullRect);
+
+    //////////////////////////////////////////////////////////////////////////
+    // Draw the lighter regular rectangles.
+    //////////////////////////////////////////////////////////////////////////
+    sf::RectangleShape hpRect;
+    sf::RectangleShape mpRect;
+    hpRect.setFillColor(sf::Color::Red);
+    mpRect.setFillColor(sf::Color::Blue);
+
+    hpRect.setSize(sf::Vector2f(32.0f * hpPercent, 4));
+    mpRect.setSize(sf::Vector2f(32.0f * mpPercent, 4));
+
+    hpRect.setPosition(xPos, yPos + 32);
+    mpRect.setPosition(xPos, yPos + 36);
+
+    target.draw(hpRect);
+    target.draw(mpRect);
   }
 }
 

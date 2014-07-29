@@ -71,6 +71,8 @@ private:
 
   void startRotate(int angle, int angleInc);
   void execRotate();
+
+  void drawParty(sf::RenderTarget& target) const;
 private:
   Map* m_currentMap;
   Player* m_player;
