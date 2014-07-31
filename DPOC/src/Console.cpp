@@ -9,7 +9,7 @@ Console::Console()
 
 void Console::add(const std::string& str)
 {
-  if (m_buffer.size() > 100)
+  if (m_buffer.size() > MAX_LOG_SIZE)
   {
     m_buffer.pop_front();
   }
@@ -36,6 +36,7 @@ void Console::draw(sf::RenderTarget& target) const
 
   for (size_t i = 0; i < m_buffer.size(); i++)
   {
-    draw_text(target, 4, 4 + i * 14, "%s", m_buffer[i].c_str());
+    //draw_text(target, 4, 4 + i * 14, "%s", m_buffer[i].c_str());
+    draw_text_bmp(target, 4, 4 + i * 8, "%s", m_buffer[i].c_str());
   }
 }

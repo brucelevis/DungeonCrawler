@@ -7,9 +7,9 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Console.h"
 #include "Scene.h"
 
+class Console;
 class Picture;
 
 class SceneManager
@@ -34,6 +34,8 @@ public:
 
   void showPicture(const std::string& pictureName, float x, float y);
   void hidePicture(const std::string& pictureName);
+
+  void setConsole(Console* console) { m_console = console; }
 private:
   SceneManager();
 
@@ -71,7 +73,7 @@ private:
 
   bool m_fullScreen;
 
-  Console m_console;
+  Console* m_console;
 };
 
 #endif

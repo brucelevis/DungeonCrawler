@@ -2,6 +2,7 @@
 
 #include <SFML/System.hpp>
 
+#include "Console.h"
 #include "Picture.h"
 #include "Config.h"
 #include "Utility.h"
@@ -22,7 +23,8 @@ SceneManager::SceneManager()
    m_fadeDuration(0),
    m_flashDuration(0),
    m_flashCounter(0),
-   m_fullScreen(false)
+   m_fullScreen(false),
+   m_console(0)
 {
 }
 
@@ -136,9 +138,9 @@ void SceneManager::draw()
 
   displayScreen();
 
-  if (m_console.isOpen())
+  if (m_console && m_console->isOpen())
   {
-    m_console.draw(m_window);
+    m_console->draw(m_window);
   }
 
   m_window.display();
@@ -318,12 +320,12 @@ bool SceneManager::checkBuiltInEvent(sf::Event& event)
     else if (event.key.code == sf::Keyboard::Return && altPressed)
     {
       setResolution(!m_fullScreen);
-
       return true;
     }
-    else if (event.key.code == sf::Keyboard::Tilde)
+    else if (event.key.code == sf::Keyboard::F12 && m_console)
     {
-      m_console.setOpen(!m_console.isOpen());
+      m_console->setOpen(!m_console->isOpen());
+      return true;
     }
   }
   else if (event.type == sf::Event::KeyReleased)

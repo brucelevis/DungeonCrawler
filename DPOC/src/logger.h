@@ -1,27 +1,28 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
+#include <cstdio>
+#include <ctime>
+#include <cstring>
 
-#define START_LOG \
-do { \
-    fclose(fopen("log.txt", "w")); \
-} while (0)
+class Console;
 
-#define TRACE(...) \
-do { \
-    char timestr[32]; \
-    FILE* log = fopen("log.txt", "a"); \
-    time_t _time; \
-    time(&_time); \
-    strncpy(timestr, ctime(&_time), 32); \
-    timestr[strlen(timestr) - 1] = '\0'; \
-    fprintf(log, "[%s] %s:%d: ", timestr, __FILE__, __LINE__); \
-    fprintf(log, __VA_ARGS__); \
-    fprintf(log, "\n"); \
-    fclose(log); \
-} while(0)
+class Logger
+{
+public:
+  static Logger& instance();
+  ~Logger();
+
+  void trace(const char* file, int line, const char* fmt, ...);
+  void setConsole(Console* console);
+private:
+  Logger();
+private:
+  FILE* m_logFile;
+  Console* m_console;
+};
+
+#define START_LOG Logger::instance();
+#define TRACE(...) Logger::instance().trace(__FILE__, __LINE__, __VA_ARGS__)
 
 #endif

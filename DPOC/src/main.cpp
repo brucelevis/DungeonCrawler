@@ -21,11 +21,15 @@
 #include "Player.h"
 #include "Game.h"
 
+#include "Console.h"
 #include "LuaBindings.h"
 
 int main(int argc, char* argv[])
 {
   START_LOG;
+
+  Console console;
+  Logger::instance().setConsole(&console);
 
   init_text_drawing();
 
@@ -44,6 +48,7 @@ int main(int argc, char* argv[])
   register_lua_bindings();
 
   SceneManager::instance().create();
+  SceneManager::instance().setConsole(&console);
 
   if (argc > 1)
   {
