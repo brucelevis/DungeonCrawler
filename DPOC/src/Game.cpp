@@ -143,7 +143,7 @@ void Game::update()
   }
   else
   {
-    if (m_currentMap)
+    if (m_currentMap && !m_transferInProgress)
       m_currentMap->update();
 
     m_playerMoved = m_player->player()->isWalking();
