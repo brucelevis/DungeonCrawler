@@ -8,7 +8,7 @@
 
 class Console
 {
-  static const size_t MAX_LOG_SIZE = 100;
+  static const size_t MAX_LOG_SIZE;
 public:
   Console();
 

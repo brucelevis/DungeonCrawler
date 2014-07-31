@@ -55,7 +55,7 @@ void Logger::trace(const char* file, int line, const char* fmt, ...)
 
   if (m_console)
   {
-    m_console->add(stream.str());
+    m_console->add(buffer);
   }
 }
 
