@@ -57,7 +57,7 @@ Game::Game()
 
    m_rotKeyDown(false),
 
-   m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 60, 56, 56),
+   m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 68, 56, 56),
    m_battleInProgress(false)
 {
   m_raycasterBuffer.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
@@ -318,16 +318,18 @@ void Game::draw(sf::RenderTarget& target)
 
 void Game::drawParty(sf::RenderTarget& target) const
 {
+  int delta = config::GAME_RES_Y - config::RAYCASTER_RES_Y;
+  int yPos = config::RAYCASTER_RES_Y + (delta / 2) - 24;
+
   auto party = m_player->getParty();
-  int partyPosX =  config::GAME_RES_X / 2 - party.size() * 16;
+  int partyPosX = 16;
   for (size_t i = 0; i < party.size(); i++)
   {
     PlayerCharacter* character = party[i];
 
-    int xPos, yPos;
+    int xPos;
 
-    xPos = partyPosX + i * 32;
-    yPos = config::RAYCASTER_RES_Y;
+    xPos = partyPosX + i * 44;
 
     character->draw(target, xPos, yPos);
 
