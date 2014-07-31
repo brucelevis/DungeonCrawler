@@ -136,6 +136,11 @@ void SceneManager::draw()
 
   displayScreen();
 
+  if (m_console.isOpen())
+  {
+    m_console.draw(m_window);
+  }
+
   m_window.display();
 }
 
@@ -315,6 +320,10 @@ bool SceneManager::checkBuiltInEvent(sf::Event& event)
       setResolution(!m_fullScreen);
 
       return true;
+    }
+    else if (event.key.code == sf::Keyboard::Tilde)
+    {
+      m_console.setOpen(!m_console.isOpen());
     }
   }
   else if (event.type == sf::Event::KeyReleased)

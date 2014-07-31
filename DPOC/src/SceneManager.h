@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Console.h"
 #include "Scene.h"
 
 class Picture;
@@ -69,6 +70,8 @@ private:
   sf::Color m_flashColor;
 
   bool m_fullScreen;
+
+  Console m_console;
 };
 
 #endif
