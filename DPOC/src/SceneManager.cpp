@@ -21,16 +21,34 @@ SceneManager::SceneManager()
    m_fadeCounter(0),
    m_fadeDuration(0),
    m_flashDuration(0),
-   m_flashCounter(0)
+   m_flashCounter(0),
+   m_fullScreen(false)
 {
 }
 
 void SceneManager::create()
 {
-  m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
-  m_window.setKeyRepeatEnabled(false);
+  setResolution(false);
 
   m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
+}
+
+void SceneManager::setResolution(bool fullScreen)
+{
+  m_fullScreen = fullScreen;
+
+  if (m_window.isOpen()) m_window.close();
+
+  if (m_fullScreen)
+  {
+    m_window.create(sf::VideoMode::getDesktopMode(), "DPOC", sf::Style::None);
+  }
+  else
+  {
+    m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
+  }
+
+  m_window.setKeyRepeatEnabled(false);
 }
 
 void SceneManager::run()
@@ -112,31 +130,44 @@ void SceneManager::draw()
     it->second->draw(m_targetTexture);
   }
 
-  if (m_flashCounter > 0)
-  {
-    float percent = (float)m_flashCounter / (float)m_flashDuration;
-    float opacity = 255 - 255 * percent;
-
-    sf::Color fillColor = m_flashColor;
-    fillColor.a = opacity;
-
-    sf::RectangleShape flashRect;
-    flashRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
-    flashRect.setFillColor(fillColor);
-    m_targetTexture.draw(flashRect);
-  }
+  drawFlash();
 
   m_targetTexture.display();
 
+  displayScreen();
+
+  m_window.display();
+}
+
+void SceneManager::displayScreen()
+{
+  int posX = 0;
+  int posY = 0;
+
   sf::Sprite sprite;
   sprite.setTexture(m_targetTexture.getTexture());
-  sprite.setScale(sf::Vector2f(2, 2));
-  sprite.setPosition(0, 0);
+
+  if (!m_fullScreen)
+  {
+    sprite.setScale(sf::Vector2f(2, 2));
+  }
+  else
+  {
+    float ratioY = (float)m_window.getSize().y / (float)config::GAME_RES_Y;
+    float ratioX = ratioY * ((float)config::GAME_RES_X / (float)config::GAME_RES_Y);
+
+    sprite.setScale(sf::Vector2f(ratioX, ratioY));
+
+    posX = m_window.getSize().x / 2 - sprite.getGlobalBounds().width / 2;
+    posY = 0;
+  }
+
+  sprite.setPosition(posX, posY);
 
   if (m_shakeCounter > 0)
   {
-    sprite.setPosition(random_range(-m_shakeStrengthX, m_shakeStrengthX),
-        random_range(-m_shakeStrengthY, m_shakeStrengthY));
+    sprite.setPosition(posX + random_range(-m_shakeStrengthX, m_shakeStrengthX),
+        posY + random_range(-m_shakeStrengthY, m_shakeStrengthY));
   }
 
   if (m_fade != Scene::FADE_NONE)
@@ -157,7 +188,23 @@ void SceneManager::draw()
   }
 
   m_window.draw(sprite);
-  m_window.display();
+}
+
+void SceneManager::drawFlash()
+{
+  if (m_flashCounter > 0)
+  {
+    float percent = (float)m_flashCounter / (float)m_flashDuration;
+    float opacity = 255 - 255 * percent;
+
+    sf::Color fillColor = m_flashColor;
+    fillColor.a = opacity;
+
+    sf::RectangleShape flashRect;
+    flashRect.setSize(sf::Vector2f(m_targetTexture.getSize().x, m_targetTexture.getSize().y));
+    flashRect.setFillColor(fillColor);
+    m_targetTexture.draw(flashRect);
+  }
 }
 
 void SceneManager::shakeScreen(int duration, int shakeStrengthX, int shakeStrengthY)
@@ -241,13 +288,45 @@ void SceneManager::pollEvents()
       close();
       break;
     default:
-      if (m_scenes.size() > 0)
+
+      if (!checkBuiltInEvent(event) && m_scenes.size() > 0)
       {
         m_scenes.back()->handleEvent(event);
       }
       break;
     }
   }
+}
+
+bool SceneManager::checkBuiltInEvent(sf::Event& event)
+{
+  static bool altPressed = false;
+
+  // Built in commands
+  if (event.type == sf::Event::KeyPressed)
+  {
+    if (event.key.code == sf::Keyboard::LAlt)
+    {
+      altPressed = true;
+      return true;
+    }
+    else if (event.key.code == sf::Keyboard::Return && altPressed)
+    {
+      setResolution(!m_fullScreen);
+
+      return true;
+    }
+  }
+  else if (event.type == sf::Event::KeyReleased)
+  {
+    if (event.key.code == sf::Keyboard::LAlt)
+    {
+      altPressed = false;
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void SceneManager::showPicture(const std::string& pictureName, float x, float y)

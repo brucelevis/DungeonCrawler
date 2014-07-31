@@ -36,12 +36,18 @@ public:
 private:
   SceneManager();
 
+  void setResolution(bool fullScreen);
   void cleanUp();
 
   void draw();
 
   void pollEvents();
   void processFade();
+
+  void displayScreen();
+  void drawFlash();
+
+  bool checkBuiltInEvent(sf::Event& event);
 private:
   std::vector< Scene* > m_scenes;
 
@@ -61,6 +67,8 @@ private:
   int m_flashDuration;
   int m_flashCounter;
   sf::Color m_flashColor;
+
+  bool m_fullScreen;
 };
 
 #endif
