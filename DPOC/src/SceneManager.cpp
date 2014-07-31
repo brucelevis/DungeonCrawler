@@ -337,6 +337,21 @@ bool SceneManager::checkBuiltInEvent(sf::Event& event)
     }
   }
 
+  // Type into console.
+  if (m_console && m_console->isOpen() && event.type == sf::Event::TextEntered)
+  {
+    if (event.text.unicode < 128)
+    {
+      m_console->addInput(event.text.unicode);
+      return true;
+    }
+  }
+
+  if (m_console && m_console->isOpen())
+  {
+    return true;
+  }
+
   return false;
 }
 

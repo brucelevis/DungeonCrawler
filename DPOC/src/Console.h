@@ -17,9 +17,12 @@ public:
   void setOpen(bool isOpen);
   bool isOpen() const;
   void draw(sf::RenderTarget& target) const;
+
+  void addInput(char c);
 private:
   bool m_isOpen;
   std::deque<std::string> m_buffer;
+  std::string m_currentInput;
 };
 
 #endif

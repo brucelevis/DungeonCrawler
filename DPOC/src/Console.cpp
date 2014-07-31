@@ -1,5 +1,6 @@
 #include <ctime>
 
+#include "logger.h"
 #include "draw_text.h"
 #include "Console.h"
 
@@ -18,6 +19,11 @@ namespace
     strftime(buffer, 64, "%H:%M:%S", timeinfo);
 
     return buffer;
+  }
+
+  bool _valid(char c)
+  {
+    return c >= 32;
   }
 }
 
@@ -60,7 +66,38 @@ void Console::draw(sf::RenderTarget& target) const
 
   for (size_t i = 0; i < m_buffer.size(); i++)
   {
-    //draw_text(target, 4, 4 + i * 14, "%s", m_buffer[i].c_str());
     draw_text_bmp(target, 4, 4 + i * 8, "%s", m_buffer[i].c_str());
+  }
+
+  // Draw prompt
+  rect.setSize(sf::Vector2f(target.getSize().x, 14));
+  rect.setPosition(0, target.getSize().y / 2);
+  rect.setFillColor(sf::Color(0, 0, 0, 230));
+  target.draw(rect);
+
+  draw_text_bmp_ex(target, 4, target.getSize().y / 2 + 4, sf::Color::Yellow, ">>%s_", m_currentInput.c_str());
+}
+
+void Console::addInput(char c)
+{
+  if (c == '\n' || c == '\r')
+  {
+    TRACE("%s", m_currentInput.c_str());
+    m_currentInput.clear();
+  }
+  else if (c == '\b')
+  {
+    if (m_currentInput.size())
+    {
+      m_currentInput.pop_back();
+    }
+  }
+  else if (c == '\x1B')
+  {
+    m_currentInput.clear();
+  }
+  else if (_valid(c))
+  {
+    m_currentInput += c;
   }
 }
