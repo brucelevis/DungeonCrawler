@@ -201,7 +201,7 @@ void Menu::drawSelectArrow(sf::RenderTarget& target, int x, int y)
 
 void ChoiceMenu::handleConfirm()
 {
-  Persistent<int>::instance().set("sys:choice", getCurrentChoiceIndex());
+  Persistent<int>::instance().set("$sys:choice", getCurrentChoiceIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
