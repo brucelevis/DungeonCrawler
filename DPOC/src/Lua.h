@@ -343,6 +343,20 @@ namespace lua
         return true;
       }
 
+      bool executeLine(const std::string& line)
+      {
+        if (luaL_dostring(m_state, line.c_str()) != 0)
+        {
+          m_error = lua_tostring(m_state, -1);
+
+          return false;
+        }
+
+        m_error.clear();
+
+        return true;
+      }
+
       const std::string& getError() const
       {
         return m_error;
@@ -409,6 +423,11 @@ namespace lua
   inline bool run(const std::string& filename)
   {
     return detail::LuaEnv::instance().executeFile(filename);
+  }
+
+  inline bool run_line(const std::string& line)
+  {
+    return detail::LuaEnv::instance().executeLine(line);
   }
 
   inline const std::string& error()

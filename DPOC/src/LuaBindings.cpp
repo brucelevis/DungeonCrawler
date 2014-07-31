@@ -23,6 +23,14 @@ void run_lua_script(const std::string& script)
   }
 }
 
+void run_lua_string(const std::string& line)
+{
+  if (!lua::run_line(line))
+  {
+    TRACE("%s", lua::error().c_str());
+  }
+}
+
 void register_lua_bindings()
 {
   lua::reg()
