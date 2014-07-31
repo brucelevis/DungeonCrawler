@@ -69,6 +69,8 @@ public:
 
   std::vector<sf::Image> getTilesetImages() const;
   std::string getBattleBackground() const { return m_battleBackground; }
+
+  const sf::Texture* getBackground() const { return m_background; }
 private:
   Map();
   Map(const Map&);
@@ -96,6 +98,7 @@ private:
   std::string m_name;
 
   std::string m_battleBackground;
+  sf::Texture* m_background;
 };
 
 #endif

@@ -305,6 +305,16 @@ void Game::draw(sf::RenderTarget& target)
     m_menu.draw(target, 0, 0);
   }
 
+  if (m_currentMap)
+  {
+    if (const sf::Texture* background = m_currentMap->getBackground())
+    {
+      sf::Sprite sprite;
+      sprite.setTexture(*background);
+      target.draw(sprite);
+    }
+  }
+
   if (Message::instance().isVisible())
   {
     Message::instance().draw(target);

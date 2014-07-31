@@ -18,7 +18,8 @@ Map::Map()
  : m_width(0),
    m_height(0),
    m_encounterRate(0),
-   m_tileset(0)
+   m_tileset(0),
+   m_background(0)
 {
 }
 
@@ -33,6 +34,7 @@ Map::~Map()
     delete *it;
 
   cache::releaseTexture(m_tileset);
+  cache::releaseTexture(m_background);
 }
 
 void Map::update()
@@ -65,6 +67,12 @@ Map* Map::loadTiledFile(const std::string& filename)
     }
 
     map->m_battleBackground = loader.getProperty("battleBackground");
+
+    std::string bg = loader.getProperty("background");
+    if (bg.size())
+    {
+      map->m_background = cache::loadTexture("Backgrounds/" + bg);
+    }
 
     TRACE("Map: Loading tilesets");
 
