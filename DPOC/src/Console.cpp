@@ -1,5 +1,6 @@
 #include <ctime>
 
+#include "LuaBindings.h"
 #include "logger.h"
 #include "draw_text.h"
 #include "Console.h"
@@ -83,6 +84,9 @@ void Console::addInput(char c)
   if (c == '\n' || c == '\r')
   {
     TRACE("%s", m_currentInput.c_str());
+
+    run_lua_string(m_currentInput);
+
     m_currentInput.clear();
   }
   else if (c == '\b')
