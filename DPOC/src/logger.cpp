@@ -42,7 +42,8 @@ void Logger::trace(const char* file, int line, const char* fmt, ...)
   va_list args;
   va_start(args, fmt);
 
-  vsprintf(buffer, fmt, args);
+  //vsprintf(buffer, fmt, args);
+  vsnprintf(buffer, 1024, fmt, args);
 
   va_end(args);
 
