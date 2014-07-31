@@ -312,7 +312,7 @@ void Game::draw(sf::RenderTarget& target)
 
   if (m_choiceMenu && m_choiceMenu->isVisible())
   {
-    m_choiceMenu->draw(target, 0, config::GAME_RES_Y - 48 - m_choiceMenu->getHeight());
+    m_choiceMenu->draw(target, 0, config::GAME_RES_Y - 68 - m_choiceMenu->getHeight());
   }
 }
 
