@@ -352,18 +352,6 @@ void Script::advance()
   }
 }
 
-void Script::stepBack()
-{
-  if (active())
-  {
-    m_currentIndex--;
-    if (m_currentIndex < 0)
-    {
-      m_currentIndex = 0;
-    }
-  }
-}
-
 bool Script::active() const
 {
   return m_running;
@@ -390,7 +378,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 {
   std::vector<std::string> strings = split_string(line, ' ');
 
-  Opcode opcode;
+  Opcode opcode = OP_NOP;
 
   if (strings[0][0] == '$' || strings[0][0] == '%')
   {

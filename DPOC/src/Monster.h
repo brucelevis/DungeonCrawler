@@ -8,8 +8,6 @@
 
 #include "Effect.h"
 
-static const std::string BUG_MONSTER = "BUG_MONSTER";
-
 struct MonsterActionEntry
 {
   std::string action;

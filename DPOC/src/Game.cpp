@@ -161,7 +161,7 @@ void Game::update()
         // Also check encounters if no warps were taken.
 
         const Encounter* encounter =
-            m_currentMap->checkEncounter(m_player->player()->x, m_player->player()->y);
+            m_currentMap->checkEncounter();
         if (encounter)
         {
           encounter->start();

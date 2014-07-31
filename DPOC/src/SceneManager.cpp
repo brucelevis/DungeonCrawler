@@ -20,8 +20,8 @@ SceneManager::SceneManager()
    m_fade(Scene::Scene::FADE_NONE),
    m_fadeCounter(0),
    m_fadeDuration(0),
-   m_flashCounter(0),
-   m_flashDuration(0)
+   m_flashDuration(0),
+   m_flashCounter(0)
 {
 }
 

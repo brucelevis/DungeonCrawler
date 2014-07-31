@@ -134,7 +134,7 @@ void Message::show(const std::string& msg, bool append)
       buffer.clear();
 
       lines++;
-      if (lines >= MAX_LINES)
+      if (lines >= (int)MAX_LINES)
       {
         lines = 0;
         if (!append) m_pages.push(complete);

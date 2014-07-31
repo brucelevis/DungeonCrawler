@@ -32,6 +32,7 @@ Entity::Entity()
 Entity::Entity(const std::string& name)
  : x(0),
    y(0),
+   m_name(name),
    m_sprite(0),
    m_direction(DIR_DOWN),
    m_speed(0.1),

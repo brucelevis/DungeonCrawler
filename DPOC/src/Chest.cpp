@@ -34,6 +34,8 @@ void Chest::update()
 
 void Chest::interact(const Entity* interactor)
 {
+  (void)interactor;
+
   std::string key = getTag();
 
   if (!Persistent<int>::instance().isSet(key))

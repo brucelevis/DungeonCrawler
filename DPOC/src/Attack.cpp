@@ -102,6 +102,8 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
 
 int calculate_physical_damage_item(Character* attacker, Character* target, Item* usedItem)
 {
+  (void)attacker;
+
   if (usedItem->itemUseType == ITEM_HEAL_FIXED)
   {
     return -usedItem->attributeGain["hp"];

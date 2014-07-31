@@ -279,9 +279,6 @@ Character* Character::createMonster(const std::string& name)
 {
   MonsterDef def = get_monster_definition(name);
 
-  if (def.name == BUG_MONSTER)
-    return 0;
-
   Character* character = new Character;
 
   character->m_name = def.name;

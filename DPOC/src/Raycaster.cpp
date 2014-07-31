@@ -81,7 +81,7 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
     int lineHeight;
     int wallStart, wallEnd;
     
-    RayInfo info = castRay(x, m_width, m_height);
+    RayInfo info = castRay(x, m_width);
 
     zbuffer[x] = info.wallDist;
     
@@ -150,7 +150,6 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
     int floorTextureX, floorTextureY;
     float weight;
     float currentFloorX, currentFloorY;
-    int textureIndex;
 
     float currentDist = (float)m_height / (2.0f * y - m_height);
       
@@ -160,8 +159,6 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
     floorTextureX = (int)(currentFloorX * config::TILE_W) % config::TILE_W;
     floorTextureY = (int)(currentFloorY * config::TILE_H) % config::TILE_H;
       
-    textureIndex = (int)currentFloorY * m_tilemap->getWidth() + (int)currentFloorX;
-
     Tile* floorTile = m_tilemap->getTileAt((int) currentFloorX, (int) currentFloorY, "floor");
     Tile* ceilTile = m_tilemap->getTileAt((int) currentFloorX, (int) currentFloorY, "ceiling");
 
@@ -271,7 +268,7 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
   }
 }
 
-Raycaster::RayInfo Raycaster::castRay(int x, int width, int height) 
+Raycaster::RayInfo Raycaster::castRay(int x, int width)
 {
   int mapX, mapY;
   float sideDistX, sideDistY;

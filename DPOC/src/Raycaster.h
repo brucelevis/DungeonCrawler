@@ -36,7 +36,7 @@ private:
     int side;
   };
 
-  RayInfo castRay(int x, int width, int height);
+  RayInfo castRay(int x, int width);
 
   bool sameCoord(const RayInfo& a, const RayInfo& b) const;
 

@@ -63,7 +63,7 @@ public:
   bool blocking(int x, int y);
   bool inside(int x, int y) const;
 
-  const Encounter* checkEncounter(int x, int y);
+  const Encounter* checkEncounter();
 
   std::string xmlDump() const;
 

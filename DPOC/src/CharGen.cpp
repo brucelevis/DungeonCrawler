@@ -142,6 +142,9 @@ struct SelectClassMenu : public Menu
 
   void draw(sf::RenderTarget& target, int x, int y)
   {
+    (void)x;
+    (void)y;
+
     draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
 
     PlayerClass currentClass = player_class_ref(getCurrentMenuChoice());
@@ -228,6 +231,9 @@ struct SelectFaceMenu : public Menu
 
   void draw(sf::RenderTarget& target, int x, int y)
   {
+    (void)x;
+    (void)y;
+
     int width = 36;
     int height = 36;
 
@@ -360,7 +366,7 @@ struct GenerateMenu : public Menu, public Proxy::Listener
       {
         theFace = m_selectFaceMenu.getCurrentMenuChoice();
 
-        reloadFace(theFace);
+        reloadFace();
 
         m_state = STATE_DEFAULT;
       }
@@ -511,7 +517,7 @@ private:
     Proxy::get().listener = 0;
   }
 
-  void reloadFace(const std::string& name)
+  void reloadFace()
   {
     if (m_faceTexture)
     {
@@ -573,6 +579,9 @@ struct CharGenCharacterMenu : public Menu
 
   void draw(sf::RenderTarget& target, int x, int y)
   {
+    (void)x;
+    (void)y;
+
     draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
 
     for (int i = 0; i < getNumberOfChoice(); i++)
@@ -709,7 +718,7 @@ struct SelectMenu : public Menu
           if (m_genMenu.theClass.size() && m_genMenu.theName.size())
           {
             m_player->addNewCharacter(m_genMenu.theName, m_genMenu.theClass, "Faces/" + m_genMenu.theFace, 0, 0, 1);
-            defaultEquip(m_genMenu.theName);
+            defaultEquip();
             m_characterMenu.refresh();
           }
         }
@@ -814,7 +823,7 @@ struct SelectMenu : public Menu
     }
   }
 private:
-  void defaultEquip(const std::string& charName)
+  void defaultEquip()
   {
     PlayerCharacter* character = m_player->getCharacter(m_genMenu.theName);
 

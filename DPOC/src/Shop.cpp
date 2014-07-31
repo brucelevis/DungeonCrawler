@@ -263,7 +263,7 @@ void ShopMenu::handleEscape()
   }
 }
 
-void ShopMenu::draw(sf::RenderTarget& target, int x, int y)
+void ShopMenu::draw(sf::RenderTarget& target, int, int)
 {
   draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
   draw_frame(target, 0, 0, config::GAME_RES_X, 24);

@@ -10,12 +10,7 @@
 
 using namespace tinyxml2;
 
-static std::vector<MonsterDef> monsters =
-{
-  {
-    BUG_MONSTER
-  }
-};
+static std::vector<MonsterDef> monsters;
 
 static MonsterDef parse_monster_element(const XMLElement* monsterElement)
 {

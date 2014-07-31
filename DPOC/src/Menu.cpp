@@ -1859,6 +1859,9 @@ void BattleMonsterMenu::moveArrow(Direction dir)
 
 void BattleMonsterMenu::draw(sf::RenderTarget& target, int x, int y)
 {
+  (void)x;
+  (void)y;
+
 //  var posX = Math.floor(canvas.width / 2);
 //  var posY = Math.floor(canvas.height / 2);
 //  posX -= Math.floor(enemy.sprite.width / 2);

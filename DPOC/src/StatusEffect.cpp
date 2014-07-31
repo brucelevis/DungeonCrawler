@@ -17,14 +17,16 @@ static std::vector<StatusEffect> statusEffects =
     "Normal", "", "",
     sf::Color::White,
     false, 0, false,
-    DAMAGE_NONE
+    DAMAGE_NONE,
+    "", 0, 0, Effect { "", "" }
   },
 
   {
     "Dead", "has fallen!", "comes back to life!",
     sf::Color::Red,
     false, 0, true,
-    DAMAGE_NONE
+    DAMAGE_NONE,
+    "", 0, 0, Effect { "", "" }
   }
 };
 

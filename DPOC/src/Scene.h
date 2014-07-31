@@ -21,8 +21,8 @@ public:
   virtual void draw(sf::RenderTarget& target) = 0;
   virtual void handleEvent(sf::Event& event) = 0;
 
-  virtual void preFade(FadeType fadeType) {}
-  virtual void postFade(FadeType fadeType) {}
+  virtual void preFade(FadeType) {}
+  virtual void postFade(FadeType) {}
 
   void close() { m_done = true; }
   bool isClosed() const { return m_done; }

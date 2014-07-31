@@ -445,7 +445,7 @@ std::string Map::xmlDump() const
   return xml.str();
 }
 
-const Encounter* Map::checkEncounter(int x, int y)
+const Encounter* Map::checkEncounter()
 {
   std::string encounter;
 

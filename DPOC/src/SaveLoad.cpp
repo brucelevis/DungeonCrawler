@@ -247,6 +247,7 @@ void parsePartyElement(const XMLElement* partyElement)
   for (const XMLElement* element = partyElement->FirstChildElement(); element; element = element->NextSiblingElement())
   {
     const XMLAttribute* idAttrib = element->FindAttribute("id");
+    (void)idAttrib;
 
     EntityData entData = parseEntityElement(element->FirstChildElement("entity"));
     CharacterData charData = parseCharacterElement(element->FirstChildElement("playerCharacter"));

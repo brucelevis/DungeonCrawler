@@ -199,7 +199,7 @@ int TileSprite::getTileNum() const
   return m_tileY * width + m_tileX;
 }
 
-const sf::Image& TileSprite::getImage(Direction opposingDirection) const
+const sf::Image& TileSprite::getImage(Direction) const
 {
   return *m_image;
 }

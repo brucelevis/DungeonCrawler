@@ -219,7 +219,6 @@ private:
   void advance();
   void executeScriptLine();
 
-  void stepBack();
   ScriptData getCurrentData() const;
   bool peekNext(ScriptData& out) const;
 
