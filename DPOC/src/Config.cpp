@@ -41,4 +41,9 @@ namespace config
   {
     CONFIG[key] = value;
   }
+
+  bool isSet(const std::string& key)
+  {
+    return CONFIG.count(key);
+  }
 }

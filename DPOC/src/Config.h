@@ -27,6 +27,7 @@ namespace config
 
   std::string get(const std::string& key);
   void set(const std::string& key, const std::string& value);
+  bool isSet(const std::string& key);
 
   inline std::string res_path(const std::string& path)
   {
