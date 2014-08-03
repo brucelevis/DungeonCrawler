@@ -3,6 +3,7 @@
 #include <set>
 
 #include "Chest.h"
+#include "Door.h"
 #include "Persistent.h"
 #include "Config.h"
 #include "Direction.h"
@@ -13,6 +14,16 @@
 #include "Encounter.h"
 
 #include "Map.h"
+
+namespace
+{
+  void _parse_trap(const std::string& trapString, std::string& trapType, int& luckToBeat)
+  {
+    std::vector<std::string> trapData = split_string(trapString, ',');
+    trapType = trapData[0];
+    luckToBeat = fromString<int>(trapData[1]);
+  }
+}
 
 Map::Map()
  : m_width(0),
@@ -192,11 +203,31 @@ Map* Map::loadTiledFile(const std::string& filename)
             }
             else
             {
-              std::vector<std::string> trapData = split_string(trap, ',');
-              std::string trapType = trapData[0];
-              int luckToBeat = fromString<int>(trapData[1]);
+              std::string trapType;
+              int luckToBeat;
+
+              _parse_trap(trap, trapType, luckToBeat);
 
               entity = new Chest(split_string(items, ','), trapType, luckToBeat);
+            }
+          }
+          else if (loader.getObjectType(objectIndex) == "door")
+          {
+            std::string keyRequired = loader.getObjectProperty(objectIndex, "key");
+            std::string trap = loader.getObjectProperty(objectIndex, "trap");
+
+            if (trap.empty())
+            {
+              entity = new Door(keyRequired);
+            }
+            else
+            {
+              std::string trapType;
+              int luckToBeat;
+
+              _parse_trap(trap, trapType, luckToBeat);
+
+              entity = new Door(keyRequired, trapType, luckToBeat);
             }
           }
           else
