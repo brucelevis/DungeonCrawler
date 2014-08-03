@@ -283,7 +283,16 @@ Character* Character::createMonster(const std::string& name)
 
   character->m_name = def.name;
   character->m_faceTexture = cache::loadTexture(def.texture);
-  character->m_textureRect = def.textureRect;
+  if (def.textureRect.height == 0 && def.textureRect.width == 0)
+  {
+    character->m_textureRect = sf::IntRect(0, 0,
+        character->m_faceTexture->getSize().x,
+        character->m_faceTexture->getSize().y);
+  }
+  else
+  {
+    character->m_textureRect = def.textureRect;
+  }
   character->m_color = def.color;
   character->m_unarmedAttackEffect = def.attackEffect;
 

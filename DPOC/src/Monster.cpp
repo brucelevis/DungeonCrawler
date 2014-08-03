@@ -65,9 +65,11 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
       monster.texture = name;
       monster.textureRect = sf::IntRect(x, y, w, h);
     }
-    else
+    else if (nameAttr)
     {
-      TRACE("Bad values for texture.");
+      std::string name = nameAttr->Value();
+      monster.texture = name;
+      monster.textureRect = sf::IntRect(0, 0, 0, 0);
     }
   }
 
