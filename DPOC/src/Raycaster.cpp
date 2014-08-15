@@ -158,7 +158,10 @@ void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::I
     currentFloorY = weight * info.floorYWall + (1.0f - weight) * m_camera->pos.y;
     floorTextureX = (int)(currentFloorX * config::TILE_W) % config::TILE_W;
     floorTextureY = (int)(currentFloorY * config::TILE_H) % config::TILE_H;
-      
+
+    if (floorTextureX < 0 || floorTextureY < 0)
+      continue;
+
     Tile* floorTile = m_tilemap->getTileAt((int) currentFloorX, (int) currentFloorY, "floor");
     Tile* ceilTile = m_tilemap->getTileAt((int) currentFloorX, (int) currentFloorY, "ceiling");
 
