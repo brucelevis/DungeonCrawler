@@ -196,7 +196,7 @@ static void get_if_statement_input(const std::string& data, std::string& key, st
   else
   {
     type = get_value_to_bracket(data);
-    if (data == "item")
+    if (type == "item")
     {
       key = get_value_in_bracket(data);
     }
