@@ -47,6 +47,9 @@ void register_lua_bindings()
     ("deal_damage", &Character::takeDamage)
     ("get_character_name", &Character::getName)
 
+    // Item functions
+    ("create_item", [](const std::string& itemName, int amount) { get_player()->addItemToInventory(itemName, amount); })
+
     // Player functions
     ("get_party_size", []() { return get_player()->getParty().size(); })
     ("get_party_member", [](int index) { return get_player()->getParty().at(index); });
