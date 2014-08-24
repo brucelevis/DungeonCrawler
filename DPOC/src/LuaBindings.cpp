@@ -11,6 +11,7 @@
 #include "SceneManager.h"
 #include "Sound.h"
 #include "Utility.h"
+#include "Persistent.h"
 
 #include "Lua.h"
 #include "LuaBindings.h"
@@ -38,6 +39,7 @@ void register_lua_bindings()
     ("play_sound", [](std::string sound) { play_sound(sound); })
     ("shake_screen", [](int duration, int power) { SceneManager::instance().shakeScreen(duration, power, power); })
     ("message", [](std::string msg) { show_message(msg.c_str()); })
+    ("set_global", [](const std::string& globalName, int value) { Persistent<int>::instance().set(globalName, value); })
 
     // Character functions
     ("afflict_status", &Character::afflictStatus)
