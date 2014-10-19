@@ -107,11 +107,18 @@ void Entity::update()
       m_script.next();
     }
 
-    if (!m_script.active() && m_stepScript.active() && m_scriptWaitMap[&m_stepScript] == 0)
+    if (!m_script.active() && m_scriptWaitMap[&m_stepScript] == 0)
     {
-      m_stepScript.next();
+      if (m_stepScript.active())
+      {
+        m_stepScript.next();
 
-      if (!m_stepScript.active())
+        if (!m_stepScript.active())
+        {
+          m_stepScript.execute();
+        }
+      }
+      else if (!m_stepScript.active())
       {
         m_stepScript.execute();
       }
