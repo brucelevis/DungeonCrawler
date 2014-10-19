@@ -359,6 +359,10 @@ bool Script::active() const
 
 Script::ScriptData Script::getCurrentData() const
 {
+  static ScriptData dummy = { OP_NOP };
+  if (m_currentIndex >= m_data.size())
+    return dummy;
+
   return m_data[m_currentIndex];
 }
 
@@ -1044,36 +1048,36 @@ void Script::executeScriptLine()
   else if (data.opcode == Script::OP_SET_CONFIG)
   {
     config::set(data.data.setConfigData.key, data.data.setConfigData.value);
-    }
-    else if (data.opcode == Script::OP_TRANSFER)
-    {
-      std::string targetMap = data.data.transferData.targetMap;
-      Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y);
-    }
-    else if (data.opcode == Script::OP_SHOP)
-    {
-      std::vector<std::string> items;
+  }
+  else if (data.opcode == Script::OP_TRANSFER)
+  {
+    std::string targetMap = data.data.transferData.targetMap;
+    Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y);
+  }
+  else if (data.opcode == Script::OP_SHOP)
+  {
+    std::vector<std::string> items;
 
-      for (int i = 0; i < data.data.shopData.number; i++)
-      {
-        items.push_back(data.data.shopData.inventory[i]);
-      }
-
-      Game::instance().openShop(items);
-    }
-    else if (data.opcode == Script::OP_SHOW_PICTURE)
+    for (int i = 0; i < data.data.shopData.number; i++)
     {
-      std::string name = data.data.showPictureData.name;
-      float x = data.data.showPictureData.x;
-      float y = data.data.showPictureData.y;
-
-      SceneManager::instance().showPicture(name, x, y);
+      items.push_back(data.data.shopData.inventory[i]);
     }
-    else if (data.opcode == Script::OP_HIDE_PICTURE)
-    {
-      std::string name = data.data.hidePictureData.name;
 
-      SceneManager::instance().hidePicture(name);
-    }
+    Game::instance().openShop(items);
+  }
+  else if (data.opcode == Script::OP_SHOW_PICTURE)
+  {
+    std::string name = data.data.showPictureData.name;
+    float x = data.data.showPictureData.x;
+    float y = data.data.showPictureData.y;
+
+    SceneManager::instance().showPicture(name, x, y);
+  }
+  else if (data.opcode == Script::OP_HIDE_PICTURE)
+  {
+    std::string name = data.data.hidePictureData.name;
+
+    SceneManager::instance().hidePicture(name);
+  }
 }
 
