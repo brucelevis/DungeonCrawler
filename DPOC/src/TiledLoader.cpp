@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -438,10 +439,21 @@ const TiledLoader::Tileset* TiledLoader::findTilesetMatchingTileIndex(int tileIn
 {
   std::vector<std::string> tilesets = getTilesets();
 
-  const Tileset* potential = 0;
+  // Sort to get in the order where smallest startTileIndex is first.
+  std::vector<const Tileset*> ptrs;
   for (auto it = tilesets.begin(); it != tilesets.end(); ++it)
   {
-    const Tileset* tileset = getTileset(*it);
+    ptrs.push_back(getTileset(*it));
+  }
+  std::sort(ptrs.begin(), ptrs.end(), [=](const Tileset* a, const Tileset* b)
+      {
+        return a->startTileIndex < b->startTileIndex;
+      });
+
+  const Tileset* potential = 0;
+  for (auto it = ptrs.begin(); it != ptrs.end(); ++it)
+  {
+    const Tileset* tileset = *it;
 
     if (tileIndex >= tileset->startTileIndex)
       potential = tileset;

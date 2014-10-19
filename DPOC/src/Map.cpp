@@ -190,6 +190,9 @@ Map* Map::loadTiledFile(const std::string& filename)
             name = "anonymous_object@[" + toString(objX) + "," + toString(objY) + "]";
           }
 
+          TRACE("New object: tileset=%s, tileId=%d, name=%s, x=%d, y=%d",
+              tileset->tilesetSource.c_str(), tileId, name.c_str(), objX, objY);
+
           Entity* entity = 0;
 
           if (loader.getObjectType(objectIndex) == "chest")
