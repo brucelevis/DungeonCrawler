@@ -45,7 +45,13 @@ void Console::add(const std::string& str)
     m_buffer.pop_front();
   }
 
-  m_buffer.push_back("[" + timestamp + "] " + str);
+  std::string data = "[" + timestamp + "] " + str;
+  if (data.size() > 512)
+  {
+    data = data.substr(0, 512);
+  }
+
+  m_buffer.push_back(data);
 }
 
 void Console::setOpen(bool isOpen)
