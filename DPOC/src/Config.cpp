@@ -9,6 +9,7 @@ using namespace tinyxml2;
 
 namespace config
 {
+  bool ENCOUNTERS_ENABLED = true;
 
   int TILE_W = 16;
   int TILE_H = 16;

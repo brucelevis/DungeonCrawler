@@ -162,7 +162,7 @@ void Game::update()
 
         const Encounter* encounter =
             m_currentMap->checkEncounter();
-        if (encounter)
+        if (encounter && config::ENCOUNTERS_ENABLED)
         {
           encounter->start();
         }

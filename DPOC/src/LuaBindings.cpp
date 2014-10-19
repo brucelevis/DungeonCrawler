@@ -40,6 +40,7 @@ void register_lua_bindings()
     ("shake_screen", [](int duration, int power) { SceneManager::instance().shakeScreen(duration, power, power); })
     ("message", [](std::string msg) { show_message(msg.c_str()); })
     ("set_global", [](const std::string& globalName, int value) { Persistent<int>::instance().set(globalName, value); })
+    ("enable_encounters", [](bool enabled) { config::ENCOUNTERS_ENABLED = enabled; })
 
     // Character functions
     ("afflict_status", &Character::afflictStatus)

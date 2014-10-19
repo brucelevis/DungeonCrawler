@@ -33,6 +33,8 @@ namespace config
   {
     return RESOURCE_DIR + path;
   }
+
+  extern bool ENCOUNTERS_ENABLED;
 }
 
 #endif
