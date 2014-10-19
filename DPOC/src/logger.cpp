@@ -38,6 +38,7 @@ Logger::~Logger()
 void Logger::trace(const char* file, int line, const char* fmt, ...)
 {
   char buffer[1024];
+  memset(buffer, '\0', 1024);
 
   va_list args;
   va_start(args, fmt);
