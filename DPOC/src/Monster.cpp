@@ -19,6 +19,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
   monster.attributeMap["mp"] = 0;
   monster.color = sf::Color::White;
   monster.numberOfAttacks = 1;
+  monster.scale = 1;
 
   const XMLElement* nameElem = monsterElement->FirstChildElement("name");
   const XMLElement* descElem = monsterElement->FirstChildElement("description");
@@ -54,6 +55,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
     const XMLAttribute* yAttr = textElem->FindAttribute("y");
     const XMLAttribute* wAttr = textElem->FindAttribute("w");
     const XMLAttribute* hAttr = textElem->FindAttribute("h");
+    const XMLAttribute* scaleAttr = textElem->FindAttribute("scale");
     if (nameAttr && xAttr && wAttr && yAttr && hAttr)
     {
       std::string name = nameAttr->Value();
@@ -70,6 +72,11 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
       std::string name = nameAttr->Value();
       monster.texture = name;
       monster.textureRect = sf::IntRect(0, 0, 0, 0);
+    }
+
+    if (scaleAttr)
+    {
+      monster.scale = fromString<float>(scaleAttr->Value());
     }
   }
 

@@ -59,8 +59,8 @@ public:
 
   const std::vector<StatusEffect*> getStatusEffects() const { return m_status; }
 
-  int spriteWidth() const { return m_textureRect.width; }
-  int spriteHeight() const { return m_textureRect.height; }
+  int spriteWidth() const { return m_textureRect.width * m_textureScale; }
+  int spriteHeight() const { return m_textureRect.height * m_textureScale; }
 
   Flash& flash() { return m_flash; }
 	const Flash& flash() const { return m_flash; }
@@ -86,6 +86,7 @@ protected:
   sf::Texture* m_faceTexture;
   sf::IntRect m_textureRect;
   sf::Color m_color;
+  float m_textureScale;
 
   std::map<std::string, Attribute> m_attributes;
 

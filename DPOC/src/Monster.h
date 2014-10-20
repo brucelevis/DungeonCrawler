@@ -31,6 +31,7 @@ struct MonsterDef
   std::string texture;
   sf::IntRect textureRect;
   sf::Color color;
+  float scale;
 
   std::vector<MonsterActionEntry> actions;
   std::vector<MonsterDropItem> itemDrop;

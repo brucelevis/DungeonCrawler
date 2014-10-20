@@ -14,7 +14,8 @@
 
 Character::Character()
  : m_faceTexture(0),
-   m_color(sf::Color::White)
+   m_color(sf::Color::White),
+   m_textureScale(1)
 {
 
 }
@@ -61,6 +62,7 @@ void Character::draw(sf::RenderTarget& target, int x, int y) const
     sprite.setTexture(*m_faceTexture);
     sprite.setTextureRect(m_textureRect);
     sprite.setColor(m_color);
+    sprite.setScale(m_textureScale, m_textureScale);
     sprite.setPosition(x, y);
     
     if (m_flash.isFading())
@@ -294,6 +296,7 @@ Character* Character::createMonster(const std::string& name)
     character->m_textureRect = def.textureRect;
   }
   character->m_color = def.color;
+  character->m_textureScale = def.scale;
   character->m_unarmedAttackEffect = def.attackEffect;
 
   character->m_status.push_back(get_status_effect("Normal"));
