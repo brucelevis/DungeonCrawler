@@ -25,6 +25,7 @@ public:
   bool canEquip(const std::string& itemName);
 
   int computeCurrentAttribute(const std::string& attribName);
+  int getBaseAttribute(const std::string& attribName) const;
 
   int toNextLevel();
   int expForLevel();

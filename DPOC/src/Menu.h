@@ -99,6 +99,7 @@ class MainMenu : public Menu
     STATE_EQUIP_MENU,
     STATE_SPELL_MENU,
     STATE_STATUS_MENU,
+    STATE_SKILL_MENU,
     STATE_SAVE_MENU
   };
 public:
@@ -130,6 +131,7 @@ private:
   void closeSaveMenu();
 
   void drawStatus(sf::RenderTarget& target, int x, int y);
+  void drawSkills(sf::RenderTarget& target, int x, int y);
 private:
   ItemMenu* m_itemMenu;
   SpellMenu* m_spellMenu;

@@ -217,6 +217,7 @@ MainMenu::MainMenu()
   addEntry("Spell");
   addEntry("Equip");
   addEntry("Status");
+  addEntry("Skills");
   addEntry("Save");
   addEntry("Close");
 
@@ -252,6 +253,11 @@ void MainMenu::handleConfirm()
       openCharacterMenu();
     }
     else if (getCurrentMenuChoice() == "Status")
+    {
+      m_characterMenu->resetChoice();
+      openCharacterMenu();
+    }
+    else if (getCurrentMenuChoice() == "Skills")
     {
       m_characterMenu->resetChoice();
       openCharacterMenu();
@@ -345,6 +351,10 @@ void MainMenu::handleConfirm()
     {
       m_stateStack.push(STATE_STATUS_MENU);
     }
+    else if (getCurrentMenuChoice() == "Skills")
+    {
+      m_stateStack.push(STATE_SKILL_MENU);
+    }
     else if (getCurrentMenuChoice() == "Equip")
     {
       m_characterMenu->setUserToCurrentChoice();
@@ -420,6 +430,10 @@ void MainMenu::handleEscape()
     {
       m_stateStack.pop();
     }
+    else if (currentState == STATE_SKILL_MENU)
+    {
+      m_stateStack.pop();
+    }
     else if (currentState == STATE_SAVE_MENU)
     {
       m_saveMenu->handleEscape();
@@ -443,7 +457,7 @@ void MainMenu::moveArrow(Direction dir)
   {
     m_itemMenu->moveArrow(dir);
   }
-  else if (currentState == STATE_CHARACTER_MENU || currentState == STATE_STATUS_MENU)
+  else if (currentState == STATE_CHARACTER_MENU || currentState == STATE_STATUS_MENU || currentState == STATE_SKILL_MENU)
   {
     m_characterMenu->moveArrow(dir);
   }
@@ -589,6 +603,10 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     {
       drawStatus(target, x + 24, y + 24);
     }
+    else if (currentState == STATE_SKILL_MENU)
+    {
+      drawSkills(target, x + 24, y + 24);
+    }
     else if (currentState == STATE_ITEM_MENU || !m_characterMenu->getItemToUse().empty())
     {
       m_itemMenu->draw(target, x + 16, y + 16);
@@ -645,6 +663,51 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   {
     Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
     draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
+  }
+}
+
+void MainMenu::drawSkills(sf::RenderTarget& target, int x, int y)
+{
+  PlayerCharacter* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->getCurrentMenuChoice());
+
+  int frameX = 16;
+  int frameY = 16;
+  int frameW = 14*16;
+  int frameH = 13*16;
+
+  draw_frame(target, frameX, frameY, frameW, frameH);
+
+  character->draw(target, x, y);
+
+  static std::vector<std::string> skills =
+  {
+    "Cartography",
+    "Searching",
+    "Lockpicking",
+    "Evasion",
+    "Swimming",
+    "Merchant"
+  };
+
+  draw_text_bmp_ex(target, x + 40, y,
+      get_status_effect(character->getStatus())->color,
+      "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
+  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
+  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
+  draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
+
+  y += 40;
+  for (size_t i = 0; i < skills.size(); i++)
+  {
+    std::string& skill = skills[i];
+    int skillPercent = character->getBaseAttribute(skill);
+
+    std::string str = toString(skillPercent) + "%";
+
+    draw_text_bmp(target, x, y + i * 12, "%s", skill.c_str(), skillPercent);
+    draw_text_bmp(target, x + frameW - str.size() * 8 - 16, y + i * 12, "%s", str.c_str());
   }
 }
 

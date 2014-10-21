@@ -71,6 +71,18 @@ int PlayerCharacter::computeCurrentAttribute(const std::string& attribName)
   return sum;
 }
 
+int PlayerCharacter::getBaseAttribute(const std::string& attribName) const
+{
+  auto it = m_attributes.find(attribName);
+
+  if (it != m_attributes.end())
+  {
+    return it->second.max;
+  }
+
+  return 0;
+}
+
 int PlayerCharacter::toNextLevel()
 {
   return expForLevel() - getAttribute("exp").max;
