@@ -70,4 +70,10 @@ inline T global(const std::string& name)
   return Persistent<T>::instance().get(name);
 }
 
+template <typename T>
+inline void set_global(const std::string& name, T value)
+{
+  Persistent<T>::instance().set(name, value);
+}
+
 #endif
