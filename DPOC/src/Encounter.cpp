@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "Encounter.h"
 
-#include "../dep/tinyxml2.h"
+#include "XMLHelpers.h"
 using namespace tinyxml2;
 
 static std::map<std::string, Encounter> _encounters;
@@ -22,52 +22,6 @@ Encounter::Encounter()
 void Encounter::start() const
 {
   Game::instance().startBattle(monsters, canEscape, music);
-}
-
-template <typename T>
-struct xml_parse_attribute
-{
-  static T parse(const XMLElement* element, const std::string& attrName)
-  {
-    const XMLAttribute* attribute = element->FindAttribute(attrName.c_str());
-
-    if (attribute)
-    {
-      T t;
-
-      std::istringstream ss ( attribute->Value() );
-      ss >> t;
-
-      return t;
-    }
-
-    return T();
-  }
-};
-
-template <>
-struct xml_parse_attribute<std::string>
-{
-  static std::string parse(const XMLElement* element, const std::string& attrName)
-  {
-    const XMLAttribute* attribute = element->FindAttribute(attrName.c_str());
-
-    if (attribute)
-    {
-      return attribute->Value();
-    }
-
-    return "";
-  }
-};
-
-template <typename Func>
-void xml_for_each(const XMLElement* startElement, Func func)
-{
-  for (const XMLElement* element = startElement->FirstChildElement(); element; element = element->NextSiblingElement())
-  {
-    func(element);
-  }
 }
 
 static std::vector<std::string> parse_group_element(const XMLElement* groupElement)
