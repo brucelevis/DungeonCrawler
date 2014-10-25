@@ -15,6 +15,7 @@
 #include "PlayerClass.h"
 #include "StatusEffect.h"
 #include "Encounter.h"
+#include "Skill.h"
 
 #include "TitleScreen.h"
 
@@ -42,6 +43,7 @@ int main(int argc, char* argv[])
   load_classes();
   load_status_effects();
   load_encounters();
+  load_skills();
 
   srand(time(0));
 

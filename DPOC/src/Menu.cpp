@@ -17,6 +17,7 @@
 #include "Spell.h"
 #include "Monster.h"
 #include "Battle.h"
+#include "Skill.h"
 
 #include "SaveLoad.h"
 #include "SaveMenu.h"
@@ -679,15 +680,7 @@ void MainMenu::drawSkills(sf::RenderTarget& target, int x, int y)
 
   character->draw(target, x, y);
 
-  static std::vector<std::string> skills =
-  {
-    "Cartography",
-    "Searching",
-    "Lockpicking",
-    "Evasion",
-    "Swimming",
-    "Merchant"
-  };
+  std::vector<std::string> skills = Skill::getAllSkills();
 
   draw_text_bmp_ex(target, x + 40, y,
       get_status_effect(character->getStatus())->color,

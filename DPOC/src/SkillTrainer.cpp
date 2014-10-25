@@ -7,6 +7,8 @@
 #include "SceneManager.h"
 #include "Config.h"
 #include "Persistent.h"
+
+#include "Skill.h"
 #include "SkillTrainer.h"
 
 class TrainMenu : public Menu
@@ -25,11 +27,14 @@ public:
   void handleConfirm()
   {
     int gems = getRequiredGems();
+    int currentSkillValue = m_currentCharacter->getBaseAttribute(getCurrentSkill());
 
-    if (global<int>("$sys:gems") >= gems)
+    if (global<int>("$sys:gems") >= gems && currentSkillValue < 100)
     {
+      auto skill = Skill::get(getCurrentSkill());
+
       set_global("$sys:gems", global<int>("$sys:gems") - gems);
-      m_currentCharacter->advanceAttribute(getCurrentSkill(), 1);
+      m_currentCharacter->advanceAttribute(getCurrentSkill(), skill.getPercent(1));
 
       play_sound(config::get("SOUND_SHOP"));
 
@@ -54,21 +59,25 @@ public:
   void draw(sf::RenderTarget& target, int x, int y)
   {
     draw_frame(target, 0, 0, config::GAME_RES_X, 24);
-    draw_text_bmp(target, 8, 8, "Gems to train: %d / %d", getRequiredGems(), global<int>("$sys:gems"));
+
+    int currentSkillValue = m_currentCharacter->getBaseAttribute(getCurrentSkill());
+    if (currentSkillValue < 100)
+    {
+      draw_text_bmp(target, 8, 8, "Gems to train: %d / %d", getRequiredGems(), global<int>("$sys:gems"));
+    }
+    else
+    {
+      draw_text_bmp(target, 8, 8, "Skill maxed out!");
+    }
 
     Menu::draw(target, x, y + 22);
   }
 private:
   int getRequiredGems() const
   {
-    std::string skill = getCurrentSkill();
+    auto skill = Skill::get( getCurrentSkill() );
 
-    if (skill.size())
-    {
-      return m_currentCharacter->getBaseAttribute(skill) + 1;
-    }
-
-    return -1;
+    return skill.costOfRank;// * (1 + skill.ranks(m_currentCharacter->getBaseAttribute(skill.name)));
   }
 
   std::string getCurrentSkill() const

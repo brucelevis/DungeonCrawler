@@ -1,6 +1,7 @@
 #ifndef XMLHELPERS_H_
 #define XMLHELPERS_H_
 
+#include <sstream>
 #include "../dep/tinyxml2.h"
 
 template <typename T>
