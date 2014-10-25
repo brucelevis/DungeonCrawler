@@ -26,6 +26,7 @@ public:
 
   int computeCurrentAttribute(const std::string& attribName);
   int getBaseAttribute(const std::string& attribName) const;
+  void advanceAttribute(const std::string& attribName, int value);
 
   int toNextLevel();
   int expForLevel();

@@ -83,6 +83,22 @@ int PlayerCharacter::getBaseAttribute(const std::string& attribName) const
   return 0;
 }
 
+void PlayerCharacter::advanceAttribute(const std::string& attribName, int value)
+{
+  auto it = m_attributes.find(attribName);
+
+  if (it == m_attributes.end())
+  {
+    m_attributes[attribName].current = value;
+    m_attributes[attribName].max = value;
+  }
+  else
+  {
+    it->second.current += value;
+    it->second.max += value;
+  }
+}
+
 int PlayerCharacter::toNextLevel()
 {
   return expForLevel() - getAttribute("exp").max;

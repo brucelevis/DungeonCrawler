@@ -12,6 +12,7 @@
 #include "Sound.h"
 #include "Utility.h"
 #include "Persistent.h"
+#include "SkillTrainer.h"
 
 #include "Lua.h"
 #include "LuaBindings.h"
@@ -41,6 +42,7 @@ void register_lua_bindings()
     ("message", [](std::string msg) { show_message(msg.c_str()); })
     ("set_global", [](const std::string& globalName, int value) { Persistent<int>::instance().set(globalName, value); })
     ("enable_encounters", [](bool enabled) { config::ENCOUNTERS_ENABLED = enabled; })
+    ("skill_trainer", []() { SceneManager::instance().addScene( new SkillTrainer({"Cartography", "Swimming", "Lockpicking"})); })
 
     // Character functions
     ("afflict_status", &Character::afflictStatus)
