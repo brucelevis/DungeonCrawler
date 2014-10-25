@@ -64,4 +64,10 @@ private:
   std::map<std::string, T> m_storage;
 };
 
+template <typename T>
+inline T global(const std::string& name)
+{
+  return Persistent<T>::instance().get(name);
+}
+
 #endif
