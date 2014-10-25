@@ -21,6 +21,7 @@
 #include "Encounter.h"
 #include "BattleBackground.h"
 
+#include "SkillTrainer.h"
 #include "Shop.h"
 #include "Battle.h"
 
@@ -660,6 +661,12 @@ void Game::openShop(const std::vector<std::string>& items)
 {
   Shop* shop = new Shop(items);
   SceneManager::instance().addScene(shop);
+}
+
+void Game::openSkillTrainer(const std::vector<std::string>& skills)
+{
+  SkillTrainer* skillTrainer = new SkillTrainer(skills);
+  SceneManager::instance().addScene(skillTrainer);
 }
 
 void Game::startRotate(int angle, int angleInc)

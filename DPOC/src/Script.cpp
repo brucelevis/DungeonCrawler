@@ -698,6 +698,35 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     memset(data.data.hidePictureData.name, '\0', MAX_SCRIPT_KEY_SIZE);
     strcpy(data.data.hidePictureData.name, strings[1].c_str());
   }
+  else if (opcode == OP_SKILL_TRAINER)
+  {
+    memset(data.data.skillTrainer.skills, '\0', MAX_SCRIPT_KEY_SIZE * 32);
+
+    std::string all;
+
+    for (size_t i = 1; i < strings.size(); i++)
+    {
+      all += strings[i];
+      if (i < strings.size() - 1)
+        all += " ";
+    }
+
+    // Error checking
+    if (all.size() >= MAX_SCRIPT_KEY_SIZE * 32)
+    {
+      TRACE("Too long string for skills command: %s", all.c_str());
+      throw std::runtime_error("Too long string for skills command!");
+    }
+
+    std::vector<std::string> skills = split_string(all, ',');
+
+    for (size_t i = 0; i < skills.size(); i++)
+    {
+      strcpy(data.data.skillTrainer.skills[i], skills[i].c_str());
+    }
+
+    data.data.skillTrainer.number = skills.size();
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -740,7 +769,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "transfer",     OP_TRANSFER },
     { "shop",         OP_SHOP },
     { "show_picture", OP_SHOW_PICTURE },
-    { "hide_picture", OP_HIDE_PICTURE }
+    { "hide_picture", OP_HIDE_PICTURE },
+    { "skill_trainer", OP_SKILL_TRAINER }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -1078,6 +1108,18 @@ void Script::executeScriptLine()
     std::string name = data.data.hidePictureData.name;
 
     SceneManager::instance().hidePicture(name);
+  }
+  else if (data.opcode == Script::OP_SKILL_TRAINER)
+  {
+    int numberOfSkills = data.data.skillTrainer.number;
+
+    std::vector<std::string> skills;
+    for (int i = 0; i < numberOfSkills; i++)
+    {
+      skills.push_back(data.data.skillTrainer.skills[i]);
+    }
+
+    Game::instance().openSkillTrainer(skills);
   }
 }
 

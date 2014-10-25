@@ -47,7 +47,8 @@ public:
     OP_TRANSFER,
     OP_SHOP,
     OP_SHOW_PICTURE,
-    OP_HIDE_PICTURE
+    OP_HIDE_PICTURE,
+    OP_SKILL_TRAINER
   };
 
   enum ArithmOp
@@ -200,6 +201,12 @@ public:
       {
         char name[MAX_SCRIPT_KEY_SIZE];
       } hidePictureData;
+
+      struct
+      {
+        char skills[32][MAX_SCRIPT_KEY_SIZE];
+        int number;
+      } skillTrainer;
     } data;
   };
 
