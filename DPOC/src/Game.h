@@ -53,6 +53,7 @@ public:
 
   void openShop(const std::vector<std::string>& items);
   void openSkillTrainer(const std::vector<std::string>& skills);
+  void openCampsite();
 
   bool battleInProgress() const { return m_battleInProgress; }
 private:
@@ -110,6 +111,8 @@ private:
   bool m_battleInProgress;
 
   std::string m_savedBattleMusic;
+
+  bool m_campSite;
 };
 
 #endif

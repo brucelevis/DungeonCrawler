@@ -48,7 +48,8 @@ public:
     OP_SHOP,
     OP_SHOW_PICTURE,
     OP_HIDE_PICTURE,
-    OP_SKILL_TRAINER
+    OP_SKILL_TRAINER,
+    OP_CAMPSITE
   };
 
   enum ArithmOp

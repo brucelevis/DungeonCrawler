@@ -233,7 +233,7 @@ static std::string replace_variables_in_string(const std::string& str, const Ent
     }
     else
     {
-      if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || isdigit(str[i]) || str[i] == '_')
+      if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || isdigit(str[i]) || str[i] == '_' || str[i] == ':')
       {
         variable += str[i];
 
@@ -727,6 +727,10 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     data.data.skillTrainer.number = skills.size();
   }
+  else if (opcode == OP_CAMPSITE)
+  {
+
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -770,7 +774,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "shop",         OP_SHOP },
     { "show_picture", OP_SHOW_PICTURE },
     { "hide_picture", OP_HIDE_PICTURE },
-    { "skill_trainer", OP_SKILL_TRAINER }
+    { "skill_trainer", OP_SKILL_TRAINER },
+    { "campsite", OP_CAMPSITE }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -1120,6 +1125,10 @@ void Script::executeScriptLine()
     }
 
     Game::instance().openSkillTrainer(skills);
+  }
+  else if (data.opcode == Script::OP_CAMPSITE)
+  {
+    Game::instance().openCampsite();
   }
 }
 

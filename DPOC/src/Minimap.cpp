@@ -1,3 +1,4 @@
+#include "Cache.h"
 #include "Map.h"
 #include "Player.h"
 #include "Game.h"
@@ -6,17 +7,17 @@
 
 namespace
 {
-  bool _entity_at(const std::vector<Entity*>& entities, int x, int y)
+  Entity* _entity_at(const std::vector<Entity*>& entities, int x, int y)
   {
     for (auto it = entities.begin(); it != entities.end(); ++it)
     {
-      if ((int)(*it)->x == x && (int)(*it)->y == y && (*it)->isVisible())
+      if ((int)(*it)->x == x && (int)(*it)->y == y)
       {
-        return true;
+        return *it;
       }
     }
 
-    return false;
+    return nullptr;
   }
 }
 
@@ -27,8 +28,14 @@ Minimap::Minimap(int x, int y, int w, int h)
    m_h(h),
    m_centerX(0),
    m_centerY(0),
-   m_currentMap(0)
+   m_currentMap(0),
+   m_campsiteIcon( cache::loadTexture("Icons/Campfire.png") )
 {
+}
+
+Minimap::~Minimap()
+{
+  cache::releaseTexture(m_campsiteIcon);
 }
 
 void Minimap::updatePosition(Map* currentMap, int x, int y)
@@ -54,9 +61,19 @@ void Minimap::draw(sf::RenderTarget& target) const
     {
       Tile* tile = m_currentMap->getTileAt(x, y, "wall");
 
-      if (_entity_at(entities, x, y))
+      if (Entity* entity = _entity_at(entities, x, y))
       {
-        draw_text_bmp(target, m_x + px * 8, m_y + py * 8, "?");
+        if (entity->getName() == "campsite")
+        {
+          sf::Sprite sprite;
+          sprite.setTexture(*m_campsiteIcon);
+          sprite.setPosition(m_x + px * 8, m_y + py * 8);
+          target.draw(sprite);
+        }
+        else if (entity->isVisible())
+        {
+          draw_text_bmp(target, m_x + px * 8, m_y + py * 8, "?");
+        }
       }
       else
       {

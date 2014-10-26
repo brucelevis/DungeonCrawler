@@ -21,6 +21,7 @@
 #include "Encounter.h"
 #include "BattleBackground.h"
 
+#include "Campsite.h"
 #include "SkillTrainer.h"
 #include "Shop.h"
 #include "Battle.h"
@@ -59,7 +60,8 @@ Game::Game()
    m_rotKeyDown(false),
 
    m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 68, 56, 56),
-   m_battleInProgress(false)
+   m_battleInProgress(false),
+   m_campSite(false)
 {
   m_raycasterBuffer.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
   m_texture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
@@ -641,6 +643,12 @@ void Game::postFade(FadeType fadeType)
   if (fadeType == FADE_IN)
   {
     m_player->setControlsEnabled(true);
+
+    if (m_campSite)
+    {
+      m_campSite = false;
+      m_currentMusic.play();
+    }
   }
   else
   {
@@ -653,6 +661,11 @@ void Game::postFade(FadeType fadeType)
       m_transferInProgress = false;
 
       SceneManager::instance().fadeIn(32);
+    }
+    else if (m_campSite)
+    {
+      Campsite* campSite = new Campsite;
+      SceneManager::instance().addScene(campSite);
     }
   }
 }
@@ -667,6 +680,13 @@ void Game::openSkillTrainer(const std::vector<std::string>& skills)
 {
   SkillTrainer* skillTrainer = new SkillTrainer(skills);
   SceneManager::instance().addScene(skillTrainer);
+}
+
+void Game::openCampsite()
+{
+  SceneManager::instance().fadeOut(32);
+  m_currentMusic.pause();
+  m_campSite = true;
 }
 
 void Game::startRotate(int angle, int angleInc)

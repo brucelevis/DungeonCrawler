@@ -235,7 +235,7 @@ Map* Map::loadTiledFile(const std::string& filename)
           }
           else
           {
-            entity = new Entity;
+            entity = new Entity(name);
           }
 
           entity->setPosition(objX, objY);
@@ -300,7 +300,7 @@ Map* Map::loadTiledFile(const std::string& filename)
             name = "anonymous_object@[" + toString(objX) + "," + toString(objY) + "]";
           }
 
-          Entity* entity = new Entity;
+          Entity* entity = new Entity(name);
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
           entity->setWalkSpeed(0);
