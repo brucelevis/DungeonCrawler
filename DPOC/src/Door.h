@@ -9,8 +9,8 @@
 class Door : public Entity
 {
 public:
-  Door(const std::string& key);
-  Door(const std::string& key, const std::string& trapType, int luckToBeat);
+  Door(const std::string& name, const std::string& key);
+  Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat);
 
   void update();
   void interact(const Entity*);

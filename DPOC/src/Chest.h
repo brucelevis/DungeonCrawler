@@ -10,8 +10,8 @@
 class Chest : public Entity
 {
 public:
-  Chest(const std::vector<std::string> items);
-  Chest(const std::vector<std::string> items, const std::string& trapType, int luckToBeat);
+  Chest(const std::string& name, const std::vector<std::string> items);
+  Chest(const std::string& name, const std::vector<std::string> items, const std::string& trapType, int luckToBeat);
   void update();
   void interact(const Entity* interactor);
 private:

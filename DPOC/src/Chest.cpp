@@ -9,15 +9,17 @@
 #include "Sprite.h"
 #include "Chest.h"
 
-Chest::Chest(const std::vector<std::string> items)
- : m_items(items),
+Chest::Chest(const std::string& name, const std::vector<std::string> items)
+ : Entity(name),
+   m_items(items),
    m_spriteChanged(false),
    m_isTrapped(false)
 {
 }
 
-Chest::Chest(const std::vector<std::string> items, const std::string& trapType, int luckToBeat)
- : m_items(items),
+Chest::Chest(const std::string& name, const std::vector<std::string> items, const std::string& trapType, int luckToBeat)
+ : Entity(name),
+   m_items(items),
    m_spriteChanged(false),
    m_isTrapped(true),
    m_trap(trapType, luckToBeat, 0, 0)

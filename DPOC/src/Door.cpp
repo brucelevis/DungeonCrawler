@@ -7,15 +7,17 @@
 
 #include "Door.h"
 
-Door::Door(const std::string& key)
- : m_keyRequired(key),
+Door::Door(const std::string& name, const std::string& key)
+ : Entity(name),
+   m_keyRequired(key),
    m_isTrapped(false)
 {
 
 }
 
-Door::Door(const std::string& key, const std::string& trapType, int luckToBeat)
- : m_keyRequired(key),
+Door::Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat)
+ : Entity(name),
+   m_keyRequired(key),
    m_isTrapped(true),
    m_trap(trapType, luckToBeat, 0, 0)
 {

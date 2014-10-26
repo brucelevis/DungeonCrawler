@@ -202,7 +202,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
             if (trap.empty())
             {
-              entity = new Chest(split_string(items, ','));
+              entity = new Chest(name, split_string(items, ','));
             }
             else
             {
@@ -211,7 +211,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
               _parse_trap(trap, trapType, luckToBeat);
 
-              entity = new Chest(split_string(items, ','), trapType, luckToBeat);
+              entity = new Chest(name, split_string(items, ','), trapType, luckToBeat);
             }
           }
           else if (loader.getObjectType(objectIndex) == "door")
@@ -221,7 +221,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
             if (trap.empty())
             {
-              entity = new Door(keyRequired);
+              entity = new Door(name, keyRequired);
             }
             else
             {
@@ -230,7 +230,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
               _parse_trap(trap, trapType, luckToBeat);
 
-              entity = new Door(keyRequired, trapType, luckToBeat);
+              entity = new Door(name, keyRequired, trapType, luckToBeat);
             }
           }
           else
