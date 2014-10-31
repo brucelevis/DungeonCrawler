@@ -25,6 +25,8 @@ namespace
   }
 }
 
+std::unordered_map<std::string, std::vector<bool>> Map::s_explored;
+
 Map::Map()
  : m_width(0),
    m_height(0),
@@ -134,7 +136,6 @@ Map* Map::loadTiledFile(const std::string& filename)
         tile.solid = false;
         tile.tileX = 0;
         tile.tileY = 0;
-        tile.isExplored = false;
 
         if (tileId > 0)
         {
@@ -326,6 +327,23 @@ Map* Map::loadTiledFile(const std::string& filename)
 
     TRACE(" -> %s", encounters_str.c_str());
 
+    TRACE("Updating explored vector for map");
+
+    // Initiate explored vector for this map, unless previously done.
+    if (s_explored.count(map->getName()) == 0)
+    {
+      s_explored[map->getName()] = std::vector<bool>(map->m_width * map->m_height, false);
+    }
+    else
+    {
+      // If size has changed the map has changed in some way, so reset it.
+      size_t size = s_explored[map->getName()].size();
+      if ((int)size != map->getWidth() * map->getHeight())
+      {
+        s_explored[map->getName()] = std::vector<bool>(map->m_width * map->m_height, false);
+      }
+    }
+
     TRACE("Map loading completed!");
   }
   else
@@ -485,6 +503,24 @@ std::string Map::xmlDump() const
   }
   xml << " </entities>\n";
 
+  for (auto it = s_explored.begin(); it != s_explored.end(); ++it)
+  {
+    xml << " <explored name=\"" << it->first << "\">\n";
+    size_t cnt = 0;
+    for (bool explored : it->second)
+    {
+      xml << explored;
+
+      if (cnt < it->second.size() - 1)
+        xml << ",";
+      else
+        xml << "\n";
+
+      cnt++;
+    }
+    xml << " </explored>\n";
+  }
+
   xml << "</map>\n";
 
   return xml.str();
@@ -544,6 +580,9 @@ std::string Map::getTrapKey(const Trap* trap) const
 
 void Map::explore(int x, int y)
 {
+//  if (isExplored(x, y))
+//    return;
+
   for (int py = y - 1; py <= y + 1; py++)
   {
     for (int px = x - 1; px <= x + 1; px++)
@@ -552,10 +591,7 @@ void Map::explore(int x, int y)
 
       if (index >= 0 && index < (m_width * m_height))
       {
-        for (auto it = m_tiles.begin(); it != m_tiles.end(); ++it)
-        {
-          it->second[index].isExplored = true;
-        }
+        s_explored[getName()][index] = true;
       }
     }
   }
@@ -565,14 +601,13 @@ bool Map::isExplored(int x, int y) const
 {
   int index = y * m_width + x;
 
-  if (index >= 0 && index < (m_width * m_height))
-  {
-    for (auto it = m_tiles.begin(); it != m_tiles.end(); ++it)
-    {
-      if (it->second[index].isExplored)
-        return true;
-    }
-  }
+  if (index < 0 || index >= (m_width * m_height))
+    return false;
 
-  return false;
+  return s_explored[getName()][index];
+}
+
+void Map::updateExplored(const std::string& mapName, const std::vector<bool>& explored)
+{
+  s_explored[mapName] = explored;
 }

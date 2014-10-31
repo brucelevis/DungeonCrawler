@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -18,6 +19,7 @@
 
 #include "SaveLoad.h"
 
+#include "XMLHelpers.h"
 #include "../dep/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -169,6 +171,23 @@ void parseMapElement(const XMLElement* mapElement)
       }
     }
   }
+
+  xml_for_each(mapElement, [](const XMLElement* element)
+  {
+    std::string name = element->Name();
+    if (name == "explored")
+    {
+      std::string mapName = xml_parse_attribute<std::string>::parse(element, "name");
+      std::string contents = element->GetText();
+
+      std::vector<std::string> indices_str = split_string(contents, ',');
+      std::vector<bool> indices(indices_str.size());
+
+      std::transform(indices_str.begin(), indices_str.end(), indices.begin(), fromString<int>);
+
+      Map::updateExplored(mapName, indices);
+    }
+  });
 }
 
 EntityData parseEntityElement(const XMLElement* entityElement)

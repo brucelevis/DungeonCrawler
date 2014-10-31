@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <unordered_map>
+#include <set>
 
 #include <SFML/Graphics.hpp>
 
@@ -19,7 +21,6 @@ struct Tile
   int tileX, tileY;
   bool solid;
   int tileId;
-  bool isExplored;
 };
 
 struct Warp
@@ -75,6 +76,8 @@ public:
 
   void explore(int x, int y);
   bool isExplored(int x, int y) const;
+
+  static void updateExplored(const std::string& mapName, const std::vector<bool>& explored);
 private:
   Map();
   Map(const Map&);
@@ -103,6 +106,8 @@ private:
 
   std::string m_battleBackground;
   sf::Texture* m_background;
+
+  static std::unordered_map<std::string, std::vector<bool>> s_explored;
 };
 
 #endif
