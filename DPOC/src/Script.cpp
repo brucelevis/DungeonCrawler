@@ -431,7 +431,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.data.walkData.dir = directionFromString(strings[1]);
   }
-  else if (opcode == OP_SET_DIR)
+  else if (opcode == OP_SET_DIR || opcode == OP_SET_PLAYER_DIR)
   {
     data.data.walkData.dir = directionFromString(strings[1]);
   }
@@ -656,6 +656,13 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     data.data.transferData.x = atoi(strings[2].c_str());
     data.data.transferData.y = atoi(strings[3].c_str());
+    data.data.transferData.dir = DIR_RANDOM;
+
+    // If a direction is given update player dir after transfer.
+    if (strings.size() > 4)
+    {
+      data.data.transferData.dir = directionFromString(strings[4]);
+    }
   }
   else if (opcode == OP_SHOP)
   {
@@ -747,8 +754,6 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "walk",         OP_WALK },
     { "set_dir",      OP_SET_DIR },
     { "wait",         OP_WAIT },
-//    { "set_global",   OP_SET_GLOBAL },
-//    { "set_local",    OP_SET_LOCAL },
     { "if",           OP_IF },
     { "endif",        OP_END_IF },
     { "else",         OP_ELSE },
@@ -775,7 +780,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "show_picture", OP_SHOW_PICTURE },
     { "hide_picture", OP_HIDE_PICTURE },
     { "skill_trainer", OP_SKILL_TRAINER },
-    { "campsite", OP_CAMPSITE }
+    { "campsite", OP_CAMPSITE },
+    { "set_player_dir", OP_SET_PLAYER_DIR }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -1087,7 +1093,7 @@ void Script::executeScriptLine()
   else if (data.opcode == Script::OP_TRANSFER)
   {
     std::string targetMap = data.data.transferData.targetMap;
-    Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y);
+    Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y, data.data.transferData.dir);
   }
   else if (data.opcode == Script::OP_SHOP)
   {
@@ -1129,6 +1135,14 @@ void Script::executeScriptLine()
   else if (data.opcode == Script::OP_CAMPSITE)
   {
     Game::instance().openCampsite();
+  }
+  else if (data.opcode == Script::OP_SET_PLAYER_DIR)
+  {
+    Direction oldDir = get_player()->player()->getDirection();
+    get_player()->player()->setDirection(data.data.walkData.dir);
+
+    // Need to update camera.
+    Game::instance().fixCamera(oldDir);
   }
 }
 

@@ -266,16 +266,19 @@ Map* Map::loadTiledFile(const std::string& filename)
         std::string name = object->name;
         if (to_lower(name) == "warp")
         {
+          std::string dirStr = loader.getObjectProperty(objectIndex, "direction");
+
           Warp warp;
           warp.srcX = object->x / config::TILE_W;
           warp.srcY = object->y / config::TILE_H;
           warp.dstX = fromString<int>(loader.getObjectProperty(objectIndex, "destX"));
           warp.dstY = fromString<int>(loader.getObjectProperty(objectIndex, "destY"));
           warp.destMap = loader.getObjectProperty(objectIndex, "destMap");
+          warp.dir = dirStr.empty() ? DIR_RANDOM : directionFromString(dirStr);
           map->m_warps.push_back(warp);
 
-          TRACE("New warp: srcX=%d, srcY=%d, dstX=%d, dstY=%d, dstMap=%s",
-              warp.srcX, warp.srcY, warp.dstX, warp.dstY, warp.destMap.c_str());
+          TRACE("New warp: srcX=%d, srcY=%d, dstX=%d, dstY=%d, dstMap=%s, direction=%s",
+              warp.srcX, warp.srcY, warp.dstX, warp.dstY, warp.destMap.c_str(), dirStr.c_str());
         }
         else if (to_lower(name) == "trap")
         {

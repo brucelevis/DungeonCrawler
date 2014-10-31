@@ -49,7 +49,8 @@ public:
     OP_SHOW_PICTURE,
     OP_HIDE_PICTURE,
     OP_SKILL_TRAINER,
-    OP_CAMPSITE
+    OP_CAMPSITE,
+    OP_SET_PLAYER_DIR
   };
 
   enum ArithmOp
@@ -184,6 +185,7 @@ public:
       {
         char targetMap[MAX_SCRIPT_KEY_SIZE];
         int x, y;
+        Direction dir;
       } transferData;
 
       struct

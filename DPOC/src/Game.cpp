@@ -439,7 +439,7 @@ bool Game::checkWarps()
 
     play_sound(config::get("SOUND_MOVEMENT"));
 
-    prepareTransfer(warp->destMap, warp->dstX, warp->dstY);
+    prepareTransfer(warp->destMap, warp->dstX, warp->dstY, warp->dir);
 
     return true;
   }
@@ -494,13 +494,14 @@ bool Game::checkInteractions()
   return false;
 }
 
-void Game::prepareTransfer(const std::string& targetMap, int x, int y)
+void Game::prepareTransfer(const std::string& targetMap, int x, int y, Direction dir)
 {
   SceneManager::instance().fadeOut(32);
 
   m_currentWarp.dstX = x;
   m_currentWarp.dstY = y;
   m_currentWarp.destMap = targetMap;
+  m_currentWarp.dir = dir;
   m_transferInProgress = true;
 }
 
@@ -667,6 +668,13 @@ void Game::postFade(FadeType fadeType)
 
       m_transferInProgress = false;
 
+      if (m_currentWarp.dir != DIR_RANDOM)
+      {
+        Direction oldDir = m_player->player()->getDirection();
+        m_player->player()->setDirection(m_currentWarp.dir);
+        fixCamera(oldDir);
+      }
+
       SceneManager::instance().fadeIn(32);
     }
     else if (m_campSite)
@@ -725,24 +733,78 @@ void Game::execRotate()
 void Game::setPlayer(Player* player)
 {
   m_player = player;
-  Direction playerDir = m_player->player()->getDirection();
 
-  if (playerDir == DIR_UP)
-  {
-    m_camera.rotate(deg2rad(90));
-  }
-  else if (playerDir == DIR_DOWN)
-  {
-    m_camera.rotate(deg2rad(-90));
-  }
-  else if (playerDir == DIR_RIGHT)
-  {
-    m_camera.rotate(deg2rad(180));
-  }
+  fixCamera(DIR_LEFT);
 
   // So it shows up at beginning of game.
   m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y, m_player->player()->x, m_player->player()->y);
 
   // Also explore starting position.
   m_currentMap->explore(m_player->player()->x, m_player->player()->y);
+}
+
+void Game::fixCamera(Direction initDir)
+{
+  Direction playerDir = m_player->player()->getDirection();
+
+  if (initDir == DIR_LEFT)
+  {
+    if (playerDir == DIR_UP)
+    {
+      m_camera.rotate(deg2rad(90));
+    }
+    else if (playerDir == DIR_DOWN)
+    {
+      m_camera.rotate(deg2rad(-90));
+    }
+    else if (playerDir == DIR_RIGHT)
+    {
+      m_camera.rotate(deg2rad(180));
+    }
+  }
+  else if (initDir == DIR_RIGHT)
+  {
+    if (playerDir == DIR_UP)
+    {
+      m_camera.rotate(deg2rad(-90));
+    }
+    else if (playerDir == DIR_DOWN)
+    {
+      m_camera.rotate(deg2rad(90));
+    }
+    else if (playerDir == DIR_LEFT)
+    {
+      m_camera.rotate(deg2rad(180));
+    }
+  }
+  else if (initDir == DIR_UP)
+  {
+    if (playerDir == DIR_DOWN)
+    {
+      m_camera.rotate(deg2rad(180));
+    }
+    else if (playerDir == DIR_LEFT)
+    {
+      m_camera.rotate(deg2rad(90));
+    }
+    else if (playerDir == DIR_RIGHT)
+    {
+      m_camera.rotate(deg2rad(-90));
+    }
+  }
+  else if (initDir == DIR_DOWN)
+  {
+    if (playerDir == DIR_UP)
+    {
+      m_camera.rotate(deg2rad(180));
+    }
+    else if (playerDir == DIR_LEFT)
+    {
+      m_camera.rotate(deg2rad(-90));
+    }
+    else if (playerDir == DIR_RIGHT)
+    {
+      m_camera.rotate(deg2rad(90));
+    }
+  }
 }

@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Direction.h"
 #include "coord.h"
 #include "Config.h"
 #include "Entity.h"
@@ -28,6 +29,7 @@ struct Warp
   int srcX, srcY;
   int dstX, dstY;
   std::string destMap;
+  Direction dir;
 };
 
 static inline std::string getWarpTargetName(const Warp& warp)

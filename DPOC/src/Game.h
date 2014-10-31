@@ -39,6 +39,7 @@ public:
   void openChoiceMenu(const std::vector<std::string>& choices);
 
   void setPlayer(Player* player);
+  void fixCamera(Direction initDir);
 
   void loadNewMap(const std::string& file);
 
@@ -49,7 +50,7 @@ public:
 
   void postBattle();
 
-  void prepareTransfer(const std::string& targetMap, int x, int y);
+  void prepareTransfer(const std::string& targetMap, int x, int y, Direction dir = DIR_RANDOM);
 
   void openShop(const std::vector<std::string>& items);
   void openSkillTrainer(const std::vector<std::string>& skills);
