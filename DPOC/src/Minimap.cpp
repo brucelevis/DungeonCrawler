@@ -45,6 +45,8 @@ Minimap::Minimap(int x, int y, int w, int h)
    m_h(h),
    m_centerX(0),
    m_centerY(0),
+   m_playerX(0),
+   m_playerY(0),
    m_currentMap(0),
    m_campsiteIcon( cache::loadTexture("Icons/Campfire.png") ),
    m_doorIcon( cache::loadTexture("Icons/Door.png") )
@@ -57,11 +59,13 @@ Minimap::~Minimap()
   cache::releaseTexture(m_doorIcon);
 }
 
-void Minimap::updatePosition(Map* currentMap, int x, int y)
+void Minimap::updatePosition(Map* currentMap, int x, int y, int playerX, int playerY)
 {
   m_currentMap = currentMap;
   m_centerX = x;
   m_centerY = y;
+  m_playerX = playerX;
+  m_playerY = playerY;
 }
 
 void Minimap::draw(sf::RenderTarget& target) const
@@ -91,7 +95,7 @@ void Minimap::draw(sf::RenderTarget& target) const
       {
         drawRectangle(target, tx, ty, sf::Color::Red);
       }
-      if (x == (int)get_player()->player()->x && y == (int)get_player()->player()->y)
+      if (x == m_playerX && y == m_playerY)
       {
         drawRectangle(target, tx, ty, sf::Color::Green);
 

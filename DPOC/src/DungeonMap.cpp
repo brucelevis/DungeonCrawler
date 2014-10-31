@@ -15,12 +15,12 @@ DungeonMap::DungeonMap(Map* map)
    m_centerX(get_player()->player()->x),
    m_centerY(get_player()->player()->y)
 {
-  m_minimap.updatePosition(m_map, m_centerX, m_centerY);
+  m_minimap.updatePosition(m_map, m_centerX, m_centerY, m_centerX, m_centerY);
 }
 
 void DungeonMap::update()
 {
-  m_minimap.updatePosition(m_map, m_centerX, m_centerY);
+  m_minimap.updatePosition(m_map, m_centerX, m_centerY, get_player()->player()->x, get_player()->player()->y);
 }
 
 void DungeonMap::draw(sf::RenderTarget& target)
