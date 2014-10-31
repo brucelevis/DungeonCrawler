@@ -12,6 +12,7 @@ class DungeonMap : public Scene
 {
 public:
   DungeonMap(Map* map);
+  ~DungeonMap();
 
   void update();
 
@@ -22,6 +23,7 @@ private:
   Map* m_map;
   Minimap m_minimap;
   int m_centerX, m_centerY;
+  sf::Texture* m_arrowTexture;
 };
 
 
