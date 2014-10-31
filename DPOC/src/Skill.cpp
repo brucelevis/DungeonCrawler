@@ -37,6 +37,11 @@ std::vector<std::string> Skill::getAllSkills()
   return skills;
 }
 
+bool Skill::isSkill(const std::string& name)
+{
+  return _skills.count(name);
+}
+
 int Skill::getRanks(int percent) const
 {
   return percent / ranks;

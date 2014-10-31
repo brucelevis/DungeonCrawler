@@ -14,6 +14,7 @@ struct Skill
 
   static const Skill& get(const std::string& name);
   static std::vector<std::string> getAllSkills();
+  static bool isSkill(const std::string& name);
 };
 
 void load_skills();

@@ -8,6 +8,7 @@
 #include "Cache.h"
 #include "Message.h"
 #include "StatusEffect.h"
+#include "Skill.h"
 
 #include "PlayerCharacter.h"
 
@@ -194,6 +195,10 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
 
     for (auto it = m_attributes.begin(); it != m_attributes.end(); ++it)
     {
+      // Don't increase skills on levelup.
+      if (Skill::isSkill(it->first))
+        continue;
+
       int increase = it->second.max - attributesTemp[it->first].max;
 
       if (it->first != "level" && it->first != "exp")
