@@ -7,6 +7,7 @@
 #include "random_pick.h"
 #include "Game.h"
 #include "Cache.h"
+#include "Persistent.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -678,7 +679,15 @@ void Battle::actionEffect()
           play_sound(config::get("SOUND_SUCCESS"));
 
           battle_message("Stole the %s!", item.c_str());
-          get_player()->addItemToInventory(item, 1);
+
+          if (item == "gem")
+          {
+            set_global<int>("$sys:gems", global<int>("$sys:gems") + 1);
+          }
+          else
+          {
+            get_player()->addItemToInventory(item, 1);
+          }
         }
         else
         {
@@ -740,14 +749,22 @@ void Battle::doVictory()
       (*it)->checkLevelUp();
     }
 
-    for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
+    for (auto monster : m_monsters)
     {
-      std::vector<std::string> items = monster_drop_items(get_monster_definition((*it)->getName()));
+      std::vector<std::string> items = monster_drop_items(get_monster_definition(monster->getName()));
 
-      for (auto itemIt = items.begin(); itemIt != items.end(); ++itemIt)
+      for (std::string& itemName : items)
       {
-        get_player()->addItemToInventory(*itemIt, 1);
-        show_message("%s dropped %s!", (*it)->getName().c_str(), itemIt->c_str());
+        if (itemName == "gem")
+        {
+          set_global<int>("$sys:gems", global<int>("$sys:gems") + 1);
+          show_message("%s dropped a gem!", monster->getName().c_str());
+        }
+        else
+        {
+          get_player()->addItemToInventory(itemName, 1);
+          show_message("%s dropped %s!", monster->getName().c_str(), itemName.c_str());
+        }
       }
     }
 
