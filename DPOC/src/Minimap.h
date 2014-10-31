@@ -21,6 +21,7 @@ private:
   Map* m_currentMap;
 
   sf::Texture* m_campsiteIcon;
+  sf::Texture* m_doorIcon;
 };
 
 #endif

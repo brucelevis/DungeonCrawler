@@ -19,6 +19,23 @@ namespace
 
     return nullptr;
   }
+
+  void drawRectangle(sf::RenderTarget& target, int x, int y, const sf::Color& color)
+  {
+    sf::RectangleShape dotRect;
+    dotRect.setSize(sf::Vector2f(8, 8));
+    dotRect.setFillColor(color);
+    dotRect.setPosition(x, y);
+    target.draw(dotRect);
+  }
+
+  void drawIcon(sf::RenderTarget& target, sf::Texture* texture, int x, int y)
+  {
+    sf::Sprite sprite;
+    sprite.setTexture(*texture);
+    sprite.setPosition(x, y);
+    target.draw(sprite);
+  }
 }
 
 Minimap::Minimap(int x, int y, int w, int h)
@@ -29,13 +46,15 @@ Minimap::Minimap(int x, int y, int w, int h)
    m_centerX(0),
    m_centerY(0),
    m_currentMap(0),
-   m_campsiteIcon( cache::loadTexture("Icons/Campfire.png") )
+   m_campsiteIcon( cache::loadTexture("Icons/Campfire.png") ),
+   m_doorIcon( cache::loadTexture("Icons/Door.png") )
 {
 }
 
 Minimap::~Minimap()
 {
   cache::releaseTexture(m_campsiteIcon);
+  cache::releaseTexture(m_doorIcon);
 }
 
 void Minimap::updatePosition(Map* currentMap, int x, int y)
@@ -61,77 +80,73 @@ void Minimap::draw(sf::RenderTarget& target) const
     {
       Tile* tile = m_currentMap->getTileAt(x, y, "wall");
 
+      int tx = m_x + px * 8;
+      int ty = m_y + py * 8;
+
+      if (tile && tile->tileId > -1)
+      {
+        drawRectangle(target, tx, ty, sf::Color::Blue);
+      }
+      else if (m_currentMap->blocking(x, y))
+      {
+        drawRectangle(target, tx, ty, sf::Color::Red);
+      }
+      if (x == (int)get_player()->player()->x && y == (int)get_player()->player()->y)
+      {
+        drawRectangle(target, tx, ty, sf::Color::Green);
+
+        sf::RectangleShape dotRect;
+
+        auto player = Game::instance().getPlayer()->player();
+        switch (player->getDirection())
+        {
+        case DIR_LEFT:
+          dotRect.setSize(sf::Vector2f(4, 1));
+          dotRect.setFillColor(sf::Color::Black);
+          dotRect.setPosition(tx, ty + 4);
+          break;
+        case DIR_RIGHT:
+          dotRect.setSize(sf::Vector2f(4, 1));
+          dotRect.setFillColor(sf::Color::Black);
+          dotRect.setPosition(tx + 4, ty + 4);
+          break;
+        case DIR_UP:
+          dotRect.setSize(sf::Vector2f(1, 4));
+          dotRect.setFillColor(sf::Color::Black);
+          dotRect.setPosition(tx + 4, ty);
+          break;
+        case DIR_DOWN:
+          dotRect.setSize(sf::Vector2f(1, 4));
+          dotRect.setFillColor(sf::Color::Black);
+          dotRect.setPosition(tx + 4, ty + 4);
+          break;
+        default:
+          break;
+        }
+
+        target.draw(dotRect);
+      }
+
       if (Entity* entity = _entity_at(entities, x, y))
       {
         if (entity->getName() == "campsite")
         {
-          sf::Sprite sprite;
-          sprite.setTexture(*m_campsiteIcon);
-          sprite.setPosition(m_x + px * 8, m_y + py * 8);
-          target.draw(sprite);
+          drawIcon(target, m_campsiteIcon, tx, ty);
         }
-        else if (entity->isVisible())
+        else if (entity->getType() == "door")
         {
-          draw_text_bmp(target, m_x + px * 8, m_y + py * 8, "?");
+          drawIcon(target, m_doorIcon, tx, ty);
+        }
+        else if (entity->getType() == "obstacle")
+        {
+          drawRectangle(target, tx, ty, sf::Color::Red);
+        }
+        else
+        {
+          draw_text_bmp(target, tx, ty, "?");
         }
       }
-      else
-      {
-        if (tile && tile->tileId > -1)
-        {
-          sf::RectangleShape dotRect;
-          dotRect.setSize(sf::Vector2f(8, 8));
-          dotRect.setFillColor(sf::Color::Blue);
-          dotRect.setPosition(m_x + px * 8, m_y + py * 8);
-          target.draw(dotRect);
-        }
-        else if (m_currentMap->blocking(x, y))
-        {
-          sf::RectangleShape dotRect;
-          dotRect.setSize(sf::Vector2f(8, 8));
-          dotRect.setFillColor(sf::Color::Red);
-          dotRect.setPosition(m_x + px * 8, m_y + py * 8);
-          target.draw(dotRect);
-        }
-        if (x == (int)get_player()->player()->x && y == (int)get_player()->player()->y)
-        {
-          sf::RectangleShape dotRect;
-          dotRect.setSize(sf::Vector2f(8, 8));
-          dotRect.setFillColor(sf::Color::Green);
-          dotRect.setPosition(m_x + px * 8, m_y + py * 8);
 
-          target.draw(dotRect);
-
-          auto player = Game::instance().getPlayer()->player();
-          switch (player->getDirection())
-          {
-          case DIR_LEFT:
-            dotRect.setSize(sf::Vector2f(4, 1));
-            dotRect.setFillColor(sf::Color::Black);
-            dotRect.setPosition(m_x + px * 8, m_y + py * 8 + 4);
-            break;
-          case DIR_RIGHT:
-            dotRect.setSize(sf::Vector2f(4, 1));
-            dotRect.setFillColor(sf::Color::Black);
-            dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8 + 4);
-            break;
-          case DIR_UP:
-            dotRect.setSize(sf::Vector2f(1, 4));
-            dotRect.setFillColor(sf::Color::Black);
-            dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8);
-            break;
-          case DIR_DOWN:
-            dotRect.setSize(sf::Vector2f(1, 4));
-            dotRect.setFillColor(sf::Color::Black);
-            dotRect.setPosition(m_x + px * 8 + 4, m_y + py * 8 + 4);
-            break;
-          default:
-            break;
-          }
-
-          target.draw(dotRect);
-        }
-      }
     }
   }
   for (int y = 1; y < numberY; y++)

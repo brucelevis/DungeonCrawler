@@ -3,8 +3,8 @@
 #include "Map.h"
 #include "DungeonMap.h"
 
-static const int WIDTH = 160;
-static const int HEIGHT = 160;
+static const int WIDTH = 168;
+static const int HEIGHT = 168;
 
 DungeonMap::DungeonMap(Map* map)
  : m_map(map),

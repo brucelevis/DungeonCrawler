@@ -241,6 +241,7 @@ Map* Map::loadTiledFile(const std::string& filename)
           entity->setPosition(objX, objY);
           entity->setTag(name + "@@" + map->m_name);
           entity->setWalkSpeed(walkSpeed);
+          entity->setType(loader.getObjectType(objectIndex));
 
           if (walkThroughProperty == "true")
           {
@@ -306,6 +307,7 @@ Map* Map::loadTiledFile(const std::string& filename)
           entity->setWalkSpeed(0);
           entity->setWalkThrough(true);
           entity->setIsVisible(false);
+          entity->setType(loader.getObjectType(objectIndex));
 
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),

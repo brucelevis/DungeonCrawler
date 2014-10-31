@@ -39,6 +39,9 @@ public:
   virtual void update();
 
   std::string getName() const { return m_name; }
+  std::string getType() const { return m_type; }
+  void setType(const std::string& type) { m_type = type; }
+
   Sprite* sprite() { return m_sprite; }
   Sprite* sprite() const { return m_sprite; }
   void setSprite(Sprite* sprite) { m_sprite = sprite; }
@@ -100,6 +103,7 @@ private:
   bool checkEntityCollision() const;
 private:
   std::string m_name;
+  std::string m_type;
   Sprite* m_sprite;
 
   Direction m_direction;
