@@ -134,6 +134,7 @@ Map* Map::loadTiledFile(const std::string& filename)
         tile.solid = false;
         tile.tileX = 0;
         tile.tileY = 0;
+        tile.isExplored = false;
 
         if (tileId > 0)
         {
@@ -539,4 +540,39 @@ std::vector<sf::Image> Map::getTilesetImages() const
 std::string Map::getTrapKey(const Trap* trap) const
 {
   return "Trap[" + getName() + "," + toString(trap->x) + "," + toString(trap->y) + "]";
+}
+
+void Map::explore(int x, int y)
+{
+  for (int py = y - 1; py <= y + 1; py++)
+  {
+    for (int px = x - 1; px <= x + 1; px++)
+    {
+      int index = py * m_width + px;
+
+      if (index >= 0 && index < (m_width * m_height))
+      {
+        for (auto it = m_tiles.begin(); it != m_tiles.end(); ++it)
+        {
+          it->second[index].isExplored = true;
+        }
+      }
+    }
+  }
+}
+
+bool Map::isExplored(int x, int y) const
+{
+  int index = y * m_width + x;
+
+  if (index >= 0 && index < (m_width * m_height))
+  {
+    for (auto it = m_tiles.begin(); it != m_tiles.end(); ++it)
+    {
+      if (it->second[index].isExplored)
+        return true;
+    }
+  }
+
+  return false;
 }

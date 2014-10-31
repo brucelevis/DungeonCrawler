@@ -19,6 +19,7 @@ struct Tile
   int tileX, tileY;
   bool solid;
   int tileId;
+  bool isExplored;
 };
 
 struct Warp
@@ -71,6 +72,9 @@ public:
   std::string getBattleBackground() const { return m_battleBackground; }
 
   const sf::Texture* getBackground() const { return m_background; }
+
+  void explore(int x, int y);
+  bool isExplored(int x, int y) const;
 private:
   Map();
   Map(const Map&);

@@ -160,6 +160,9 @@ void Game::update()
       // Update minimap position only when player has finished moving.
       m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y, m_player->player()->x, m_player->player()->y);
 
+      // And explore new position.
+      m_currentMap->explore(m_player->player()->x, m_player->player()->y);
+
       if (!checkWarps() && !checkTraps() && !checkInteractions())
       {
         // Also check encounters if no warps were taken.
@@ -512,6 +515,9 @@ void Game::transferPlayer(const std::string& targetMap, int x, int y)
 
   // Also update minimap when player has transfered.
   m_minimap.updatePosition(m_currentMap, x, y, x, y);
+
+  // Explore the new position.
+  m_currentMap->explore(x, y);
 }
 
 void Game::playMusic(const std::string& music)
@@ -736,4 +742,7 @@ void Game::setPlayer(Player* player)
 
   // So it shows up at beginning of game.
   m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y, m_player->player()->x, m_player->player()->y);
+
+  // Also explore starting position.
+  m_currentMap->explore(m_player->player()->x, m_player->player()->y);
 }

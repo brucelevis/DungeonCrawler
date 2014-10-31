@@ -82,6 +82,9 @@ void Minimap::draw(sf::RenderTarget& target) const
   {
     for (int x = m_centerX - numberX / 2, px = 0; x <= m_centerX + numberX / 2; x++, px++)
     {
+      if (!m_currentMap->isExplored(x, y))
+        continue;
+
       Tile* tile = m_currentMap->getTileAt(x, y, "wall");
 
       int tx = m_x + px * 8;
@@ -94,6 +97,11 @@ void Minimap::draw(sf::RenderTarget& target) const
       else if (m_currentMap->blocking(x, y))
       {
         drawRectangle(target, tx, ty, sf::Color::Red);
+      }
+      else
+      {
+        // Probably a floor.
+        drawRectangle(target, tx, ty, sf::Color(0, 127, 255));
       }
       if (x == m_playerX && y == m_playerY)
       {
