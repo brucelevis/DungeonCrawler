@@ -54,6 +54,7 @@ public:
   void openShop(const std::vector<std::string>& items);
   void openSkillTrainer(const std::vector<std::string>& skills);
   void openCampsite();
+  void openMap();
 
   bool battleInProgress() const { return m_battleInProgress; }
 private:

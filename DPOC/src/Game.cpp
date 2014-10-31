@@ -21,6 +21,7 @@
 #include "Encounter.h"
 #include "BattleBackground.h"
 
+#include "DungeonMap.h"
 #include "Campsite.h"
 #include "SkillTrainer.h"
 #include "Shop.h"
@@ -687,6 +688,11 @@ void Game::openCampsite()
   SceneManager::instance().fadeOut(32);
   m_currentMusic.pause();
   m_campSite = true;
+}
+
+void Game::openMap()
+{
+  SceneManager::instance().addScene( new DungeonMap(m_currentMap) );
 }
 
 void Game::startRotate(int angle, int angleInc)

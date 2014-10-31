@@ -219,6 +219,7 @@ MainMenu::MainMenu()
   addEntry("Equip");
   addEntry("Status");
   addEntry("Skills");
+  addEntry("Map");
   addEntry("Save");
   addEntry("Close");
 
@@ -271,6 +272,10 @@ void MainMenu::handleConfirm()
     else if (getCurrentMenuChoice() == "Save")
     {
       openSaveMenu();
+    }
+    else if (getCurrentMenuChoice() == "Map")
+    {
+      Game::instance().openMap();
     }
   }
   else if (currentState == STATE_CHARACTER_MENU)

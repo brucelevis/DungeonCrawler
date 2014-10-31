@@ -93,7 +93,7 @@ void Minimap::draw(sf::RenderTarget& target) const
           dotRect.setPosition(m_x + px * 8, m_y + py * 8);
           target.draw(dotRect);
         }
-        if (x == m_centerX && y == m_centerY)
+        if (x == (int)get_player()->player()->x && y == (int)get_player()->player()->y)
         {
           sf::RectangleShape dotRect;
           dotRect.setSize(sf::Vector2f(8, 8));
