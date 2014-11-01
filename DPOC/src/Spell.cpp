@@ -192,6 +192,8 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
     battle_message("%s drains life from %s!",
         caster->getName().c_str(), target->getName().c_str());
+
+    caster->flash().addDamageText(toString(-(int)damage), sf::Color::Green);
   }
 
   if (spell->spellType & SPELL_CAUSE_STATUS)
