@@ -3,6 +3,7 @@
 #include "Config.h"
 #include "logger.h"
 
+#include "Encounter.h"
 #include "Message.h"
 #include "Character.h"
 #include "Player.h"
@@ -43,6 +44,18 @@ void register_lua_bindings()
     ("set_global", [](const std::string& globalName, int value) { Persistent<int>::instance().set(globalName, value); })
     ("enable_encounters", [](bool enabled) { config::ENCOUNTERS_ENABLED = enabled; })
     ("skill_trainer", []() { SceneManager::instance().addScene( new SkillTrainer({"Cartography", "Swimming", "Lockpicking"})); })
+    ("start_encounter", [](const std::string& encounterName)
+      {
+        const Encounter* enc = get_encounter(encounterName);
+        if (enc)
+        {
+          enc->start();
+        }
+        else
+        {
+          TRACE("Could not find: %s", encounterName.c_str());
+        }
+      })
 
     // Character functions
     ("afflict_status", &Character::afflictStatus)
