@@ -36,7 +36,10 @@ private:
     int side;
   };
 
-  RayInfo castRay(int x, int width);
+  void drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, const std::string& layer);
+
+  RayInfo castRay(int x, int width) const;
+  RayInfo castDoorRay(int x, int width) const;
 
   bool sameCoord(const RayInfo& a, const RayInfo& b) const;
 
@@ -44,6 +47,8 @@ private:
   void drawSprites(sf::Image& buffer, Direction pDir);
 
   const Entity* getEntityAt(int x, int y) const;
+
+  bool outOfBounds(int mapX, int mapY) const;
 private:
   int m_width, m_height;
 

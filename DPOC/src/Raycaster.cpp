@@ -74,9 +74,7 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
 {
   m_camera = camera;
 
-  int x, y;
-
-  for (x = 0; x < m_width; x++)
+  for (int x = 0; x < m_width; x++)
   {
     int lineHeight;
     int wallStart, wallEnd;
@@ -84,61 +82,82 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
     RayInfo info = castRay(x, m_width);
 
     zbuffer[x] = info.wallDist;
-    
+
     lineHeight = (int)fabs((float)m_height / info.wallDist);
     wallStart = -lineHeight / 2 + m_height / 2;
     wallEnd = lineHeight / 2 + m_height / 2;
     
-    if  (wallStart < 0) wallStart = 0;
-    
-    for (y = wallStart; y < std::min(wallEnd, m_height); y++) 
+    drawWallSlice(info, buffer, x, lineHeight, wallStart, wallEnd, "wall");
+
+    if (wallEnd < 0)
+    {
+      wallEnd = m_height;
+    }
+
+    drawFloorsCeiling(info, x, wallEnd, buffer);
+
+    RayInfo doorInfo = castDoorRay(x, m_width);
+    if (doorInfo.side != -1 && doorInfo.wallDist < zbuffer[x])
+    {
+      zbuffer[x] = doorInfo.wallDist;
+
+      int doorLineHeight = (int)fabs((float)m_height / doorInfo.wallDist);
+      int doorStart = -doorLineHeight / 2 + m_height / 2;
+      int doorEnd = doorLineHeight / 2 + m_height / 2;
+
+      drawWallSlice(doorInfo, buffer, x, doorLineHeight, doorStart, doorEnd, "doors");
+    }
+  }
+
+  drawSprites(buffer, pDir);
+}
+
+void Raycaster::drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, const std::string& layer)
+{
+  Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, layer);
+  Tile* featureTile = tile ? m_tilemap->getTileAt(info.mapX, info.mapY, "wallfeature") : nullptr;
+
+  if (wallStart < 0)
+  {
+    wallStart = 0;
+  }
+
+  for (int y = wallStart; y < std::min(wallEnd, m_height); y++)
+  {
+    if (tile)
     {
       int d, textureY;
 
       d = y * 256 - m_height * 128 + lineHeight * 128;
       textureY = ((d * config::TILE_W) / lineHeight) / 256;
 
-      Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, "wall");
-      if (tile)
+      int tileId = tile ? tile->tileId : -1;
+
+      sf::Color color = computeIntensity(
+          m_tileTextures[tileId].getPixel(info.textureX, textureY),
+          INTENSITY, MULTIPLIER, info.wallDist);
+
+      buffer.setPixel(x, y, color);
+
+      if (featureTile && featureTile->tileId > -1)
       {
-        int tileId = tile ? tile->tileId : -1;
+        color = m_tileTextures[featureTile->tileId].getPixel(info.textureX, textureY);
 
-        sf::Color color = computeIntensity(
-            m_tileTextures[tileId].getPixel(info.textureX, textureY),
-            INTENSITY, MULTIPLIER, info.wallDist);
-
-        buffer.setPixel(x, y, color);
-
-        Tile* featureTile = m_tilemap->getTileAt(info.mapX, info.mapY, "wallfeature");
-        if (featureTile && featureTile->tileId > -1)
+        if (color.a == 255)
         {
-          color = m_tileTextures[featureTile->tileId].getPixel(info.textureX, textureY);
+          color = computeIntensity(
+              color,
+              INTENSITY, MULTIPLIER, info.wallDist);
 
-          if (color.a == 255)
-          {
-            color = computeIntensity(
-                color,
-                INTENSITY, MULTIPLIER, info.wallDist);
-
-            buffer.setPixel(x, y, color);
-          }
+          buffer.setPixel(x, y, color);
         }
       }
-      else
-      {
-        buffer.setPixel(x, y, sf::Color::Black);
-      }
     }
-  
-    if (wallEnd < 0) 
+    else
     {
-      wallEnd = m_height;
+      buffer.setPixel(x, y, sf::Color::Black);
     }
-
-    drawFloorsCeiling(info, x, wallEnd, buffer);
   }
-
-  drawSprites(buffer, pDir);
 }
 
 void Raycaster::drawFloorsCeiling(const RayInfo& info, int x, int wallEnd, sf::Image& buffer)
@@ -271,7 +290,7 @@ void Raycaster::drawSprites(sf::Image& buffer, Direction pDir)
   }
 }
 
-Raycaster::RayInfo Raycaster::castRay(int x, int width)
+Raycaster::RayInfo Raycaster::castRay(int x, int width) const
 {
   int mapX, mapY;
   float sideDistX, sideDistY;
@@ -330,8 +349,7 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width)
       side = 1;
     }
     
-    if ((mapX < 0 || mapY < 0 || mapX >= m_tilemap->getWidth() || mapY >= m_tilemap->getHeight()) || 
-        /*m_tilemap->blocking(mapX, mapY)*/m_tilemap->getTileAt(mapX, mapY, "wall")->tileId != -1)
+    if (outOfBounds(mapX, mapY) || m_tilemap->getTileAt(mapX, mapY, "wall")->tileId != -1)
     {
       break;
     }
@@ -359,7 +377,7 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width)
     if (rayDir.y < 0)
     {
       textureX = config::TILE_W - textureX - 1;
-    }      
+    }
   }
   
   if (side == 0 && rayDir.x > 0)
@@ -397,6 +415,145 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width)
   return info;
 }
 
+Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
+{
+  // TODO: Temp check to see if we have a door layer or not.
+  if (!m_tilemap->getTileAt(0, 0, "doors"))
+  {
+    RayInfo rayInfo{};
+    rayInfo.side = -1;
+    return rayInfo;
+  }
+
+  int mapX, mapY;
+  float sideDistX, sideDistY;
+  float ddx, ddy;
+  float wallDist;
+  int stepX, stepY;
+  int side;
+  float wallX;
+  int textureX;
+  float floorXWall, floorYWall;
+
+  float camX = 2.0f * (float)x / (float)width - 1.0f;
+  Vec2 ray = m_camera->pos;
+  Vec2 rayDir(m_camera->dir.x + m_camera->plane.x * camX,
+              m_camera->dir.y + m_camera->plane.y * camX);
+
+  mapX = (int) ray.x;
+  mapY = (int) ray.y;
+
+  ddx = sqrt(1.0f + (rayDir.y * rayDir.y) / (rayDir.x * rayDir.x));
+  ddy = sqrt(1.0f + (rayDir.x * rayDir.x) / (rayDir.y * rayDir.y));
+
+  if (rayDir.x < 0)
+  {
+    stepX = -1;
+    sideDistX = (ray.x - mapX) * ddx;
+  }
+  else
+  {
+    stepX = 1;
+    sideDistX = (mapX + 1.0f - ray.x) * ddx;
+  }
+
+  if (rayDir.y < 0)
+  {
+    stepY = -1;
+    sideDistY = (ray.y - mapY) * ddy;
+  } else
+  {
+    stepY = 1;
+    sideDistY = (mapY + 1.0f - ray.y) * ddy;
+  }
+
+  while (1)
+  {
+    if (sideDistX < sideDistY)
+    {
+      sideDistX += ddx;
+      mapX += stepX;
+      side = 0;
+    }
+    else
+    {
+      sideDistY += ddy;
+      mapY += stepY;
+      side = 1;
+    }
+
+    if (outOfBounds(mapX, mapY))
+    {
+      RayInfo failedInfo{};
+      failedInfo.side = -1;
+      return failedInfo;
+    }
+    else if (m_tilemap->getTileAt(mapX, mapY, "doors")->tileId != -1)
+    {
+      break;
+    }
+  }
+
+  if (side == 0)
+  {
+    wallDist = fabs((mapX - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) + 0.5f;
+    wallX = ray.y + ((mapX - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
+    wallX -= floor(wallX);
+
+    textureX = (int)(wallX * (float)config::TILE_W);
+    if (rayDir.x > 0)
+    {
+      textureX = config::TILE_W - textureX - 1;
+    }
+  }
+  else
+  {
+    wallDist = fabs((mapY - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) + 0.5f;
+    wallX = ray.x + ((mapY - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
+    wallX -= floor(wallX);
+
+    textureX = (int)(wallX * (float)config::TILE_W);
+    if (rayDir.y < 0)
+    {
+      textureX = config::TILE_W - textureX - 1;
+    }
+  }
+
+  if (side == 0 && rayDir.x > 0)
+  {
+    floorXWall = (float) mapX;
+    floorYWall = mapY + wallX;
+  }
+  else if (side == 0 && rayDir.x < 0)
+  {
+    floorXWall = mapX + 1.0f;
+    floorYWall = mapY + wallX;
+  }
+  else if (side == 1 && rayDir.y > 0)
+  {
+    floorXWall = mapX + wallX;
+    floorYWall = (float) mapY;
+  }
+  else
+  {
+    floorXWall = mapX + wallX;
+    floorYWall = mapY + 1.0f;
+  }
+
+  RayInfo info =
+  {
+    wallDist,
+    mapX,
+    mapY,
+    floorXWall,
+    floorYWall,
+    textureX,
+    side
+  };
+
+  return info;
+}
+
 bool Raycaster::sameCoord(const RayInfo& a, const RayInfo& b) const
 {
   return a.mapX == b.mapX && a.mapY == b.mapY;
@@ -416,4 +573,9 @@ const Entity* Raycaster::getEntityAt(int x, int y) const
   }
 
   return 0;
+}
+
+bool Raycaster::outOfBounds(int mapX, int mapY) const
+{
+  return (mapX < 0 || mapY < 0 || mapX >= m_tilemap->getWidth() || mapY >= m_tilemap->getHeight());
 }
