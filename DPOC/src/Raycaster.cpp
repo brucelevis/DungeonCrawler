@@ -19,6 +19,10 @@ float zbuffer[320];
 
 namespace
 {
+  // TODO TEMP
+  float doorState = 1;
+  int dir = 0;
+
   const float INTENSITY = 0.75f;
   const float MULTIPLIER = 2.0f;
 }
@@ -72,6 +76,18 @@ void Raycaster::removeEntity(const Entity* entity)
 
 void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
 {
+  // TODO TEMP
+  if (dir == 0)
+  {
+    doorState -= 0.01f;
+    if (doorState <= 0) dir = 1;
+  }
+  else
+  {
+    doorState += 0.01f;
+    if (doorState >= 1) dir = 0;
+  }
+
   m_camera = camera;
 
   for (int x = 0; x < m_width; x++)
@@ -328,7 +344,8 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width) const
   {
     stepY = -1;
     sideDistY = (ray.y - mapY) * ddy;
-  } else
+  }
+  else
   {
     stepY = 1;
     sideDistY = (mapY + 1.0f - ray.y) * ddy;
@@ -433,7 +450,6 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
   int side;
   float wallX;
   int textureX;
-  float floorXWall, floorYWall;
 
   float camX = 2.0f * (float)x / (float)width - 1.0f;
   Vec2 ray = m_camera->pos;
@@ -461,12 +477,13 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
   {
     stepY = -1;
     sideDistY = (ray.y - mapY) * ddy;
-  } else
+  }
+  else
   {
     stepY = 1;
     sideDistY = (mapY + 1.0f - ray.y) * ddy;
   }
-
+stepping:
   while (1)
   {
     if (sideDistX < sideDistY)
@@ -529,7 +546,9 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
     wallX = ray.y + ((mapXDiff - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
     wallX -= floor(wallX);
 
-    textureX = (int)(wallX * (float)config::TILE_W);
+    float opWallX = std::min(1.f, wallX + (1 - doorState));
+
+    textureX = (int)(opWallX * (float)config::TILE_W);
     if (rayDir.x > 0)
     {
       textureX = config::TILE_W - textureX - 1;
@@ -541,11 +560,18 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
     wallX = ray.x + ((mapYDiff - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
     wallX -= floor(wallX);
 
-    textureX = (int)(wallX * (float)config::TILE_W);
+    float opWallX = std::min(1.f, wallX + (1 - doorState));
+
+    textureX = (int)(opWallX * (float)config::TILE_W);
     if (rayDir.y < 0)
     {
       textureX = config::TILE_W - textureX - 1;
     }
+  }
+
+  if (wallX > doorState)
+  {
+    goto stepping;
   }
 
   RayInfo info =
