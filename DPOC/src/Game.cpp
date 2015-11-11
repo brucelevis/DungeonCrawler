@@ -21,6 +21,7 @@
 #include "Encounter.h"
 #include "BattleBackground.h"
 
+#include "Door.h"
 #include "DungeonMap.h"
 #include "Campsite.h"
 #include "SkillTrainer.h"
@@ -564,11 +565,15 @@ void Game::loadNewMap(const std::string& file)
 
   m_raycaster->setTilemap(m_currentMap);
   m_raycaster->clearEntities();
-  for (auto it = m_currentMap->getEntities().begin(); it != m_currentMap->getEntities().end(); ++it)
+  for (auto& entity : m_currentMap->getEntities())
   {
-    if ((*it)->sprite())
+    if (entity->sprite() && entity->getType() != "door")
     {
-      m_raycaster->addEntity(*it);
+      m_raycaster->addEntity(entity);
+    }
+    else if (entity->getType() == "door")
+    {
+      m_raycaster->addDoor(static_cast<Door*>(entity));
     }
   }
 

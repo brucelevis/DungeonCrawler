@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Entity.h"
 #include "Sprite.h"
+#include "Door.h"
 
 #include "Raycaster.h"
 
@@ -74,6 +75,11 @@ void Raycaster::removeEntity(const Entity* entity)
   m_entities.remove(entity);
 }
 
+void Raycaster::addDoor(const Door* door)
+{
+  m_doors.push_back(door);
+}
+
 void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
 {
   // TODO TEMP
@@ -103,7 +109,8 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
     wallStart = -lineHeight / 2 + m_height / 2;
     wallEnd = lineHeight / 2 + m_height / 2;
     
-    drawWallSlice(info, buffer, x, lineHeight, wallStart, wallEnd, "wall");
+    Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, "wall");
+    drawWallSlice(info, buffer, x, lineHeight, wallStart, wallEnd, tile ? tile->tileId : -1);
 
     if (wallEnd < 0)
     {
@@ -112,26 +119,29 @@ void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
 
     drawFloorsCeiling(info, x, wallEnd, buffer);
 
-    RayInfo doorInfo = castDoorRay(x, m_width);
-    if (doorInfo.side != -1 && doorInfo.wallDist < zbuffer[x])
+    if (m_doors.size())
     {
-      zbuffer[x] = doorInfo.wallDist;
+      RayInfo doorInfo = castDoorRay(x, m_width);
+      if (doorInfo.side != -1 && doorInfo.wallDist < zbuffer[x])
+      {
+        zbuffer[x] = doorInfo.wallDist;
 
-      int doorLineHeight = (int)fabs((float)m_height / doorInfo.wallDist);
-      int doorStart = -doorLineHeight / 2 + m_height / 2;
-      int doorEnd = doorLineHeight / 2 + m_height / 2;
+        int doorLineHeight = (int)fabs((float)m_height / doorInfo.wallDist);
+        int doorStart = -doorLineHeight / 2 + m_height / 2;
+        int doorEnd = doorLineHeight / 2 + m_height / 2;
 
-      drawWallSlice(doorInfo, buffer, x, doorLineHeight, doorStart, doorEnd, "doors");
+        int tileId = static_cast<TileSprite*>(doorInfo.door->sprite())->getTileNum();
+        drawWallSlice(doorInfo, buffer, x, doorLineHeight, doorStart, doorEnd, tileId);
+      }
     }
   }
 
   drawSprites(buffer, pDir);
 }
 
-void Raycaster::drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, const std::string& layer)
+void Raycaster::drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, int tileId)
 {
-  Tile* tile = m_tilemap->getTileAt(info.mapX, info.mapY, layer);
-  Tile* featureTile = tile ? m_tilemap->getTileAt(info.mapX, info.mapY, "wallfeature") : nullptr;
+  Tile* featureTile = tileId > -1 ? m_tilemap->getTileAt(info.mapX, info.mapY, "wallfeature") : nullptr;
 
   if (wallStart < 0)
   {
@@ -140,14 +150,12 @@ void Raycaster::drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int
 
   for (int y = wallStart; y < std::min(wallEnd, m_height); y++)
   {
-    if (tile)
+    if (tileId > -1)
     {
       int d, textureY;
 
       d = y * 256 - m_height * 128 + lineHeight * 128;
       textureY = ((d * config::TILE_W) / lineHeight) / 256;
-
-      int tileId = tile ? tile->tileId : -1;
 
       sf::Color color = computeIntensity(
           m_tileTextures[tileId].getPixel(info.textureX, textureY),
@@ -434,14 +442,6 @@ Raycaster::RayInfo Raycaster::castRay(int x, int width) const
 
 Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
 {
-  // TODO: Temp check to see if we have a door layer or not.
-  if (!m_tilemap->getTileAt(0, 0, "doors"))
-  {
-    RayInfo rayInfo{};
-    rayInfo.side = -1;
-    return rayInfo;
-  }
-
   int mapX, mapY;
   float sideDistX, sideDistY;
   float ddx, ddy;
@@ -483,6 +483,9 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
     stepY = 1;
     sideDistY = (mapY + 1.0f - ray.y) * ddy;
   }
+
+  const Door* door = nullptr;
+
 stepping:
   while (1)
   {
@@ -505,9 +508,12 @@ stepping:
       failedInfo.side = -1;
       return failedInfo;
     }
-    else if (m_tilemap->getTileAt(mapX, mapY, "doors")->tileId != -1)
+    else if ((door = getDoorAt(mapX, mapY)))
     {
-      break;
+      if (door->isVisible())
+      {
+        break;
+      }
     }
   }
 
@@ -582,7 +588,8 @@ stepping:
     0,
     0,
     textureX,
-    side
+    side,
+    door
   };
 
   return info;
@@ -607,6 +614,21 @@ const Entity* Raycaster::getEntityAt(int x, int y) const
   }
 
   return 0;
+}
+
+const Door* Raycaster::getDoorAt(int x, int y) const
+{
+  auto it = std::find_if(m_doors.begin(), m_doors.end(), [&x, &y](const Door* door)
+  {
+    return (int)door->x == x && (int)door->y == y;
+  });
+
+  if (it != m_doors.end())
+  {
+    return *it;
+  }
+
+  return nullptr;
 }
 
 bool Raycaster::outOfBounds(int mapX, int mapY) const

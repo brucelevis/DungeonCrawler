@@ -10,6 +10,7 @@
 #include "Direction.h"
 
 class Entity;
+class Door;
 class Map;
 class Tile;
 
@@ -25,7 +26,13 @@ public:
   void addEntity(const Entity* entity);
   void removeEntity(const Entity* entity);
  
-  void clearEntities() { m_entities.clear(); }
+  void addDoor(const Door* door);
+
+  void clearEntities()
+  {
+    m_entities.clear();
+    m_doors.clear();
+  }
 
 private:
   struct RayInfo {
@@ -34,9 +41,10 @@ private:
     float floorXWall, floorYWall;
     int textureX;
     int side;
+    const Door* door; // When drawing doors.
   };
 
-  void drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, const std::string& layer);
+  void drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, int tileId);
 
   RayInfo castRay(int x, int width) const;
   RayInfo castDoorRay(int x, int width) const;
@@ -47,6 +55,7 @@ private:
   void drawSprites(sf::Image& buffer, Direction pDir);
 
   const Entity* getEntityAt(int x, int y) const;
+  const Door* getDoorAt(int x, int y) const;
 
   bool outOfBounds(int mapX, int mapY) const;
 private:
@@ -58,6 +67,7 @@ private:
   std::vector<sf::Image> m_tileTextures;
 
   std::list<const Entity*> m_entities;
+  std::list<const Door*> m_doors;
 
 };
 
