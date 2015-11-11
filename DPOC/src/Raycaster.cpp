@@ -20,10 +20,6 @@ float zbuffer[320];
 
 namespace
 {
-  // TODO TEMP
-  float doorState = 1;
-  int dir = 0;
-
   const float INTENSITY = 0.75f;
   const float MULTIPLIER = 2.0f;
 }
@@ -82,18 +78,6 @@ void Raycaster::addDoor(const Door* door)
 
 void Raycaster::raycast(Camera* camera, sf::Image& buffer, Direction pDir)
 {
-  // TODO TEMP
-  if (dir == 0)
-  {
-    doorState -= 0.01f;
-    if (doorState <= 0) dir = 1;
-  }
-  else
-  {
-    doorState += 0.01f;
-    if (doorState >= 1) dir = 0;
-  }
-
   m_camera = camera;
 
   for (int x = 0; x < m_width; x++)
@@ -552,7 +536,9 @@ stepping:
     wallX = ray.y + ((mapXDiff - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
     wallX -= floor(wallX);
 
-    float opWallX = std::min(1.f, wallX + (1 - doorState));
+    float opWallX = door->isMoving() ?
+      std::min(1.f, wallX + (1 - door->getOpeningCount())) :
+      wallX;
 
     textureX = (int)(opWallX * (float)config::TILE_W);
     if (rayDir.x > 0)
@@ -566,7 +552,9 @@ stepping:
     wallX = ray.x + ((mapYDiff - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
     wallX -= floor(wallX);
 
-    float opWallX = std::min(1.f, wallX + (1 - doorState));
+    float opWallX = door->isMoving() ?
+      std::min(1.f, wallX + (1 - door->getOpeningCount())) :
+      wallX;
 
     textureX = (int)(opWallX * (float)config::TILE_W);
     if (rayDir.y < 0)
@@ -575,7 +563,7 @@ stepping:
     }
   }
 
-  if (wallX > doorState)
+  if (door->isMoving() && (wallX > door->getOpeningCount()))
   {
     goto stepping;
   }
