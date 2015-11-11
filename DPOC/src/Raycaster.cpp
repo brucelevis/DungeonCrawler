@@ -494,10 +494,39 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
     }
   }
 
+  bool verticalDoor = m_tilemap->getTileAt(mapX, mapY - 1, "wall")->tileId != -1 &&
+                      m_tilemap->getTileAt(mapX, mapY + 1, "wall")->tileId != -1;
+
+  float mapXDiff = mapX;
+  float mapYDiff = mapY;
+
+  if (verticalDoor)
+  {
+    if (ray.x > mapX)
+    {
+      mapXDiff -= 0.25f;
+    }
+    else
+    {
+      mapXDiff += 0.25f;
+    }
+  }
+  else
+  {
+    if (ray.y > mapY)
+    {
+      mapYDiff -= 0.25f;
+    }
+    else
+    {
+      mapYDiff += 0.25f;
+    }
+  }
+
   if (side == 0)
   {
-    wallDist = fabs((mapX - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) + 0.5f;
-    wallX = ray.y + ((mapX - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
+    wallDist = fabs((mapXDiff - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x);
+    wallX = ray.y + ((mapXDiff - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
     wallX -= floor(wallX);
 
     textureX = (int)(wallX * (float)config::TILE_W);
@@ -508,8 +537,8 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
   }
   else
   {
-    wallDist = fabs((mapY - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) + 0.5f;
-    wallX = ray.x + ((mapY - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
+    wallDist = fabs((mapYDiff - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y);
+    wallX = ray.x + ((mapYDiff - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
     wallX -= floor(wallX);
 
     textureX = (int)(wallX * (float)config::TILE_W);
@@ -519,34 +548,13 @@ Raycaster::RayInfo Raycaster::castDoorRay(int x, int width) const
     }
   }
 
-  if (side == 0 && rayDir.x > 0)
-  {
-    floorXWall = (float) mapX;
-    floorYWall = mapY + wallX;
-  }
-  else if (side == 0 && rayDir.x < 0)
-  {
-    floorXWall = mapX + 1.0f;
-    floorYWall = mapY + wallX;
-  }
-  else if (side == 1 && rayDir.y > 0)
-  {
-    floorXWall = mapX + wallX;
-    floorYWall = (float) mapY;
-  }
-  else
-  {
-    floorXWall = mapX + wallX;
-    floorYWall = mapY + 1.0f;
-  }
-
   RayInfo info =
   {
     wallDist,
     mapX,
     mapY,
-    floorXWall,
-    floorYWall,
+    0,
+    0,
     textureX,
     side
   };
