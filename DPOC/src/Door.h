@@ -22,7 +22,7 @@ public:
   void update();
   void interact(const Entity*);
 
-  bool isMoving() const;
+  bool isSeeThrough() const;
 
   bool isOpening() const;
   float getOpeningCount() const;

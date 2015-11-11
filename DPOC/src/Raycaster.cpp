@@ -494,10 +494,10 @@ stepping:
     }
     else if ((door = getDoorAt(mapX, mapY)))
     {
-      if (door->isVisible())
-      {
+//      if (door->isVisible())
+//      {
         break;
-      }
+//      }
     }
   }
 
@@ -536,7 +536,7 @@ stepping:
     wallX = ray.y + ((mapXDiff - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
     wallX -= floor(wallX);
 
-    float opWallX = door->isMoving() ?
+    float opWallX = door->isSeeThrough() ?
       std::min(1.f, wallX + (1 - door->getOpeningCount())) :
       wallX;
 
@@ -552,7 +552,7 @@ stepping:
     wallX = ray.x + ((mapYDiff - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
     wallX -= floor(wallX);
 
-    float opWallX = door->isMoving() ?
+    float opWallX = door->isSeeThrough() ?
       std::min(1.f, wallX + (1 - door->getOpeningCount())) :
       wallX;
 
@@ -563,7 +563,7 @@ stepping:
     }
   }
 
-  if (door->isMoving() && (wallX > door->getOpeningCount()))
+  if (door->isSeeThrough() && (wallX > door->getOpeningCount()))
   {
     goto stepping;
   }

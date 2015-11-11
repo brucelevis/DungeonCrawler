@@ -119,9 +119,9 @@ void Door::interact(const Entity*)
   }
 }
 
-bool Door::isMoving() const
+bool Door::isSeeThrough() const
 {
-  return m_state == Door_Opening || m_state == Door_Closing;
+  return m_state == Door_Opening || m_state == Door_Closing || m_state == Door_Open;
 }
 
 bool Door::isOpening() const
@@ -131,6 +131,11 @@ bool Door::isOpening() const
 
 float Door::getOpeningCount() const
 {
+  if (m_state == Door_Open)
+  {
+    return 0.05f;
+  }
+
   return m_openingCount;
 }
 
@@ -161,7 +166,7 @@ bool Door::isOpen() const
 void Door::close()
 {
   m_state = Door_Closing;
-  m_openingCount = 0;
+  m_openingCount = 0.05f;
 
   setIsVisible(true);
   Persistent<int>::instance().set(getTag(), false);
