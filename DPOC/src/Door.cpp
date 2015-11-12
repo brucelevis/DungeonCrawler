@@ -17,6 +17,7 @@ Door::Door(const std::string& name, const std::string& key)
  : Entity(name),
    m_keyRequired(key),
    m_isTrapped(false),
+   m_type(Door_TwoWay),
    m_state(Door_Closed),
    m_openingCount(1),
    m_closeCounter(MAX_CLOSE_COUNTER)
@@ -29,6 +30,7 @@ Door::Door(const std::string& name, const std::string& key, const std::string& t
    m_keyRequired(key),
    m_isTrapped(true),
    m_trap(trapType, luckToBeat, 0, 0),
+   m_type(Door_TwoWay),
    m_state(Door_Closed),
    m_openingCount(1),
    m_closeCounter(MAX_CLOSE_COUNTER)

@@ -16,6 +16,12 @@ class Door : public Entity
     Door_Closing
   };
 public:
+  enum DoorType
+  {
+    Door_OneWay,
+    Door_TwoWay
+  };
+
   Door(const std::string& name, const std::string& key);
   Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat);
 
@@ -26,6 +32,8 @@ public:
 
   bool isOpening() const;
   float getOpeningCount() const;
+
+  DoorType getType() const { return m_type; }
 private:
   void open();
   void openFinished();
@@ -39,6 +47,7 @@ private:
   bool m_isTrapped;
   Trap m_trap;
 
+  DoorType m_type;
   DoorState m_state;
 
   float m_openingCount;

@@ -58,6 +58,8 @@ private:
   const Door* getDoorAt(int x, int y) const;
 
   bool outOfBounds(int mapX, int mapY) const;
+
+  float getDoorWallX(const Door* door, float wallX) const;
 private:
   int m_width, m_height;
 

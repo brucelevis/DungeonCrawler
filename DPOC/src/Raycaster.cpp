@@ -536,11 +536,9 @@ stepping:
     wallX = ray.y + ((mapXDiff - ray.x + (1.0f - stepX) / 2.0f) / rayDir.x) * rayDir.y;
     wallX -= floor(wallX);
 
-    float opWallX = door->isSeeThrough() ?
-      std::min(1.f, wallX + (1 - door->getOpeningCount())) :
-      wallX;
+    float doorX = getDoorWallX(door, wallX);
 
-    textureX = (int)(opWallX * (float)config::TILE_W);
+    textureX = (int)(doorX * (float)config::TILE_W);
     if (rayDir.x > 0)
     {
       textureX = config::TILE_W - textureX - 1;
@@ -552,20 +550,38 @@ stepping:
     wallX = ray.x + ((mapYDiff - ray.y + (1.0f - stepY) / 2.0f) / rayDir.y) * rayDir.x;
     wallX -= floor(wallX);
 
-    float opWallX = door->isSeeThrough() ?
-      std::min(1.f, wallX + (1 - door->getOpeningCount())) :
-      wallX;
+    float doorX = getDoorWallX(door, wallX);
 
-    textureX = (int)(opWallX * (float)config::TILE_W);
+    textureX = (int)(doorX * (float)config::TILE_W);
     if (rayDir.y < 0)
     {
       textureX = config::TILE_W - textureX - 1;
     }
   }
 
-  if (door->isSeeThrough() && (wallX > door->getOpeningCount()))
+  if (door->isSeeThrough())
   {
-    goto stepping;
+    if (door->getType() == Door::Door_OneWay && (wallX > door->getOpeningCount()))
+    {
+      goto stepping;
+    }
+    else if (door->getType() == Door::Door_TwoWay)
+    {
+      if (wallX < 0.5f)
+      {
+        if (wallX > door->getOpeningCount() / 2)
+        {
+          goto stepping;
+        }
+      }
+      else
+      {
+        if (wallX < 0.5f+(1 - door->getOpeningCount()) / 2)
+        {
+          goto stepping;
+        }
+      }
+    }
   }
 
   RayInfo info =
@@ -622,4 +638,32 @@ const Door* Raycaster::getDoorAt(int x, int y) const
 bool Raycaster::outOfBounds(int mapX, int mapY) const
 {
   return (mapX < 0 || mapY < 0 || mapX >= m_tilemap->getWidth() || mapY >= m_tilemap->getHeight());
+}
+
+float Raycaster::getDoorWallX(const Door* door, float wallX) const
+{
+  float opWallX = wallX;
+
+  if (door->isSeeThrough())
+  {
+    if (door->getType() == Door::Door_OneWay)
+    {
+      opWallX = std::min(1.f, wallX + (1 - door->getOpeningCount()));
+    }
+    else if (door->getType() == Door::Door_TwoWay)
+    {
+      opWallX = std::min(1.f, wallX + (1 - door->getOpeningCount()));
+//      if (wallX < 0.5f)
+//      {
+//        opWallX = std::max(0.f, wallX - (1 - door->getOpeningCount()));
+//            //std::min(0.5f, wallX + (1 - door->getOpeningCount()));
+//      }
+//      else
+//      {
+//        opWallX = std::min(1.f, 0.5f + wallX + (1 - door->getOpeningCount()));
+//      }
+    }
+  }
+
+  return opWallX;
 }
