@@ -652,16 +652,14 @@ float Raycaster::getDoorWallX(const Door* door, float wallX) const
     }
     else if (door->getType() == Door::Door_TwoWay)
     {
-      opWallX = std::min(1.f, wallX + (1 - door->getOpeningCount()));
-//      if (wallX < 0.5f)
-//      {
-//        opWallX = std::max(0.f, wallX - (1 - door->getOpeningCount()));
-//            //std::min(0.5f, wallX + (1 - door->getOpeningCount()));
-//      }
-//      else
-//      {
-//        opWallX = std::min(1.f, 0.5f + wallX + (1 - door->getOpeningCount()));
-//      }
+      if (wallX < 0.5f)
+      {
+        opWallX = std::min(0.5f, wallX + (1 - door->getOpeningCount()) / 2);
+      }
+      else
+      {
+        opWallX = std::max(0.5f, wallX - (1 - door->getOpeningCount()) / 2);
+      }
     }
   }
 
