@@ -3,6 +3,7 @@
 #include "Config.h"
 #include "Utility.h"
 #include "Sound.h"
+#include "Vocabulary.h"
 
 #include "PlayerCharacter.h"
 #include "Player.h"
@@ -422,7 +423,7 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
   Menu::draw(target, x, y);
 
   draw_frame(target, 0, config::GAME_RES_Y - 16, config::GAME_RES_X, 16);
-  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
+  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "%s %d", vocab_upcase(terms::gold).c_str(), get_player()->getGold());
 
   if (m_confirmMenu)
   {
@@ -452,48 +453,48 @@ void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* characte
 
     character->equip(equipSlot, itemName);
 
-    newStr = character->computeCurrentAttribute("strength");
-    newDef = character->computeCurrentAttribute("defense");
-    newMag = character->computeCurrentAttribute("magic");
-    newMdf = character->computeCurrentAttribute("mag.def");
-    newSpd = character->computeCurrentAttribute("speed");
-    newLuk = character->computeCurrentAttribute("luck");
+    newStr = character->computeCurrentAttribute(terms::strength);
+    newDef = character->computeCurrentAttribute(terms::defense);
+    newMag = character->computeCurrentAttribute(terms::magic);
+    newMdf = character->computeCurrentAttribute(terms::magdef);
+    newSpd = character->computeCurrentAttribute(terms::speed);
+    newLuk = character->computeCurrentAttribute(terms::luck);
 
     character->equip(equipSlot, currentEquip);
   }
   else
   {
-    newStr = character->computeCurrentAttribute("strength");
-    newDef = character->computeCurrentAttribute("defense");
-    newMag = character->computeCurrentAttribute("magic");
-    newMdf = character->computeCurrentAttribute("mag.def");
-    newSpd = character->computeCurrentAttribute("speed");
-    newLuk = character->computeCurrentAttribute("luck");
+    newStr = character->computeCurrentAttribute(terms::strength);
+    newDef = character->computeCurrentAttribute(terms::defense);
+    newMag = character->computeCurrentAttribute(terms::magic);
+    newMdf = character->computeCurrentAttribute(terms::magdef);
+    newSpd = character->computeCurrentAttribute(terms::speed);
+    newLuk = character->computeCurrentAttribute(terms::luck);
   }
 
-  draw_text_bmp(target, x, y,      "St%s%d",
-      newStr > character->computeCurrentAttribute("strength") ? ">" :
-          newStr < character->computeCurrentAttribute("strength") ? "<" : "=",
+  draw_text_bmp(target, x, y,      "%s%s%d", vocab_short(terms::strength).c_str(),
+      newStr > character->computeCurrentAttribute(terms::strength) ? ">" :
+          newStr < character->computeCurrentAttribute(terms::strength) ? "<" : "=",
               newStr);
-  draw_text_bmp(target, x, y + 12, "Df%s%d",
-      newDef > character->computeCurrentAttribute("defense") ? ">" :
-          newDef < character->computeCurrentAttribute("defense") ? "<" : "=",
+  draw_text_bmp(target, x, y + 12, "%s%s%d", vocab_short(terms::defense).c_str(),
+      newDef > character->computeCurrentAttribute(terms::defense) ? ">" :
+          newDef < character->computeCurrentAttribute(terms::defense) ? "<" : "=",
       newDef);
-  draw_text_bmp(target, x, y + 24, "Mg%s%d",
-      newMag > character->computeCurrentAttribute("magic") ? ">" :
-          newMag < character->computeCurrentAttribute("magic") ? "<" : "=",
+  draw_text_bmp(target, x, y + 24, "%s%s%d", vocab_short(terms::magic).c_str(),
+      newMag > character->computeCurrentAttribute(terms::magic) ? ">" :
+          newMag < character->computeCurrentAttribute(terms::magic) ? "<" : "=",
       newMag);
-  draw_text_bmp(target, x, y + 36, "Md%s%d",
-      newMdf > character->computeCurrentAttribute("mag.def") ? ">" :
-          newMdf < character->computeCurrentAttribute("mag.def") ? "<" : "=",
+  draw_text_bmp(target, x, y + 36, "%s%s%d", vocab_short(terms::magdef).c_str(),
+      newMdf > character->computeCurrentAttribute(terms::magdef) ? ">" :
+          newMdf < character->computeCurrentAttribute(terms::magdef) ? "<" : "=",
       newMdf);
-  draw_text_bmp(target, x, y + 48, "Sp%s%d",
-      newSpd > character->computeCurrentAttribute("speed") ? ">" :
-          newSpd < character->computeCurrentAttribute("speed") ? "<" : "=",
+  draw_text_bmp(target, x, y + 48, "%s%s%d", vocab_short(terms::speed).c_str(),
+      newSpd > character->computeCurrentAttribute(terms::speed) ? ">" :
+          newSpd < character->computeCurrentAttribute(terms::speed) ? "<" : "=",
       newSpd);
-  draw_text_bmp(target, x, y + 60, "Lu%s%d",
-      newLuk > character->computeCurrentAttribute("luck") ? ">" :
-          newLuk < character->computeCurrentAttribute("luck") ? "<" : "=",
+  draw_text_bmp(target, x, y + 60, "%s%s%d", vocab_short(terms::luck).c_str(),
+      newLuk > character->computeCurrentAttribute(terms::luck) ? ">" :
+          newLuk < character->computeCurrentAttribute(terms::luck) ? "<" : "=",
       newLuk);
 }
 
@@ -614,7 +615,7 @@ void ShopSellMenu::draw(sf::RenderTarget& target, int x, int y)
   Menu::draw(target, x, y);
 
   draw_frame(target, 0, config::GAME_RES_Y - 16, config::GAME_RES_X, 16);
-  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "Gold %d", get_player()->getGold());
+  draw_text_bmp(target, 8, config::GAME_RES_Y - 12, "%s %d", vocab_upcase(terms::gold).c_str(), get_player()->getGold());
 
   if (m_confirmMenu)
   {

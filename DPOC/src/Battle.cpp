@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "Cache.h"
 #include "Persistent.h"
+#include "Vocabulary.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -29,8 +30,8 @@ static const int TURN_DELAY_TIME = 32;
 
 static bool speed_comparator(Character* left, Character* right)
 {
-  int left_speed = left->computeCurrentAttribute("speed");
-  int right_speed = right->computeCurrentAttribute("speed");
+  int left_speed = left->computeCurrentAttribute(terms::speed);
+  int right_speed = right->computeCurrentAttribute(terms::speed);
 
   if (left_speed < right_speed)
     return true;
@@ -110,7 +111,7 @@ static std::string replace_dollar_with_name(const std::string& str, const std::s
 
 static void check_death(Character* actor)
 {
-  if (actor->getAttribute("hp").current <= 0)
+  if (actor->getAttribute(terms::hp).current <= 0)
   {
     cause_status(actor, "Dead", true);
 
@@ -225,12 +226,12 @@ void Battle::endBattle()
   // reset attributes that might have been affected by buffs and clear status effects.
   for (auto it = get_player()->getParty().begin(); it != get_player()->getParty().end(); ++it)
   {
-    reset_attribute((*it)->getAttribute("strength"));
-    reset_attribute((*it)->getAttribute("defense"));
-    reset_attribute((*it)->getAttribute("magic"));
-    reset_attribute((*it)->getAttribute("mag.def"));
-    reset_attribute((*it)->getAttribute("speed"));
-    reset_attribute((*it)->getAttribute("luck"));
+    reset_attribute((*it)->getAttribute(terms::strength));
+    reset_attribute((*it)->getAttribute(terms::defense));
+    reset_attribute((*it)->getAttribute(terms::magic));
+    reset_attribute((*it)->getAttribute(terms::magdef));
+    reset_attribute((*it)->getAttribute(terms::speed));
+    reset_attribute((*it)->getAttribute(terms::luck));
 
     std::vector<StatusEffect*> statusEffects = (*it)->getStatusEffects();
     for (auto statusIt = statusEffects.begin(); statusIt != statusEffects.end(); ++statusIt)
@@ -545,7 +546,7 @@ void Battle::showAction()
 
         // Reduce it here since cast_spell is called for each target when
         // spell has multiple targets.
-        m_currentActor->getAttribute("mp").current -= spell->mpCost;
+        m_currentActor->getAttribute(terms::mp).current -= spell->mpCost;
       }
     }
     else
@@ -556,7 +557,7 @@ void Battle::showAction()
 
         // Reduce it here since cast_spell is called for each target when
         // spell has multiple targets.
-        m_currentActor->getAttribute("mp").current -= spell->mpCost;
+        m_currentActor->getAttribute(terms::mp).current -= spell->mpCost;
 
         setCurrentTargets(spell->target);
       }
@@ -669,8 +670,8 @@ void Battle::actionEffect()
 
       currentTarget->flash().start(6, 3);
 
-      if (check_vs_luck(m_currentActor->computeCurrentAttribute("luck"),
-                        currentTarget->computeCurrentAttribute("luck")))
+      if (check_vs_luck(m_currentActor->computeCurrentAttribute(terms::luck),
+                        currentTarget->computeCurrentAttribute(terms::luck)))
       {
         std::string item = currentTarget->stealItem();
 
@@ -738,7 +739,7 @@ void Battle::doVictory()
     m_battleMusic.play();
 
     show_message("Victory!");
-    show_message("The party gains %d experience and %d gold!", getExperience(), getGold());
+    show_message("The party gains %d experience and %d %s!", getExperience(), getGold(), vocab(terms::gold).c_str());
 
     get_player()->gainExperience(getExperience());
     get_player()->gainGold(getGold());
@@ -826,7 +827,7 @@ bool Battle::processStatusEffectForCharacter(Character* actor)
     {
       int damage = status->applyDamage(actor);
 
-      actor->flash().addDamageText(toString(damage) + " [" + status->damageStat + "]", sf::Color::Red);
+      actor->flash().addDamageText(toString(damage) + " [" + vocab(status->damageStat) + "]", sf::Color::Red);
 
       status->effect.playSfx();
       status->effect.applyAnimation(actor);
@@ -1078,15 +1079,15 @@ void Battle::doneSelectingActions()
   std::map<Character*, int> tmpSpeeds;
   for (auto it = m_battleOrder.begin(); it != m_battleOrder.end(); ++it)
   {
-    tmpSpeeds[*it] = (*it)->getAttribute("speed").current;
+    tmpSpeeds[*it] = (*it)->getAttribute(terms::speed).current;
 
-    float newSpeed = (float)(*it)->getAttribute("speed").current * rand_float(0.8f, 1.2f);
+    float newSpeed = (float)(*it)->getAttribute(terms::speed).current * rand_float(0.8f, 1.2f);
     if (newSpeed <= 1)
     {
-      newSpeed = (*it)->getAttribute("speed").current;
+      newSpeed = (*it)->getAttribute(terms::speed).current;
     }
 
-    (*it)->getAttribute("speed").current = newSpeed;
+    (*it)->getAttribute(terms::speed).current = newSpeed;
   }
 
   std::sort(m_battleOrder.begin(), m_battleOrder.end(), speed_comparator);
@@ -1094,7 +1095,7 @@ void Battle::doneSelectingActions()
   // Restore speeds.
   for (auto it = tmpSpeeds.begin(); it != tmpSpeeds.end(); ++it)
   {
-    it->first->getAttribute("speed").current = it->second;
+    it->first->getAttribute(terms::speed).current = it->second;
   }
 
   m_battleMenu.setActionMenuHidden(true);
@@ -1327,7 +1328,7 @@ int Battle::getExperience() const
 
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
-    sum += (*it)->getAttribute("exp").current;
+    sum += (*it)->getAttribute(terms::exp).current;
   }
 
   return sum;
@@ -1339,7 +1340,7 @@ int Battle::getGold() const
 
   for (auto it = m_monsters.begin(); it != m_monsters.end(); ++it)
   {
-    sum += (*it)->getAttribute("gold").current;
+    sum += (*it)->getAttribute(terms::gold).current;
   }
 
   return sum;

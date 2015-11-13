@@ -10,6 +10,7 @@
 #include "Message.h"
 #include "draw_text.h"
 #include "Frame.h"
+#include "Vocabulary.h"
 
 #include "Campsite.h"
 
@@ -196,7 +197,7 @@ int Campsite::requiredFood() const
 
   for (auto pc : get_player()->getParty())
   {
-    sumLevel += pc->computeCurrentAttribute("level");
+    sumLevel += pc->computeCurrentAttribute(terms::level);
 
     if (pc->hasStatus("Dead"))
     {
@@ -204,8 +205,8 @@ int Campsite::requiredFood() const
     }
     else
     {
-      int maxHp = pc->getAttribute("hp").max;
-      int curHp = pc->getAttribute("hp").current;
+      int maxHp = pc->getAttribute(terms::hp).max;
+      int curHp = pc->getAttribute(terms::hp).current;
 
       float quote = (float) curHp / (float) maxHp;
 

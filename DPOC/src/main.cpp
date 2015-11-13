@@ -7,6 +7,7 @@
 #include "SaveLoad.h"
 #include "BattleTest.h"
 
+#include "Vocabulary.h"
 #include "Config.h"
 #include "draw_text.h"
 #include "Spell.h"
@@ -37,6 +38,7 @@ int main(int argc, char* argv[])
   config::load_config();
 
   // Load databases.
+  load_vocabulary();
   load_spells();
   load_items();
   load_monsters();

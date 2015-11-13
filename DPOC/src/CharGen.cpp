@@ -10,6 +10,7 @@
 #include "Game.h"
 #include "SceneManager.h"
 
+#include "Vocabulary.h"
 #include "Item.h"
 #include "StatusEffect.h"
 #include "Config.h"
@@ -100,20 +101,20 @@ static void draw_status(sf::RenderTarget& target, PlayerCharacter* character, in
   draw_text_bmp_ex(target, x + 40, y,
       get_status_effect(character->getStatus())->color,
       "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+  draw_text_bmp(target, x + 40, y + 12, "%s: %d/%d", vocab(terms::hp).c_str(), character->getAttribute(terms::hp).current, character->getAttribute(terms::hp).max);
+  draw_text_bmp(target, x + 40, y + 24, "%s: %d/%d", vocab(terms::mp).c_str(), character->getAttribute(terms::mp).current, character->getAttribute(terms::mp).max);
 
-  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute(terms::level));
   draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
 
   y += 40;
 
-  draw_text_bmp(target, x, y,      "Strength: %d", character->computeCurrentAttribute("strength"));
-  draw_text_bmp(target, x, y + 12, "Defense:  %d", character->computeCurrentAttribute("defense"));
-  draw_text_bmp(target, x, y + 24, "Magic:    %d", character->computeCurrentAttribute("magic"));
-  draw_text_bmp(target, x, y + 36, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
-  draw_text_bmp(target, x, y + 48, "Speed:    %d", character->computeCurrentAttribute("speed"));
-  draw_text_bmp(target, x, y + 60, "Luck:     %d", character->computeCurrentAttribute("luck"));
+  draw_text_bmp(target, x, y,      "%s: %d", vocab(terms::strength).c_str(), character->computeCurrentAttribute(terms::strength));
+  draw_text_bmp(target, x, y + 12, "%s:  %d", vocab(terms::defense).c_str(), character->computeCurrentAttribute(terms::defense));
+  draw_text_bmp(target, x, y + 24, "%s:    %d", vocab(terms::magic).c_str(), character->computeCurrentAttribute(terms::magic));
+  draw_text_bmp(target, x, y + 36, "%s:  %d", vocab(terms::magdef).c_str(),  character->computeCurrentAttribute(terms::magdef));
+  draw_text_bmp(target, x, y + 48, "%s:    %d", vocab(terms::speed).c_str(), character->computeCurrentAttribute(terms::speed));
+  draw_text_bmp(target, x, y + 60, "%s:     %d", vocab(terms::luck).c_str(), character->computeCurrentAttribute(terms::luck));
 
   for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
   {
@@ -153,12 +154,12 @@ struct SelectClassMenu : public Menu
     int yPos = 76;
 
     draw_text_bmp(target, 8, yPos,  "Base attributes:");
-    draw_text_bmp(target, 8, yPos + 12, "Strength: %d", currentClass.baseAttributes["strength"]);
-    draw_text_bmp(target, 8, yPos + 24, "Defense:  %d", currentClass.baseAttributes["defense"]);
-    draw_text_bmp(target, 8, yPos + 36, "Magic:    %d", currentClass.baseAttributes["magic"]);
-    draw_text_bmp(target, 8, yPos + 48, "Mag.Def:  %d", currentClass.baseAttributes["mag.def"]);
-    draw_text_bmp(target, 8, yPos + 60, "Speed:    %d", currentClass.baseAttributes["speed"]);
-    draw_text_bmp(target, 8, yPos + 72, "Luck:     %d", currentClass.baseAttributes["luck"]);
+    draw_text_bmp(target, 8, yPos + 12, "%s: %d", vocab(terms::strength).c_str(), currentClass.baseAttributes[terms::strength]);
+    draw_text_bmp(target, 8, yPos + 24, "%s:  %d", vocab(terms::defense).c_str(), currentClass.baseAttributes[terms::defense]);
+    draw_text_bmp(target, 8, yPos + 36, "%s:    %d", vocab(terms::magic).c_str(), currentClass.baseAttributes[terms::magic]);
+    draw_text_bmp(target, 8, yPos + 48, "%s:  %d", vocab(terms::magdef).c_str(), currentClass.baseAttributes[terms::magdef]);
+    draw_text_bmp(target, 8, yPos + 60, "%s:    %d", vocab(terms::speed).c_str(), currentClass.baseAttributes[terms::speed]);
+    draw_text_bmp(target, 8, yPos + 72, "%s:     %d", vocab(terms::luck).c_str(), currentClass.baseAttributes[terms::luck]);
 
     Menu::draw(target, 8, config::GAME_RES_Y - getHeight() - 8);
   }
@@ -598,8 +599,8 @@ struct CharGenCharacterMenu : public Menu
       draw_text_bmp_ex(target, offX + 40, offY + i * v_spacing,
           get_status_effect(character->getStatus())->color,
           "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-      draw_text_bmp(target, offX + 40, offY + i * v_spacing + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-      draw_text_bmp(target, offX + 40, offY + i * v_spacing + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+      draw_text_bmp(target, offX + 40, offY + i * v_spacing + 12, "%s: %d/%d", vocab(terms::hp).c_str(), character->getAttribute(terms::hp).current, character->getAttribute(terms::hp).max);
+      draw_text_bmp(target, offX + 40, offY + i * v_spacing + 24, "%s: %d/%d", vocab(terms::mp).c_str(), character->getAttribute(terms::mp).current, character->getAttribute(terms::mp).max);
 
       if (cursorVisible() && getCurrentChoiceIndex() == i)
       {

@@ -10,6 +10,7 @@
 #include "Monster.h"
 #include "StatusEffect.h"
 #include "Attack.h"
+#include "Vocabulary.h"
 #include "Character.h"
 
 Character::Character()
@@ -306,7 +307,7 @@ Character* Character::createMonster(const std::string& name)
     character->m_attributes[it->first] = make_attribute(it->second);
 
     // Variance to monster stats.
-    if (it->first != "exp" && it->first != "gold" && it->first != "level")
+    if (it->first != terms::exp && it->first != terms::gold && it->first != terms::level)
     {
       float variance = rand_float(0.95, 1.05);
       character->m_attributes[it->first].max *= variance;

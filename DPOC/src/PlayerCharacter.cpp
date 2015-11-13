@@ -9,6 +9,7 @@
 #include "Message.h"
 #include "StatusEffect.h"
 #include "Skill.h"
+#include "Vocabulary.h"
 
 #include "PlayerCharacter.h"
 
@@ -102,12 +103,12 @@ void PlayerCharacter::advanceAttribute(const std::string& attribName, int value)
 
 int PlayerCharacter::toNextLevel()
 {
-  return expForLevel() - getAttribute("exp").max;
+  return expForLevel() - getAttribute(terms::exp).max;
 }
 
 int PlayerCharacter::expForLevel()
 {
-  int level = getAttribute("level").max;
+  int level = getAttribute(terms::level).max;
 
 //  return level * level * 10;
 
@@ -121,13 +122,13 @@ int PlayerCharacter::expForLevel()
 int PlayerCharacter::checkLevelUp(bool display)
 {
   int levelReached = 0;
-  int exp = getAttribute("exp").max;
+  int exp = getAttribute(terms::exp).max;
 
   while (exp > expForLevel())
   {
-    getAttribute("level").max++;
-    reset_attribute(getAttribute("level"));
-    levelReached = getAttribute("level").max;
+    getAttribute(terms::level).max++;
+    reset_attribute(getAttribute(terms::level));
+    levelReached = getAttribute(terms::level).max;
   }
 
   if (levelReached > 0)
@@ -140,7 +141,7 @@ int PlayerCharacter::checkLevelUp(bool display)
 
 void PlayerCharacter::setAttributes()
 {
-  int level = m_attributes["level"].max;
+  int level = m_attributes[terms::level].max;
 
   for (auto it = m_class.baseAttributes.begin(); it != m_class.baseAttributes.end(); ++it)
   {
@@ -171,7 +172,7 @@ void PlayerCharacter::setAttributes()
     }
 
     // HP/MP is not restores when leveling up.
-    if (it->first != "hp" && it->first != "mp")
+    if (it->first != terms::hp && it->first != terms::mp)
     {
       reset_attribute(m_attributes[it->first]);
     }
@@ -180,7 +181,7 @@ void PlayerCharacter::setAttributes()
 
 void PlayerCharacter::setLevel(int levelReached, bool display)
 {
-  m_attributes["level"] = make_attribute(levelReached);
+  m_attributes[terms::level] = make_attribute(levelReached);
 
   std::map<std::string, Attribute> attributesTemp = m_attributes;
 
@@ -201,8 +202,8 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
 
       int increase = it->second.max - attributesTemp[it->first].max;
 
-      if (it->first != "level" && it->first != "exp")
-        buffer += capitalize(it->first) + " +" + toString(increase) + "! ";
+      if (it->first != terms::level && it->first != terms::exp)
+        buffer += vocab(it->first) + " +" + toString(increase) + "! ";
     }
 
     if (display)
@@ -370,8 +371,8 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
 
   character->m_status.push_back(get_status_effect("Normal"));
 
-  character->m_attributes["level"] = make_attribute(0);
-  character->m_attributes["exp"] = make_attribute(0);
+  character->m_attributes[terms::level] = make_attribute(0);
+  character->m_attributes[terms::exp] = make_attribute(0);
 
   for (int i = 1; i <= level; i++)
   {
@@ -380,13 +381,13 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
     if (i < level)
     {
       // Gain enough exp for the current level.
-      character->getAttribute("exp").max = character->expForLevel();
-      reset_attribute(character->getAttribute("exp"));
+      character->getAttribute(terms::exp).max = character->expForLevel();
+      reset_attribute(character->getAttribute(terms::exp));
     }
   }
 
-  reset_attribute(character->m_attributes["hp"]);
-  reset_attribute(character->m_attributes["mp"]);
+  reset_attribute(character->m_attributes[terms::hp]);
+  reset_attribute(character->m_attributes[terms::mp]);
 
   return character;
 }
@@ -403,8 +404,8 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
 
   character->m_status.push_back(get_status_effect("Normal"));
 
-  character->m_attributes["level"] = make_attribute(0);
-  character->m_attributes["exp"] = make_attribute(0);
+  character->m_attributes[terms::level] = make_attribute(0);
+  character->m_attributes[terms::exp] = make_attribute(0);
 
   for (int i = 1; i <= level; i++)
   {
@@ -413,13 +414,13 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
     if (i < level)
     {
       // Gain enough exp for the current level.
-      character->getAttribute("exp").max = character->expForLevel();
-      reset_attribute(character->getAttribute("exp"));
+      character->getAttribute(terms::exp).max = character->expForLevel();
+      reset_attribute(character->getAttribute(terms::exp));
     }
   }
 
-  reset_attribute(character->m_attributes["hp"]);
-  reset_attribute(character->m_attributes["mp"]);
+  reset_attribute(character->m_attributes[terms::hp]);
+  reset_attribute(character->m_attributes[terms::mp]);
 
   return character;
 }

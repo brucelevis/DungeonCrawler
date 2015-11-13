@@ -21,6 +21,7 @@
 #include "Encounter.h"
 #include "BattleBackground.h"
 
+#include "Vocabulary.h"
 #include "Door.h"
 #include "DungeonMap.h"
 #include "Campsite.h"
@@ -113,7 +114,7 @@ void Game::start(Player* thePlayer)
     }
   }
 
-  const XMLElement* goldElem = root->FirstChildElement("gold");
+  const XMLElement* goldElem = root->FirstChildElement(terms::gold.c_str());
   if (goldElem)
   {
     thePlayer->gainGold(fromString<int>(goldElem->GetText()));
@@ -351,8 +352,8 @@ void Game::drawParty(sf::RenderTarget& target) const
 
     character->draw(target, xPos, yPos);
 
-    float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
-    float mpPercent = (float)character->getAttribute("mp").current / (float)character->getAttribute("mp").max;
+    float hpPercent = (float)character->getAttribute(terms::hp).current / (float)character->getAttribute(terms::hp).max;
+    float mpPercent = (float)character->getAttribute(terms::mp).current / (float)character->getAttribute(terms::mp).max;
 
     //////////////////////////////////////////////////////////////////////////
     // Draw darker rectangles to display lost HP/MP.

@@ -12,6 +12,7 @@
 #include "StatusEffect.h"
 #include "Flash.h"
 
+#include "Vocabulary.h"
 #include "Sound.h"
 #include "Direction.h"
 #include "Entity.h"
@@ -404,8 +405,8 @@ void Player::recoverAll()
 {
   for (auto it = m_party.begin(); it != m_party.end(); ++it)
   {
-    reset_attribute((*it)->getAttribute("hp"));
-    reset_attribute((*it)->getAttribute("mp"));
+    reset_attribute((*it)->getAttribute(terms::hp));
+    reset_attribute((*it)->getAttribute(terms::mp));
     (*it)->resetStatus();
   }
 }

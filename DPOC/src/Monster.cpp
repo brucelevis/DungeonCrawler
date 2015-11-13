@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Utility.h"
 #include "logger.h"
+#include "Vocabulary.h"
 #include "Monster.h"
 
 #include "../dep/tinyxml2.h"
@@ -16,7 +17,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
 {
   MonsterDef monster;
   // Monsters does not care about MP but it's required for spellcasting.
-  monster.attributeMap["mp"] = 0;
+  monster.attributeMap[terms::mp] = 0;
   monster.color = sf::Color::White;
   monster.numberOfAttacks = 1;
   monster.scale = 1;

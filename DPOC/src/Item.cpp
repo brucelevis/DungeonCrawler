@@ -7,6 +7,7 @@
 #include "Character.h"
 #include "Utility.h"
 #include "Message.h"
+#include "Vocabulary.h"
 #include "Item.h"
 
 #include "../dep/tinyxml2.h"
@@ -189,14 +190,14 @@ int use_item(Item* item, Character* user, Character* target)
   if (item->itemUseType == ITEM_HEAL || item->itemUseType == ITEM_HEAL_FIXED ||
           item->itemUseType == ITEM_DAMAGE)
   {
-    target->takeDamage("hp", damage);
+    target->takeDamage(terms::hp, damage);
   }
   else if (item->itemUseType == ITEM_RESTORE_MP || item->itemUseType == ITEM_RESTORE_MP_FIXED)
   {
-    target->takeDamage("mp", damage);
+    target->takeDamage(terms::mp, damage);
 
-    battle_message("%s's MP restored by %d!",
-        target->getName().c_str(), damage);
+    battle_message("%s's %s restored by %d!",
+        target->getName().c_str(), vocab_mid(terms::mp).c_str(), damage);
 
     damage = 0;
   }
@@ -208,8 +209,8 @@ int use_item(Item* item, Character* user, Character* target)
       target->getAttribute(it->first).max += it->second;
       reset_attribute(target->getAttribute(it->first));
 
-      show_message("%s %s increased by %d!",
-          target->getName().c_str(), it->first.c_str(), it->second);
+      show_message("%s's %s increased by %d!",
+          target->getName().c_str(), vocab(it->first.c_str()).c_str(), it->second);
     }
   }
 
@@ -220,7 +221,7 @@ int use_item(Item* item, Character* user, Character* target)
     // If dead they should be restored with HP.
     if (item->status == "Dead")
     {
-      target->getAttribute("hp").current = 1;
+      target->getAttribute(terms::hp).current = 1;
     }
   }
   else if (item->itemUseType == ITEM_CAUSE_STATUS)

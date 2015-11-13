@@ -7,6 +7,7 @@
 #include "Config.h"
 #include "Persistent.h"
 #include "Sprite.h"
+#include "Vocabulary.h"
 #include "Chest.h"
 
 Chest::Chest(const std::string& name, const std::vector<std::string> items)
@@ -73,7 +74,7 @@ void Chest::interact(const Entity* interactor)
     }
     for (auto it = m_items.begin(); it != m_items.end(); ++it)
     {
-      if (isdigit(it->at(0)) && it->find("gold") != std::string::npos)
+      if (isdigit(it->at(0)) && it->find(terms::gold) != std::string::npos)
       {
         std::vector<std::string> golds = split_string(*it, ' ');
         int amount = fromString<int>(golds[0]);
@@ -115,7 +116,14 @@ std::string Chest::getItemsString() const
   {
     for (size_t i = 0; i < m_items.size(); i++)
     {
-      things += m_items[i];
+      std::string itemName = m_items[i];
+
+      if (m_items[i] == terms::gold)
+      {
+        itemName = vocab(terms::gold);
+      }
+
+      things += itemName;
       if (i == m_items.size() - 2)
       {
         things += " and ";

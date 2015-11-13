@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "Message.h"
 #include "StatusEffect.h"
+#include "Vocabulary.h"
 
 #include "Attack.h"
 
@@ -10,8 +11,8 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
 {
   int damage = calculate_physical_damage(attacker, target, weapon);
 
-  int aSpeed = attacker->computeCurrentAttribute("speed");
-  int bSpeed = target->computeCurrentAttribute("speed");
+  int aSpeed = attacker->computeCurrentAttribute(terms::speed);
+  int bSpeed = target->computeCurrentAttribute(terms::speed);
 
   if (aSpeed < bSpeed)
   {
@@ -44,7 +45,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
 
   if (damage > 0)
   {
-    bool critical = attacker->computeCurrentAttribute("luck") >= random_range(0, 1024);
+    bool critical = attacker->computeCurrentAttribute(terms::luck) >= random_range(0, 1024);
     wasCritical = critical;
 
     if (critical)
@@ -54,7 +55,7 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
     }
   }
 
-  target->takeDamage("hp", damage);
+  target->takeDamage(terms::hp, damage);
 
   target->flash().addDamageText(toString(damage), sf::Color::Red);
 
@@ -63,8 +64,8 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
 
 int calculate_physical_damage(Character* attacker, Character* target, Item* weapon)
 {
-  float atk = attacker->computeCurrentAttribute("strength");
-  float def = target->computeCurrentAttribute("defense");
+  float atk = attacker->computeCurrentAttribute(terms::strength);
+  float def = target->computeCurrentAttribute(terms::defense);
 
   float resist = 1.0f;
 
@@ -106,12 +107,12 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
 
   if (usedItem->itemUseType == ITEM_HEAL_FIXED)
   {
-    return -usedItem->attributeGain["hp"];
+    return -usedItem->attributeGain[terms::hp];
   }
   else if (usedItem->itemUseType == ITEM_DAMAGE || usedItem->itemUseType == ITEM_HEAL)
   {
-    float atk = usedItem->attributeGain["strength"];
-    float def = target->computeCurrentAttribute("defense");
+    float atk = usedItem->attributeGain[terms::strength];
+    float def = target->computeCurrentAttribute(terms::defense);
 
     float damage = 0;
 
@@ -144,7 +145,7 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
   }
   else if (usedItem->itemUseType == ITEM_RESTORE_MP_FIXED)
   {
-    return -usedItem->attributeGain["mp"];
+    return -usedItem->attributeGain[terms::mp];
   }
 
   return 0;
@@ -152,11 +153,11 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
 
 int calculate_magical_damage(Character* attacker, Character* target, const Spell* spell)
 {
-  float str = !spell->isPhysical ? attacker->computeCurrentAttribute("magic")
-                                 : attacker->computeCurrentAttribute("strength");
+  float str = !spell->isPhysical ? attacker->computeCurrentAttribute(terms::magic)
+                                 : attacker->computeCurrentAttribute(terms::strength);
   float pow = spell->power;
-  float def = !spell->isPhysical ? target->computeCurrentAttribute("mag.def")
-                                 : target->computeCurrentAttribute("defense");
+  float def = !spell->isPhysical ? target->computeCurrentAttribute(terms::magdef)
+                                 : target->computeCurrentAttribute(terms::defense);
 
   float resistance = target->getResistance(spell->element);
 
@@ -215,7 +216,7 @@ bool cause_status(Character* target, const std::string& status, bool forceStatus
     // Set hp to 0 if the status to cause is "Dead"
     if (status == "Dead")
     {
-      target->getAttribute("hp").current = 0;
+      target->getAttribute(terms::hp).current = 0;
     }
 
 //    battle_message("%s %s",
@@ -277,11 +278,11 @@ void buff(Character* target, const std::string& attr, int buffPower)
   if (delta > 0)
   {
     target->getAttribute(attr).current += delta;
-    target->flash().addDamageText("+" + attr, sf::Color::Green);
+    target->flash().addDamageText("+" + vocab(attr), sf::Color::Green);
   }
   else if (delta < 0)
   {
     target->getAttribute(attr).current += delta;
-    target->flash().addDamageText("-" + attr, sf::Color::Green);
+    target->flash().addDamageText("-" + vocab(attr), sf::Color::Green);
   }
 }

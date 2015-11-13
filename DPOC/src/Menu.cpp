@@ -18,6 +18,7 @@
 #include "Monster.h"
 #include "Battle.h"
 #include "Skill.h"
+#include "Vocabulary.h"
 
 #include "SaveLoad.h"
 #include "SaveMenu.h"
@@ -299,7 +300,7 @@ void MainMenu::handleConfirm()
 
           // Reduce it here since cast_spell is called for each target when
           // spell has multiple targets.
-          m_characterMenu->getUser()->getAttribute("mp").current -= m_characterMenu->getSpellToUse()->mpCost;
+          m_characterMenu->getUser()->getAttribute(terms::mp).current -= m_characterMenu->getSpellToUse()->mpCost;
         }
         else
         {
@@ -588,7 +589,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
     draw_frame(target, x, y, 80, getNumberOfChoice() * 16);
     draw_frame(target, x, y + 208, 80, 32);
 
-    draw_text_bmp(target, x + 8, y + 13*16+7, "GP");
+    draw_text_bmp(target, x + 8, y + 13*16+7, "%s", vocab_short(terms::gold).c_str());
     draw_text_bmp(target, x + 8, y + 13*16+19, "%d", get_player()->getGold());
 
     for (int i = 0; i < getNumberOfChoice(); i++)
@@ -650,20 +651,20 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
   draw_text_bmp_ex(target, x + 40, y,
       get_status_effect(character->getStatus())->color,
       "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+  draw_text_bmp(target, x + 40, y + 12, "%s: %d/%d", vocab(terms::hp).c_str(), character->getAttribute(terms::hp).current, character->getAttribute(terms::hp).max);
+  draw_text_bmp(target, x + 40, y + 24, "%s: %d/%d", vocab(terms::mp).c_str(), character->getAttribute(terms::mp).current, character->getAttribute(terms::mp).max);
 
-  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute(terms::level));
   draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
 
   y += 40;
 
-  draw_text_bmp(target, x, y,      "Strength: %d", character->computeCurrentAttribute("strength"));
-  draw_text_bmp(target, x, y + 12, "Defense:  %d", character->computeCurrentAttribute("defense"));
-  draw_text_bmp(target, x, y + 24, "Magic:    %d", character->computeCurrentAttribute("magic"));
-  draw_text_bmp(target, x, y + 36, "Mag.Def:  %d", character->computeCurrentAttribute("mag.def"));
-  draw_text_bmp(target, x, y + 48, "Speed:    %d", character->computeCurrentAttribute("speed"));
-  draw_text_bmp(target, x, y + 60, "Luck:     %d", character->computeCurrentAttribute("luck"));
+  draw_text_bmp(target, x, y,      "%s: %d", vocab(terms::strength).c_str(), character->computeCurrentAttribute(terms::strength));
+  draw_text_bmp(target, x, y + 12, "%s:  %d", vocab(terms::defense).c_str(), character->computeCurrentAttribute(terms::defense));
+  draw_text_bmp(target, x, y + 24, "%s:    %d", vocab(terms::magic).c_str(), character->computeCurrentAttribute(terms::magic));
+  draw_text_bmp(target, x, y + 36, "%s:  %d", vocab(terms::magdef).c_str(), character->computeCurrentAttribute(terms::magdef));
+  draw_text_bmp(target, x, y + 48, "%s:    %d", vocab(terms::speed).c_str(), character->computeCurrentAttribute(terms::speed));
+  draw_text_bmp(target, x, y + 60, "%s:     %d", vocab(terms::luck).c_str(), character->computeCurrentAttribute(terms::luck));
 
   for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
   {
@@ -690,10 +691,10 @@ void MainMenu::drawSkills(sf::RenderTarget& target, int x, int y)
   draw_text_bmp_ex(target, x + 40, y,
       get_status_effect(character->getStatus())->color,
       "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-  draw_text_bmp(target, x + 40, y + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-  draw_text_bmp(target, x + 40, y + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+  draw_text_bmp(target, x + 40, y + 12, "%s: %d/%d", vocab(terms::hp).c_str(), character->getAttribute(terms::hp).current, character->getAttribute(terms::hp).max);
+  draw_text_bmp(target, x + 40, y + 24, "%s: %d/%d", vocab(terms::mp).c_str(), character->getAttribute(terms::mp).current, character->getAttribute(terms::mp).max);
 
-  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute("level"));
+  draw_text_bmp(target, x + 40 + 96, y + 12, "Lv: %d", character->computeCurrentAttribute(terms::level));
   draw_text_bmp(target, x + 40 + 96, y + 24, "Tn: %d", character->toNextLevel());
 
   y += 40;
@@ -968,8 +969,8 @@ void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
     draw_text_bmp_ex(target, offX + 40, offY + i * 48,
         get_status_effect(character->getStatus())->color,
         "%s (%s)", character->getName().c_str(), character->getStatus().c_str());
-    draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "Hp: %d/%d", character->getAttribute("hp").current, character->getAttribute("hp").max);
-    draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "Mp: %d/%d", character->getAttribute("mp").current, character->getAttribute("mp").max);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 12, "%s: %d/%d", vocab(terms::hp).c_str(), character->getAttribute(terms::hp).current, character->getAttribute(terms::hp).max);
+    draw_text_bmp(target, offX + 40, offY + i * 48 + 24, "%s: %d/%d", vocab(terms::mp).c_str(), character->getAttribute(terms::mp).current, character->getAttribute(terms::mp).max);
 
     if (cursorVisible() && getCurrentChoiceIndex() == i)
     {
@@ -1169,31 +1170,31 @@ void EquipMenu::drawDeltas(sf::RenderTarget& target, int x, int y)
       m_character->equip(getCurrentMenuChoice(), "");
     }
 
-    newStr = m_character->computeCurrentAttribute("strength");
-    newDef = m_character->computeCurrentAttribute("defense");
-    newMag = m_character->computeCurrentAttribute("magic");
-    newMdf = m_character->computeCurrentAttribute("mag.def");
-    newSpd = m_character->computeCurrentAttribute("speed");
-    newLuk = m_character->computeCurrentAttribute("luck");
+    newStr = m_character->computeCurrentAttribute(terms::strength);
+    newDef = m_character->computeCurrentAttribute(terms::defense);
+    newMag = m_character->computeCurrentAttribute(terms::magic);
+    newMdf = m_character->computeCurrentAttribute(terms::magdef);
+    newSpd = m_character->computeCurrentAttribute(terms::speed);
+    newLuk = m_character->computeCurrentAttribute(terms::luck);
 
     m_character->equip(getCurrentMenuChoice(), currentEquip);
   }
   else
   {
-    newStr = m_character->computeCurrentAttribute("strength");
-    newDef = m_character->computeCurrentAttribute("defense");
-    newMag = m_character->computeCurrentAttribute("magic");
-    newMdf = m_character->computeCurrentAttribute("mag.def");
-    newSpd = m_character->computeCurrentAttribute("speed");
-    newLuk = m_character->computeCurrentAttribute("luck");
+    newStr = m_character->computeCurrentAttribute(terms::strength);
+    newDef = m_character->computeCurrentAttribute(terms::defense);
+    newMag = m_character->computeCurrentAttribute(terms::magic);
+    newMdf = m_character->computeCurrentAttribute(terms::magdef);
+    newSpd = m_character->computeCurrentAttribute(terms::speed);
+    newLuk = m_character->computeCurrentAttribute(terms::luck);
   }
 
-  draw_text_bmp(target, x, y,      "Str: %d (%d)", m_character->computeCurrentAttribute("strength"), newStr);
-  draw_text_bmp(target, x, y + 12, "Def: %d (%d)", m_character->computeCurrentAttribute("defense"), newDef);
-  draw_text_bmp(target, x, y + 24, "Mag: %d (%d)", m_character->computeCurrentAttribute("magic"), newMag);
-  draw_text_bmp(target, x, y + 36, "Mdf: %d (%d)", m_character->computeCurrentAttribute("mag.def"), newMdf);
-  draw_text_bmp(target, x, y + 48, "Spd: %d (%d)", m_character->computeCurrentAttribute("speed"), newSpd);
-  draw_text_bmp(target, x, y + 60, "Luk: %d (%d)", m_character->computeCurrentAttribute("luck"), newLuk);
+  draw_text_bmp(target, x, y,      "%s: %d (%d)", vocab_mid(terms::strength).c_str(), m_character->computeCurrentAttribute(terms::strength), newStr);
+  draw_text_bmp(target, x, y + 12, "%s: %d (%d)", vocab_mid(terms::defense).c_str(), m_character->computeCurrentAttribute(terms::defense), newDef);
+  draw_text_bmp(target, x, y + 24, "%s: %d (%d)", vocab_mid(terms::magic).c_str(), m_character->computeCurrentAttribute(terms::magic), newMag);
+  draw_text_bmp(target, x, y + 36, "%s: %d (%d)", vocab_mid(terms::magdef).c_str(), m_character->computeCurrentAttribute(terms::magdef), newMdf);
+  draw_text_bmp(target, x, y + 48, "%s: %d (%d)", vocab_mid(terms::speed).c_str(), m_character->computeCurrentAttribute(terms::speed), newSpd);
+  draw_text_bmp(target, x, y + 60, "%s: %d (%d)", vocab_mid(terms::luck).c_str(), m_character->computeCurrentAttribute(terms::luck), newLuk);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1331,7 +1332,7 @@ void BattleMenu::handleConfirm()
 
     m_spellMemory[m_statusMenu->getCurrentActor()] = m_spellMenu->getCurrentChoiceIndex();
 
-    if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute("mp").current)
+    if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute(terms::mp).current)
     {
       play_sound(config::get("SOUND_CANCEL"));
     }
@@ -1579,8 +1580,8 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
         draw_text_bmp(target, x + 8, y + 8, "Action");
         draw_text_bmp(target, x + 88, y + 8, "Name");
         draw_text_bmp(target, x + 136, y + 8, "Cond");
-        draw_text_bmp(target, x + 180, y + 8, "HP");
-        draw_text_bmp(target, x + 216, y + 8, "MP");
+        draw_text_bmp(target, x + 180, y + 8, "%s", vocab_mid(terms::hp).c_str());
+        draw_text_bmp(target, x + 216, y + 8, "%s", vocab_mid(terms::mp).c_str());
       }
     }
 
@@ -1730,7 +1731,7 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
 
     int offY = y + 8 + i * ENTRY_OFFSET;
 
-    float hpPercent = (float)character->getAttribute("hp").current / (float)character->getAttribute("hp").max;
+    float hpPercent = (float)character->getAttribute(terms::hp).current / (float)character->getAttribute(terms::hp).max;
 
     draw_text_bmp(target, x + 8,  offY, "%s", limit_string(name, 5).c_str());
     draw_text_bmp_ex(target, x + 56, offY,
@@ -1738,8 +1739,8 @@ void BattleStatusMenu::draw(sf::RenderTarget& target, int x, int y)
         "%s", limit_string(character->getStatus(), 4).c_str());
     draw_text_bmp_ex(target, x + 100, offY,
         hpPercent > 0.2 ? sf::Color::White : sf::Color::Red,
-        "%d", character->getAttribute("hp").current);
-    draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute("mp").current);
+        "%d", character->getAttribute(terms::hp).current);
+    draw_text_bmp(target, x + 136, offY, "%d", character->getAttribute(terms::mp).current);
 
     if (i == m_currentActor && !m_currenActorRectHidden)
     {

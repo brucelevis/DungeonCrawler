@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include "logger.h"
 
+#include "Vocabulary.h"
 #include "Attack.h"
 #include "Message.h"
 #include "Character.h"
@@ -187,8 +188,8 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
 
   if ((spell->spellType & SPELL_DRAIN))
   {
-    caster->getAttribute("hp").current += damage;
-    clamp_attribute(caster->getAttribute("hp"));
+    caster->getAttribute(terms::hp).current += damage;
+    clamp_attribute(caster->getAttribute(terms::hp));
 
     battle_message("%s drains life from %s!",
         caster->getName().c_str(), target->getName().c_str());
@@ -267,12 +268,12 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
     }
   }
 
-  target->takeDamage("hp", damage);
+  target->takeDamage(terms::hp, damage);
 
   return damage;
 }
 
 bool can_cast_spell(const Spell* spell, Character* caster)
 {
-  return spell->mpCost <= caster->getAttribute("mp").current;
+  return spell->mpCost <= caster->getAttribute(terms::mp).current;
 }

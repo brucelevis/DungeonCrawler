@@ -7,6 +7,7 @@
 #include "PlayerCharacter.h"
 #include "Message.h"
 
+#include "Vocabulary.h"
 #include "Utility.h"
 
 #include "LuaBindings.h"
@@ -37,7 +38,7 @@ PlayerCharacter* Trap::triggerTrap() const
 
   for (auto it = party.begin(); it != party.end(); ++it)
   {
-    if (check_vs_luck((*it)->computeCurrentAttribute("luck"), m_luckToBeat))
+    if (check_vs_luck((*it)->computeCurrentAttribute(terms::luck), m_luckToBeat))
     {
       detector = *it;
       break;
@@ -71,7 +72,7 @@ void Trap::applyTrap(const std::vector<PlayerCharacter*>& party) const
   {
     for (auto it = party.begin(); it != party.end(); ++it)
     {
-      if (!check_vs_luck((*it)->computeCurrentAttribute("luck"), m_luckToBeat))
+      if (!check_vs_luck((*it)->computeCurrentAttribute(terms::luck), m_luckToBeat))
       {
         (*it)->afflictStatus("Poison", -1);
 
