@@ -5,6 +5,7 @@
 #include "draw_text.h"
 #include "Vocabulary.h"
 #include "Character.h"
+#include "PlayerClass.h"
 #include "MenuTextHelpers.h"
 
 namespace
@@ -13,15 +14,15 @@ namespace
   {
     std::vector<std::string> attrNames =
     {
-      terms::strength,
-      terms::defense,
-      terms::magdef,
-      terms::magic,
-      terms::speed,
-      terms::luck
+      vocab(terms::strength),
+      vocab(terms::defense),
+      vocab(terms::magdef),
+      vocab(terms::magic),
+      vocab(terms::speed),
+      vocab(terms::luck)
     };
 
-    auto maxElem = std::max_element(attrNames.begin(), attrNames.end());
+    auto maxElem = std::max_element(attrNames.begin(), attrNames.end(), [](const std::string& a, const std::string& b) { return a.size() < b.size(); });
 
     return static_cast<int>(maxElem->size()) + 1;
   }
@@ -31,6 +32,13 @@ namespace
     std::string toDraw = vocab(attrName) + ":";
 
     draw_text_bmp(target, x, y, "%-*s %d", maxColumnLength, toDraw.c_str(), character->computeCurrentAttribute(attrName));
+  }
+
+  void print_attr(sf::RenderTarget& target, PlayerClass& playerClass, const std::string& attrName, int x, int y, int maxColumnLength)
+  {
+    std::string toDraw = vocab(attrName) + ":";
+
+    draw_text_bmp(target, x, y, "%-*s %d", maxColumnLength, toDraw.c_str(), playerClass.baseAttributes[attrName]);
   }
 }
 
@@ -44,6 +52,18 @@ void draw_stat_block(sf::RenderTarget& target, Character* character, int x, int 
   print_attr(target, character, terms::magdef,   x, y + 36, maxColumnLength);
   print_attr(target, character, terms::speed,    x, y + 48, maxColumnLength);
   print_attr(target, character, terms::luck,     x, y + 60, maxColumnLength);
+}
+
+void draw_stat_block(sf::RenderTarget& target, PlayerClass& playerClass, int x, int y)
+{
+  static int maxColumnLength = computeStatColumnLength();
+
+  print_attr(target, playerClass, terms::strength, x, y,      maxColumnLength);
+  print_attr(target, playerClass, terms::defense,  x, y + 12, maxColumnLength);
+  print_attr(target, playerClass, terms::magic,    x, y + 24, maxColumnLength);
+  print_attr(target, playerClass, terms::magdef,   x, y + 36, maxColumnLength);
+  print_attr(target, playerClass, terms::speed,    x, y + 48, maxColumnLength);
+  print_attr(target, playerClass, terms::luck,     x, y + 60, maxColumnLength);
 }
 
 void draw_hp(sf::RenderTarget& target, Character* character, int x, int y)

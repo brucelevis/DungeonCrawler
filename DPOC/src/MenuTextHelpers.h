@@ -4,8 +4,10 @@
 #include <SFML/Graphics.hpp>
 
 class Character;
+struct PlayerClass;
 
 void draw_stat_block(sf::RenderTarget& target, Character* character, int x, int y);
+void draw_stat_block(sf::RenderTarget& target, PlayerClass& playerClass, int x, int y);
 
 void draw_hp(sf::RenderTarget& target, Character* character, int x, int y);
 void draw_mp(sf::RenderTarget& target, Character* character, int x, int y);
