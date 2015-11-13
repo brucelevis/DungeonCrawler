@@ -44,6 +44,14 @@ Objects:
 XML Formats
 -----------
 
+### Vocabulary.xml (`<vocabulary>`) ###
+Defines names of attributes and so on.
+ * `<term name="termName" base="baseName" mid="midLength" short="shortLength" />`
+
+Term name is the name as refered to by config file and in the code. "base" is
+the long name used in most occasions. "mid" should be a three character
+abbreviation. "short" should be a two character abbreviation.
+
 ### Spells.xml (`<spells><spell>`) ###
 * `<name>`
 * `<description>`
@@ -218,9 +226,9 @@ Script Commands
  - Entity changes direction to dir. Overrides fixed direction.
 * wait [frames]
  - Entity waits for some frames before continuing script
-* set_global [key] [value]
+* set_global \[key] [value]
  - Set global variable.
-* set_local [key] [value]
+* set_local \[key] [value]
  - Set local variable. This depends on the name of the entity so if several
    entities have the same name on the same map then they will share locals.
 * if [condition]  
@@ -243,7 +251,7 @@ Script Commands
 * give_gold [amount]
 * take_gold [amount]
 * play_sound [sound]
-* add_member [name] [class] {level}
+* add_member \[name] [class] {level}
  - Adds a new member to the player party.
 * remove_member [name]
 * set_visible [true/false]
@@ -258,8 +266,8 @@ Script Commands
  - Comma separated list of monsters to fight.  
    ex: combat Batty,Monster With Space In Name,Skelington
 * end_game
-* set_config [key] [value]
-* transfer [targetMap] [x] [y]
+* set_config \[key] [value]
+* transfer \[targetMap] \[x] [y]
 * shop [item1,...itemN]
  - Comma separated list of items in the shop. hard cap of 32 * 32 string length
    items right now.
