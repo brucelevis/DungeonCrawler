@@ -473,7 +473,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       strcpy(data.data.arithmeticData.value, assign_key.c_str());
     }
   }
-  else if (opcode == OP_IF)
+  else if (opcode == OP_IF || opcode == OP_WHILE)
   {
     std::string lhs = strings[1];
     std::string operation = strings[2];
@@ -505,6 +505,14 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     // Nothing
   }
   else if (opcode == OP_ELSE)
+  {
+    // Nothing
+  }
+  else if (opcode == OP_WEND)
+  {
+    // Nothing
+  }
+  else if (opcode == OP_BREAK)
   {
     // Nothing
   }
@@ -759,6 +767,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "if",           OP_IF },
     { "endif",        OP_END_IF },
     { "else",         OP_ELSE },
+    { "while",        OP_WHILE },
+    { "wend",         OP_WEND },
+    { "break",        OP_BREAK },
     { "choice",       OP_CHOICE },
     { "set_tile_id",  OP_SET_TILE_ID },
     { "give_item",    OP_GIVE_ITEM },
@@ -974,6 +985,81 @@ void Script::executeScriptLine()
         ifCount--;
       }
     }
+  }
+  else if (data.opcode == Script::OP_WHILE)
+  {
+    std::string lhs = data.data.ifData.lhs;
+    std::string rhs = data.data.ifData.rhs;
+    std::string lhsKey = data.data.ifData.lhsKey;
+    std::string rhsKey = data.data.ifData.rhsKey;
+    std::string operation = data.data.ifData.boolOperation;
+
+    int lhsValue, rhsValue;
+
+    get_if_value(m_callingEntity, lhs, lhsKey, lhsValue);
+    get_if_value(m_callingEntity, rhs, rhsKey, rhsValue);
+
+    bool result = exec_bool_operation(operation, lhsValue, rhsValue);
+
+    if (!result)
+    {
+      // Find matching wend in case the expression was false.
+      int whileCount = 1;
+      while (whileCount > 0)
+      {
+        advance();
+        if (getCurrentData().opcode == Script::OP_WHILE)
+        {
+          whileCount++;
+        }
+        else if (getCurrentData().opcode == Script::OP_WEND)
+        {
+          whileCount--;
+        }
+      }
+    }
+
+    advance();
+    executeScriptLine();
+  }
+  else if (data.opcode == Script::OP_WEND)
+  {
+    // Step backward in script until finding matching WHILE
+
+    int wendCount = 1;
+    while (wendCount > 0)
+    {
+      if (m_currentIndex == 0)
+      {
+        throw std::runtime_error{"Badly form script, wend without matching while."};
+      }
+
+      m_currentIndex--;
+
+      if (getCurrentData().opcode == Script::OP_WHILE)
+      {
+        wendCount--;
+      }
+      else if (getCurrentData().opcode == Script::OP_WEND)
+      {
+        wendCount++;
+      }
+    }
+
+    // Execute the WHILE that we stand on.
+    executeScriptLine();
+  }
+  else if (data.opcode == Script::OP_BREAK)
+  {
+    // Step until finding WEND
+    while (getCurrentData().opcode != OP_WEND)
+    {
+      advance();
+    }
+
+    // Step past WEND and execute.
+    advance();
+    executeScriptLine();
   }
   else if (data.opcode == Script::OP_CHOICE)
   {

@@ -26,6 +26,9 @@ public:
     OP_ARITHMETIC,
     OP_IF,
     OP_END_IF,
+    OP_WHILE,
+    OP_WEND,
+    OP_BREAK,
     OP_ELSE,
     OP_CHOICE,
     OP_SET_TILE_ID, // For entities with tileSprites.
