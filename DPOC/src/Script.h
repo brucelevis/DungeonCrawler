@@ -6,6 +6,7 @@
 #include "Direction.h"
 
 class Entity;
+class Battle;
 
 static const int MAX_SCRIPT_MESSAGE_BUFFER_SIZE = 512;
 static const int MAX_SCRIPT_KEY_SIZE = 32;
@@ -225,6 +226,7 @@ public:
   bool active() const;
 
   void setCallingEntity(Entity* entity);
+  void setCallingBattle(Battle* battle);
 private:
   void advance();
   void executeScriptLine();
@@ -241,6 +243,7 @@ private:
   bool m_loaded;
 
   Entity* m_callingEntity;
+  Battle* m_callingBattle;
 };
 
 #endif

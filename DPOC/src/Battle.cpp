@@ -9,6 +9,7 @@
 #include "Cache.h"
 #include "Persistent.h"
 #include "Vocabulary.h"
+#include "Script.h"
 
 #include "StatusEffect.h"
 #include "Monster.h"
@@ -119,7 +120,7 @@ static void check_death(Character* actor)
   }
 }
 
-Battle::Battle(const std::vector<Character*>& monsters)
+Battle::Battle(const std::vector<Character*>& monsters, const std::vector<std::string>& scriptLines)
  : m_battleOngoing(false),
    m_state(STATE_BATTLE_BEGINS),
    m_battleMenu(this, monsters),
@@ -130,6 +131,11 @@ Battle::Battle(const std::vector<Character*>& monsters)
    m_battleBackground(0),
    m_battleBeginFade(1.0f)
 {
+  if (scriptLines.size())
+  {
+    m_script.loadFromLines(scriptLines);
+    m_script.setCallingBattle(this);
+  }
 }
 
 Battle::~Battle()
@@ -163,16 +169,25 @@ void Battle::update()
 
   updateEffects();
 
-  if (m_state == STATE_BATTLE_BEGINS)
+  if (m_script.isLoaded() && m_script.active() && m_turnDelay > 0)
+  {
+    m_script.next();
+  }
+  else if (m_state == STATE_BATTLE_BEGINS)
   {
     m_battleBeginFade -= 0.03f;
 
     if (m_battleBeginFade <= 0)
     {
+      if (m_script.isLoaded())
+      {
+        m_script.execute();
+      }
+
       m_state = STATE_SELECT_ACTIONS;
     }
   }
-  if (m_state == STATE_EXECUTE_ACTIONS)
+  else if (m_state == STATE_EXECUTE_ACTIONS)
   {
     executeActions();
   }
@@ -801,6 +816,11 @@ void Battle::processStatusEffects()
       m_battleMenu.resetChoice();
 
       clear_message();
+
+      if (m_script.isLoaded())
+      {
+        m_script.execute();
+      }
     }
   }
 }
@@ -910,6 +930,17 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
       else if (m_state == STATE_VICTORY_POST)
       {
         message.flush();
+      }
+      else
+      {
+        if (message.isWaitingForKey())
+        {
+          message.nextPage();
+        }
+        else
+        {
+          message.flush();
+        }
       }
     }
   }

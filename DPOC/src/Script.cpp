@@ -15,6 +15,7 @@
 #include "Persistent.h"
 #include "Sound.h"
 #include "Encounter.h"
+#include "Battle.h"
 
 #include "logger.h"
 #include "Utility.h"
@@ -280,7 +281,8 @@ Script::Script()
  : m_currentIndex(0),
    m_running(false),
    m_loaded(false),
-   m_callingEntity(0)
+   m_callingEntity(nullptr),
+   m_callingBattle(nullptr)
 {
 
 }
@@ -801,6 +803,11 @@ void Script::setCallingEntity(Entity* entity)
   m_callingEntity = entity;
 }
 
+void Script::setCallingBattle(Battle* battle)
+{
+  m_callingBattle = battle;
+}
+
 void Script::executeScriptLine()
 {
   const Script::ScriptData& data = getCurrentData();
@@ -845,6 +852,10 @@ void Script::executeScriptLine()
     if (m_callingEntity)
     {
       m_callingEntity->m_scriptWaitMap[this] = data.data.waitData.duration;
+    }
+    else if (m_callingBattle)
+    {
+      m_callingBattle->m_turnDelay = data.data.waitData.duration;
     }
   }
   else if (data.opcode == Script::OP_ASSIGNMENT)

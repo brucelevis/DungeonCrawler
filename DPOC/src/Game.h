@@ -43,7 +43,7 @@ public:
 
   void loadNewMap(const std::string& file);
 
-  void startBattle(const std::vector<std::string>& monsters, bool canEscape = true, const std::string& music = "");
+  void startBattle(const std::vector<std::string>& monsters, bool canEscape = true, const std::string& music = "", const std::vector<std::string>& script = {});
 
   void preFade(FadeType fadeType);
   void postFade(FadeType fadeType);

@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <sstream>
 #include <map>
 
 #include "Utility.h"
@@ -21,7 +22,7 @@ Encounter::Encounter()
 
 void Encounter::start() const
 {
-  Game::instance().startBattle(monsters, canEscape, music);
+  Game::instance().startBattle(monsters, canEscape, music, script);
 }
 
 static std::vector<std::string> parse_group_element(const XMLElement* groupElement)
@@ -70,6 +71,12 @@ static Encounter parse_encounter_element(const XMLElement* encounterElement)
     if (elementName == "group")
     {
       encounter.monsters = parse_group_element(element);
+    }
+    else if (elementName == "script")
+    {
+      std::string script = element->GetText();
+      std::istringstream ss{script};
+      encounter.script = get_lines(ss);
     }
   }
 

@@ -11,6 +11,7 @@ struct Encounter
   std::string name;
   std::string music;
   std::vector<std::string> monsters;
+  std::vector<std::string> script;
   bool canEscape;
 
   void start() const;

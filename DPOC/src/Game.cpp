@@ -584,7 +584,7 @@ void Game::loadNewMap(const std::string& file)
   }
 }
 
-void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape, const std::string& music)
+void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape, const std::string& music, const std::vector<std::string>& script)
 {
   if (music.size())
   {
@@ -619,7 +619,7 @@ void Game::startBattle(const std::vector<std::string>& monsters, bool canEscape,
       m_player->player()->y,
       m_player->player()->getDirection());
 
-  Battle* battle = new Battle(monsterChars);
+  Battle* battle = new Battle(monsterChars, script);
   battle->setBattleBackground(battleBg);
   battle->start(canEscape);
 

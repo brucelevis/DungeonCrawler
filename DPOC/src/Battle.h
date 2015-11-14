@@ -2,6 +2,7 @@
 #define BATTLE_H
 
 #include <vector>
+#include <memory>
 #include <map>
 
 #include <SFML/Graphics.hpp>
@@ -11,6 +12,7 @@
 #include "Target.h"
 #include "Effect.h"
 #include "Scene.h"
+#include "Script.h"
 
 class BattleBackground;
 class Character;
@@ -43,7 +45,7 @@ public:
     std::string objectName;
   };
 
-  Battle(const std::vector<Character*>& monsters);
+  Battle(const std::vector<Character*>& monsters, const std::vector<std::string>& scriptLines = {});
 
   ~Battle();
 
@@ -120,6 +122,10 @@ private:
   sf::Texture m_battleBackgroundTexture;
 
   float m_battleBeginFade;
+
+  Script m_script;
+
+  friend class Script;
 };
 
 #endif
