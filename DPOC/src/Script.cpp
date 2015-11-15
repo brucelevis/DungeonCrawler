@@ -748,6 +748,15 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
 
   }
+  else if (opcode == OP_CHANGE_TILE)
+  {
+    memset(&data.data.changeTile, '\0', sizeof(data.data.changeTile));
+
+    strncpy(data.data.changeTile.layer, strings[1].c_str(), 32);
+    data.data.changeTile.x = atoi(strings[2].c_str());
+    data.data.changeTile.y = atoi(strings[3].c_str());
+    data.data.changeTile.tilenum = atoi(strings[4].c_str());
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -794,7 +803,8 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "hide_picture", OP_HIDE_PICTURE },
     { "skill_trainer", OP_SKILL_TRAINER },
     { "campsite", OP_CAMPSITE },
-    { "set_player_dir", OP_SET_PLAYER_DIR }
+    { "set_player_dir", OP_SET_PLAYER_DIR },
+    { "change_tile", OP_CHANGE_TILE }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -1240,6 +1250,15 @@ void Script::executeScriptLine()
 
     // Need to update camera.
     Game::instance().fixCamera(oldDir);
+  }
+  else if (data.opcode == Script::OP_CHANGE_TILE)
+  {
+    std::string layer = data.data.changeTile.layer;
+    int x = data.data.changeTile.x;
+    int y = data.data.changeTile.y;
+    int tilenum = data.data.changeTile.tilenum;
+
+    Game::instance().getCurrentMap()->setTileAt(x, y, layer, tilenum);
   }
 }
 

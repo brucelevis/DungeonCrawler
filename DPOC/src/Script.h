@@ -54,7 +54,8 @@ public:
     OP_HIDE_PICTURE,
     OP_SKILL_TRAINER,
     OP_CAMPSITE,
-    OP_SET_PLAYER_DIR
+    OP_SET_PLAYER_DIR,
+    OP_CHANGE_TILE
   };
 
   enum ArithmOp
@@ -214,6 +215,13 @@ public:
         char skills[32][MAX_SCRIPT_KEY_SIZE];
         int number;
       } skillTrainer;
+
+      struct
+      {
+        char layer[32];
+        int x, y;
+        int tilenum;
+      } changeTile;
     } data;
   };
 
