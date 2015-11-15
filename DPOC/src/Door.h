@@ -22,8 +22,8 @@ public:
     Door_TwoWay
   };
 
-  Door(const std::string& name, const std::string& key);
-  Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat);
+  Door(const std::string& name, const std::string& key, DoorType type = Door_OneWay);
+  Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat, DoorType type = Door_OneWay);
 
   void update();
   void interact(const Entity*);

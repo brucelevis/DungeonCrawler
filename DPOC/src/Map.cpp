@@ -220,10 +220,12 @@ Map* Map::loadTiledFile(const std::string& filename)
           {
             std::string keyRequired = loader.getObjectProperty(objectIndex, "key");
             std::string trap = loader.getObjectProperty(objectIndex, "trap");
+            std::string doorType = loader.getObjectProperty(objectIndex, "type");
+            Door::DoorType type = doorType == "2" ? Door::Door_TwoWay : Door::Door_OneWay;
 
             if (trap.empty())
             {
-              entity = new Door(name, keyRequired);
+              entity = new Door(name, keyRequired, type);
             }
             else
             {
@@ -232,7 +234,7 @@ Map* Map::loadTiledFile(const std::string& filename)
 
               _parse_trap(trap, trapType, luckToBeat);
 
-              entity = new Door(name, keyRequired, trapType, luckToBeat);
+              entity = new Door(name, keyRequired, trapType, luckToBeat, type);
             }
           }
           else

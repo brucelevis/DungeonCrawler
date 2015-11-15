@@ -13,11 +13,11 @@ namespace
   const float DOOR_SPEED = 0.05f;
 }
 
-Door::Door(const std::string& name, const std::string& key)
+Door::Door(const std::string& name, const std::string& key, DoorType type)
  : Entity(name),
    m_keyRequired(key),
    m_isTrapped(false),
-   m_type(Door_TwoWay),
+   m_type(type),
    m_state(Door_Closed),
    m_openingCount(1),
    m_closeCounter(MAX_CLOSE_COUNTER)
@@ -25,12 +25,12 @@ Door::Door(const std::string& name, const std::string& key)
 
 }
 
-Door::Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat)
+Door::Door(const std::string& name, const std::string& key, const std::string& trapType, int luckToBeat, DoorType type)
  : Entity(name),
    m_keyRequired(key),
    m_isTrapped(true),
    m_trap(trapType, luckToBeat, 0, 0),
-   m_type(Door_TwoWay),
+   m_type(type),
    m_state(Door_Closed),
    m_openingCount(1),
    m_closeCounter(MAX_CLOSE_COUNTER)
@@ -53,7 +53,7 @@ void Door::update()
       openFinished();
     }
   }
-  else if (isOpen() && m_keyRequired.empty())
+  else if (isOpen() && m_keyRequired.empty() && !m_isTrapped)
   {
     m_closeCounter--;
     if (m_closeCounter <= 0)
