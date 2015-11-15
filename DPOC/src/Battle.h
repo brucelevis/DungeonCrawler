@@ -65,6 +65,7 @@ public:
 
   void setBattleBackground(BattleBackground* battleBackground);
 private:
+  void nextTurn();
   void executeActions();
   void showAction();
   void actionEffect();
@@ -101,6 +102,7 @@ private:
 private:
   bool m_battleOngoing;
   State m_state;
+  int m_turnCounter;
 
   BattleMenu m_battleMenu;
   std::vector<Character*> m_monsters;

@@ -123,6 +123,7 @@ static void check_death(Character* actor)
 Battle::Battle(const std::vector<Character*>& monsters, const std::vector<std::string>& scriptLines)
  : m_battleOngoing(false),
    m_state(STATE_BATTLE_BEGINS),
+   m_turnCounter(0),
    m_battleMenu(this, monsters),
    m_monsters(monsters),
    m_currentActor(0),
@@ -179,12 +180,7 @@ void Battle::update()
 
     if (m_battleBeginFade <= 0)
     {
-      if (m_script.isLoaded())
-      {
-        m_script.execute();
-      }
-
-      m_state = STATE_SELECT_ACTIONS;
+      nextTurn();
     }
   }
   else if (m_state == STATE_EXECUTE_ACTIONS)
@@ -266,6 +262,19 @@ void Battle::endBattle()
   {
     close();
   }
+}
+
+void Battle::nextTurn()
+{
+  m_turnCounter++;
+  set_global("$sys:turn_count", m_turnCounter);
+
+  if (m_script.isLoaded())
+  {
+    m_script.execute();
+  }
+
+  m_state = STATE_SELECT_ACTIONS;
 }
 
 void Battle::executeActions()
@@ -811,16 +820,12 @@ void Battle::processStatusEffects()
     }
     else
     {
-      m_state = STATE_SELECT_ACTIONS;
       m_battleMenu.setActionMenuHidden(false);
       m_battleMenu.resetChoice();
 
       clear_message();
 
-      if (m_script.isLoaded())
-      {
-        m_script.execute();
-      }
+      nextTurn();
     }
   }
 }
