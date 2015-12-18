@@ -6,6 +6,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Lua.h"
+
 class Console
 {
   static const size_t MAX_LOG_SIZE;
@@ -23,6 +25,8 @@ private:
   bool m_isOpen;
   std::deque<std::string> m_buffer;
   std::string m_currentInput;
+
+  lua::LuaEnv m_luaState;
 };
 
 #endif

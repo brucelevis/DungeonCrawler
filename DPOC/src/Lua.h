@@ -1,5 +1,5 @@
-#ifndef LUA_H_
-#define LUA_H_
+#ifndef BGL_LUA_H
+#define BGL_LUA_H
 
 #include <string>
 #include <tuple>
@@ -140,6 +140,17 @@ namespace lua
     {
       lua_pushboolean(L, val);
     }
+
+    inline void pushmany(lua_State* L)
+    {
+    }
+
+    template <typename T, typename ... Args>
+    void pushmany(lua_State* L, T val, Args... args)
+    {
+      push(L, val);
+      pushmany(L, args...);
+    }
   }
 
   namespace detail
@@ -279,161 +290,171 @@ namespace lua
     {
       using Function = std::function<ReturnValue(Args...)>;
     };
-
-    class LuaEnv
-    {
-    public:
-      static LuaEnv& instance()
-      {
-        static LuaEnv env;
-        return env;
-      }
-
-      template <typename ReturnValue, typename ... Args>
-      void register_function(const char* func_name, std::function<ReturnValue(Args...)> func)
-      {
-        auto wrap = new detail::function_wrapper<ReturnValue, Args...>(func);
-
-        detail::_register_function(m_state, func_name, wrap);
-      }
-
-      template <typename Functor>
-      void register_function(const char* func_name, Functor functor)
-      {
-        auto function = (typename lambda_traits<Functor>::Function)(functor);
-
-        register_function(func_name, function);
-      }
-
-      template <typename ReturnValue, typename ... Args>
-      void register_function(const char* func_name, ReturnValue (*funcPtr) (Args...))
-      {
-        std::function<ReturnValue(Args...)> func { funcPtr };
-
-        register_function(func_name, func);
-      }
-
-      template <typename ReturnValue, typename Type, typename ... Args>
-      void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
-      {
-        std::function<ReturnValue(Type*, Args...)> func { funcPtr };
-
-        register_function(func_name, func);
-      }
-
-      template <typename ReturnValue, typename Type, typename ... Args>
-      void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...) const)
-      {
-        std::function<ReturnValue(Type*, Args...)> func { funcPtr };
-
-        register_function(func_name, func);
-      }
-
-      bool executeFile(const std::string& filename)
-      {
-        if (luaL_dofile(m_state, filename.c_str()) != 0)
-        {
-          m_error = lua_tostring(m_state, -1);
-
-          return false;
-        }
-
-        m_error.clear();
-
-        return true;
-      }
-
-      bool executeLine(const std::string& line)
-      {
-        if (luaL_dostring(m_state, line.c_str()) != 0)
-        {
-          m_error = lua_tostring(m_state, -1);
-
-          return false;
-        }
-
-        m_error.clear();
-
-        return true;
-      }
-
-      const std::string& getError() const
-      {
-        return m_error;
-      }
-    private:
-      LuaEnv()
-       : m_state(luaL_newstate())
-      {
-        luaopen_base(m_state);
-        luaopen_math(m_state);
-      }
-    private:
-      lua_State* m_state;
-      std::string m_error;
-    };
   }
 
-  struct reg
+  class LuaEnv
   {
-    // std::function.
-    template <typename ReturnValue, typename ... Args>
-    reg operator()(const char* func_name, std::function<ReturnValue(Args...)> func)
+  public:
+    LuaEnv()
+     : m_state(luaL_newstate())
     {
-      detail::LuaEnv::instance().register_function<ReturnValue, Args...>(func_name, func);
+      luaopen_base(m_state);
+      luaopen_math(m_state);
+    }
 
-      return reg{};
+    ~LuaEnv()
+    {
+      lua_close(m_state);
+    }
+
+    template <typename ReturnValue, typename ... Args>
+    void register_function(const char* func_name, std::function<ReturnValue(Args...)> func)
+    {
+      auto wrap = new detail::function_wrapper<ReturnValue, Args...>(func);
+
+      detail::_register_function(m_state, func_name, wrap);
     }
 
     template <typename Functor>
-    reg operator()(const char* func_name, Functor func)
+    void register_function(const char* func_name, Functor functor)
     {
-      detail::LuaEnv::instance().register_function<Functor>(func_name, func);
+      auto function = (typename detail::lambda_traits<Functor>::Function)(functor);
 
-      return reg{};
+      register_function(func_name, function);
+    }
+
+    template <typename ReturnValue, typename ... Args>
+    void register_function(const char* func_name, ReturnValue (*funcPtr) (Args...))
+    {
+      std::function<ReturnValue(Args...)> func { funcPtr };
+
+      register_function(func_name, func);
+    }
+
+    template <typename ReturnValue, typename Type, typename ... Args>
+    void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
+    {
+      std::function<ReturnValue(Type*, Args...)> func { funcPtr };
+
+      register_function(func_name, func);
+    }
+
+    template <typename ReturnValue, typename Type, typename ... Args>
+    void register_function(const char* func_name, ReturnValue (Type::*funcPtr) (Args...) const)
+    {
+      std::function<ReturnValue(Type*, Args...)> func { funcPtr };
+
+      register_function(func_name, func);
+    }
+
+    template <typename ... Args>
+    void call_function(const char* func_name, Args... args)
+    {
+      lua_getglobal(m_state, func_name);
+
+      size_t nArgs = sizeof...(Args);
+      detail::pushmany(m_state, args...);
+
+      lua_call(m_state, nArgs, 0);
+
+      // Don't care about return value.
+      lua_pop(m_state, 1);
+    }
+
+    template <typename T>
+    void register_global(const char* global_name, T value)
+    {
+      detail::push(m_state, value);
+      lua_setglobal(m_state, global_name);
+    }
+
+    bool executeFile(const std::string& filename)
+    {
+      if (luaL_dofile(m_state, filename.c_str()) != 0)
+      {
+        m_error = lua_tostring(m_state, -1);
+
+        return false;
+      }
+
+      m_error.clear();
+
+      return true;
+    }
+
+    bool executeLine(const std::string& line)
+    {
+      if (luaL_dostring(m_state, line.c_str()) != 0)
+      {
+        m_error = lua_tostring(m_state, -1);
+
+        return false;
+      }
+
+      m_error.clear();
+
+      return true;
+    }
+
+    const std::string& getError() const
+    {
+      return m_error;
+    }
+  private:
+    lua_State* m_state;
+    std::string m_error;
+  };
+
+  struct reg
+  {
+    reg(LuaEnv& _state)
+     : state(_state) {}
+
+    // std::function.
+    template <typename ReturnValue, typename ... Args>
+    reg& operator()(const char* func_name, std::function<ReturnValue(Args...)> func)
+    {
+      state.register_function<ReturnValue, Args...>(func_name, func);
+
+      return *this;
+    }
+
+    template <typename Functor>
+    reg& operator()(const char* func_name, Functor func)
+    {
+      state.register_function<Functor>(func_name, func);
+
+      return *this;
     }
 
     // Function pointers.
     template <typename ReturnValue, typename ... Args>
-    reg operator()(const char* func_name, ReturnValue (*funcPtr) (Args...))
+    reg& operator()(const char* func_name, ReturnValue (*funcPtr) (Args...))
     {
-      detail::LuaEnv::instance().register_function<ReturnValue, Args...>(func_name, funcPtr);
+      state.register_function<ReturnValue, Args...>(func_name, funcPtr);
 
-      return reg{};
+      return *this;
     }
 
     // Member function pointers.
     template <typename ReturnValue, typename Type, typename ... Args>
-    reg operator()(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
+    reg& operator()(const char* func_name, ReturnValue (Type::*funcPtr) (Args...))
     {
-      detail::LuaEnv::instance().register_function<ReturnValue, Type, Args...>(func_name, funcPtr);
+      state.register_function<ReturnValue, Type, Args...>(func_name, funcPtr);
 
-      return reg{};
+      return *this;
     }
 
     template <typename ReturnValue, typename Type, typename ... Args>
-    reg operator()(const char* func_name, ReturnValue (Type::*funcPtr) (Args...) const)
+    reg& operator()(const char* func_name, ReturnValue (Type::*funcPtr) (Args...) const)
     {
-      detail::LuaEnv::instance().register_function<ReturnValue, Type, Args...>(func_name, funcPtr);
+      state.register_function<ReturnValue, Type, Args...>(func_name, funcPtr);
 
-      return reg{};
+      return *this;
     }
+  private:
+    LuaEnv& state;
   };
-
-  inline bool run(const std::string& filename)
-  {
-    return detail::LuaEnv::instance().executeFile(filename);
-  }
-
-  inline bool run_line(const std::string& line)
-  {
-    return detail::LuaEnv::instance().executeLine(line);
-  }
-
-  inline const std::string& error()
-  {
-    return detail::LuaEnv::instance().getError();
-  }
 }
 
 #endif

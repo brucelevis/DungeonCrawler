@@ -24,7 +24,6 @@
 #include "Game.h"
 
 #include "Console.h"
-#include "LuaBindings.h"
 
 int main(int argc, char* argv[])
 {
@@ -48,8 +47,6 @@ int main(int argc, char* argv[])
   load_skills();
 
   srand(time(0));
-
-  register_lua_bindings();
 
   SceneManager::instance().create();
   SceneManager::instance().setConsole(&console);

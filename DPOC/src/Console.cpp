@@ -33,7 +33,7 @@ const size_t Console::MAX_LOG_SIZE = 28;
 Console::Console()
  : m_isOpen(false)
 {
-
+  register_lua_bindings(m_luaState);
 }
 
 void Console::add(const std::string& str)
@@ -91,7 +91,7 @@ void Console::addInput(char c)
   {
     TRACE("%s", m_currentInput.c_str());
 
-    run_lua_string(m_currentInput);
+    run_lua_string(m_luaState, m_currentInput);
 
     m_currentInput.clear();
   }
