@@ -8,7 +8,7 @@ ScriptScene::ScriptScene(const std::string& scriptFile)
 
   if (!m_luaState.executeFile(scriptFile))
   {
-    TRACE("Failed to load script: %s", scriptFile.c_str());
+    TRACE("Failed to load script: %s [%s]", scriptFile.c_str(), m_luaState.getError().c_str());
   }
   else
   {
@@ -33,15 +33,15 @@ void ScriptScene::draw(sf::RenderTarget& target)
 
 void ScriptScene::handleEvent(sf::Event& event)
 {
-  m_luaState.call_function("handleEvent", this, &event);
+  m_luaState.call_function("handle_event", this, &event);
 }
 
 void ScriptScene::preFade(Scene::FadeType fadeType)
 {
-  m_luaState.call_function("preFade", this, static_cast<int>(fadeType));
+  m_luaState.call_function("pre_fade", this, static_cast<int>(fadeType));
 }
 
 void ScriptScene::postFade(Scene::FadeType fadeType)
 {
-  m_luaState.call_function("postFade", this, static_cast<int>(fadeType));
+  m_luaState.call_function("post_fade", this, static_cast<int>(fadeType));
 }

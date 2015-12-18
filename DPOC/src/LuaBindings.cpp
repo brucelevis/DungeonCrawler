@@ -29,9 +29,19 @@ namespace
   ////////////////////////////////////////////////////////////////////////////
   sf::Music* lua_loadMusic(const std::string& fileName)
   {
+    TRACE("Loading music: %s", fileName.c_str());
+
     sf::Music* music = new sf::Music;
-    music->openFromFile( config::res_path(fileName) );
-    return music;
+
+    if (music->openFromFile( config::res_path(fileName) ))
+    {
+      return music;
+    }
+    else
+    {
+      TRACE("Failed to load music file!");
+      return nullptr;
+    }
   }
 
   void lua_freeMusic(sf::Music* music)
@@ -62,7 +72,7 @@ namespace
   ////////////////////////////////////////////////////////////////////////////
   // Graphic functions
   ////////////////////////////////////////////////////////////////////////////
-  void lua_drawTexture(sf::RenderTarget* target, sf::Texture* texture, int x, int y)
+  void lua_drawTexture(sf::Texture* texture, sf::RenderTarget* target, int x, int y)
   {
     sf::Sprite sprite;
     sprite.setTexture(*texture);
@@ -116,6 +126,11 @@ namespace
   int lua_getEventType(sf::Event* event)
   {
     return static_cast<int>(event->type);
+  }
+
+  int lua_getKeyCodeFromEvent(sf::Event* event)
+  {
+    return static_cast<int>(event->key.code);
   }
 }
 
@@ -177,6 +192,7 @@ void register_lua_bindings(lua::LuaEnv& luaState)
         }
       })
     ("get_config_var", [](const std::string& var) { return config::get(var); })
+    ("trace", [](const std::string& message) { TRACE("%s", message.c_str()); })
 
     // Character functions
     ("afflict_status", &Character::afflictStatus)
@@ -199,11 +215,11 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("recover_party", &Player::recoverAll)
 
     // Message functions
-    ("message", [](std::string msg) { show_message(msg.c_str()); })
+    ("show_message", [](std::string msg) { show_message(msg.c_str()); })
     ("clear_message", []() { Message::instance().clear(); })
     ("update_message", []() { Message::instance().update(); })
     ("message_waiting_for_key", []() { return Message::instance().isWaitingForKey(); })
-    ("message_flush", []() { Message::instance().flush(); })
+    ("flush_message", []() { Message::instance().flush(); })
 
     // Graphics stuff
     ("load_texture", cache::loadTexture)
@@ -240,5 +256,6 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("move_menu_arrow", lua_moveMenuArrow)
 
     // Event functions
-    ("event_type", lua_getEventType);
+    ("event_type", lua_getEventType)
+    ("get_keycode", lua_getKeyCodeFromEvent);
 }

@@ -29,6 +29,8 @@
 #include "Shop.h"
 #include "Battle.h"
 
+#include "ScriptScene.h"
+
 #include "../dep/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -685,7 +687,9 @@ void Game::postFade(FadeType fadeType)
     }
     else if (m_campSite)
     {
-      Campsite* campSite = new Campsite;
+      ScriptScene* campSite = new ScriptScene(config::res_path("Scripts/Campsite.lua"));
+
+      //Campsite* campSite = new Campsite;
       SceneManager::instance().addScene(campSite);
     }
   }
