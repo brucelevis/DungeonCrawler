@@ -356,9 +356,6 @@ namespace lua
       detail::pushmany(m_state, args...);
 
       lua_call(m_state, nArgs, 0);
-
-      // Don't care about return value.
-      lua_pop(m_state, 1);
     }
 
     template <typename T>
