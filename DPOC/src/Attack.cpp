@@ -73,7 +73,7 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
     std::string funcWrap = "function __calc_damage(a, b, w)\n return " + weapon->formula + "\nend";
 
     global_lua_env()->executeLine(funcWrap);
-    global_lua_env()->call_function<double>("__calc_damage", damage, attacker, target, weapon);
+    damage = global_lua_env()->call_function_result<double>("__calc_damage", attacker, target, weapon);
   }
   else
   {

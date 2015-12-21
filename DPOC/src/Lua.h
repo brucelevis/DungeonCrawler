@@ -359,7 +359,7 @@ namespace lua
     }
 
     template <typename ReturnValue, typename ... Args>
-    void call_function(const char* func_name, ReturnValue& returnOut, Args... args)
+    ReturnValue call_function_result(const char* func_name, Args... args)
     {
       lua_getglobal(m_state, func_name);
 
@@ -368,8 +368,10 @@ namespace lua
 
       lua_call(m_state, nArgs, 1);
 
-      returnOut = detail::assert_and_get<ReturnValue>::get(m_state, -1);
+      ReturnValue returnOut = detail::assert_and_get<ReturnValue>::get(m_state, -1);
       lua_pop(m_state, 1);
+
+      return returnOut;
     }
 
     template <typename T>
