@@ -8,4 +8,7 @@ void register_lua_bindings(lua::LuaEnv& luaState);
 void run_lua_script(lua::LuaEnv& luaState, const std::string& script);
 void run_lua_string(lua::LuaEnv& luaState, const std::string& line);
 
+/// Get a global singleton lua environment.
+lua::LuaEnv* global_lua_env();
+
 #endif

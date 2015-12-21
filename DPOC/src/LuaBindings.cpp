@@ -259,3 +259,9 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("event_type", lua_getEventType)
     ("get_keycode", lua_getKeyCodeFromEvent);
 }
+
+lua::LuaEnv* global_lua_env()
+{
+  static lua::LuaEnv env;
+  return &env;
+}
