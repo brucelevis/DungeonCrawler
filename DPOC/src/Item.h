@@ -43,6 +43,7 @@ struct Item
   ItemType type;
 
   std::string useVerb;
+  std::string formula;  /// Formula used when calculating damage.
 
   Target target;
 

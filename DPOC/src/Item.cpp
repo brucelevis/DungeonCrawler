@@ -71,6 +71,7 @@ static Item parse_item_element(const XMLElement* itemElement)
   const XMLElement* statElem = itemElement->FirstChildElement("status");
   const XMLElement* effeElem = itemElement->FirstChildElement("effect");
   const XMLElement* verbElem = itemElement->FirstChildElement("verb");
+  const XMLElement* formElem = itemElement->FirstChildElement("formula");
 
   if (nameElem)
     item.name = nameElem->GetText();
@@ -86,6 +87,8 @@ static Item parse_item_element(const XMLElement* itemElement)
     item.itemUseType = itemUseTypeFromString(useElem->GetText());
   if (statElem)
     item.status = statElem->GetText();
+  if (formElem)
+    item.formula = formElem->GetText();
   if (effeElem)
   {
     item.effect = Effect::createFromXmlElement(effeElem);

@@ -4,6 +4,7 @@
 #include "Message.h"
 #include "StatusEffect.h"
 #include "Vocabulary.h"
+#include "LuaBindings.h"
 
 #include "Attack.h"
 
@@ -64,10 +65,23 @@ int attack(Character* attacker, Character* target, bool guard, Item* weapon, boo
 
 int calculate_physical_damage(Character* attacker, Character* target, Item* weapon)
 {
-  float atk = attacker->computeCurrentAttribute(terms::strength);
-  float def = target->computeCurrentAttribute(terms::defense);
-
+  float damage = 0;
   float resist = 1.0f;
+
+  if (weapon && weapon->formula.size())
+  {
+    std::string funcWrap = "function __calc_damage(a, b, w)\n return " + weapon->formula + "\nend";
+
+    global_lua_env()->executeLine(funcWrap);
+    global_lua_env()->call_function<double>("__calc_damage", damage, attacker, target, weapon);
+  }
+  else
+  {
+    float atk = attacker->computeCurrentAttribute(terms::strength);
+    float def = target->computeCurrentAttribute(terms::defense);
+
+    damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
+  }
 
   if (weapon)
   {
@@ -76,20 +90,6 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
       resist *= target->getResistance(it->first);
     }
   }
-
-  float damage = 0;
-
-  damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
-
-//  if (atk >= (2 + def / 2.0f))
-//  {
-//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
-//  }
-//  else
-//  {
-//    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-//    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
-//  }
 
   if ((int)damage <= 0)
   {
