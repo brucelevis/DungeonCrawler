@@ -8,6 +8,14 @@
 
 #include "Attack.h"
 
+namespace
+{
+  std::string _wrap_in_function(const std::string& formula)
+  {
+    return std::string("function __calc_damage(a, b)\n return ") + formula + "\nend";
+  }
+}
+
 int attack(Character* attacker, Character* target, bool guard, Item* weapon, bool& wasCritical)
 {
   int damage = calculate_physical_damage(attacker, target, weapon);
@@ -70,10 +78,10 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
 
   if (weapon && weapon->formula.size())
   {
-    std::string funcWrap = "function __calc_damage(a, b, w)\n return " + weapon->formula + "\nend";
+    std::string funcWrap = _wrap_in_function(weapon->formula);
 
     global_lua_env()->executeLine(funcWrap);
-    damage = global_lua_env()->call_function_result<double>("__calc_damage", attacker, target, weapon);
+    damage = global_lua_env()->call_function_result<double>("__calc_damage", attacker, target);
   }
   else
   {
@@ -153,33 +161,33 @@ int calculate_physical_damage_item(Character* attacker, Character* target, Item*
 
 int calculate_magical_damage(Character* attacker, Character* target, const Spell* spell)
 {
-  float str = !spell->isPhysical ? attacker->computeCurrentAttribute(terms::magic)
-                                 : attacker->computeCurrentAttribute(terms::strength);
-  float pow = spell->power;
-  float def = !spell->isPhysical ? target->computeCurrentAttribute(terms::magdef)
-                                 : target->computeCurrentAttribute(terms::defense);
-
+  float damage = 0;
   float resistance = target->getResistance(spell->element);
 
-  if (spell->spellType & SPELL_HEAL)
+  if (spell->formula.empty())
   {
-    def = 0;
+    float str = !spell->isPhysical ? attacker->computeCurrentAttribute(terms::magic)
+                                   : attacker->computeCurrentAttribute(terms::strength);
+    float pow = spell->power;
+    float def = !spell->isPhysical ? target->computeCurrentAttribute(terms::magdef)
+                                   : target->computeCurrentAttribute(terms::defense);
+
+    if (spell->spellType & SPELL_HEAL)
+    {
+      def = 0;
+    }
+
+    float atk = (1.0f + str / 255.0f) * pow;
+
+    damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
   }
+  else
+  {
+    std::string funcWrap = _wrap_in_function(spell->formula);
 
-  float atk = (1.0f + str / 255.0f) * pow;
-  float damage = 0;
-
-  damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
-
-//  if (atk >= (2 + def))
-//  {
-//    damage = (atk - def / 2.0f + ((atk - def / 2.0f + 1.0f) * (float)random_range(0, 256)) / 256.0f) / 4.0f;
-//  }
-//  else
-//  {
-//    float b = std::max(5.0f, atk - (12.0f * (def - atk + 1.0f)) / atk);
-//    damage = ((b / 2.0f + 1.0f) * (float)random_range(0, 256) / 256.0f + 2.0f) / 3.0f;
-//  }
+    global_lua_env()->executeLine(funcWrap);
+    damage = global_lua_env()->call_function_result<double>("__calc_damage", attacker, target);
+  }
 
   if ((int)damage <= 0)
   {

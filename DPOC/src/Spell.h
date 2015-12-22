@@ -34,6 +34,7 @@ struct Spell
   std::string verb;
   int mpCost;
 
+  std::string formula;
   Target target;
 
   bool battleOnly;
