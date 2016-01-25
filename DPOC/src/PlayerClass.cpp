@@ -60,6 +60,28 @@ PlayerClass parse_class_element(const XMLElement* classElement)
     }
   }
 
+  const XMLElement* fixedAttributesElem = classElement->FirstChildElement("fixedAttributes");
+  if (fixedAttributesElem)
+  {
+    for (const XMLElement* element = fixedAttributesElem->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      const XMLAttribute* nameAttr = element->FindAttribute("name");
+      const XMLAttribute* valueAttr = element->FindAttribute("value");
+
+      if (nameAttr && valueAttr)
+      {
+        std::string name = nameAttr->Value();
+        int increase = fromString<int>(valueAttr->Value());
+
+        pc.fixedAttributes[name] = increase;
+      }
+      else
+      {
+        TRACE("No nameAttr/valueAttr");
+      }
+    }
+  }
+
   const XMLElement* spellsElem = classElement->FirstChildElement("spellsPerLevel");
   if (spellsElem)
   {

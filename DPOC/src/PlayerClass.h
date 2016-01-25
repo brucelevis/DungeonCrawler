@@ -19,6 +19,7 @@ struct PlayerClass
 {
   std::string name;
   std::map<std::string, BaseAttr> baseAttributes;
+  std::map<std::string, int> fixedAttributes; // Attributes increased with a fixed number each level.
   std::map<int, std::vector<std::string> > spells;
   std::vector<std::string> equipment;
   std::vector<std::string> startingEquipment;

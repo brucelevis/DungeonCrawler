@@ -177,6 +177,14 @@ void PlayerCharacter::setAttributes()
       reset_attribute(m_attributes[it->first]);
     }
   }
+
+  if (level > 1)
+  {
+    for (const auto& fixedAttributePair : m_class.fixedAttributes)
+    {
+      advanceAttribute(fixedAttributePair.first, fixedAttributePair.second);
+    }
+  }
 }
 
 void PlayerCharacter::setLevel(int levelReached, bool display)
@@ -190,7 +198,9 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
   if (levelReached > 0)
   {
     if (display)
+    {
       show_message("%s has reached level %d!", getName().c_str(), levelReached);
+    }
 
     std::string buffer;
 
@@ -207,7 +217,9 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
     }
 
     if (display)
+    {
       show_message("%s", buffer.c_str());
+    }
 
     if (m_class.spells.count(levelReached) > 0)
     {
@@ -361,34 +373,8 @@ void PlayerCharacter::draw(sf::RenderTarget& target, int x, int y) const
 
 PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::string& className, int level)
 {
-  PlayerCharacter* character = new PlayerCharacter;
-
-  character->m_name = name;
-  character->setClass(className);
-
-  character->m_faceTexture = cache::loadTexture(character->m_class.faceTexture);
+  PlayerCharacter* character = create(name, className, player_class_ref(className).faceTexture, level);
   character->m_textureRect = character->m_class.textureRect;
-
-  character->m_status.push_back(get_status_effect("Normal"));
-
-  character->m_attributes[terms::level] = make_attribute(0);
-  character->m_attributes[terms::exp] = make_attribute(0);
-
-  for (int i = 1; i <= level; i++)
-  {
-    character->setLevel(i, false);
-
-    if (i < level)
-    {
-      // Gain enough exp for the current level.
-      character->getAttribute(terms::exp).max = character->expForLevel();
-      reset_attribute(character->getAttribute(terms::exp));
-    }
-  }
-
-  reset_attribute(character->m_attributes[terms::hp]);
-  reset_attribute(character->m_attributes[terms::mp]);
-
   return character;
 }
 
@@ -400,12 +386,13 @@ PlayerCharacter* PlayerCharacter::create(const std::string& name, const std::str
   character->setClass(className);
 
   character->m_faceTexture = cache::loadTexture(face);
-  character->m_textureRect = sf::IntRect(0, 0, 32, 32);
+  character->m_textureRect = sf::IntRect(0, 0, character->m_faceTexture->getSize().x, character->m_faceTexture->getSize().y);
 
   character->m_status.push_back(get_status_effect("Normal"));
 
   character->m_attributes[terms::level] = make_attribute(0);
   character->m_attributes[terms::exp] = make_attribute(0);
+  character->m_attributes[terms::skillpoints] = make_attribute(0);
 
   for (int i = 1; i <= level; i++)
   {
