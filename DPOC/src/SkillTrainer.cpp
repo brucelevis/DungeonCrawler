@@ -65,7 +65,7 @@ public:
 
     if (currentSkillValue < 100)
     {
-      draw_text_bmp(target, 8, 8, "%s cost: %d", vocab_short(terms::skillpoints).c_str(), skill.costOfRank);
+      draw_text_bmp(target, 8, 8, "%s cost: %d / %d", vocab_short(terms::skillpoints).c_str(), skill.costOfRank, m_currentCharacter->getBaseAttribute(terms::skillpoints));
     }
     else
     {
