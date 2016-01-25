@@ -26,6 +26,8 @@ namespace terms
 
   const std::string exp = "exp";
   const std::string level = "level";
+
+  const std::string skillpoints = "skillpoints";
 }
 
 #endif /* VOCABULARY_H_ */

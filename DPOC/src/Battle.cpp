@@ -704,15 +704,7 @@ void Battle::actionEffect()
           play_sound(config::get("SOUND_SUCCESS"));
 
           battle_message("Stole the %s!", item.c_str());
-
-          if (item == "gem")
-          {
-            set_global<int>("$sys:gems", global<int>("$sys:gems") + 1);
-          }
-          else
-          {
-            get_player()->addItemToInventory(item, 1);
-          }
+          get_player()->addItemToInventory(item, 1);
         }
         else
         {
@@ -780,16 +772,8 @@ void Battle::doVictory()
 
       for (std::string& itemName : items)
       {
-        if (itemName == "gem")
-        {
-          set_global<int>("$sys:gems", global<int>("$sys:gems") + 1);
-          show_message("%s dropped a gem!", monster->getName().c_str());
-        }
-        else
-        {
-          get_player()->addItemToInventory(itemName, 1);
-          show_message("%s dropped %s!", monster->getName().c_str(), itemName.c_str());
-        }
+        get_player()->addItemToInventory(itemName, 1);
+        show_message("%s dropped %s!", monster->getName().c_str(), itemName.c_str());
       }
     }
 

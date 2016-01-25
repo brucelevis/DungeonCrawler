@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include "Config.h"
 #include "Persistent.h"
+#include "Vocabulary.h"
 
 #include "Skill.h"
 #include "SkillTrainer.h"
@@ -26,15 +27,14 @@ public:
 
   void handleConfirm()
   {
-    int gems = getRequiredGems();
     int currentSkillValue = m_currentCharacter->getBaseAttribute(getCurrentSkill());
+    int skillPoints = m_currentCharacter->getBaseAttribute(terms::skillpoints);
+    auto skill = Skill::get(getCurrentSkill());
 
-    if (global<int>("$sys:gems") >= gems && currentSkillValue < 100)
+    if (skillPoints >= skill.costOfRank && currentSkillValue < 100)
     {
-      auto skill = Skill::get(getCurrentSkill());
-
-      set_global("$sys:gems", global<int>("$sys:gems") - gems);
       m_currentCharacter->advanceAttribute(getCurrentSkill(), skill.getPercent(1));
+      m_currentCharacter->advanceAttribute(terms::skillpoints, -skill.costOfRank);
 
       play_sound(config::get("SOUND_SHOP"));
 
@@ -60,10 +60,12 @@ public:
   {
     draw_frame(target, 0, 0, config::GAME_RES_X, 24);
 
+    auto skill = Skill::get(getCurrentSkill());
     int currentSkillValue = m_currentCharacter->getBaseAttribute(getCurrentSkill());
+
     if (currentSkillValue < 100)
     {
-      draw_text_bmp(target, 8, 8, "Gems to train: %d / %d", getRequiredGems(), global<int>("$sys:gems"));
+      draw_text_bmp(target, 8, 8, "%s cost: %d", vocab_short(terms::skillpoints).c_str(), skill.costOfRank);
     }
     else
     {
@@ -73,13 +75,6 @@ public:
     Menu::draw(target, x, y + 22);
   }
 private:
-  int getRequiredGems() const
-  {
-    auto skill = Skill::get( getCurrentSkill() );
-
-    return skill.costOfRank;// * (1 + skill.ranks(m_currentCharacter->getBaseAttribute(skill.name)));
-  }
-
   std::string getCurrentSkill() const
   {
     auto choiceVec = split_string(getCurrentMenuChoice(), ' ');
