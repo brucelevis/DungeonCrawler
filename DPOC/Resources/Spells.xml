@@ -1,118 +1,305 @@
 <spells>
+  <!-- Fighter spells -->
   <spell>
-    <name>Hurt</name>
-    <description>Low damage to one enemy</description>
-    <cost>2</cost>
+    <name>Steadfast</name>
+    <description>Hold ground to increase defense</description>
+    <cost>5</cost>
+    <target>TARGET_SELF</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <buff>
+      <attribute name="defense" power="20" />
+    </buff>
+    
+    <effect animation="effect_Buff.xml" sound="Spells/Flash2.wav" />
+  </spell>
+  
+  <spell>
+    <name>Provoke</name>
+    <description>Draws attention for 3 turns</description>
+    <cost>10</cost>
+    <target>TARGET_SELF</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Provoke" chance="100" duration="4" />
+    </statusChange>
+    
+    <effect animation="effect_Provoke.xml" sound="Spells/Monster3.ogg" />
+  </spell>
+
+  <spell>
+    <name>Disarm</name>
+    <description>Attack with disarming strike to lower str</description>
+    <cost>8</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
     <spellType>
+      <type>SPELL_BUFF</type>
       <type>SPELL_DAMAGE</type>
+    </spellType>
+    <isPhysical>1</isPhysical>
+    <power>80</power>
+    <buff>
+      <attribute name="strength" power="-40" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Battlecry</name>
+    <description>Cry to frighten enemies</description>
+    <cost>14</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
     </spellType>
     <power>40</power>
+    <statusChange>
+      <status name="Afraid" change="80" duration="2" />
+    </statusChange>
   </spell>
 
   <spell>
-    <name>Hurt More</name>
-    <description>Mid damage to one enemy</description>
-    <cost>5</cost>
-    <target>TARGET_SINGLE_ENEMY</target>
+    <name>Rallying Cry</name>
+    <description>Cry to bolster allies</description>
+    <cost>20</cost>
+    <target>TARGET_ALL_ALLY</target>
     <battleOnly>1</battleOnly>
     <spellType>
-      <type>SPELL_DAMAGE</type>
+      <type>SPELL_BUFF</type>
     </spellType>
-    <power>80</power>
+    <buff>
+      <attribute name="strength" power="80" />
+      <attribute name="defense" power="60" />
+    </buff>
   </spell>
 
   <spell>
-    <name>Hurt Most</name>
-    <description>High damage to one enemy</description>
-    <cost>15</cost>
-    <target>TARGET_SINGLE_ENEMY</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_DAMAGE</type>
-    </spellType>
-    <power>160</power>
-  </spell>
-
-  <spell>
-    <name>Hurt All</name>
-    <description>High damage to all enemies</description>
-    <cost>4</cost>
+    <name>Whirlwind Attack</name>
+    <description>Damage to all enemies</description>
+    <cost>25</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>140</power>
+    <power>120</power>
+    <isPhysical>1</isPhysical>
+  </spell>
+
+  <!-- Thief spells -->
+  <spell>
+    <name>Critical Strike</name>
+    <description>Basic damage dealing skill</description>
+    <cost>8</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>60</power>
+    <isPhysical>1</isPhysical>
+  </spell>
+
+  <spell>
+    <name>Poison Strike</name>
+    <description>Attack thay may poison its target</description>
+    <cost>9</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>30</power>
+    <isPhysical>1</isPhysical>
+    <statusChange>
+      <status name="Poison" chance="75" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Trip</name>
+    <description>Trips the enemy, causing knockdown</description>
+    <cost>11</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>    
+    <power>40</power>
+    <isPhysical>1</isPhysical>
+    <statusChange>
+      <status name="Knockdown" chance="90" />
+    </statusChange>    
+  </spell>
+
+  <spell>
+    <name>Dirty Strike</name>
+    <description>An attack towards the eyes</description>
+    <cost>14</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>80</power>
+    <isPhysical>1</isPhysical>
+    <statusChange>
+      <status name="Blind" chance="85" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Befuddle</name>
+    <description>Confuses an enemy</description>
+    <cost>16</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>    
+    <statusChange>
+      <status name="Confusion" chance="100" />
+    </statusChange>    
+  </spell>
+
+  <spell>
+    <name>Crippling Strike</name>
+    <description>A nasty attack exposing the enemy</description>
+    <cost>22</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>100</power>
+    <isPhysical>1</isPhysical>
+    <buff>
+      <attribute name="defense" power="-80" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Garrot</name>
+    <description>Leaves the target bleeding</description>
+    <cost>26</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>120</power>
+    <isPhysical>1</isPhysical>
+    <statusChange>
+      <status name="Bleed" chance="100" />
+    </statusChange>
+  </spell>
+
+  <!-- Priest spells -->
+  <spell>
+    <name>Cure</name>
+    <description>Tier 1 healing spell</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_HEAL</type>
+    </spellType>
+    <power>25</power>
+    
+    <effect animation="effect_Heal.xml" sound="Spells/Holy5.wav" />
+  </spell>
+
+  <spell>
+    <name>Cure Poison</name>
+    <description>Removes Poison status</description>
+    <cost>6</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_REMOVE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Poison" />
+    </statusChange>
   </spell>
 
   <spell>
     <name>Heal</name>
-    <description>Heals ally</description>
-    <cost>2</cost>
+    <description>Tier 2 healing spell</description>
+    <cost>8</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>30</power>
+    <power>60</power>
   </spell>
 
   <spell>
-    <name>Heal 2</name>
-    <description>Heals ally moderatly</description>
-    <cost>5</cost>
-    <target>TARGET_SINGLE_ALLY</target>
-    <battleOnly>0</battleOnly>
+    <name>Sunray</name>
+    <description>Holy damage to one enemy</description>
+    <cost>12</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
     <spellType>
-      <type>SPELL_HEAL</type>
+      <type>SPELL_DAMAGE</type>
     </spellType>
+    <element>holy</element>
     <power>80</power>
   </spell>
 
   <spell>
-    <name>Heal 3</name>
-    <description>Heals ally a lot</description>
-    <cost>5</cost>
+    <name>Mend</name>
+    <description>Tier 3 healing spell</description>
+    <cost>16</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>160</power>
+    <power>100</power>
   </spell>
 
   <spell>
-    <name>Heal All</name>
-    <description>Heals the entire party</description>
-    <cost>7</cost>
+    <name>Restore</name>
+    <description>Removes bad statuses</description>
+    <cost>18</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>0</battleOnly>
+    <spellType>
+      <type>SPELL_REMOVE_STATUS</type>
+    </spellType>
+    <statusChange>
+      <status name="Poison" />
+      <status name="Bleed" />
+      <status name="Sleep" />
+      <status name="Paralyze" />
+      <status name="Confusion" />
+      <status name="Blind" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Healing Wave</name>
+    <description>Tier 4 healing spell</description>
+    <cost>32</cost>
     <target>TARGET_ALL_ALLY</target>
     <battleOnly>1</battleOnly>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>30</power>
-  </spell>
-
-  <spell>
-    <name>Multiheal</name>
-    <description>Heals party a lot</description>
-    <cost>10</cost>
-    <target>TARGET_ALL_ALLY</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_HEAL</type>
-    </spellType>
-    <power>85</power>
+    <power>120</power>
   </spell>
 
   <spell>
     <name>Phoenix</name>
     <description>Returns ally to life</description>
-    <cost>12</cost>
+    <cost>40</cost>
     <target>TARGET_DEAD</target>
-    <battleOnly>0</battleOnly>
     <spellType>
       <type>SPELL_REMOVE_STATUS</type>
       <type>SPELL_HEAL</type>
@@ -122,6 +309,405 @@
     </statusChange>
     <power>15</power>
   </spell>
+
+  <spell>
+    <name>Prayer</name>
+    <description>Prayer to buff the caster</description>
+    <cost>20</cost>
+    <target>TARGET_SELF</target>
+    <spellType>
+      <type>SPELL_HEAL</type>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>60</power>
+    <buff>
+      <attribute name="strength"  power="60" />
+      <attribute name="defense"   power="60" />
+      <attribute name="magic"     power="60" />
+      <attribute name="mag.def"   power="60" />
+    </buff>
+  </spell>
+
+  <spell>
+    <name>Holy</name>
+    <description>Massive holy damage enemies</description>
+    <cost>28</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <element>holy</element>
+    <power>120</power>
+  </spell>
+
+  <!-- Elementalist spells -->
+    <!-- Fire spells -->
+  <spell>
+    <name>Firepuff</name>
+    <description>Tier 1 fire spell</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>40</power>
+    <element>fire</element>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+  </spell>
+
+  <spell>
+    <name>Fire Bolt</name>
+    <description>Tier 2 fire spell</description>
+    <cost>8</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>80</power>
+    <element>fire</element>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+  </spell>
+
+  <spell>
+    <name>Scorch</name>
+    <description>Tier 3 fire spell</description>
+    <cost>12</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>120</power>
+    <element>fire</element>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+  </spell>
+
+  <spell>
+    <name>Flameline</name>
+    <description>Tier 1 fire spell (all)</description>
+    <cost>7</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>50</power>
+    <element>fire</element>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+  </spell>
+
+  <spell>
+    <name>Fireball</name>
+    <description>Tier 2 fire spell (all)</description>
+    <cost>14</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>70</power>
+    <element>fire</element>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+  </spell>
+
+  <spell>
+    <name>Inferno</name>
+    <description>Tier 3 fire spell (all)</description>
+    <cost>21</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <power>140</power>
+    <element>fire</element>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+  </spell>
+
+    <!-- Ice spells -->
+  <spell>
+    <name>Chill</name>
+    <description>Tier 1 ice spell</description>
+    <cost>5</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>30</power>
+    <element>ice</element>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    
+    <buff>
+      <attribute name="speed" power="-10" />
+    </buff>
+  </spell>
+  
+  <spell>
+    <name>Frost</name>
+    <description>Tier 2 ice spell</description>
+    <cost>9</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_BUFF</type>
+    </spellType>
+    <power>50</power>
+    <element>ice</element>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    
+    <buff>
+      <attribute name="speed" power="-30" />
+    </buff>
+  </spell>
+  
+  <spell>
+    <name>Freeze</name>
+    <description>Tier 3 ice spell</description>
+    <cost>16</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_BUFF</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>120</power>
+    <element>ice</element>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    
+    <buff>
+      <attribute name="speed" power="-100" />
+    </buff>
+    
+    <statusChange>
+      <status name="Frozen" chance="5" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Frost Armour</name>
+    <description>Tier 1 ice spell (+def)</description>
+    <cost>5</cost>
+    <target>TARGET_SINGLE_ALLY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_BUFF</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <buff>
+      <attribute name="defense" power="80" />
+    </buff>
+    <statusChange>
+      <status name="Chilled" chance="100" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Cold Snap</name>
+    <description>Tier 2 ice spell (all,+frozen)</description>
+    <cost>14</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>50</power>
+    <element>ice</element>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <statusChange>
+      <status name="Frozen" chance="15" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Blizzard</name>
+    <description>Tier 3 ice spell (all)</description>
+    <cost>25</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>130</power>
+    <element>ice</element>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <statusChange>
+      <status name="Frozen" chance="15" />
+      <status name="Chilled" chance="75" />
+    </statusChange>
+  </spell>
+  
+    <!-- Lit spells -->
+  <spell>
+    <name>Static</name>
+    <description>Tier 1 air spell (+par)</description>
+    <cost>4</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>30</power>
+    <element>air</element>
+    <statusChange>
+      <status name="Paralyze" chance="10" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Gust</name>
+    <description>Tier 2 air spell</description>
+    <cost>9</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>60</power>
+    <element>air</element>
+    <statusChange>
+      <status name="Knockdown" chance="75" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Lightning Bolt</name>
+    <description>Tier 3 air spell</description>
+    <cost>16</cost>
+    <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <power>120</power>
+    <element>air</element>
+    <statusChange>
+      <status name="Paralyze" chance="30" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Flash</name>
+    <description>Tier 1 air spell (all,+blind)</description>
+    <cost>7</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <element>air</element>
+    <statusChange>
+      <status name="Blind" chance="80" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Shock</name>
+    <description>Tier 2 air spell (all,+blind)</description>
+    <cost>16</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <element>air</element>
+    <power>50</power>
+    <statusChange>
+      <status name="Blind" chance="50" />
+    </statusChange>
+  </spell>
+
+  <spell>
+    <name>Tornado</name>
+    <description>Tier 3 air spell (all)</description>
+    <cost>26</cost>
+    <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>1</battleOnly>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_CAUSE_STATUS</type>
+    </spellType>
+    <element>air</element>
+    <power>120</power>
+    <statusChange>
+      <status name="Knockdown" chance="100" />
+    </statusChange>
+  </spell>
+
+  <!-- Garbage -->
+  <spell>
+    <name>Poison Gnaw</name>
+    <description>Poisons an enemy</description>
+    <verb>sinks it fangs into $!</verb>
+    <target>TARGET_SINGLE_ENEMY</target>
+
+    <power>45</power>
+    <isPhysical>1</isPhysical>
+
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    
+    <statusChange>
+      <status name="Poison" chance="25" />
+    </statusChange>
+    
+    <effect animation="effect_PoisonBite.xml" sound="Bite.wav" />
+  </spell>
+  <spell>
+    <name>Leech</name>
+    <description>Leeches HP and paralyzes</description>
+    <verb>sucks hold of $!</verb>
+    <target>TARGET_SINGLE_ENEMY</target>
+
+    <power>60</power>
+    <isPhysical>1</isPhysical>
+
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+      <type>SPELL_DRAIN</type>
+    </spellType>
+    
+    <statusChange>
+      <status name="Paralyze" chance="10" />
+    </statusChange>
+    
+    <effect animation="effect_Bite.xml" sound="Bite.wav" />
+  </spell>
+  <spell>
+    <name>Poison Spew</name>
+    <description>Poisons an enemy</description>
+    <verb>spews forth some terrible bile!</verb>
+    <target>TARGET_ALL_ENEMY</target>
+
+    <power>30</power>
+    <isPhysical>1</isPhysical>
+
+    <spellType>
+      <type>SPELL_CAUSE_STATUS</type>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    
+    <statusChange>
+      <status name="Poison" chance="25" />
+    </statusChange>
+    
+    <effect animation="effect_Poison.xml" sound="Poison.wav" />
+  </spell>
+  
 
   <spell>
     <name>Poison</name>
@@ -135,6 +721,8 @@
     <statusChange>
       <status name="Poison" chance="100" />
     </statusChange>
+    
+    <effect animation="effect_Poison.xml" sound="Poison.wav" />
   </spell>
 
   <spell>
@@ -194,66 +782,6 @@
   </spell>
 
   <spell>
-    <name>Buff</name>
-    <description>Increases power</description>
-    <cost>4</cost>
-    <target>TARGET_SINGLE_ALLY</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_BUFF</type>
-    </spellType>
-    <power>100</power>
-    <buff>
-      <attribute name="strength" />
-    </buff>
-  </spell>
-
-  <spell>
-    <name>Barrier</name>
-    <description>Increases party defense</description>
-    <cost>12</cost>
-    <target>TARGET_ALL_ALLY</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_BUFF</type>
-    </spellType>
-    <power>65</power>
-    <buff>
-      <attribute name="defense" />
-      <attribute name="mag.def" />
-    </buff>
-  </spell>
-
-  <spell>
-    <name>Agility</name>
-    <description>Increases speed</description>
-    <cost>4</cost>
-    <target>TARGET_SELF</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_BUFF</type>
-    </spellType>
-    <power>100</power>
-    <buff>
-      <attribute name="speed" />
-    </buff>
-  </spell>
-
-  <spell>
-    <name>Cure Poison</name>
-    <description>Removes Poison status</description>
-    <cost>2</cost>
-    <target>TARGET_SINGLE_ALLY</target>
-    <battleOnly>0</battleOnly>
-    <spellType>
-      <type>SPELL_REMOVE_STATUS</type>
-    </spellType>
-    <statusChange>
-      <status name="Poison" />
-    </statusChange>
-  </spell>
-
-  <spell>
     <name>Drain</name>
     <description>Drains HP</description>
     <cost>4</cost>
@@ -266,54 +794,6 @@
     <power>50</power>
   </spell>
 
-  <spell>
-    <name>Soften</name>
-    <description>Lowers enemies defense</description>
-    <cost>14</cost>
-    <target>TARGET_ALL_ENEMY</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_BUFF</type>
-    </spellType>
-    <power>-35</power>
-    <buff>
-      <attribute name="defense" />
-      <attribute name="mag.def" />
-    </buff>
-  </spell>
-
-  <spell>
-    <name>Power Up!</name>
-    <description>Oh! You will feel so good!</description>
-    <cost>32</cost>
-    <target>TARGET_SELF</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_BUFF</type>
-    </spellType>
-    <power>140</power>
-    <buff>
-      <attribute name="strength" />
-      <attribute name="magic" />
-      <attribute name="speed" />
-    </buff>
-  </spell>
-
-  <spell>
-    <name>Provoke</name>
-    <description>Draws attention for 3 turns</description>
-    <cost>8</cost>
-    <target>TARGET_SELF</target>
-    <battleOnly>1</battleOnly>
-    <spellType>
-      <type>SPELL_CAUSE_STATUS</type>
-    </spellType>
-    <statusChange>
-      <status name="Provoke" chance="100" duration="4" />
-    </statusChange>
-  </spell>
-
-  <!-- Monster spells -->
   <spell>
     <name>Rake</name>
     <verb>grazes the party!</verb>

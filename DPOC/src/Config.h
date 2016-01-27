@@ -21,7 +21,7 @@ namespace config
   static const int RAYCASTER_RES_X = 256;
   static const int RAYCASTER_RES_Y = 160;
 
-  static std::string RESOURCE_DIR = "Resources_2/";
+  static std::string RESOURCE_DIR = "Resources/";
 
   void load_config();
 

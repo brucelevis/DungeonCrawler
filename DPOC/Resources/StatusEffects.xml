@@ -8,7 +8,29 @@
     <recoveryChance>0</recoveryChance>
     <incapacitate>0</incapacitate>
     <damage type="DAMAGE_PERCENT" amount="4" attr="hp" />
-    <sound>Poison.wav</sound>
+    <effect animation="effect_Poison.xml" sound="Poison.wav" />
+  </statusEffect>
+
+  <statusEffect>
+    <name>Bleed</name>
+    <verb>is bleeding nastily!</verb>
+    <recoveryVerb>stops bleeding.</recoveryVerb>
+    <color r="255" g="0" b="0" />
+    <battleOnly>1</battleOnly>
+    <recoveryChance>0</recoveryChance>
+    <incapacitate>0</incapacitate>
+    <damage type="DAMAGE_PERCENT" amount="8" attr="hp" />
+  </statusEffect>
+
+  <statusEffect>
+    <name>Curse</name>
+    <verb>is under a nasty curse!</verb>
+    <recoveryVerb>recovers from the curse.</recoveryVerb>
+    <color r="127" g="127" b="180" />
+    <battleOnly>1</battleOnly>
+    <recoveryChance>0</recoveryChance>
+    <incapacitate>1</incapacitate>
+    <damage type="DAMAGE_PERCENT" amount="10" attr="hp" />
   </statusEffect>
 
   <statusEffect>
@@ -19,7 +41,29 @@
     <battleOnly>1</battleOnly>
     <recoveryChance>25</recoveryChance>
     <incapacitate>1</incapacitate>
-    <sound>Numbness3.wav</sound>
+    <effect sound="Numbness3.wav" />
+  </statusEffect>
+
+  <statusEffect>
+    <name>Chilled</name>
+    <verb>is chilled!</verb>
+    <recoveryVerb>thaws out.</recoveryVerb>
+    <color r="0" g="127" b="255" />
+    <battleOnly>1</battleOnly>
+    <recoveryChance>5</recoveryChance>
+    <effect sound="Cold2.wav" />
+    <damage type="DAMAGE_FIXED" amount="2" attr="speed" />
+  </statusEffect>
+
+  <statusEffect>
+    <name>Frozen</name>
+    <verb>is frozen solid!</verb>
+    <recoveryVerb>thaws out.</recoveryVerb>
+    <color r="0" g="127" b="255" />
+    <battleOnly>1</battleOnly>
+    <recoveryChance>10</recoveryChance>
+    <incapacitate>1</incapacitate>
+    <effect sound="Cold2.wav" />
   </statusEffect>
 
   <statusEffect>
@@ -48,6 +92,15 @@
     <recoveryVerb>comes back to its senses.</recoveryVerb>
     <color r="255" g="255" b="45" />
     <recoveryChance>0</recoveryChance>
+    <incapacitate>1</incapacitate>
+  </statusEffect>
+
+  <statusEffect>
+    <name>Knockdown</name>
+    <verb>is knocked down.</verb>
+    <recoveryVerb>clambers back up.</recoveryVerb>
+    <color r="255" g="255" b="255" />
+    <recoveryChance>75</recoveryChance>
     <incapacitate>1</incapacitate>
   </statusEffect>
 
