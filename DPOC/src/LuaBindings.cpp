@@ -242,7 +242,7 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("shake_screen", [](int duration, int power) { SceneManager::instance().shakeScreen(duration, power, power); })
     ("fade_in", [](int duration) { SceneManager::instance().fadeIn(duration); })
     ("fade_out", [](int duration) { SceneManager::instance().fadeOut(duration); })
-    ("close", Scene::close)
+    ("close", &Scene::close)
 
     // Menu functions
     ("create_choice_menu", lua_createChoiceMenu)

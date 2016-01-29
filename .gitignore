@@ -8,6 +8,7 @@ Thumbs.db
 *.wav
 *.ogg
 *.mp3
+*.o
 Save*xml
 Resources_2
 /Release
