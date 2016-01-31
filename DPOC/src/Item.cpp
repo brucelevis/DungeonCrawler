@@ -72,6 +72,7 @@ static Item parse_item_element(const XMLElement* itemElement)
   const XMLElement* effeElem = itemElement->FirstChildElement("effect");
   const XMLElement* verbElem = itemElement->FirstChildElement("verb");
   const XMLElement* formElem = itemElement->FirstChildElement("formula");
+  const XMLElement* singleElem = itemElement->FirstChildElement("element");
 
   if (nameElem)
     item.name = nameElem->GetText();
@@ -86,7 +87,7 @@ static Item parse_item_element(const XMLElement* itemElement)
   if (useElem)
     item.itemUseType = itemUseTypeFromString(useElem->GetText());
   if (statElem)
-    item.status = statElem->GetText();
+    item.status.push_back(statElem->GetText());
   if (formElem)
     item.formula = formElem->GetText();
   if (effeElem)
@@ -95,6 +96,13 @@ static Item parse_item_element(const XMLElement* itemElement)
   }
   if (verbElem)
     item.useVerb = verbElem->GetText();
+  if (singleElem)
+  {
+    // <element>...</element>
+    // Typically used for weapons that only has an element type.
+    std::string elementName = singleElem->GetText();
+    item.elements[elementName] = 1;
+  }
 
   const XMLElement* attrElem = itemElement->FirstChildElement("attributes");
   if (attrElem)
@@ -128,6 +136,18 @@ static Item parse_item_element(const XMLElement* itemElement)
       std::string name = element->FindAttribute("name")->Value();
       float value = fromString<float>(element->FindAttribute("value")->Value());
       item.elements[name] = value;
+    }
+  }
+
+  // List of status effects: <statusEffects> <status>Dead</status> ... </statusEffects>
+  const XMLElement* statusEffectsElement = itemElement->FirstChildElement("statusEffects");
+  if (statusEffectsElement)
+  {
+    for (const XMLElement* element = statusEffectsElement->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string statusName = element->GetText();
+
+      item.status.push_back(statusName);
     }
   }
 
@@ -219,17 +239,30 @@ int use_item(Item* item, Character* user, Character* target)
 
   if (item->itemUseType == ITEM_REMOVE_STATUS)
   {
-    cure_status(target, item->status);
-
-    // If dead they should be restored with HP.
-    if (item->status == "Dead")
+    for (const auto& statusName : item->status)
     {
-      target->getAttribute(terms::hp).current = 1;
+      cure_status(target, statusName);
+
+      // If dead they should be restored with HP.
+      if (statusName == "Dead")
+      {
+        target->getAttribute(terms::hp).current = 1;
+      }
     }
   }
   else if (item->itemUseType == ITEM_CAUSE_STATUS)
   {
-    if (!cause_status(target, item->status, false))
+    bool nothingHappened = true;
+
+    for (const auto& statusName : item->status)
+    {
+      if (cause_status(target, statusName, false))
+      {
+        nothingHappened = false;
+      }
+    }
+
+    if (nothingHappened)
     {
       battle_message("No effect...");
     }

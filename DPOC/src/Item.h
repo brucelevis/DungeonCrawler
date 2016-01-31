@@ -53,7 +53,7 @@ struct Item
 
   ItemUseType itemUseType;
 
-  std::string status;
+  std::vector<std::string> status;
 
   /// Damage element for weapons, protection for armors.
   /// Map because resist amount.
