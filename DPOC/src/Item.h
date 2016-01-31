@@ -18,8 +18,8 @@ enum ItemType
   ITEM_SHIELD,
   ITEM_ARMOR,
   ITEM_HELMET,
-  ITEM_BOOTS,
-  ITEM_MISC
+  ITEM_MISC1,
+  ITEM_MISC2
 };
 
 enum ItemUseType
@@ -71,5 +71,6 @@ Item& item_ref(const std::string& name);
 int use_item(Item* item, Character* user, Character* target);
 
 std::string equip_type_string(ItemType itemType);
+std::vector<std::string> get_equip_names();
 
 #endif

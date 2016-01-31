@@ -113,10 +113,11 @@ static void draw_status(sf::RenderTarget& target, PlayerCharacter* character, in
 
   draw_stat_block(target, character, x, y);
 
-  for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
+  const auto equipNames = get_equip_names();
+  for (size_t i = 0; i < equipNames.size(); i++)
   {
-    Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
-    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
+    Item* item = character->getEquipment(equipNames[i]);
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", vocab(equipNames[i]).c_str(), item ? item->name.c_str(): "");
   }
 }
 

@@ -12,6 +12,7 @@ const std::string& vocab_short(const std::string& termName);
 
 namespace terms
 {
+  // Attribute terms
   const std::string gold = "gold";
 
   const std::string hp = "hp";
@@ -28,6 +29,14 @@ namespace terms
   const std::string level = "level";
 
   const std::string skillpoints = "skillpoints";
+
+  // Equipment terms
+  const std::string weapon = "Weapon";
+  const std::string shield = "Shield";
+  const std::string armour = "Armour";
+  const std::string helmet = "Helmet";
+  const std::string misc1  = "Misc1";
+  const std::string misc2  = "Misc2";
 }
 
 #endif /* VOCABULARY_H_ */

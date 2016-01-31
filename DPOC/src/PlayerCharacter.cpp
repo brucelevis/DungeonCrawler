@@ -13,11 +13,6 @@
 
 #include "PlayerCharacter.h"
 
-std::vector<std::string> PlayerCharacter::equipNames =
-{
-  "Weapon", "Shield", "Armour", "Helmet", "Boots", "Others"
-};
-
 PlayerCharacter::PlayerCharacter()
  : m_skullTexture(cache::loadTexture("Pictures/Death.png"))
 {
@@ -312,8 +307,10 @@ bool PlayerCharacter::isImmune(const std::string& status) const
 {
   for (auto it = m_equipment.begin(); it != m_equipment.end(); ++it)
   {
-    if (it->second.status == status)
+    if (std::find(it->second.status.begin(), it->second.status.end(), status) != it->second.status.end())
+    {
       return true;
+    }
   }
 
   return Character::isImmune(status);

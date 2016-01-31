@@ -13,8 +13,6 @@ struct CharacterData;
 class PlayerCharacter : public Character
 {
 public:
-  static std::vector<std::string> equipNames;
-
   PlayerCharacter();
   ~PlayerCharacter();
 

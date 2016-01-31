@@ -663,10 +663,11 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 
   draw_stat_block(target, character, x, y);
 
-  for (size_t i = 0; i < PlayerCharacter::equipNames.size(); i++)
+  auto equipNames = get_equip_names();
+  for (size_t i = 0; i < equipNames.size(); i++)
   {
-    Item* item = character->getEquipment(PlayerCharacter::equipNames[i]);
-    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", PlayerCharacter::equipNames[i].c_str(), item ? item->name.c_str(): "");
+    Item* item = character->getEquipment(equipNames[i]);
+    draw_text_bmp(target, x, y + 84 + 12 * i, "%s: %s", vocab(equipNames[i]).c_str(), item ? item->name.c_str(): "");
   }
 }
 
@@ -996,9 +997,9 @@ EquipMenu::EquipMenu(PlayerCharacter* character)
    m_itemMenu(new EquipItemMenu(character, 256, 104)),
    m_state(STATE_SELECT_EQUIPMENT_TYPE)
 {
-  for (auto it = PlayerCharacter::equipNames.begin(); it != PlayerCharacter::equipNames.end(); ++it)
+  for (const auto equipName : get_equip_names())
   {
-    addEntry(*it);
+    addEntry(equipName);
   }
 
   m_itemMenu->setCursorVisible(false);
@@ -1133,7 +1134,7 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     Item* equipment = m_character->getEquipment(getChoice(i));
 
-    std::string typeShortName = get_equip_short_name(getChoice(i));
+    std::string typeShortName = vocab_short(getChoice(i));
     std::string itemShortName = equipment ?
         limit_string(equipment->name, 8) :
         "";

@@ -27,8 +27,8 @@ static ItemType itemTypeFromString(const std::string& type)
   E_S(type, ITEM_SHIELD);
   E_S(type, ITEM_ARMOR);
   E_S(type, ITEM_HELMET);
-  E_S(type, ITEM_MISC);
-  E_S(type, ITEM_BOOTS);
+  E_S(type, ITEM_MISC1);
+  E_S(type, ITEM_MISC2);
 
   TRACE("Unknown item type %s", type.c_str());
 
@@ -273,11 +273,25 @@ int use_item(Item* item, Character* user, Character* target)
 
 std::string equip_type_string(ItemType itemType)
 {
-  if (itemType == ITEM_WEAPON) return "Weapon";
-  else if (itemType == ITEM_SHIELD) return "Shield";
-  else if (itemType == ITEM_ARMOR) return "Armour";
-  else if (itemType == ITEM_HELMET) return "Helmet";
-  else if (itemType == ITEM_BOOTS) return "Boots";
-  else if (itemType == ITEM_MISC) return "Others";
+  if (itemType == ITEM_WEAPON) return vocab(terms::weapon);
+  else if (itemType == ITEM_SHIELD) return vocab(terms::shield);
+  else if (itemType == ITEM_ARMOR) return vocab(terms::armour);
+  else if (itemType == ITEM_HELMET) return vocab(terms::helmet);
+  else if (itemType == ITEM_MISC1) return vocab(terms::misc1);
+  else if (itemType == ITEM_MISC2) return vocab(terms::misc2);
   return "";
 }
+
+std::vector<std::string> get_equip_names()
+{
+  return std::vector<std::string>
+  {
+    terms::weapon,
+    terms::shield,
+    terms::armour,
+    terms::helmet,
+    terms::misc1,
+    terms::misc2
+  };
+}
+

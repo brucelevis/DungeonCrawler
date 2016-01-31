@@ -56,36 +56,6 @@ std::string to_lower(const std::string& str)
   return cpy;
 }
 
-std::string get_equip_short_name(const std::string& equipName)
-{
-  if (equipName == "Weapon")
-  {
-    return "Weap";
-  }
-  else if (equipName == "Shield")
-  {
-    return "Shld";
-  }
-  else if (equipName == "Armour")
-  {
-    return "Armr";
-  }
-  else if (equipName == "Helmet")
-  {
-    return "Helm";
-  }
-  else if (equipName == "Boots")
-  {
-    return "Boot";
-  }
-  else if (equipName == "Others")
-  {
-    return "Misc";
-  }
-
-  return "";
-}
-
 std::string get_string_after_first_space(const std::string& str)
 {
   std::string buff;
