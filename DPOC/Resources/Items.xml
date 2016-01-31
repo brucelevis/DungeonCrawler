@@ -490,7 +490,7 @@
 
   <!-- Armor -->
   <!-- Shields -->
-    <! -- Normal shields -->
+    <!-- Normal shields -->
   <item>
     <name>Wood Shield</name>
     <description>A wooden shield</description>
@@ -787,7 +787,7 @@
 
   <item>
     <name>Luminant Robes</name>
-    <description>Protects against holy & dark</description>
+    <description>Protects against holy &amp; dark</description>
     <cost>10000</cost>
     <type>ITEM_ARMOR</type>
     <attributes>
