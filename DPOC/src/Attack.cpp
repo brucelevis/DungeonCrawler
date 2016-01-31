@@ -91,12 +91,9 @@ int calculate_physical_damage(Character* attacker, Character* target, Item* weap
     damage = (atk / 2.0f - def / 4.0f) * rand_float(0.8f, 1.2f);
   }
 
-  if (weapon)
+  if (weapon && weapon->element.size())
   {
-    for (auto it = weapon->elements.begin(); it != weapon->elements.end(); ++it)
-    {
-      resist *= target->getResistance(it->first);
-    }
+    resist *= target->getResistance(weapon->element);
   }
 
   if ((int)damage <= 0)

@@ -55,7 +55,9 @@ struct Item
 
   std::vector<std::string> status;
 
-  /// Damage element for weapons, protection for armors.
+  /// Damage element for weapons
+  std::string element;
+  /// Protection for armors.
   /// Map because resist amount.
   std::map<std::string, float> elements;
 

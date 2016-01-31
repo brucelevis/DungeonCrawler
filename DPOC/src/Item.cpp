@@ -101,7 +101,7 @@ static Item parse_item_element(const XMLElement* itemElement)
     // <element>...</element>
     // Typically used for weapons that only has an element type.
     std::string elementName = singleElem->GetText();
-    item.elements[elementName] = 1;
+    item.element = elementName;
   }
 
   const XMLElement* attrElem = itemElement->FirstChildElement("attributes");
