@@ -189,7 +189,7 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
   {
     for (const XMLElement* element = imunElem->FirstChildElement(); element; element = element->NextSiblingElement())
     {
-      std::string name = element->FindAttribute("name")->Value();
+      std::string name = element->GetText();
       monster.immunity.push_back(name);
     }
   }
