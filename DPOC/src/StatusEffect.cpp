@@ -7,6 +7,7 @@
 #include "Utility.h"
 #include "StatusEffect.h"
 
+#include "XMLHelpers.h"
 #include "../dep/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -98,11 +99,11 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
   const XMLElement* damageElem = statusElement->FirstChildElement("damage");
   const XMLElement* effeElem = statusElement->FirstChildElement("effect");
 
-  if (nameElem)
+  if (valid_text_element(nameElem))
     status.name = nameElem->GetText();
-  if (verbElem)
+  if (valid_text_element(verbElem))
     status.verb = verbElem->GetText();
-  if (recovElem)
+  if (valid_text_element(recovElem))
     status.recoverVerb = recovElem->GetText();
   if (colorElem)
   {
@@ -111,11 +112,11 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
     int b = fromString<int>(colorElem->FindAttribute("b")->Value());
     status.color = sf::Color(r, g, b);
   }
-  if (battElem)
+  if (valid_text_element(battElem))
     status.battleOnly = fromString<bool>(battElem->GetText());
-  if (recovChanceElem)
+  if (valid_text_element(recovChanceElem))
     status.recoveryChance = fromString<int>(recovChanceElem->GetText());
-  if (incapElem)
+  if (valid_text_element(incapElem))
     status.incapacitate = fromString<bool>(incapElem->GetText());
   if (damageElem)
   {

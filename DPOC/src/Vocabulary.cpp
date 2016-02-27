@@ -73,6 +73,8 @@ void load_vocabulary()
 {
   static const std::string database = config::res_path("Vocabulary.xml");
 
+  TRACE("Loading Vocabulary file %s", database.c_str());
+
   XMLDocument doc;
   if (doc.LoadFile(database.c_str()) != 0)
   {

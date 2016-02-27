@@ -1,9 +1,7 @@
 <config>
   <MUSIC_BATTLE>Music/Battle3.ogg</MUSIC_BATTLE>
   <MUSIC_VICTORY>Music/Victory1.ogg</MUSIC_VICTORY>
-  <!--<MUSIC_LEVELUP>Music/LevelUp.ogg</MUSIC_LEVELUP>-->
   <MUSIC_TITLE>Music/Intro.ogg</MUSIC_TITLE>
-
   <SOUND_CANCEL>Audio/Cancel1.wav</SOUND_CANCEL>
   <SOUND_USE_ITEM>Audio/Item2.wav</SOUND_USE_ITEM>
   <SOUND_SUCCESS>Audio/Success2.wav</SOUND_SUCCESS>
@@ -12,7 +10,6 @@
   <SOUND_HIT>Audio/hit.wav</SOUND_HIT>
   <SOUND_ENEMY_HIT>Audio/enemy-hit.wav</SOUND_ENEMY_HIT>
   <SOUND_CRITICAL>Audio/Critical.wav</SOUND_CRITICAL>
-  <!--<SOUND_SPELL>Audio/spell.wav</SOUND_SPELL>-->
   <SOUND_ESCAPE>Audio/Run.ogg</SOUND_ESCAPE>
   <SOUND_MISS>Audio/Evasion1.wav</SOUND_MISS>
   <SOUND_HEAL>Audio/blipp.wav</SOUND_HEAL>
@@ -28,11 +25,12 @@
   <SOUND_BATTLE>Audio/Fight1.wav</SOUND_BATTLE>
   <SOUND_FIELD_DAMAGE>Audio/Numbness2.wav</SOUND_FIELD_DAMAGE>
   <SOUND_DOOR>Audio/Close1.wav</SOUND_DOOR>
-
   <DEBUG_MODE>true</DEBUG_MODE>
-  <DEBUG_SHOP>Copper Sword,Cure Potion,Apprentice Staff,Dagger</DEBUG_SHOP>
-  <!--<DEBUG_BATTLE>Batty,Snake,Centopode,Cave Dog</DEBUG_BATTLE>-->
-  <DEBUG_BATTLE>Batty</DEBUG_BATTLE>
-
+  <DEBUG_SHOP>Copper Sword,Cure Potion,Apprentice Staff,Dagger,,,,,</DEBUG_SHOP>
+  <DEBUG_BATTLE>Batty,,,,,</DEBUG_BATTLE>
   <MAX_LEVEL>30</MAX_LEVEL>
+  <SOUND_SPELL>
+  </SOUND_SPELL>
+  <MUSIC_LEVELUP>
+  </MUSIC_LEVELUP>
 </config>

@@ -1,76 +1,113 @@
 <spells>
-  <!-- Fighter spells -->
   <spell>
     <name>Steadfast</name>
     <description>Hold ground to increase defense</description>
     <cost>5</cost>
     <target>TARGET_SELF</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="effect_Buff.xml" sound="Spells/Flash2.wav" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_BUFF</type>
     </spellType>
     <buff>
       <attribute name="defense" power="20" />
     </buff>
-    
-    <effect animation="effect_Buff.xml" sound="Spells/Flash2.wav" />
+    <statusChange />
   </spell>
-  
   <spell>
     <name>Provoke</name>
     <description>Draws attention for 3 turns</description>
     <cost>10</cost>
     <target>TARGET_SELF</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="effect_Provoke.xml" sound="Spells/Monster3.ogg" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
       <status name="Provoke" chance="100" duration="4" />
     </statusChange>
-    
-    <effect animation="effect_Provoke.xml" sound="Spells/Monster3.ogg" />
   </spell>
-
   <spell>
     <name>Disarm</name>
     <description>Attack with disarming strike to lower str</description>
     <cost>8</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>80</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_BUFF</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <isPhysical>1</isPhysical>
-    <power>80</power>
     <buff>
       <attribute name="strength" power="-40" />
     </buff>
+    <statusChange />
   </spell>
-
   <spell>
     <name>Battlecry</name>
     <description>Cry to frighten enemies</description>
     <cost>14</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>40</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>40</power>
+    <buff />
     <statusChange>
-      <status name="Afraid" change="80" duration="2" />
+      <status name="Afraid" chance="100" duration="2" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Rallying Cry</name>
     <description>Cry to bolster allies</description>
     <cost>20</cost>
     <target>TARGET_ALL_ALLY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_BUFF</type>
     </spellType>
@@ -78,870 +115,1298 @@
       <attribute name="strength" power="80" />
       <attribute name="defense" power="60" />
     </buff>
+    <statusChange />
   </spell>
-
   <spell>
     <name>Whirlwind Attack</name>
     <description>Damage to all enemies</description>
     <cost>25</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>120</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>120</power>
-    <isPhysical>1</isPhysical>
+    <buff />
+    <statusChange />
   </spell>
-
-  <!-- Thief spells -->
   <spell>
     <name>Critical Strike</name>
     <description>Basic damage dealing skill</description>
     <cost>8</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>60</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>60</power>
-    <isPhysical>1</isPhysical>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Poison Strike</name>
     <description>Attack thay may poison its target</description>
     <cost>9</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>30</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>30</power>
-    <isPhysical>1</isPhysical>
+    <buff />
     <statusChange>
-      <status name="Poison" chance="75" />
+      <status name="Poison" chance="75" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Trip</name>
     <description>Trips the enemy, causing knockdown</description>
     <cost>11</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>40</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
-    </spellType>    
-    <power>40</power>
-    <isPhysical>1</isPhysical>
+    </spellType>
+    <buff />
     <statusChange>
-      <status name="Knockdown" chance="90" />
-    </statusChange>    
+      <status name="Knockdown" chance="90" duration="-1" />
+    </statusChange>
   </spell>
-
   <spell>
     <name>Dirty Strike</name>
     <description>An attack towards the eyes</description>
     <cost>14</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>80</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>80</power>
-    <isPhysical>1</isPhysical>
+    <buff />
     <statusChange>
-      <status name="Blind" chance="85" />
+      <status name="Blind" chance="85" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Befuddle</name>
     <description>Confuses an enemy</description>
     <cost>16</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
-    </spellType>    
+    </spellType>
+    <buff />
     <statusChange>
-      <status name="Confusion" chance="100" />
-    </statusChange>    
+      <status name="Confusion" chance="100" duration="-1" />
+    </statusChange>
   </spell>
-
   <spell>
     <name>Crippling Strike</name>
     <description>A nasty attack exposing the enemy</description>
     <cost>22</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>100</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_BUFF</type>
     </spellType>
-    <power>100</power>
-    <isPhysical>1</isPhysical>
     <buff>
       <attribute name="defense" power="-80" />
     </buff>
+    <statusChange />
   </spell>
-
   <spell>
     <name>Garrot</name>
     <description>Leaves the target bleeding</description>
     <cost>26</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>120</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>120</power>
-    <isPhysical>1</isPhysical>
+    <buff />
     <statusChange>
-      <status name="Bleed" chance="100" />
+      <status name="Bleed" chance="100" duration="-1" />
     </statusChange>
   </spell>
-
-  <!-- Priest spells -->
   <spell>
     <name>Cure</name>
     <description>Tier 1 healing spell</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
+    <power>25</power>
+    <effect animation="effect_Heal.xml" sound="Spells/Holy5.wav" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>25</power>
-    
-    <effect animation="effect_Heal.xml" sound="Spells/Holy5.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Cure Poison</name>
     <description>Removes Poison status</description>
     <cost>6</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_REMOVE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Poison" />
+      <status name="Poison" chance="100" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Heal</name>
     <description>Tier 2 healing spell</description>
     <cost>8</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
+    <power>60</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>60</power>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Sunray</name>
     <description>Holy damage to one enemy</description>
     <cost>12</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>80</power>
+    <effect animation="" sound="" />
+    <element>holy</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <element>holy</element>
-    <power>80</power>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Mend</name>
     <description>Tier 3 healing spell</description>
     <cost>16</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
+    <power>100</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>100</power>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Restore</name>
     <description>Removes bad statuses</description>
     <cost>18</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>0</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_REMOVE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Poison" />
-      <status name="Bleed" />
-      <status name="Sleep" />
-      <status name="Paralyze" />
-      <status name="Confusion" />
-      <status name="Blind" />
+      <status name="Poison" chance="100" duration="-1" />
+      <status name="Bleed" chance="100" duration="-1" />
+      <status name="Sleep" chance="100" duration="-1" />
+      <status name="Paralyze" chance="100" duration="-1" />
+      <status name="Confusion" chance="100" duration="-1" />
+      <status name="Blind" chance="100" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Healing Wave</name>
     <description>Tier 4 healing spell</description>
     <cost>32</cost>
     <target>TARGET_ALL_ALLY</target>
     <battleOnly>1</battleOnly>
+    <power>120</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>120</power>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Phoenix</name>
     <description>Returns ally to life</description>
     <cost>40</cost>
     <target>TARGET_DEAD</target>
+    <battleOnly>0</battleOnly>
+    <power>15</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_REMOVE_STATUS</type>
       <type>SPELL_HEAL</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Dead" />
+      <status name="Dead" chance="100" duration="-1" />
     </statusChange>
-    <power>15</power>
   </spell>
-
   <spell>
     <name>Prayer</name>
     <description>Prayer to buff the caster</description>
     <cost>20</cost>
     <target>TARGET_SELF</target>
+    <battleOnly>0</battleOnly>
+    <power>60</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_HEAL</type>
       <type>SPELL_BUFF</type>
     </spellType>
-    <power>60</power>
     <buff>
-      <attribute name="strength"  power="60" />
-      <attribute name="defense"   power="60" />
-      <attribute name="magic"     power="60" />
-      <attribute name="mag.def"   power="60" />
+      <attribute name="strength" power="60" />
+      <attribute name="defense" power="60" />
+      <attribute name="magic" power="60" />
+      <attribute name="mag.def" power="60" />
     </buff>
+    <statusChange />
   </spell>
-
   <spell>
     <name>Holy</name>
     <description>Massive holy damage enemies</description>
     <cost>28</cost>
     <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>120</power>
+    <effect animation="" sound="" />
+    <element>holy</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <element>holy</element>
-    <power>120</power>
+    <buff />
+    <statusChange />
   </spell>
-
-  <!-- Elementalist spells -->
-    <!-- Fire spells -->
   <spell>
     <name>Firepuff</name>
     <description>Tier 1 fire spell</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>40</power>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <element>fire</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>40</power>
-    <element>fire</element>
-    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Fire Bolt</name>
     <description>Tier 2 fire spell</description>
     <cost>8</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>80</power>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <element>fire</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>80</power>
-    <element>fire</element>
-    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Scorch</name>
     <description>Tier 3 fire spell</description>
     <cost>12</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>120</power>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <element>fire</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>120</power>
-    <element>fire</element>
-    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Flameline</name>
     <description>Tier 1 fire spell (all)</description>
     <cost>7</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>50</power>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <element>fire</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>50</power>
-    <element>fire</element>
-    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Fireball</name>
     <description>Tier 2 fire spell (all)</description>
     <cost>14</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>70</power>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <element>fire</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>70</power>
-    <element>fire</element>
-    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Inferno</name>
     <description>Tier 3 fire spell (all)</description>
     <cost>21</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>140</power>
+    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <element>fire</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>140</power>
-    <element>fire</element>
-    <effect animation="effect_FlamePuff.xml" sound="Spells/Flame1.wav" />
+    <buff />
+    <statusChange />
   </spell>
-
-    <!-- Ice spells -->
   <spell>
     <name>Chill</name>
     <description>Tier 1 ice spell</description>
     <cost>5</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>30</power>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <element>ice</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_BUFF</type>
     </spellType>
-    <power>30</power>
-    <element>ice</element>
-    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
-    
     <buff>
       <attribute name="speed" power="-10" />
     </buff>
+    <statusChange />
   </spell>
-  
   <spell>
     <name>Frost</name>
     <description>Tier 2 ice spell</description>
     <cost>9</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>1</battleOnly>
+    <power>50</power>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <element>ice</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_BUFF</type>
     </spellType>
-    <power>50</power>
-    <element>ice</element>
-    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
-    
     <buff>
       <attribute name="speed" power="-30" />
     </buff>
+    <statusChange />
   </spell>
-  
   <spell>
     <name>Freeze</name>
     <description>Tier 3 ice spell</description>
     <cost>16</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>1</battleOnly>
+    <power>120</power>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <element>ice</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_BUFF</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>120</power>
-    <element>ice</element>
-    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
-    
     <buff>
       <attribute name="speed" power="-100" />
     </buff>
-    
     <statusChange>
-      <status name="Frozen" chance="5" />
+      <status name="Frozen" chance="5" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Frost Armour</name>
     <description>Tier 1 ice spell (+def)</description>
     <cost>5</cost>
     <target>TARGET_SINGLE_ALLY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_BUFF</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
     <buff>
       <attribute name="defense" power="80" />
     </buff>
     <statusChange>
-      <status name="Chilled" chance="100" />
+      <status name="Chilled" chance="100" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Cold Snap</name>
     <description>Tier 2 ice spell (all,+frozen)</description>
     <cost>14</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>50</power>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <element>ice</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>50</power>
-    <element>ice</element>
-    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <buff />
     <statusChange>
-      <status name="Frozen" chance="15" />
+      <status name="Frozen" chance="15" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Blizzard</name>
     <description>Tier 3 ice spell (all)</description>
     <cost>25</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>130</power>
+    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <element>ice</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>130</power>
-    <element>ice</element>
-    <effect animation="effect_Chill.xml" sound="Spells/Cold5.wav" />
+    <buff />
     <statusChange>
-      <status name="Frozen" chance="15" />
-      <status name="Chilled" chance="75" />
+      <status name="Frozen" chance="15" duration="-1" />
+      <status name="Chilled" chance="75" duration="-1" />
     </statusChange>
   </spell>
-  
-    <!-- Lit spells -->
   <spell>
     <name>Static</name>
     <description>Tier 1 air spell (+par)</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>30</power>
+    <effect animation="" sound="" />
+    <element>air</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>30</power>
-    <element>air</element>
+    <buff />
     <statusChange>
-      <status name="Paralyze" chance="10" />
+      <status name="Paralyze" chance="10" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Gust</name>
     <description>Tier 2 air spell</description>
     <cost>9</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>60</power>
+    <effect animation="" sound="" />
+    <element>air</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>60</power>
-    <element>air</element>
+    <buff />
     <statusChange>
-      <status name="Knockdown" chance="75" />
+      <status name="Knockdown" chance="75" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Lightning Bolt</name>
     <description>Tier 3 air spell</description>
     <cost>16</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>120</power>
+    <effect animation="" sound="" />
+    <element>air</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <power>120</power>
-    <element>air</element>
+    <buff />
     <statusChange>
-      <status name="Paralyze" chance="30" />
+      <status name="Paralyze" chance="30" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Flash</name>
     <description>Tier 1 air spell (all,+blind)</description>
     <cost>7</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>air</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <element>air</element>
+    <buff />
     <statusChange>
-      <status name="Blind" chance="80" />
+      <status name="Blind" chance="80" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Shock</name>
     <description>Tier 2 air spell (all,+blind)</description>
     <cost>16</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>50</power>
+    <effect animation="" sound="" />
+    <element>air</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <element>air</element>
-    <power>50</power>
+    <buff />
     <statusChange>
-      <status name="Blind" chance="50" />
+      <status name="Blind" chance="50" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Tornado</name>
     <description>Tier 3 air spell (all)</description>
     <cost>26</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>120</power>
+    <effect animation="" sound="" />
+    <element>air</element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
-    <element>air</element>
-    <power>120</power>
+    <buff />
     <statusChange>
-      <status name="Knockdown" chance="100" />
+      <status name="Knockdown" chance="100" duration="-1" />
     </statusChange>
   </spell>
-
-  <!-- Garbage -->
   <spell>
     <name>Poison Gnaw</name>
     <description>Poisons an enemy</description>
-    <verb>sinks it fangs into $!</verb>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
-
+    <battleOnly>0</battleOnly>
     <power>45</power>
+    <effect animation="effect_PoisonBite.xml" sound="Bite.wav" />
+    <element>
+    </element>
+    <verb>sinks it fangs into $!</verb>
     <isPhysical>1</isPhysical>
-
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    
+    <buff />
     <statusChange>
-      <status name="Poison" chance="25" />
+      <status name="Poison" chance="25" duration="-1" />
     </statusChange>
-    
-    <effect animation="effect_PoisonBite.xml" sound="Bite.wav" />
   </spell>
   <spell>
     <name>Leech</name>
     <description>Leeches HP and paralyzes</description>
-    <verb>sucks hold of $!</verb>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
-
+    <battleOnly>0</battleOnly>
     <power>60</power>
+    <effect animation="effect_Bite.xml" sound="Bite.wav" />
+    <element>
+    </element>
+    <verb>sucks hold of $!</verb>
     <isPhysical>1</isPhysical>
-
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_DRAIN</type>
     </spellType>
-    
+    <buff />
     <statusChange>
-      <status name="Paralyze" chance="10" />
+      <status name="Paralyze" chance="10" duration="-1" />
     </statusChange>
-    
-    <effect animation="effect_Bite.xml" sound="Bite.wav" />
   </spell>
   <spell>
     <name>Poison Spew</name>
     <description>Poisons an enemy</description>
-    <verb>spews forth some terrible bile!</verb>
+    <cost>0</cost>
     <target>TARGET_ALL_ENEMY</target>
-
+    <battleOnly>0</battleOnly>
     <power>30</power>
+    <effect animation="effect_Poison.xml" sound="Poison.wav" />
+    <element>
+    </element>
+    <verb>spews forth some terrible bile!</verb>
     <isPhysical>1</isPhysical>
-
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    
+    <buff />
     <statusChange>
-      <status name="Poison" chance="25" />
+      <status name="Poison" chance="25" duration="-1" />
     </statusChange>
-    
-    <effect animation="effect_Poison.xml" sound="Poison.wav" />
   </spell>
-  
-
   <spell>
     <name>Poison</name>
     <description>Poisons an enemy</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="effect_Poison.xml" sound="Poison.wav" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Poison" chance="100" />
+      <status name="Poison" chance="100" duration="-1" />
     </statusChange>
-    
-    <effect animation="effect_Poison.xml" sound="Poison.wav" />
   </spell>
-
   <spell>
     <name>Sleep</name>
     <description>Puts all enemies to sleep</description>
     <cost>6</cost>
     <target>TARGET_ALL_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Sleep" chance="35" />
+      <status name="Sleep" chance="35" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Paralyze</name>
     <description>Paralyzes an enemy</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Paralyze" chance="75" />
+      <status name="Paralyze" chance="75" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Blind</name>
     <description>Blinds an enemy</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Blind" chance="75" />
+      <status name="Blind" chance="75" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Murder</name>
     <description>Kills an enemy</description>
     <cost>16</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Dead" chance="50" />
+      <status name="Dead" chance="50" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Drain</name>
     <description>Drains HP</description>
     <cost>4</cost>
     <target>TARGET_SINGLE_ENEMY</target>
     <battleOnly>1</battleOnly>
+    <power>50</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>
+    </verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
       <type>SPELL_DRAIN</type>
     </spellType>
-    <power>50</power>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Rake</name>
-    <verb>grazes the party!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_ALL_ENEMY</target>
-    <spellType>
-        <type>SPELL_DAMAGE</type>
-    </spellType>
+    <battleOnly>0</battleOnly>
     <power>15</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>grazes the party!</verb>
     <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
+    <spellType>
+      <type>SPELL_DAMAGE</type>
+    </spellType>
+    <buff />
+    <statusChange />
   </spell>
-  
   <spell>
     <name>Firebreath</name>
-    <verb>coughs up a fireball.</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>40</power>
+    <effect animation="" sound="" />
+    <element>fire</element>
+    <verb>coughs up a fireball.</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>40</power>
-    <element>fire</element>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Slippy-Slopp</name>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
-    <verb>flops around all silly-like at $!</verb>
+    <battleOnly>0</battleOnly>
     <power>20</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>flops around all silly-like at $!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Confusion" chance="50" />
+      <status name="Confusion" chance="50" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Snore</name>
-    <verb>snores loudly at $!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>35</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>snores loudly at $!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Sleep" chance="85" />
+      <status name="Sleep" chance="85" duration="-1" />
     </statusChange>
-    <power>35</power>
   </spell>
-
   <spell>
     <name>Devour</name>
-    <verb>attempts to devour $!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>attempts to devour $!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Dead" chance="15" />
+      <status name="Dead" chance="15" duration="-1" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Slug</name>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>60</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
     <verb>releases foul-smelling slug at $!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Poison" chance="65" />
+      <status name="Poison" chance="65" duration="-1" />
     </statusChange>
-    <power>60</power>
   </spell>
-
   <spell>
     <name>Mimic Grab</name>
-    <verb>grabs hold of $!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>45</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>grabs hold of $!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Paralyze" chance="75" />
+      <status name="Paralyze" chance="75" duration="-1" />
     </statusChange>
-    <power>45</power>
   </spell>
-
   <spell>
     <name>Mad Bark</name>
-    <verb>barks madly!!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>0</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>barks madly!!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
     </spellType>
+    <buff />
     <statusChange>
       <status name="Afraid" chance="65" duration="2" />
     </statusChange>
   </spell>
-
   <spell>
     <name>Squid Ink</name>
-    <verb>releases a spray of ink!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>25</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>releases a spray of ink!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
+    <buff />
     <statusChange>
-      <status name="Blind" chance="35" />
+      <status name="Blind" chance="35" duration="-1" />
     </statusChange>
-    <power>25</power>
   </spell>
-
   <spell>
     <name>Self Heal</name>
-    <verb>gathers energy from the surroundings.</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SELF</target>
+    <battleOnly>0</battleOnly>
+    <power>40</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>gathers energy from the surroundings.</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_HEAL</type>
     </spellType>
-    <power>40</power>
+    <buff />
+    <statusChange />
   </spell>
-
   <spell>
     <name>Dark Blade</name>
-    <verb>uses its sword of darkness!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_ALL_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>85</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>uses its sword of darkness!</verb>
+    <isPhysical>1</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_CAUSE_STATUS</type>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>85</power>
+    <buff />
     <statusChange>
-      <status name="Blind" chance="65" />
+      <status name="Blind" chance="65" duration="-1" />
     </statusChange>
-    <isPhysical>1</isPhysical>
   </spell>
-
   <spell>
     <name>Crush</name>
-    <verb>crushes $!</verb>
+    <description>
+    </description>
+    <cost>0</cost>
     <target>TARGET_SINGLE_ENEMY</target>
+    <battleOnly>0</battleOnly>
+    <power>250</power>
+    <effect animation="" sound="" />
+    <element>
+    </element>
+    <verb>crushes $!</verb>
+    <isPhysical>0</isPhysical>
+    <formula>
+    </formula>
     <spellType>
       <type>SPELL_DAMAGE</type>
     </spellType>
-    <power>250</power>
+    <buff />
+    <statusChange />
   </spell>
 </spells>

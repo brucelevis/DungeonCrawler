@@ -1,7 +1,6 @@
 <classes>
   <class>
     <name>Fighter</name>
-    
     <description>The fighter is the master of 
 arms and armour. The fighter 
 has the highest defense 
@@ -9,22 +8,21 @@ capability of all classes,
 making it the ideal "tank"
 character, with the Spells to
 support it.</description>
-    
+    <texture name="" x="0" y="0" w="0" h="0" />
+    <face name="" x="0" y="0" w="0" h="0" />
     <attributes>
-      <attr name="hp"       base="30" max="300" />
-      <attr name="mp"       base="10" max="100" />
+      <attr name="hp" base="30" max="300" />
+      <attr name="mp" base="10" max="100" />
       <attr name="strength" base="20" max="150" />
-      <attr name="defense"  base="20" max="200" />
-      <attr name="magic"    base="5"  max="80" />
-      <attr name="mag.def"  base="8"  max="95" />
-      <attr name="speed"    base="10" max="100" />
-      <attr name="luck"     base="3"  max="75" />
+      <attr name="defense" base="20" max="200" />
+      <attr name="magic" base="5" max="80" />
+      <attr name="mag.def" base="8" max="95" />
+      <attr name="speed" base="10" max="100" />
+      <attr name="luck" base="3" max="75" />
     </attributes>
-    
     <fixedAttributes>
       <attr name="skillpoints" value="10" />
     </fixedAttributes>
-    
     <spellsPerLevel>
       <level num="2">
         <spell>Steadfast</spell>
@@ -45,9 +43,7 @@ support it.</description>
         <spell>Whirlwind Attack</spell>
       </level>
     </spellsPerLevel>
-    
     <equipment>
-        <!-- Weapons -->
       <item>Copper Sword</item>
       <item>Iron Sword</item>
       <item>Longsword</item>
@@ -55,7 +51,6 @@ support it.</description>
       <item>Mithril Blade</item>
       <item>Hanzo Steel</item>
       <item>Legendary Sword</item>
-      
       <item>Scalpel</item>
       <item>Knife</item>
       <item>Stiletto</item>
@@ -63,30 +58,12 @@ support it.</description>
       <item>Main Gauche</item>
       <item>Epee</item>
       <item>Rapier</item>
-      
       <item>Club</item>
       <item>Mace</item>
       <item>Flail</item>
       <item>Warhammer</item>
       <item>Maul</item>
       <item>Great Mace</item>
-      
-        <!-- armor -->
-      <item>Rags</item>
-      <item>Leather Vest</item>
-      <item>Leather Armor</item>
-      <item>Studded Leather</item>
-      <item>Chain Vest</item>
-      <item>Chain Shirt</item>
-      <item>Mithril Armor</item>
-      
-      <item>Chain Mail</item>
-      <item>Splint Mail</item>
-      <item>Steel Mail</item>
-      <item>Full Plate</item>
-      <item>Dragon Armor</item>
-      
-        <!-- Shields -->
       <item>Wood Shield</item>
       <item>Bronze Shield</item>
       <item>Iron Shield</item>
@@ -94,45 +71,40 @@ support it.</description>
       <item>Tower Shield</item>
       <item>Crusader Shield</item>
       <item>Dragon Shield</item>
-      
-        <!-- Helmets -->
+      <item>Rags</item>
+      <item>Leather Vest</item>
+      <item>Leather Armor</item>
+      <item>Studded Leather</item>
+      <item>Chain Vest</item>
+      <item>Chain Shirt</item>
+      <item>Mithril Armor</item>
+      <item>Chain Mail</item>
+      <item>Splint Mail</item>
+      <item>Steel Mail</item>
+      <item>Full Plate</item>
+      <item>Dragon Armor</item>
       <item>Fancy Hat</item>
       <item>Bronze Helmet</item>
       <item>Iron Helmet</item>
       <item>Knight Helmet</item>
       <item>Mithril Helmet</item>
-      
-        <!-- Boots -->
-      <item>Boots of Speed</item>
-      <item>Lucky Slippers</item>
-      <item>Boots of Grounding</item>
-      <item>Hoverboots</item>
-      <item>Boots of Defense</item>  
-        
-        <!-- Accessories -->
-      <item>Protect Ring</item>
     </equipment>
-    
     <startingEquipment>
-      <item>Copper Sword</item>
+      <item>Legendary Sword</item>
       <item>Wood Shield</item>
       <item>Leather Vest</item>
     </startingEquipment>
-    
     <actions>
       <action>Attack</action>
-      <action>Item</action>
-      <action>Spell</action>
       <action>Guard</action>
+      <action>Spell</action>
+      <action>Item</action>
       <action>Run</action>
     </actions>
-    
     <unarmedAttack animation="effect_Hit.xml" sound="Blow6.wav" />
   </class>
-
   <class>
     <name>Thief</name>
-
     <description>The Thief is the master of
 fighting dirty. It is also
 the luckiest class, making it
@@ -140,22 +112,21 @@ ideal for detecting and
 avoiding traps. Furthermore,
 the "Steal" skill allows it
 to pilfer items from enemies.</description>
-
+    <texture name="" x="0" y="0" w="0" h="0" />
+    <face name="" x="0" y="0" w="0" h="0" />
     <attributes>
-      <attr name="hp"       base="20" max="230" />
-      <attr name="mp"       base="15" max="150" />
+      <attr name="hp" base="20" max="230" />
+      <attr name="mp" base="15" max="150" />
       <attr name="strength" base="16" max="135" />
-      <attr name="defense"  base="10" max="110" />
-      <attr name="magic"    base="8"  max="125" />
-      <attr name="mag.def"  base="12"  max="125" />
-      <attr name="speed"    base="20" max="250" />
-      <attr name="luck"     base="12"  max="180" />
+      <attr name="defense" base="10" max="110" />
+      <attr name="magic" base="8" max="125" />
+      <attr name="mag.def" base="12" max="125" />
+      <attr name="speed" base="20" max="250" />
+      <attr name="luck" base="12" max="180" />
     </attributes>
-    
     <fixedAttributes>
       <attr name="skillpoints" value="20" />
     </fixedAttributes>
-    
     <spellsPerLevel>
       <level num="2">
         <spell>Critical Strike</spell>
@@ -179,14 +150,7 @@ to pilfer items from enemies.</description>
         <spell>Garrot</spell>
       </level>
     </spellsPerLevel>
-    
-    <startingEquipment>
-      <item>Scalpel</item>
-      <item>Rags</item>
-    </startingEquipment>
-    
     <equipment>
-        <!-- weapons -->
       <item>Scalpel</item>
       <item>Knife</item>
       <item>Stiletto</item>
@@ -194,8 +158,10 @@ to pilfer items from enemies.</description>
       <item>Main Gauche</item>
       <item>Epee</item>
       <item>Rapier</item>
-      
-        <!-- armor -->
+      <item>Wood Shield</item>
+      <item>Bronze Shield</item>
+      <item>Iron Shield</item>
+      <item>Crusader Shield</item>
       <item>Rags</item>
       <item>Leather Vest</item>
       <item>Leather Armor</item>
@@ -206,46 +172,28 @@ to pilfer items from enemies.</description>
       <item>Catsuite</item>
       <item>Mithril Armor</item>
       <item>Shadow Armor</item>
-    
-        <!-- Shields -->
-      <item>Wood Shield</item>
-      <item>Bronze Shield</item>
-      <item>Iron Shield</item>
-      <item>Crusader Shield</item>
-      
-        <!-- Helmets -->
       <item>Fancy Hat</item>
       <item>Bronze Helmet</item>
       <item>Iron Helmet</item>
-      <item>Pirate Hat</item>
       <item>Mithril Helmet</item>
-      
-        <!-- Boots -->
-      <item>Boots of Speed</item>
-      <item>Lucky Slippers</item>
-      <item>Boots of Grounding</item>
-      <item>Hoverboots</item>
-      <item>Boots of Defense</item> 
-        
-        <!-- Accessories -->
-      <item>Protect Ring</item>
+      <item>Pirate Hat</item>
     </equipment>
-    
+    <startingEquipment>
+      <item>Scalpel</item>
+      <item>Rags</item>
+    </startingEquipment>
     <actions>
       <action>Attack</action>
-      <action>Item</action>
-      <action>Spell</action>
-      <action>Steal</action>
       <action>Guard</action>
+      <action>Spell</action>
+      <action>Item</action>
       <action>Run</action>
+      <action>Steal</action>
     </actions>
-    
     <unarmedAttack animation="effect_Hit.xml" sound="Blow6.wav" />
   </class>
-
   <class>
     <name>Priest</name>
-    
     <description>The priest is the ultimate
 support class. She has spells
 of healing and restoration.
@@ -253,30 +201,21 @@ While not the best fighter,
 she can hold her own and gets
 Holy spells which are
 devastating against undead.</description>
-
+    <texture name="" x="0" y="0" w="0" h="0" />
+    <face name="" x="0" y="0" w="0" h="0" />
     <attributes>
-      <attr name="hp"       base="20" max="275" />
-      <attr name="mp"       base="20" max="200" />
+      <attr name="hp" base="20" max="275" />
+      <attr name="mp" base="20" max="200" />
       <attr name="strength" base="13" max="130" />
-      <attr name="defense"  base="17" max="175" />
-      <attr name="magic"    base="13" max="125" />
-      <attr name="mag.def"  base="15" max="165" />
-      <attr name="speed"    base="15" max="165" />
-      <attr name="luck"     base="1"  max="30" />
+      <attr name="defense" base="17" max="175" />
+      <attr name="magic" base="13" max="125" />
+      <attr name="mag.def" base="15" max="165" />
+      <attr name="speed" base="15" max="165" />
+      <attr name="luck" base="1" max="30" />
     </attributes>
-
     <fixedAttributes>
       <attr name="skillpoints" value="10" />
     </fixedAttributes>
-
-    <actions>
-      <action>Attack</action>
-      <action>Item</action>
-      <action>Spell</action>
-      <action>Guard</action>
-      <action>Run</action>
-    </actions>
-    
     <spellsPerLevel>
       <level num="1">
         <spell>Cure</spell>
@@ -309,107 +248,80 @@ devastating against undead.</description>
         <spell>Holy</spell>
       </level>
     </spellsPerLevel>
-
-    <startingEquipment>
-      <item>Club</item>
-      <item>Rags</item>
-    </startingEquipment>
-    
     <equipment>
-        <!-- Weapons -->
       <item>Club</item>
       <item>Mace</item>
       <item>Flail</item>
       <item>Warhammer</item>
       <item>Maul</item>
       <item>Great Mace</item>
-      
       <item>Apprentice Staff</item>
       <item>Journeyman Staff</item>
       <item>Runed Staff</item>
       <item>Advocate's Staff</item>
       <item>Judicator's Staff</item>
       <item>Staff of the Magi</item>
-      
-        <!--- Armor -->
+      <item>Wood Shield</item>
+      <item>Bronze Shield</item>
+      <item>Iron Shield</item>
+      <item>Crusader Shield</item>
+      <item>Magic Tome</item>
       <item>Rags</item>
       <item>Robes</item>
       <item>Apprentice Robes</item>
       <item>Journeyman Robes</item>
-      <item>Luminant Robes</item>
-      
       <item>Leather Vest</item>
       <item>Leather Armor</item>
       <item>Studded Leather</item>
       <item>Chain Vest</item>
       <item>Chain Shirt</item>
       <item>Mithril Armor</item>
-    
-        <!-- Shields -->
-      <item>Wood Shield</item>
-      <item>Bronze Shield</item>
-      <item>Iron Shield</item>
-      <item>Crusader Shield</item>
-      <item>Magic Tome</item>
-      
-        <!-- Helmets -->
+      <item>Luminant Robes</item>
       <item>Fancy Hat</item>
       <item>Bronze Helmet</item>
+      <item>Pointy Cap</item>
       <item>Iron Helmet</item>
       <item>Knight Helmet</item>
       <item>Mithril Helmet</item>
-      <item>Pointy Cap</item>
       <item>Bishop's Miter</item>
-      
-        <!-- Boots -->
-      <item>Boots of Speed</item>
-      <item>Lucky Slippers</item>
-      <item>Boots of Grounding</item>
-      <item>Hoverboots</item>
-      <item>Boots of Defense</item>
-
-        <!-- Accessories -->
-      <item>Protect Ring</item>
     </equipment>
-    
+    <startingEquipment>
+      <item>Club</item>
+      <item>Rags</item>
+    </startingEquipment>
+    <actions>
+      <action>Attack</action>
+      <action>Guard</action>
+      <action>Spell</action>
+      <action>Item</action>
+      <action>Run</action>
+    </actions>
     <unarmedAttack animation="effect_Hit.xml" sound="Blow6.wav" />
   </class>
-
   <class>
     <name>Elementalist</name>
-    
     <description>The elementalist is a master
 at commanding the elements of
 fire, water and air. While
 not physically strong, the
 spells she can cast are
 potent.</description>
-    
+    <texture name="" x="0" y="0" w="0" h="0" />
+    <face name="" x="0" y="0" w="0" h="0" />
     <attributes>
-      <attr name="hp"       base="15" max="195" />
-      <attr name="mp"       base="20" max="250" />
+      <attr name="hp" base="15" max="195" />
+      <attr name="mp" base="20" max="250" />
       <attr name="strength" base="10" max="95" />
-      <attr name="defense"  base="10" max="100" />
-      <attr name="magic"    base="15" max="150" />
-      <attr name="mag.def"  base="15" max="150" />
-      <attr name="speed"    base="13" max="130" />
-      <attr name="luck"     base="1"  max="50" />
+      <attr name="defense" base="10" max="100" />
+      <attr name="magic" base="15" max="150" />
+      <attr name="mag.def" base="15" max="150" />
+      <attr name="speed" base="13" max="130" />
+      <attr name="luck" base="1" max="50" />
     </attributes>
-    
     <fixedAttributes>
       <attr name="skillpoints" value="10" />
     </fixedAttributes>
-    
-    <actions>
-      <action>Attack</action>
-      <action>Item</action>
-      <action>Spell</action>
-      <action>Guard</action>
-      <action>Run</action>
-    </actions>
-    
     <spellsPerLevel>
-      <!-- Tier 1 Variant 1 -->
       <level num="1">
         <spell>Firepuff</spell>
       </level>
@@ -419,8 +331,6 @@ potent.</description>
       <level num="3">
         <spell>Static</spell>
       </level>
-      
-      <!-- Tier 1 Variant 2 -->
       <level num="6">
         <spell>Flameline</spell>
       </level>
@@ -430,8 +340,6 @@ potent.</description>
       <level num="8">
         <spell>Flash</spell>
       </level>
-      
-      <!-- Tier 2 Variant 1 -->
       <level num="12">
         <spell>Firebolt</spell>
       </level>
@@ -441,8 +349,6 @@ potent.</description>
       <level num="14">
         <spell>Gust</spell>
       </level>
-      
-      <!-- Tier 2 Variant 2 -->
       <level num="17">
         <spell>Fireball</spell>
       </level>
@@ -452,8 +358,6 @@ potent.</description>
       <level num="19">
         <spell>Shock</spell>
       </level>
-      
-      <!-- Tier 3 Variant 1 -->
       <level num="22">
         <spell>Scorch</spell>
       </level>
@@ -463,8 +367,6 @@ potent.</description>
       <level num="24">
         <spell>Lightning Bolt</spell>
       </level>
-      
-      <!-- Tier 3 Variant 2 -->
       <level num="27">
         <spell>Inferno</spell>
       </level>
@@ -475,25 +377,20 @@ potent.</description>
         <spell>Tornado</spell>
       </level>
     </spellsPerLevel>
-
-    <startingEquipment>
-      <item>Club</item>
-      <item>Rags</item>
-    </startingEquipment>
-    
     <equipment>
-        <!-- Weapons -->
-      <item>Club</item>
       <item>Scalpel</item>
       <item>Knife</item>
+      <item>Club</item>
       <item>Apprentice Staff</item>
       <item>Journeyman Staff</item>
       <item>Runed Staff</item>
       <item>Advocate's Staff</item>
       <item>Judicator's Staff</item>
       <item>Staff of the Magi</item>
-      
-        <!--- Armor -->
+      <item>Wood Shield</item>
+      <item>Bronze Shield</item>
+      <item>Iron Shield</item>
+      <item>Magic Tome</item>
       <item>Rags</item>
       <item>Robes</item>
       <item>Apprentice Robes</item>
@@ -502,31 +399,22 @@ potent.</description>
       <item>Necromancers Robe</item>
       <item>Ancient Robes</item>
       <item>Robe of Archmagi</item>
-      
-        <!-- Shields -->
-      <item>Wood Shield</item>
-      <item>Bronze Shield</item>
-      <item>Iron Shield</item>
-      <item>Magic Tome</item>
-      
-        <!-- Helmets -->
       <item>Fancy Hat</item>
       <item>Bronze Helmet</item>
       <item>Pointy Cap</item>
       <item>Wizard Hat</item>
-      
-        <!-- Boots -->
-      <item>Boots of Speed</item>
-      <item>Lucky Slippers</item>
-      <item>Boots of Grounding</item>
-      <item>Hoverboots</item>
-      <item>Boots of Defense</item>
-        
-        <!-- Accessories -->
-      <item>Protect Ring</item>
     </equipment>
-    
+    <startingEquipment>
+      <item>Club</item>
+      <item>Rags</item>
+    </startingEquipment>
+    <actions>
+      <action>Attack</action>
+      <action>Guard</action>
+      <action>Spell</action>
+      <action>Item</action>
+      <action>Run</action>
+    </actions>
     <unarmedAttack animation="effect_Hit.xml" sound="Blow6.wav" />
   </class>
-  
 </classes>

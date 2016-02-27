@@ -2,143 +2,218 @@
   <monster>
     <name>Giant Rat</name>
     <description>An extraordinary large rat</description>
+    <texture name="Monsters/rat.png" x="-1" y="-1" w="-1" h="-1" />
     <attributes>
-      <attr name="hp"       value="32" />
+      <attr name="hp" value="32" />
       <attr name="strength" value="20" />
-      <attr name="defense"  value="8" />
-      <attr name="magic"    value="8" />
-      <attr name="mag.def"  value="10" />
-      <attr name="speed"    value="15" />
-      <attr name="luck"     value="4" />
-      <attr name="exp"      value="1" />
-      <attr name="gold"     value="1" />
+      <attr name="defense" value="8" />
+      <attr name="magic" value="8" />
+      <attr name="mag.def" value="10" />
+      <attr name="speed" value="15" />
+      <attr name="luck" value="4" />
+      <attr name="gold" value="1" />
+      <attr name="exp" value="1" />
     </attributes>
-    <texture name="Monsters/rat.png" />
+    <numberOfAttacks>1</numberOfAttacks>
     <actions>
-      <action name="Attack" chance="1" />
+      <action name="Attack" chance="1">
+      </action>
     </actions>
-    
+    <items />
+    <immunity />
+    <resistance>
+      <element name="fire" resist="1" />
+      <element name="ice" resist="1" />
+      <element name="air" resist="1" />
+      <element name="holy" resist="1" />
+      <element name="dark" resist="1" />
+      <element name="slashing" resist="1" />
+      <element name="piercing" resist="1" />
+      <element name="crushing" resist="1" />
+    </resistance>
     <attackEffect animation="effect_Bite.xml" sound="Kill10.wav" />
+    <steal />
   </monster>
-
   <monster>
     <name>Venom Rat</name>
     <description>Green and mean</description>
+    <texture name="Monsters/green_rat.png" x="-1" y="-1" w="-1" h="-1" />
     <attributes>
-      <attr name="hp"       value="37" />
+      <attr name="hp" value="37" />
       <attr name="strength" value="23" />
-      <attr name="defense"  value="9" />
-      <attr name="magic"    value="11" />
-      <attr name="mag.def"  value="11" />
-      <attr name="speed"    value="15" />
-      <attr name="luck"     value="6" />
-      <attr name="exp"      value="2" />
-      <attr name="gold"     value="1" />
+      <attr name="defense" value="9" />
+      <attr name="magic" value="11" />
+      <attr name="mag.def" value="11" />
+      <attr name="speed" value="15" />
+      <attr name="luck" value="6" />
+      <attr name="gold" value="1" />
+      <attr name="exp" value="2" />
     </attributes>
-    <texture name="Monsters/green_rat.png" />
+    <numberOfAttacks>1</numberOfAttacks>
     <actions>
-      <action name="Attack" chance="3" />
+      <action name="Attack" chance="3">
+      </action>
       <action name="Spell" chance="1">Poison Gnaw</action>
     </actions>
-    
+    <items />
+    <immunity />
+    <resistance>
+      <element name="fire" resist="1" />
+      <element name="ice" resist="1" />
+      <element name="air" resist="1" />
+      <element name="holy" resist="1" />
+      <element name="dark" resist="1" />
+      <element name="slashing" resist="1" />
+      <element name="piercing" resist="1" />
+      <element name="crushing" resist="1" />
+    </resistance>
     <attackEffect animation="effect_Bite.xml" sound="Kill10.wav" />
+    <steal />
   </monster>
-
   <monster>
     <name>Sewer Frog</name>
     <description>A sewer-dwelling species</description>
+    <texture name="Monsters/giant_frog.png" x="-1" y="-1" w="-1" h="-1" />
     <attributes>
-      <attr name="hp"       value="44" />
+      <attr name="hp" value="44" />
       <attr name="strength" value="26" />
-      <attr name="defense"  value="8" />
-      <attr name="magic"    value="8" />
-      <attr name="mag.def"  value="10" />
-      <attr name="speed"    value="13" />
-      <attr name="luck"     value="4" />
-      <attr name="exp"      value="3" />
-      <attr name="gold"     value="1" />
+      <attr name="defense" value="8" />
+      <attr name="magic" value="8" />
+      <attr name="mag.def" value="10" />
+      <attr name="speed" value="13" />
+      <attr name="luck" value="4" />
+      <attr name="gold" value="1" />
+      <attr name="exp" value="3" />
     </attributes>
-    <texture name="Monsters/giant_frog.png" />
+    <numberOfAttacks>1</numberOfAttacks>
     <actions>
-      <action name="Attack" chance="1" />
+      <action name="Attack" chance="1">
+      </action>
+      <action name="Spell" chance="1">Whirlwind Attack</action>
     </actions>
-    
+    <items />
+    <immunity />
+    <resistance>
+      <element name="fire" resist="1" />
+      <element name="ice" resist="1" />
+      <element name="air" resist="1" />
+      <element name="holy" resist="1" />
+      <element name="dark" resist="1" />
+      <element name="slashing" resist="1" />
+      <element name="piercing" resist="1" />
+      <element name="crushing" resist="1" />
+    </resistance>
     <attackEffect animation="effect_Hit.xml" sound="Blow6.wav" />
+    <steal />
   </monster>
-
   <monster>
     <name>Sewer Fish</name>
     <description>Pffaw! This stinks!</description>
+    <texture name="Monsters/big_fish.png" x="-1" y="-1" w="-1" h="-1" />
     <attributes>
-      <attr name="hp"       value="64" />
+      <attr name="hp" value="64" />
       <attr name="strength" value="35" />
-      <attr name="defense"  value="8" />
-      <attr name="magic"    value="8" />
-      <attr name="mag.def"  value="16" />
-      <attr name="speed"    value="13" />
-      <attr name="luck"     value="8" />
-      <attr name="exp"      value="4" />
-      <attr name="gold"     value="4" />
+      <attr name="defense" value="8" />
+      <attr name="magic" value="8" />
+      <attr name="mag.def" value="16" />
+      <attr name="speed" value="13" />
+      <attr name="luck" value="8" />
+      <attr name="gold" value="4" />
+      <attr name="exp" value="4" />
     </attributes>
-    <texture name="Monsters/big_fish.png" />
+    <numberOfAttacks>1</numberOfAttacks>
     <actions>
-      <action name="Attack" chance="1" />
+      <action name="Attack" chance="1">
+      </action>
     </actions>
-    
+    <items />
+    <immunity />
+    <resistance>
+      <element name="fire" resist="1" />
+      <element name="ice" resist="1" />
+      <element name="air" resist="1" />
+      <element name="holy" resist="1" />
+      <element name="dark" resist="1" />
+      <element name="slashing" resist="1" />
+      <element name="piercing" resist="1" />
+      <element name="crushing" resist="1" />
+    </resistance>
     <attackEffect animation="effect_Bite.xml" sound="Kill10.wav" />
+    <steal />
   </monster>
-
   <monster>
     <name>Sewer Worm</name>
     <description>A creepy crawler!!</description>
+    <texture name="Monsters/sewer_worm.png" x="-1" y="-1" w="-1" h="-1" />
     <attributes>
-      <attr name="hp"       value="300" />
+      <attr name="hp" value="300" />
       <attr name="strength" value="48" />
-      <attr name="defense"  value="12" />
-      <attr name="magic"    value="8" />
-      <attr name="mag.def"  value="12" />
-      <attr name="speed"    value="7" />
-      <attr name="luck"     value="4" />
-      <attr name="exp"      value="12" />
-      <attr name="gold"     value="24" />
+      <attr name="defense" value="12" />
+      <attr name="magic" value="8" />
+      <attr name="mag.def" value="12" />
+      <attr name="speed" value="7" />
+      <attr name="luck" value="4" />
+      <attr name="gold" value="24" />
+      <attr name="exp" value="12" />
     </attributes>
-    <texture name="Monsters/sewer_worm.png" scale="2" />
+    <numberOfAttacks>1</numberOfAttacks>
     <actions>
-      <action name="Attack" chance="5" />
+      <action name="Attack" chance="5">
+      </action>
       <action name="Spell" chance="3">Poison Gnaw</action>
       <action name="Spell" chance="3">Leech</action>
       <action name="Spell" chance="1">Poison Spew</action>
     </actions>
-    
-    <attackEffect animation="effect_Bite.xml" sound="Kill10.wav" />
-    
     <items>
       <item name="gem" chance="100" />
     </items>
+    <immunity />
+    <resistance>
+      <element name="fire" resist="1" />
+      <element name="ice" resist="1" />
+      <element name="air" resist="1" />
+      <element name="holy" resist="1" />
+      <element name="dark" resist="1" />
+      <element name="slashing" resist="1" />
+      <element name="piercing" resist="1" />
+      <element name="crushing" resist="1" />
+    </resistance>
+    <attackEffect animation="effect_Bite.xml" sound="Kill10.wav" />
+    <steal />
   </monster>
-
-  <!-- Batty -->
   <monster>
     <name>Batty</name>
     <description>A fluttering bat</description>
+    <texture name="Monsters/rpg_monster_set.png" x="434" y="172" w="44" h="42" />
     <attributes>
-      <attr name="hp"       value="12" />
+      <attr name="hp" value="12" />
       <attr name="strength" value="12" />
-      <attr name="defense"  value="8" />
-      <attr name="magic"    value="8" />
-      <attr name="mag.def"  value="12" />
-      <attr name="speed"    value="20" />
-      <attr name="luck"     value="15" />
-      <attr name="level"    value="1" />
-      <attr name="exp"      value="2" />
-      <attr name="gold"     value="3" />
+      <attr name="defense" value="8" />
+      <attr name="magic" value="8" />
+      <attr name="mag.def" value="12" />
+      <attr name="speed" value="20" />
+      <attr name="luck" value="15" />
+      <attr name="gold" value="3" />
+      <attr name="exp" value="2" />
     </attributes>
-    <texture name="Monsters/rpg_monster_set.png"
-      x="434" y="172" w="44" h="42" />
+    <numberOfAttacks>1</numberOfAttacks>
     <actions>
-      <action name="Attack" chance="1" />
+      <action name="Attack" chance="1">
+      </action>
     </actions>
-    
+    <items />
+    <immunity />
+    <resistance>
+      <element name="fire" resist="1" />
+      <element name="ice" resist="1" />
+      <element name="air" resist="1" />
+      <element name="holy" resist="1" />
+      <element name="dark" resist="1" />
+      <element name="slashing" resist="1" />
+      <element name="piercing" resist="1" />
+      <element name="crushing" resist="1" />
+    </resistance>
     <attackEffect animation="effect_Hit.xml" sound="Blow6.wav" />
+    <steal />
   </monster>
 </monsters>

@@ -50,5 +50,9 @@ void xml_for_each(const tinyxml2::XMLElement* startElement, Func func)
   }
 }
 
+inline bool valid_text_element(const tinyxml2::XMLElement* element)
+{
+  return element && element->GetText();
+}
 
 #endif /* XMLHELPERS_H_ */

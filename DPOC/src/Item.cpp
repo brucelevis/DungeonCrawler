@@ -10,6 +10,7 @@
 #include "Vocabulary.h"
 #include "Item.h"
 
+#include "XMLHelpers.h"
 #include "../dep/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -74,29 +75,29 @@ static Item parse_item_element(const XMLElement* itemElement)
   const XMLElement* formElem = itemElement->FirstChildElement("formula");
   const XMLElement* singleElem = itemElement->FirstChildElement("element");
 
-  if (nameElem)
+  if (valid_text_element(nameElem))
     item.name = nameElem->GetText();
-  if (descElem)
+  if (valid_text_element(descElem))
     item.description = descElem->GetText();
-  if (costElem)
+  if (valid_text_element(costElem))
     item.cost = fromString<int>(costElem->GetText());
-  if (typeElem)
+  if (valid_text_element(typeElem))
     item.type = itemTypeFromString(typeElem->GetText());
-  if (targElem)
+  if (valid_text_element(targElem))
     item.target = targetFromString(targElem->GetText());
-  if (useElem)
+  if (valid_text_element(useElem))
     item.itemUseType = itemUseTypeFromString(useElem->GetText());
-  if (statElem)
+  if (valid_text_element(statElem))
     item.status.push_back(statElem->GetText());
-  if (formElem)
+  if (valid_text_element(formElem))
     item.formula = formElem->GetText();
   if (effeElem)
   {
     item.effect = Effect::createFromXmlElement(effeElem);
   }
-  if (verbElem)
+  if (valid_text_element(verbElem))
     item.useVerb = verbElem->GetText();
-  if (singleElem)
+  if (valid_text_element(singleElem))
   {
     // <element>...</element>
     // Typically used for weapons that only has an element type.

@@ -9,8 +9,8 @@
     <incapacitate>0</incapacitate>
     <damage type="DAMAGE_PERCENT" amount="4" attr="hp" />
     <effect animation="effect_Poison.xml" sound="Poison.wav" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Bleed</name>
     <verb>is bleeding nastily!</verb>
@@ -20,8 +20,9 @@
     <recoveryChance>0</recoveryChance>
     <incapacitate>0</incapacitate>
     <damage type="DAMAGE_PERCENT" amount="8" attr="hp" />
+    <effect animation="" sound="" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Curse</name>
     <verb>is under a nasty curse!</verb>
@@ -31,8 +32,9 @@
     <recoveryChance>0</recoveryChance>
     <incapacitate>1</incapacitate>
     <damage type="DAMAGE_PERCENT" amount="10" attr="hp" />
+    <effect animation="" sound="" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Paralyze</name>
     <verb>is paralyzed!</verb>
@@ -41,9 +43,10 @@
     <battleOnly>1</battleOnly>
     <recoveryChance>25</recoveryChance>
     <incapacitate>1</incapacitate>
-    <effect sound="Numbness3.wav" />
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="Numbness3.wav" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Chilled</name>
     <verb>is chilled!</verb>
@@ -51,10 +54,11 @@
     <color r="0" g="127" b="255" />
     <battleOnly>1</battleOnly>
     <recoveryChance>5</recoveryChance>
-    <effect sound="Cold2.wav" />
+    <incapacitate>0</incapacitate>
     <damage type="DAMAGE_FIXED" amount="2" attr="speed" />
+    <effect animation="" sound="Cold2.wav" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Frozen</name>
     <verb>is frozen solid!</verb>
@@ -63,65 +67,84 @@
     <battleOnly>1</battleOnly>
     <recoveryChance>10</recoveryChance>
     <incapacitate>1</incapacitate>
-    <effect sound="Cold2.wav" />
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="Cold2.wav" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Confusion</name>
     <verb>is confused!</verb>
     <recoveryVerb>Thinks straight again.</recoveryVerb>
     <color r="0" g="0" b="255" />
+    <battleOnly>0</battleOnly>
     <recoveryChance>15</recoveryChance>
+    <incapacitate>0</incapacitate>
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="" />
     <statusType>
       <type>STATUS_CONFUSE</type>
     </statusType>
   </statusEffect>
-
   <statusEffect>
     <name>Sleep</name>
     <verb>falls asleep.</verb>
     <recoveryVerb>wakes up.</recoveryVerb>
     <color r="255" g="0" b="255" />
+    <battleOnly>0</battleOnly>
     <recoveryChance>50</recoveryChance>
     <incapacitate>1</incapacitate>
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Afraid</name>
     <verb>is too terrified to move!</verb>
     <recoveryVerb>comes back to its senses.</recoveryVerb>
     <color r="255" g="255" b="45" />
+    <battleOnly>0</battleOnly>
     <recoveryChance>0</recoveryChance>
     <incapacitate>1</incapacitate>
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Knockdown</name>
     <verb>is knocked down.</verb>
     <recoveryVerb>clambers back up.</recoveryVerb>
     <color r="255" g="255" b="255" />
+    <battleOnly>0</battleOnly>
     <recoveryChance>75</recoveryChance>
     <incapacitate>1</incapacitate>
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="" />
+    <statusType />
   </statusEffect>
-
   <statusEffect>
     <name>Blind</name>
     <verb>is blinded!</verb>
     <recoveryVerb>can see again.</recoveryVerb>
-    <battleOnly>1</battleOnly>
     <color r="0" g="255" b="255" />
+    <battleOnly>1</battleOnly>
     <recoveryChance>10</recoveryChance>
+    <incapacitate>0</incapacitate>
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="" />
     <statusType>
       <type>STATUS_BLIND</type>
     </statusType>
   </statusEffect>
-
   <statusEffect>
     <name>Provoke</name>
     <verb>is taunting the enemies!</verb>
     <recoveryVerb>stops taunting.</recoveryVerb>
-    <battleOnly>1</battleOnly>
     <color r="127" g="255" b="127" />
+    <battleOnly>1</battleOnly>
+    <recoveryChance>0</recoveryChance>
+    <incapacitate>0</incapacitate>
+    <damage type="" amount="0" attr="" />
+    <effect animation="" sound="" />
     <statusType>
       <type>STATUS_PROVOKE</type>
     </statusType>

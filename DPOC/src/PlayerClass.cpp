@@ -6,6 +6,7 @@
 
 #include "PlayerClass.h"
 
+#include "XMLHelpers.h"
 #include "../dep/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -18,13 +19,13 @@ PlayerClass parse_class_element(const XMLElement* classElement)
   pc.name = "ERROR";
 
   const XMLElement* nameElem = classElement->FirstChildElement("name");
-  if (nameElem)
+  if (valid_text_element(nameElem))
   {
     pc.name = nameElem->GetText();
   }
 
   const XMLElement* descElem = classElement->FirstChildElement("description");
-  if (descElem)
+  if (valid_text_element(descElem))
   {
     pc.description = descElem->GetText();
   }

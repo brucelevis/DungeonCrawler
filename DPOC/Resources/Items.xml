@@ -5,36 +5,60 @@
     <cost>100</cost>
     <type>ITEM_USE</type>
     <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_HEAL_FIXED</onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="hp" value="25" />
     </attributes>
-    <onUse>ITEM_HEAL_FIXED</onUse>
+    <elements />
   </item>
-
   <item>
     <name>Elixir</name>
     <description>Potent healing potion</description>
     <cost>300</cost>
     <type>ITEM_USE</type>
     <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_HEAL_FIXED</onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="hp" value="75" />
     </attributes>
-    <onUse>ITEM_HEAL_FIXED</onUse>
+    <elements />
   </item>
-
   <item>
     <name>Ether</name>
     <description>Restores MP</description>
     <cost>150</cost>
     <type>ITEM_USE</type>
     <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_RESTORE_MP_FIXED</onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="mp" value="25" />
     </attributes>
-    <onUse>ITEM_RESTORE_MP_FIXED</onUse>
+    <elements />
   </item>
-
   <item>
     <name>Antidote</name>
     <description>Cures poison</description>
@@ -42,9 +66,19 @@
     <type>ITEM_USE</type>
     <target>TARGET_SINGLE_ALLY</target>
     <onUse>ITEM_REMOVE_STATUS</onUse>
-    <status>Poison</status>
+    <statusEffects>
+      <status>Poison</status>
+    </statusEffects>
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
   <item>
     <name>Eye Drops</name>
     <description>Cures blindness</description>
@@ -52,9 +86,19 @@
     <type>ITEM_USE</type>
     <target>TARGET_SINGLE_ALLY</target>
     <onUse>ITEM_REMOVE_STATUS</onUse>
-    <status>Blind</status>
+    <statusEffects>
+      <status>Blind</status>
+    </statusEffects>
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
   <item>
     <name>Adrenaline</name>
     <description>Cures paralysis</description>
@@ -62,9 +106,19 @@
     <type>ITEM_USE</type>
     <target>TARGET_SINGLE_ALLY</target>
     <onUse>ITEM_REMOVE_STATUS</onUse>
-    <status>Paralyze</status>
+    <statusEffects>
+      <status>Paralyze</status>
+    </statusEffects>
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
   <item>
     <name>Phoenix</name>
     <description>Restores life</description>
@@ -72,710 +126,1266 @@
     <type>ITEM_USE</type>
     <target>TARGET_DEAD</target>
     <onUse>ITEM_REMOVE_STATUS</onUse>
-    <status>Dead</status>
+    <statusEffects>
+      <status>Dead</status>
+    </statusEffects>
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
   <item>
     <name>Rusty Knife</name>
     <description>An old rusty knife</description>
+    <cost>0</cost>
     <type>ITEM_WEAPON</type>
+    <target>TARGET_ALL_ENEMY</target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="strength" value="4" />
     </attributes>
     <elements>
       <element name="fire" value="1" />
     </elements>
-    <target>TARGET_ALL_ENEMY</target>
   </item>
-
-  <!-- Key Items -->
   <item>
     <name>Key</name>
     <description>Opens many doors</description>
+    <cost>0</cost>
+    <type>
+    </type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
   <item>
     <name>Rusty Key</name>
     <description>An old, rusted key</description>
+    <cost>0</cost>
+    <type>
+    </type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
   <item>
     <name>Crowbar</name>
     <description>A crowbar</description>
+    <cost>0</cost>
+    <type>
+    </type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
+    <elements />
   </item>
-
-  <!-- Weapons -->
-    <!-- Swords -->
   <item>
     <name>Copper Sword</name>
     <description>A copper sword</description>
     <cost>100</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>500</formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="4" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
-    <formula>500</formula>
-  </item>  
-
+    <elements />
+  </item>
   <item>
     <name>Iron Sword</name>
     <description>An iron sword</description>
     <cost>250</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>
+    </formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="8" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
+    <elements />
   </item>
-
   <item>
     <name>Longsword</name>
     <description>A longsword</description>
     <cost>400</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>
+    </formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="13" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
+    <elements />
   </item>
-
   <item>
     <name>Bastard Sword</name>
     <description>A bastard sword</description>
     <cost>800</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>
+    </formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="19" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
+    <elements />
   </item>
-
   <item>
     <name>Mithril Blade</name>
     <description>A sword made of mithril</description>
     <cost>1600</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>
+    </formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="27" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
+    <elements />
   </item>
-
   <item>
     <name>Hanzo Steel</name>
     <description>Wuh.. What?</description>
     <cost>3200</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>
+    </formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="38" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
+    <elements />
   </item>
-
   <item>
     <name>Legendary Sword</name>
     <description>The ultimate sword</description>
     <cost>6000</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
+    <verb>slashes at</verb>
+    <formula>
+    </formula>
+    <element>slashing</element>
     <attributes>
       <attribute name="strength" value="50" />
     </attributes>
-    <verb>slashes at</verb>
-    <effect animation="effect_Sword.xml" sound="Sword1.wav" />
-    <element>slashing</element>
+    <elements />
   </item>
-
-    <!-- Knives -->
   <item>
     <name>Scalpel</name>
     <description>A tiny scalpel</description>
     <cost>75</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="2" />
       <attribute name="speed" value="1" />
       <attribute name="luck" value="1" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-    
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Knife</name>
     <description>A common knife</description>
     <cost>150</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="5" />
       <attribute name="speed" value="2" />
       <attribute name="luck" value="1" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-        
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Stiletto</name>
     <description>A stiletto</description>
     <cost>325</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="9" />
       <attribute name="speed" value="6" />
       <attribute name="luck" value="3" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-        
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Dagger</name>
     <description>A dagger</description>
     <cost>700</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="15" />
       <attribute name="speed" value="9" />
       <attribute name="luck" value="6" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-        
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Main Gauche</name>
     <description>A main gauche</description>
     <cost>1500</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="23" />
       <attribute name="speed" value="14" />
       <attribute name="luck" value="10" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-        
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Epee</name>
     <description>An epee</description>
     <cost>3000</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="34" />
       <attribute name="speed" value="19" />
       <attribute name="luck" value="14" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-        
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Rapier</name>
     <description>A rapier</description>
     <cost>5500</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>piercing</element>
     <attributes>
       <attribute name="strength" value="46" />
       <attribute name="speed" value="31" />
       <attribute name="luck" value="23" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>piercing</element>
-        
-    <effect animation="effect_Dagger.xml" sound="Kill8.wav" />
+    <elements />
   </item>
-
-    <!-- Blunt weapons -->
   <item>
     <name>Club</name>
     <description>A wooden club</description>
     <cost>50</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="2" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-    
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Mace</name>
     <description>A mace</description>
     <cost>150</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="6" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Flail</name>
     <description>A flail</description>
     <cost>300</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="11" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Warhammer</name>
     <description>A warhammer</description>
     <cost>600</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="16" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Maul</name>
     <description>A mighty maul</description>
     <cost>1200</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="24" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Great Mace</name>
     <description>A giant mace</description>
     <cost>4000</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="45" />
       <attribute name="speed" value="-20" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
-    <!-- Magi weapons -->
   <item>
     <name>Apprentice Staff</name>
     <description>A simple magic staff</description>
     <cost>150</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="2" />
       <attribute name="magic" value="6" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Journeyman Staff</name>
     <description>A more advanced staff</description>
     <cost>450</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="4" />
       <attribute name="magic" value="10" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Runed Staff</name>
     <description>Staff with mystic runes</description>
     <cost>1000</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="8" />
       <attribute name="magic" value="17" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Advocate's Staff</name>
     <description>Advanced magic staff</description>
     <cost>2500</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="14" />
       <attribute name="magic" value="24" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Judicator's Staff</name>
     <description>Powerful magic staff</description>
     <cost>5500</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="24" />
       <attribute name="magic" value="48" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
   <item>
     <name>Staff of the Magi</name>
     <description>The ultimate magic staff</description>
     <cost>8000</cost>
     <type>ITEM_WEAPON</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <verb>bashes at</verb>
+    <formula>
+    </formula>
+    <element>crushing</element>
     <attributes>
       <attribute name="strength" value="32" />
       <attribute name="magic" value="64" />
     </attributes>
-    <verb>bashes at</verb>
-    <element>crushing</element>
-        
-    <effect animation="effect_Blow.xml" sound="Blow2.wav" />
+    <elements />
   </item>
-
-  <!-- Armor -->
-  <!-- Shields -->
-    <!-- Normal shields -->
   <item>
     <name>Wood Shield</name>
     <description>A wooden shield</description>
     <cost>50</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="2" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Bronze Shield</name>
     <description>A bronze shield</description>
     <cost>300</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="6" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Iron Shield</name>
     <description>An iron shield</description>
     <cost>760</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="10" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Large Shield</name>
     <description>A large iron shield</description>
     <cost>1100</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="15" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Tower Shield</name>
     <description>A tower shield</description>
     <cost>1700</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="25" />
       <attribute name="speed" value="-30" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Crusader Shield</name>
     <description>An impressive shield</description>
     <cost>2400</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="27" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Dragon Shield</name>
     <description>Shield from dragon scales</description>
     <cost>4000</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="35" />
     </attributes>
+    <elements />
   </item>
-    
-    <!-- Strange shields -->
   <item>
     <name>Magic Tome</name>
     <description>A wizards tome</description>
     <cost>1000</cost>
     <type>ITEM_SHIELD</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="6" />
       <attribute name="mag.def" value="12" />
     </attributes>
+    <elements />
   </item>
-  
-  <!-- Body -->
-    <!-- Robes -->
   <item>
     <name>Rags</name>
     <description>Some moldy rags</description>
     <cost>25</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="1" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Robes</name>
     <description>Some fine robes</description>
     <cost>125</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="2" />
       <attribute name="mag.def" value="3" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Apprentice Robes</name>
     <description>Robe for new mages</description>
     <cost>400</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="6" />
       <attribute name="mag.def" value="7" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Journeyman Robes</name>
     <description>For the more seasoned mage</description>
     <cost>1000</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="9" />
       <attribute name="mag.def" value="13" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Mage Robes</name>
     <description>For fully qualifed mages</description>
     <cost>2500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="15" />
       <attribute name="mag.def" value="20" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Necromancers Robe</name>
     <description>A creepy visage surrounds this</description>
     <cost>4500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="20" />
       <attribute name="mag.def" value="30" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Ancient Robes</name>
     <description>Ancient but powerful</description>
     <cost>7500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="30" />
       <attribute name="mag.def" value="40" />
     </attributes>
+    <elements />
   </item>
-
-    <!-- Light armor -->
   <item>
     <name>Leather Vest</name>
     <description>A leather vest</description>
     <cost>50</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="2" />
     </attributes>
+    <elements />
   </item>
-  
   <item>
     <name>Leather Armor</name>
     <description>A leather armor</description>
     <cost>100</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="4" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Studded Leather</name>
     <description>A leather armor</description>
     <cost>200</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="6" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Chain Vest</name>
     <description>A chain vest</description>
     <cost>250</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="8" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Chain Shirt</name>
     <description>A chain shirt</description>
     <cost>500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="13" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Thief's Garb</name>
     <description>Some sweet thief gear</description>
     <cost>1200</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="18" />
       <attribute name="luck" value="8" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Catsuite</name>
     <description>Very sexy!</description>
     <cost>2500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="25" />
       <attribute name="luck" value="15" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Mithril Armor</name>
     <description>Made from mithril</description>
     <cost>3500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="40" />
     </attributes>
+    <elements />
   </item>
-
-    <!-- Heavy armor -->
   <item>
     <name>Chain Mail</name>
     <description>A chain mail</description>
     <cost>500</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="14" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Splint Mail</name>
     <description>A splint mail</description>
     <cost>900</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="24" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Steel Mail</name>
     <description>A steel mail</description>
     <cost>1600</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="32" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Full Plate</name>
     <description>Heavy suite of plate</description>
     <cost>6000</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="50" />
     </attributes>
+    <elements />
   </item>
-
-    <!-- Ultimate armors -->
   <item>
     <name>Dragon Armor</name>
     <description>Protects against fire</description>
     <cost>10000</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="60" />
       <attribute name="mag.def" value="15" />
@@ -784,12 +1394,23 @@
       <element name="fire" value="0.5" />
     </elements>
   </item>
-
   <item>
     <name>Luminant Robes</name>
     <description>Protects against holy &amp; dark</description>
     <cost>10000</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="45" />
       <attribute name="mag.def" value="45" />
@@ -799,12 +1420,23 @@
       <element name="dark" value="0.5" />
     </elements>
   </item>
-
   <item>
     <name>Shadow Armor</name>
     <description>Protects against dark</description>
     <cost>10000</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="50" />
       <attribute name="luck" value="25" />
@@ -813,166 +1445,363 @@
       <element name="dark" value="0.5" />
     </elements>
   </item>
-  
   <item>
     <name>Robe of Archmagi</name>
     <description>The ultimate mage robe</description>
     <cost>10000</cost>
     <type>ITEM_ARMOR</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="45" />
       <attribute name="mag.def" value="55" />
     </attributes>
+    <elements />
   </item>
-
-  <!-- Helmets -->
   <item>
     <name>Fancy Hat</name>
     <description>A neat looking hat</description>
     <cost>25</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="1" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Bronze Helmet</name>
     <description>A bronze helmet</description>
     <cost>125</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="4" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Pointy Cap</name>
     <description>Hat for the mysterious</description>
     <cost>175</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="2" />
       <attribute name="mag.def" value="2" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Iron Helmet</name>
     <description>A good sturdy helmet</description>
     <cost>450</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="8" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Knight Helmet</name>
     <description>A knight's helmet</description>
     <cost>900</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="12" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Mithril Helmet</name>
     <description>Mithril helmet</description>
     <cost>1500</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="16" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Pirate Hat</name>
     <description>A sweet pirate hat</description>
     <cost>1300</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="9" />
       <attribute name="luck" value="9" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Wizard Hat</name>
     <description>Large pointy hat</description>
     <cost>1500</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="9" />
       <attribute name="mag.def" value="9" />
       <attribute name="magic" value="3" />
     </attributes>
+    <elements />
   </item>
   <item>
     <name>Bishop's Miter</name>
     <description>Pious cap</description>
     <cost>1600</cost>
     <type>ITEM_HELMET</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="13" />
       <attribute name="mag.def" value="9" />
     </attributes>
+    <elements />
   </item>
-
-  <!-- Boots -->
   <item>
     <name>Boots of Defense</name>
     <description>Small defense bonus</description>
     <cost>750</cost>
     <type>ITEM_BOOTS</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="5" />
     </attributes>
+    <elements />
   </item>
-  
   <item>
     <name>Boots of Speed</name>
     <description>Boosts speed</description>
     <cost>1500</cost>
     <type>ITEM_BOOTS</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="speed" value="10" />
     </attributes>
+    <elements />
   </item>
-
   <item>
     <name>Lucky Slippers</name>
     <description>Wow! Lucky times!</description>
     <cost>5000</cost>
     <type>ITEM_BOOTS</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="luck" value="10" />
     </attributes>
+    <elements />
   </item>
-  
   <item>
     <name>Boots of Grounding</name>
     <description>50% air resistance</description>
     <cost>3500</cost>
     <type>ITEM_BOOTS</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
     <elements>
       <element name="air" value="0.5" />
     </elements>
   </item>
-  
   <item>
     <name>Hoverboots</name>
     <description>100% earth resistance</description>
     <cost>7000</cost>
     <type>ITEM_BOOTS</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
+    <attributes />
     <elements>
       <element name="earth" value="0" />
     </elements>
   </item>
-
-  <!-- Accessories -->
   <item>
     <name>Protect Ring</name>
     <description>Boosts defense and mag.def</description>
     <cost>1500</cost>
     <type>ITEM_MISC</type>
+    <target>
+    </target>
+    <onUse>
+    </onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>
+    </formula>
+    <element>
+    </element>
     <attributes>
       <attribute name="defense" value="5" />
       <attribute name="mag.def" value="5" />
     </attributes>
+    <elements />
   </item>
 </items>

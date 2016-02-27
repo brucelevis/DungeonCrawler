@@ -2,6 +2,7 @@
 #include <string>
 
 #include "Config.h"
+#include "logger.h"
 
 #include "../dep/tinyxml2.h"
 
@@ -20,6 +21,8 @@ namespace config
   {
     static const std::string conf = RESOURCE_DIR + "Config.xml";
 
+    TRACE("Loading config %s", conf.c_str());
+
     XMLDocument doc;
     doc.LoadFile(conf.c_str());
 
@@ -27,9 +30,14 @@ namespace config
     for (const XMLElement* element = root->FirstChildElement(); element; element = element->NextSiblingElement())
     {
       std::string name = element->Name();
-      std::string value = element->GetText();
+      std::string value = element->GetText() ? element->GetText() : "";
 
-      CONFIG[name] = value;
+      if (value.size())
+      {
+        TRACE(" - %s => %s", name.c_str(), value.c_str());
+
+        CONFIG[name] = value;
+      }
     }
   }
 

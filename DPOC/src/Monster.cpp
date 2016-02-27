@@ -66,7 +66,15 @@ static MonsterDef parse_monster_element(const XMLElement* monsterElement)
       int h = fromString<int>(hAttr->Value());
 
       monster.texture = name;
-      monster.textureRect = sf::IntRect(x, y, w, h);
+
+      if (x != -1 && y != -1 && w > 0 && h > 0)
+      {
+        monster.textureRect = sf::IntRect(x, y, w, h);
+      }
+      else
+      {
+        monster.textureRect = sf::IntRect(0, 0, 0, 0);
+      }
     }
     else if (nameAttr)
     {

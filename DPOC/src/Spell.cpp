@@ -13,6 +13,7 @@
 #include "StatusEffect.h"
 #include "Spell.h"
 
+#include "XMLHelpers.h"
 #include "../dep/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -59,27 +60,27 @@ static Spell parse_spell_element(const XMLElement* spellElement)
   const XMLElement* physElem = spellElement->FirstChildElement("isPhysical");
   const XMLElement* formElem = spellElement->FirstChildElement("formula");
 
-  if (nameElem)
+  if (valid_text_element(nameElem))
     spell.name = nameElem->GetText();
-  if (descElem)
+  if (valid_text_element(descElem))
     spell.description = descElem->GetText();
-  if (costElem)
+  if (valid_text_element(costElem))
     spell.mpCost = fromString<int>(costElem->GetText());
-  if (targElem)
+  if (valid_text_element(targElem))
     spell.target = targetFromString(targElem->GetText());
-  if (battElem)
+  if (valid_text_element(battElem))
     spell.battleOnly = fromString<bool>(battElem->GetText());
-  if (powrElem)
+  if (valid_text_element(powrElem))
     spell.power = fromString<int>(powrElem->GetText());
   if (effeElem)
     spell.effect = Effect::createFromXmlElement(effeElem);
-  if (elemElem)
+  if (valid_text_element(elemElem))
     spell.element = elemElem->GetText();
-  if (verbElem)
+  if (valid_text_element(verbElem))
     spell.verb = verbElem->GetText();
-  if (physElem)
+  if (valid_text_element(physElem))
     spell.isPhysical = fromString<bool>(physElem->GetText());
-  if (formElem)
+  if (valid_text_element(formElem))
     spell.formula = formElem->GetText();
 
   const XMLElement* typeElem = spellElement->FirstChildElement("spellType");
