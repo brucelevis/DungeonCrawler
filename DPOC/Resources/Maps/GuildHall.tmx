@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="3" height="3" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="GuildHall.png"/>
+  <property name="music" value="Town1.ogg"/>
+ </properties>
+ <tileset firstgid="1" name="dc-dngn" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/dc-dngn.png" width="960" height="608"/>
+ </tileset>
+ <layer name="wall" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="3" height="3">
+  <object x="32" y="32" width="32" height="32">
+   <properties>
+    <property name="stepScript">
+      message Welcome to the guild hall.
+      choice Trainer,Leave
+      
+      # Train
+      if $sys:choice == 0
+        skill_trainer Cartography,Swimming,Evasion,Searching
+      endif
+      
+      # Leave
+      if $sys:choice == 1
+        message See you soon.
+        transfer Town.tmx 14 6
+        wait 50
+      endif
+    </property>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="floor" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+ <layer name="ceiling" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+</map>

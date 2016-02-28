@@ -1,0 +1,39 @@
+<animation texture="Hit.png" textureW="96" textureH="96" spriteOriginX="48" spriteOriginY="48">
+ <frame index="0">
+  <sprite index="8" x="0" y="-48" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="1">
+  <sprite index="8" x="0" y="-40" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="2">
+  <sprite index="8" x="0" y="-32" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="3">
+  <sprite index="8" x="0" y="-24" scaleX="1.000000" scaleY="1.000000" alpha="229" />
+ </frame>
+ <frame index="4">
+  <sprite index="8" x="0" y="-16" scaleX="1.000000" scaleY="1.000000" alpha="204" />
+ </frame>
+ <frame index="5">
+  <sprite index="8" x="0" y="-8" scaleX="1.000000" scaleY="1.000000" alpha="153" />
+  <sprite index="4" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="6">
+  <sprite index="5" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="7">
+  <sprite index="6" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="8">
+  <sprite index="7" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="229" />
+ </frame>
+ <frame index="9">
+  <sprite index="7" x="0" y="0" scaleX="1.100000" scaleY="1.100000" alpha="204" />
+ </frame>
+ <frame index="10">
+  <sprite index="7" x="0" y="0" scaleX="1.200000" scaleY="1.200000" alpha="178" />
+ </frame>
+ <frame index="11">
+  <sprite index="7" x="0" y="0" scaleX="1.300000" scaleY="1.300000" alpha="153" />
+ </frame>
+</animation>

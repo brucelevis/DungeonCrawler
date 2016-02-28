@@ -1,0 +1,18 @@
+<vocabulary>
+  <term name="hp" base="Hp" mid="HP" short="hp" />
+  <term name="mp" base="Mp" mid="MP" short="mp" />
+  <term name="strength" base="Strength" mid="Str" short="St" />
+  <term name="defense" base="Defense" mid="Def" short="Df" />
+  <term name="magic" base="Magic" mid="Mag" short="Mg" />
+  <term name="mag.def" base="Mag.Def" mid="Mdf" short="Md" />
+  <term name="speed" base="Speed" mid="Spd" short="Sp" />
+  <term name="luck" base="Luck" mid="Luk" short="Lu" />
+  <term name="gold" base="gold" mid="" short="GP" />
+  <term name="skillpoints" base="Skill Points" mid="" short="SP" />
+  <term name="Weapon" base="Weapon" mid="Weap" short="Weap" />
+  <term name="Shield" base="Shield" mid="Shld" short="Shld" />
+  <term name="Armour" base="Armour" mid="Armr" short="Armr" />
+  <term name="Helmet" base="Helmet" mid="Helm" short="Helm" />
+  <term name="Misc1" base="Boots" mid="Boot" short="Boot" />
+  <term name="Misc2" base="Others" mid="Misc" short="Misc" />
+</vocabulary>

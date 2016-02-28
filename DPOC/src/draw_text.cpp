@@ -5,8 +5,6 @@
 #include "draw_text.h"
 #include "Cache.h"
 
-static sf::Font font;
-static sf::Text text;
 static sf::Texture* bmpFont;
 
 static void draw_bmp_text(sf::RenderTarget& target, int x, int y, const sf::Color& color, const std::string& str)
@@ -44,33 +42,7 @@ void init_text_drawing()
 {
   TRACE("Initialize text drawing.");
 
-  if (!font.loadFromFile(config::res_path("UI/arial.ttf")))
-  {
-    TRACE("Unable to load font %s/UI/arial.ttf", config::RESOURCE_DIR.c_str());
-  }
-
-  text.setFont(font);
-  text.setColor(sf::Color::White);
-  text.setCharacterSize(14);
-
   bmpFont = cache::loadTexture("UI/font_8x8.png");
-}
-
-void draw_text(sf::RenderTarget& target, int x, int y, const char* fmt, ...)
-{
-  char buffer[512];
-
-  va_list args;
-  va_start(args, fmt);
-
-  vsprintf(buffer, fmt, args);
-
-  va_end(args);
-
-  text.setString(buffer);
-  text.setPosition(x, y);
-
-  target.draw(text);
 }
 
 void draw_text_bmp(sf::RenderTarget& target, int x, int y, const char* fmt, ...)

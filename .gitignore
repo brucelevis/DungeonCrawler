@@ -9,8 +9,9 @@ Thumbs.db
 *.ogg
 *.mp3
 *.o
+*.png
 Save*xml
-Resources
-Resources*
 /Release
 /Debug/
+*.swp
+*.bak

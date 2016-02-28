@@ -1,0 +1,45 @@
+<animation texture="effect_Hit.png" textureW="64" textureH="64" spriteOriginX="32" spriteOriginY="32">
+ <frame index="0">
+  <sprite index="0" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="1">
+  <sprite index="1" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="2">
+  <sprite index="2" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+  <sprite index="0" x="-16" y="16" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="3">
+  <sprite index="3" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+  <sprite index="1" x="-16" y="16" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="4">
+  <sprite index="3" x="0" y="0" scaleX="1.100000" scaleY="1.100000" alpha="255" />
+  <sprite index="2" x="-16" y="16" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="5">
+  <sprite index="3" x="0" y="0" scaleX="1.200000" scaleY="1.200000" alpha="178" />
+  <sprite index="3" x="-16" y="16" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+  <sprite index="0" x="16" y="24" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="6">
+  <sprite index="3" x="0" y="0" scaleX="1.500000" scaleY="1.500000" alpha="102" />
+  <sprite index="3" x="-16" y="16" scaleX="1.200000" scaleY="1.200000" alpha="153" />
+  <sprite index="1" x="16" y="24" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="7">
+  <sprite index="2" x="16" y="24" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="8">
+  <sprite index="3" x="16" y="24" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="9">
+  <sprite index="3" x="16" y="24" scaleX="1.200000" scaleY="1.200000" alpha="255" />
+ </frame>
+ <frame index="10">
+  <sprite index="3" x="16" y="24" scaleX="1.400000" scaleY="1.400000" alpha="153" />
+ </frame>
+ <frame index="11">
+  <sprite index="3" x="16" y="24" scaleX="1.600000" scaleY="1.600000" alpha="102" />
+ </frame>
+</animation>

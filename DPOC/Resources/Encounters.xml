@@ -1,0 +1,59 @@
+<encounters>
+  <encounter name="3x bat" canEscape="true" music="">
+    <group>
+      <monster name="Batty" />
+      <monster name="Batty" />
+      <monster name="Batty" />
+    </group>
+  </encounter>
+  <encounter name="3x rat" canEscape="true" music="">
+    <group>
+      <monster name="Giant Rat" />
+      <monster name="Giant Rat" />
+      <monster name="Giant Rat" />
+    </group>
+  </encounter>
+  <encounter name="2x rat 1x green rat" canEscape="true" music="">
+    <group>
+      <monster name="Giant Rat" />
+      <monster name="Venom Rat" />
+      <monster name="Giant Rat" />
+    </group>
+  </encounter>
+  <encounter name="2x frog" canEscape="true" music="">
+    <group>
+      <monster name="Sewer Frog" />
+      <monster name="Sewer Frog" />
+    </group>
+  </encounter>
+  <encounter name="sewer fish" canEscape="true" music="">
+    <group>
+      <monster name="Sewer Fish" />
+      <monster name="Sewer Fish" />
+      <monster name="Sewer Fish" />
+    </group>
+  </encounter>
+  <encounter name="sewer worm" canEscape="false" music="Battle4.ogg">
+    <group>
+      <monster name="Sewer Worm" />
+    </group>
+  </encounter>
+  <encounter name="test man" canEscape="false" music="Battle4.ogg">
+    <script>
+      if $sys:turn_count == 1
+        message You are a goddamn asshole, you know that right?
+      endif
+      if $sys:turn_count == 2
+        message What's the matter, getting tired?
+      endif
+    </script>
+    <group>
+      <monster name="Sewer Fish" />
+    </group>
+  </encounter>
+  <encounter name="lame boss" canEscape="false" music="Battle4.ogg">
+    <group>
+      <monster name="Dark Knight" />
+    </group>
+  </encounter>
+</encounters>

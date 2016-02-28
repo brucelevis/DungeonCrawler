@@ -1,0 +1,10 @@
+<init>
+  <start map="Playground.tmx" x="8" y="9" />
+  <gold>500</gold>
+  <party>
+    <character name="Aslan" class="Fighter" />
+  </party>
+  <inventory>
+    <item name="Cure Potion" amount="4" />
+  </inventory>
+</init>

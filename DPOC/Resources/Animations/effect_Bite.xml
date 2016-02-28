@@ -1,0 +1,37 @@
+<animation texture="Bite.png" textureW="96" textureH="96" spriteOriginX="48" spriteOriginY="48">
+ <frame index="0">
+  <sprite index="3" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="1">
+  <sprite index="3" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="2">
+  <sprite index="3" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="3">
+  <sprite index="4" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+  <sprite index="3" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="127" />
+ </frame>
+ <frame index="4">
+  <sprite index="4" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+  <sprite index="3" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="76" />
+ </frame>
+ <frame index="5">
+  <sprite index="5" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="6">
+ </frame>
+ <frame index="7">
+  <sprite index="5" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="8">
+ </frame>
+ <frame index="9">
+  <sprite index="5" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+ <frame index="10">
+ </frame>
+ <frame index="11">
+  <sprite index="5" x="0" y="0" scaleX="1.000000" scaleY="1.000000" alpha="255" />
+ </frame>
+</animation>

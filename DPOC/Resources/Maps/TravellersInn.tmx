@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="3" height="3" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="Tavern.png"/>
+  <property name="music" value="Town1.ogg"/>
+ </properties>
+ <tileset firstgid="1" name="dc-dngn" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/dc-dngn.png" width="960" height="608"/>
+ </tileset>
+ <layer name="wall" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="3" height="3">
+  <object x="32" y="32" width="32" height="32">
+   <properties>
+    <property name="stepScript">
+      message Welcome to the travellers inn!
+      choice Rest,Food,Leave
+      if $sys:choice == 0
+        # Take a room
+        message Rooms are 50 gold a night. Stay?
+        choice Yes,No
+        if $sys:choice == 0
+          if item[gold] &gt;= 50
+            play_sound Audio/Recovery3.wav
+            recover_all
+            take_gold 50
+            transfer Town.tmx 10 12
+            wait 50
+          else
+            message Sorry, not enough gold.
+          endif
+        endif
+      else
+        # Buy food
+        if $sys:choice == 1
+          if $sys:food &gt; 0
+            message Food is 10 gold / ration. One ration feeds 4 people. You currently have $sys:food food. Buy some more?
+            choice 1 ration,2 rations,3 rations,Leave
+          else
+            message Food is 10 gold / ration. One ration feeds 4 people. You currently have no food. Buy some more?
+            choice 1 ration,2 rations,3 rations,Leave
+          endif
+          
+          # 1 Ration
+          if $sys:choice == 0
+            if item[gold] &gt;= 10
+              $sys:food += 1
+              take_gold 10
+              play_sound Audio/Shop.ogg
+            else
+              message Sorry, not enough gold.
+            endif
+          endif
+          
+          # 2 Rations
+          if $sys:choice == 1
+            if item[gold] &gt;= 20
+              $sys:food += 2
+              take_gold 20
+              play_sound Audio/Shop.ogg
+            else
+              message Sorry, not enough gold.
+            endif
+          endif
+          
+          # 3 Rations
+          if $sys:choice == 2
+            if item[gold] &gt;= 30
+              $sys:food += 3
+              take_gold 30
+              play_sound Audio/Shop.ogg
+            else
+              message Sorry, not enough gold.
+            endif
+          endif
+        else
+          # Leave
+          message See you soon!
+          transfer Town.tmx 10 12
+          wait 50
+        endif
+      endif
+    </property>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="floor" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+ <layer name="ceiling" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+</map>
