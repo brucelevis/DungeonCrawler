@@ -62,7 +62,7 @@ void Entity::loadScripts(const std::string& talkScript, const std::string& stepS
 
   if (!stepScript.empty())
   {
-    m_script.loadFromFile(config::res_path("Scripts/" + stepScript), arguments);
+    m_stepScript.loadFromFile(config::res_path("Scripts/" + stepScript), arguments);
     m_stepScript.setCallingEntity(this);
     m_stepScript.execute();
   }
