@@ -18,6 +18,8 @@
 #include "SkillTrainer.h"
 #include "Frame.h"
 #include "draw_text.h"
+#include "Vocabulary.h"
+#include "Skill.h"
 
 #include "Lua.h"
 #include "LuaBindings.h"
@@ -173,6 +175,25 @@ void register_lua_bindings(lua::LuaEnv& luaState)
   luaState.register_global("Key_Right", static_cast<int>(sf::Keyboard::Right));
   luaState.register_global("Key_Escape", static_cast<int>(sf::Keyboard::Escape));
 
+  luaState.register_global("Term_Gold", terms::gold);
+  luaState.register_global("Term_Hp",   terms::hp);
+  luaState.register_global("Term_Mp", terms::mp);
+  luaState.register_global("Term_Strength", terms::strength);
+  luaState.register_global("Term_Defense", terms::defense);
+  luaState.register_global("Term_Magic", terms::magic);
+  luaState.register_global("Term_MagDef", terms::magdef);
+  luaState.register_global("Term_Speed", terms::speed);
+  luaState.register_global("Term_Luck", terms::luck);
+  luaState.register_global("Term_Exp", terms::exp);
+  luaState.register_global("Term_Level", terms::level);
+  luaState.register_global("Term_SkillPoints", terms::skillpoints);
+  luaState.register_global("Term_Weapon", terms::weapon);
+  luaState.register_global("Term_Shield", terms::shield);
+  luaState.register_global("Term_Armour", terms::armour);
+  luaState.register_global("Term_Helmet", terms::helmet);
+  luaState.register_global("Term_Misc1", terms::misc1);
+  luaState.register_global("Term_Misc2", terms::misc2);
+
   lua::reg{luaState}
     // Misc functions
     ("set_global", [](const std::string& globalName, int value) { Persistent<int>::instance().set(globalName, value); })
@@ -204,6 +225,8 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("character_has_status", &Character::hasStatus)
     ("get_current_attribute", [](Character* chr, const std::string& attr) { return chr->getAttribute(attr).current; })
     ("get_max_attribute", [](Character* chr, const std::string& attr) { return chr->getAttribute(attr).max; })
+    ("get_base_attribute", &PlayerCharacter::getBaseAttribute)
+    ("advance_attribute", &PlayerCharacter::advanceAttribute)
 
     // Item functions
     ("create_item", [](const std::string& itemName, int amount) { get_player()->addItemToInventory(itemName, amount); })
@@ -254,10 +277,31 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("get_menu_height", &Menu::getHeight)
     ("get_current_menu_choice", &Menu::getCurrentMenuChoice)
     ("move_menu_arrow", lua_moveMenuArrow)
+    ("menu_clear", &Menu::clear)
 
     // Event functions
     ("event_type", lua_getEventType)
-    ("get_keycode", lua_getKeyCodeFromEvent);
+    ("get_keycode", lua_getKeyCodeFromEvent)
+
+    // Skill functions
+    ("get_skill", [](const char* skillName) { return &Skill::get(skillName); })
+    ("get_skill_cost_of_rank", [](const Skill* skill) { return skill->costOfRank; })
+    ("get_skill_percent", &Skill::getPercent)
+
+    // Vocab functions
+    ("vocab_short", vocab_short)
+
+    // Container functions
+    ("vector_string_size", &std::vector<std::string>::size)
+    ("vector_string_at", [](const std::vector<std::string>* vec, size_t index) { return vec->at(index); })
+    ("strlen", std::string::size)
+    ("split_string", [](const char* string, const char* delim) -> std::vector<std::string>*
+        {
+          // ...
+          static std::vector<std::string> storage;
+          storage = split_string(string, delim[0]);
+          return &storage;
+        });
 }
 
 lua::LuaEnv* global_lua_env()

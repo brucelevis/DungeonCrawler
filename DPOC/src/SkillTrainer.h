@@ -8,7 +8,7 @@
 #include "Scene.h"
 
 class PlayerCharacter;
-class TrainMenu;
+class ScriptMenu;
 
 class SkillTrainer : public Scene
 {
@@ -26,7 +26,8 @@ private:
 private:
   std::vector<std::string> m_skills;
   ChoiceMenu m_choiceMenu;
-  TrainMenu* m_trainMenu;
+  //TrainMenu* m_trainMenu;
+  ScriptMenu* m_trainMenu;
 };
 
 #endif /* SKILLTRAINER_H_ */

@@ -4,8 +4,6 @@
 
 ScriptScene::ScriptScene(const std::string& scriptFile)
 {
-  register_lua_bindings(m_luaState);
-
   if (!m_luaState.executeFile(scriptFile))
   {
     TRACE("Failed to load script: %s [%s]", scriptFile.c_str(), m_luaState.getError().c_str());

@@ -12,6 +12,8 @@
 #include "Skill.h"
 #include "SkillTrainer.h"
 
+#include "ScriptMenu.h"
+/*
 class TrainMenu : public Menu
 {
 public:
@@ -113,6 +115,7 @@ private:
   int m_height;
   PlayerCharacter* m_currentCharacter;
 };
+*/
 
 SkillTrainer::SkillTrainer(const std::vector<std::string>& skills)
  : m_skills(skills),
@@ -212,7 +215,12 @@ void SkillTrainer::handleKeyPress(sf::Keyboard::Key key)
       }
       else
       {
-        m_trainMenu = new TrainMenu(m_skills, config::GAME_RES_Y - m_choiceMenu.getHeight(), getCurrentCharacter());
+        //m_trainMenu = new TrainMenu(m_skills, config::GAME_RES_Y - m_choiceMenu.getHeight(), getCurrentCharacter());
+        m_trainMenu = new ScriptMenu(config::res_path("Scripts/SkillTrainerMenu.lua"));
+        m_trainMenu->setPointerArg("skills", &m_skills);
+        m_trainMenu->setIntegerArg("height", config::GAME_RES_Y - m_choiceMenu.getHeight());
+        m_trainMenu->setPointerArg("currentCharacter", getCurrentCharacter());
+
         m_trainMenu->setVisible(true);
         m_choiceMenu.setCursorVisible(false);
       }
