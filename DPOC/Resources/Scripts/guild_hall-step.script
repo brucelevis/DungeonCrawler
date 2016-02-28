@@ -1,0 +1,14 @@
+message Welcome to the guild hall.
+choice Trainer,Leave
+
+# Train
+if $sys:choice == 0
+  skill_trainer Cartography,Swimming,Evasion,Searching
+endif
+
+# Leave
+if $sys:choice == 1
+  message See you soon.
+  transfer Town.tmx 14 6
+  wait 50
+endif

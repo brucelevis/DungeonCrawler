@@ -1,0 +1,4 @@
+if @1 == true
+  set_walkthrough true
+  set_visible false
+endif

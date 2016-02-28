@@ -1,0 +1,22 @@
+if %opened == false
+  message This grating is rusted shut. You need some kind of tool to pry it open.
+  if item[Crowbar] >= 1
+    %opened = true
+    message Using your crowbar, you manage the bend the grating open.
+    message Crawl into the tunnel?
+    choice Yes,No
+    if $sys:choice == 0
+      transfer Sewers-1.tmx 28 28
+    else
+      message You leave it alone for now.
+    endif
+  endif
+else
+  message Crawl into the tunnel?
+  choice Yes,No
+  if $sys:choice == 0
+    transfer Sewers-1.tmx 28 28
+  else
+    message You leave it alone for now.
+  endif
+endif

@@ -92,26 +92,12 @@
   <object type="door" gid="392" x="224" y="384"/>
   <object gid="534" x="512" y="320">
    <properties>
-    <property name="talkScript">
-      while 1 == 1
-        message Do ye wish to fight?
-        choice Yes,No
-        if $sys:choice == 0
-          encounter test man
-          break
-        else
-          message But thou must!
-        endif
-      wend
-    </property>
+    <property name="talkScript" value="testman-talk.script" />
    </properties>
   </object>
   <object name="creepy wall" x="192" y="288" width="32" height="32">
    <properties>
-    <property name="talkScript">
-      message There's something uncanny about this...
-      change_tile wall 6 9 18
-    </property>
+    <property name="talkScript" value="creepy_wall-talk.script" />
    </properties>
   </object>
  </objectgroup>

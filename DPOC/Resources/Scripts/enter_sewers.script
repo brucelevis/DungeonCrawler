@@ -1,0 +1,5 @@
+message This door leads to a cellar connected to the sewers. Proceed?
+choice Hell yeah!,No way...
+if $sys:choice == 0
+  transfer Sewers-1.tmx 15 11 DIR_RIGHT
+endif

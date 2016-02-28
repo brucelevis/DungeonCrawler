@@ -1,0 +1,3 @@
+if $sewer_1_fence_opened == false
+  message You see a mechanism to move this fence but you can't see where it is connected.
+endif

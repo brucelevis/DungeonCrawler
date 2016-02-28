@@ -17,16 +17,7 @@
  <objectgroup name="Object Layer 1" width="3" height="3">
   <object x="32" y="32" width="32" height="32">
    <properties>
-    <property name="stepScript">
-      message Welcome to the general store.
-      choice Trade,Leave
-      if $sys:choice == 0
-        shop Cure Potion
-      endif
-      message See you soon.
-      transfer Town.tmx 4 11
-      wait 50
-    </property>
+    <property name="stepScript" value="general_store-step.script" />
    </properties>
   </object>
  </objectgroup>

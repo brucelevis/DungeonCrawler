@@ -23,6 +23,18 @@ namespace
     trapType = trapData[0];
     luckToBeat = fromString<int>(trapData[1]);
   }
+
+  std::vector<std::string> _parse_script_arguments(const TiledLoader& loader, size_t objectIndex)
+  {
+    // Parse arguments (argument1 ... argument9). Empty args will be ignored later.
+    std::vector<std::string> scriptArguments;
+    for (int i = 1; i <= 9; i++)
+    {
+      std::string argument = loader.getObjectProperty(objectIndex, "argument" + toString(i));
+      scriptArguments.push_back(argument);
+    }
+    return scriptArguments;
+  }
 }
 
 std::unordered_map<std::string, std::vector<bool>> Map::s_explored;
@@ -254,7 +266,8 @@ Map* Map::loadTiledFile(const std::string& filename)
 
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),
-              loader.getObjectProperty(objectIndex, "stepScript"));
+              loader.getObjectProperty(objectIndex, "stepScript"),
+              _parse_script_arguments(loader, objectIndex));
 
           TileSprite* tileSprite = new TileSprite(texture, tileX, tileY);
           entity->setSprite(tileSprite);
@@ -318,7 +331,8 @@ Map* Map::loadTiledFile(const std::string& filename)
 
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),
-              loader.getObjectProperty(objectIndex, "stepScript"));
+              loader.getObjectProperty(objectIndex, "stepScript"),
+              _parse_script_arguments(loader, objectIndex));
 
           map->m_entities.push_back(entity);
         }

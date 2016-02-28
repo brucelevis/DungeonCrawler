@@ -1,0 +1,5 @@
+if %stepped == 0
+  %stepped = 1
+  message @1
+  encounter @2
+endif

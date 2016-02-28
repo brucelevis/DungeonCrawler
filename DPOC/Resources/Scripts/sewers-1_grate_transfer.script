@@ -1,0 +1,7 @@
+message Crawl into the tunnel?
+choice Yes,No
+if $sys:choice == 0
+  transfer Sewers-1.tmx 1 24
+else
+  message You leave it alone for now.
+endif

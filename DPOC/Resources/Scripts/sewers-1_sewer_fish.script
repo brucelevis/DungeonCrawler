@@ -1,0 +1,15 @@
+if %grabbed == false
+  message In the filthy sewer water, you spot something disturbing the surface. Reach in and grab it?
+  choice Yes,No
+  if $sys:choice == 0
+    message As you stick your hand into the water, something grabs hold and emerges to the surface!
+    encounter sewer fish
+    message For your troubles, you find a rusted key.
+    give_item 1 Rusty Key
+    %grabbed = true
+  else
+    message You leave it alone, for now.
+  endif
+else
+  message You see nothing else in the water.
+endif

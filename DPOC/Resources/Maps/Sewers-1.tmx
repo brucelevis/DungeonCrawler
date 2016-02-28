@@ -78,28 +78,15 @@
  <objectgroup name="Object Layer 1" width="30" height="30">
   <object name="Stairs Up" gid="279" x="448" y="384">
    <properties>
-    <property name="talkScript" value="transfer Town.tmx 7 4"/>
+    <property name="talkScript" value="transfer.script"/>
+    <property name="argument1" value="Town.tmx" />
+    <property name="argument2" value="7" />
+    <property name="argument3" value="4" />
    </properties>
   </object>
   <object name="WaterInterest1" x="832" y="224" width="32" height="32">
    <properties>
-    <property name="talkScript">
-      if %grabbed == false
-        message In the filthy sewer water, you spot something disturbing the surface. Reach in and grab it?
-        choice Yes,No
-        if $sys:choice == 0
-          message As you stick your hand into the water, something grabs hold and emerges to the surface!
-          encounter sewer fish
-          message For your troubles, you find a rusted key.
-          give_item 1 Rusty Key
-          %grabbed = true
-        else
-          message You leave it alone, for now.
-        endif
-      else
-        message You see nothing else in the water.
-      endif
-    </property>
+    <property name="talkScript" value="sewers-1_sewer_fish.script" />
    </properties>
   </object>
   <object type="chest" gid="555" x="896" y="512">
@@ -114,30 +101,7 @@
   </object>
   <object name="grate" x="928" y="672" width="32" height="32">
    <properties>
-    <property name="talkScript">
-      if %opened == false
-        message This grating is rusted shut. You need some kind of tool to pry it open.
-        if item[Crowbar] &gt;= 1
-          %opened = true
-          message Using your crowbar, you manage the bend the grating open.
-          message Crawl into the tunnel?
-          choice Yes,No
-          if $sys:choice == 0
-            transfer Sewers-1.tmx 28 28
-          else
-            message You leave it alone for now.
-          endif
-        endif
-      else
-        message Crawl into the tunnel?
-        choice Yes,No
-        if $sys:choice == 0
-          transfer Sewers-1.tmx 28 28
-        else
-          message You leave it alone for now.
-        endif
-      endif
-    </property>
+    <property name="talkScript" value="sewers-1_rusty_grating.script" />
    </properties>
   </object>
   <object type="chest" gid="555" x="32" y="672">
@@ -157,80 +121,48 @@
   </object>
   <object name="grate2" x="928" y="896" width="32" height="32">
    <properties>
-    <property name="talkScript">
-        message Crawl into the tunnel?
-        choice Yes,No
-        if $sys:choice == 0
-          transfer Sewers-1.tmx 1 24
-        else
-          message You leave it alone for now.
-        endif
-      </property>
+    <property name="talkScript" value="sewers-1_grate_transfer.script" />
+    <property name="argument1" value="Sewers-1.tmx" />
+    <property name="argument2" value="1" />
+    <property name="argument3" value="24" />
    </properties>
   </object>
   <object name="grate3" x="0" y="768" width="32" height="32">
    <properties>
-    <property name="talkScript">
-        message Crawl into the tunnel?
-        choice Yes,No
-        if $sys:choice == 0
-          transfer Sewers-1.tmx 28 21
-        else
-          message You leave it alone for now.
-        endif
-      </property>
+    <property name="talkScript" value="sewers-1_grate_transfer.script" />
+    <property name="argument1" value="Sewers-1.tmx" />
+    <property name="argument2" value="28" />
+    <property name="argument3" value="21" />
    </properties>
   </object>
   <object name="Eye" x="192" y="352" width="32" height="32">
    <properties>
-    <property name="talkScript" value="message There's some kind of eye etched into the wall. There is probably some significane to this, but you can't tell right now."/>
+    <property name="talkScript" value="message.script"/>
+    <property name="argument1" value="There's some kind of eye etched into the wall. There is probably some significane to this, but you can't tell right now." />
    </properties>
   </object>
   <object name="Fence" gid="282" x="128" y="256">
    <properties>
-    <property name="stepScript">
-      if $sewer_1_fence_opened == true
-        set_walkthrough true
-        set_visible false
-      endif
-    </property>
-    <property name="talkScript">
-      if $sewer_1_fence_opened == false
-        message You see a mechanism to move this fence but you can't see where it is connected.
-      endif
-    </property>
+    <property name="stepScript" value="remove.script" />
+    <property name="argument1" value="$sewer_1_fence_opened" />
+    <property name="talkScript" value="sewers-1_fence-talk.script" />
    </properties>
   </object>
   <object name="Lever" gid="507" x="128" y="928">
    <properties>
-    <property name="talkScript">
-      message This is some kind of lever. Pull it?
-      choice Yes,No
-      if $sys:choice == 0
-        message You hear a rumble in the distance.
-        if $sewer_1_fence_opened == false
-          $sewer_1_fence_opened = true
-        else
-          $sewer_1_fence_opened = false
-        endif
-      endif
-    </property>
+    <property name="talkScript" value="sewers-1_lever.script" />
    </properties>
   </object>
   <object name="campsite" x="896" y="32" width="32" height="32">
    <properties>
-    <property name="talkScript" value="campsite"/>
+    <property name="talkScript" value="call_campsite.script"/>
    </properties>
   </object>
   <object name="sewer_worm_encounter" x="256" y="448" width="32" height="32">
    <properties>
-    <property name="talkScript">
-      if %stepped == 0
-        %stepped = 1
-        message Suddenly a horrible beast drops from the ceiling!
-        encounter sewer worm
-      endif
-    </property>
+    <property name="talkScript" value="one_shot_encounter.script" />
+    <property name="argument1" value="Suddenly a horrible beast drops from the ceiling!" />
+    <property name="argument2" value="sewer worm" />
    </properties>
   </object>
   <object type="door" gid="544" x="160" y="448">

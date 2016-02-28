@@ -17,16 +17,7 @@
  <objectgroup name="Object Layer 1" width="3" height="3">
   <object x="32" y="32" width="32" height="32">
    <properties>
-    <property name="stepScript">
-      message Welcome to the blacksmith. We deal in weapons and armour.
-      choice Trade,Leave
-      if $sys:choice == 0
-        shop Copper Sword
-      endif
-      message See you soon.
-      transfer Town.tmx 7 15
-      wait 50
-    </property>
+    <property name="stepScript" value="blacksmith-step.script" />
    </properties>
   </object>
  </objectgroup>

@@ -50,21 +50,19 @@ Entity::~Entity()
   delete m_sprite;
 }
 
-void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript)
+void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript, const std::vector<std::string>& arguments)
 {
   TRACE("Entity[%s]::loadScripts(%s, %s)", getTag().c_str(), talkScript.c_str(), stepScript.c_str());
 
   if (!talkScript.empty())
   {
-    std::istringstream ss(talkScript);
-    m_script.loadFromLines(get_lines(ss));
+    m_script.loadFromFile(config::res_path("Scripts/" + talkScript), arguments);
     m_script.setCallingEntity(this);
   }
 
   if (!stepScript.empty())
   {
-    std::istringstream ss(stepScript);
-    m_stepScript.loadFromLines(get_lines(ss));
+    m_script.loadFromFile(config::res_path("Scripts/" + stepScript), arguments);
     m_stepScript.setCallingEntity(this);
     m_stepScript.execute();
   }

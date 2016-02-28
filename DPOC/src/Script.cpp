@@ -132,6 +132,24 @@ static void strip_comments(std::vector<std::string>& lines)
   }
 }
 
+static void replace_arguments(std::vector<std::string>& lines, const std::vector<std::string>& arguments)
+{
+  for (std::string& line : lines)
+  {
+    for (size_t i = 0; i < arguments.size(); i++)
+    {
+      int varIndex = i + 1;
+      std::string varToken = "@" + toString(varIndex);
+
+      size_t pos = std::string::npos;
+      while ((pos = line.find(varToken)) != std::string::npos)
+      {
+        line.replace(pos, varToken.size(), arguments[i]);
+      }
+    }
+  }
+}
+
 static std::string get_value_to_bracket(const std::string& str)
 {
   std::string buffer;
@@ -287,7 +305,7 @@ Script::Script()
 
 }
 
-bool Script::loadFromFile(const std::string& file)
+bool Script::loadFromFile(const std::string& file, const std::vector<std::string>& arguments)
 {
   m_currentIndex = 0;
   m_loaded = true;
@@ -299,7 +317,7 @@ bool Script::loadFromFile(const std::string& file)
   {
     std::vector<std::string> lines = get_lines(infile);
 
-    loadFromLines(lines);
+    loadFromLines(lines, arguments);
 
     infile.close();
 
@@ -313,9 +331,10 @@ bool Script::loadFromFile(const std::string& file)
   return false;
 }
 
-void Script::loadFromLines(std::vector<std::string> lines)
+void Script::loadFromLines(std::vector<std::string> lines, const std::vector<std::string>& arguments)
 {
   strip_comments(lines);
+  replace_arguments(lines, arguments);
 
   for (auto it = lines.begin(); it != lines.end(); ++it)
   {

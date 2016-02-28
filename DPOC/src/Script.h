@@ -227,8 +227,8 @@ public:
 
   Script();
 
-  bool loadFromFile(const std::string& file);
-  void loadFromLines(std::vector<std::string> lines);
+  bool loadFromFile(const std::string& file, const std::vector<std::string>& arguments = {});
+  void loadFromLines(std::vector<std::string> lines, const std::vector<std::string>& arguments = {});
 
   bool isLoaded() const { return m_loaded; }
 
