@@ -58,6 +58,8 @@ public:
   void openMap();
 
   bool battleInProgress() const { return m_battleInProgress; }
+
+  void transferPlayer(const std::string& targetMap, int x, int y);
 private:
   Game();
   ~Game();
@@ -66,8 +68,6 @@ private:
   bool checkWarps();
   bool checkTraps();
   bool checkInteractions();
-
-  void transferPlayer(const std::string& targetMap, int x, int y);
 
   void handleKeyPress(sf::Keyboard::Key key);
 

@@ -511,7 +511,7 @@ void Game::prepareTransfer(const std::string& targetMap, int x, int y, Direction
 
 void Game::transferPlayer(const std::string& targetMap, int x, int y)
 {
-  if (targetMap != m_currentMap->getName())
+  if (targetMap.size() && targetMap != m_currentMap->getName())
   {
     loadNewMap(targetMap);
   }

@@ -41,7 +41,7 @@
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,516,31,516,31,31,
-31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
+31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,517,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,516,31,516,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
@@ -92,12 +92,19 @@
   <object type="door" gid="392" x="224" y="384"/>
   <object gid="534" x="512" y="320">
    <properties>
-    <property name="talkScript" value="testman-talk.script" />
+    <property name="talkScript" value="testman-talk.script"/>
    </properties>
   </object>
   <object name="creepy wall" x="192" y="288" width="32" height="32">
    <properties>
-    <property name="talkScript" value="creepy_wall-talk.script" />
+    <property name="talkScript" value="creepy_wall-talk.script"/>
+   </properties>
+  </object>
+  <object name="magic transfer" x="576" y="288" width="32" height="32">
+   <properties>
+    <property name="argument1" value="8"/>
+    <property name="argument2" value="9"/>
+    <property name="talkScript" value="magic_teleport.script"/>
    </properties>
   </object>
  </objectgroup>

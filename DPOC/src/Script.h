@@ -55,7 +55,9 @@ public:
     OP_SKILL_TRAINER,
     OP_CAMPSITE,
     OP_SET_PLAYER_DIR,
-    OP_CHANGE_TILE
+    OP_CHANGE_TILE,
+    OP_FLASH_SCREEN,
+    OP_CHANGE_PLAYER_POSITION
   };
 
   enum ArithmOp
@@ -222,6 +224,17 @@ public:
         int x, y;
         int tilenum;
       } changeTile;
+
+      struct
+      {
+        int duration;
+        int r, g, b;
+      } flashScreen;
+
+      struct
+      {
+        int x, y;
+      } changePlayerPosition;
     } data;
   };
 

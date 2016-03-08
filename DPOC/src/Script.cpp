@@ -776,6 +776,20 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     data.data.changeTile.y = atoi(strings[3].c_str());
     data.data.changeTile.tilenum = atoi(strings[4].c_str());
   }
+  else if (opcode == OP_FLASH_SCREEN)
+  {
+    memset(&data.data.flashScreen, 0, sizeof(data.data.flashScreen));
+
+    data.data.flashScreen.duration = atoi(strings[1].c_str());
+    data.data.flashScreen.r = atoi(strings[2].c_str());
+    data.data.flashScreen.g = atoi(strings[3].c_str());
+    data.data.flashScreen.b = atoi(strings[4].c_str());
+  }
+  else if (opcode == OP_CHANGE_PLAYER_POSITION)
+  {
+    data.data.changePlayerPosition.x = atoi(strings[1].c_str());
+    data.data.changePlayerPosition.y = atoi(strings[2].c_str());
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -823,7 +837,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "skill_trainer", OP_SKILL_TRAINER },
     { "campsite", OP_CAMPSITE },
     { "set_player_dir", OP_SET_PLAYER_DIR },
-    { "change_tile", OP_CHANGE_TILE }
+    { "change_tile", OP_CHANGE_TILE },
+    { "flash_screen", OP_FLASH_SCREEN },
+    { "change_player_position", OP_CHANGE_PLAYER_POSITION }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -1279,5 +1295,17 @@ void Script::executeScriptLine()
 
     Game::instance().getCurrentMap()->setTileAt(x, y, layer, tilenum);
   }
-}
+  else if (data.opcode == Script::OP_FLASH_SCREEN)
+  {
+    int duration = data.data.flashScreen.duration;
+    uint8_t r = static_cast<uint8_t>(data.data.flashScreen.r);
+    uint8_t g = static_cast<uint8_t>(data.data.flashScreen.g);
+    uint8_t b = static_cast<uint8_t>(data.data.flashScreen.b);
 
+    SceneManager::instance().flashScreen(duration, sf::Color{r, g, b});
+  }
+  else if (data.opcode == Script::OP_CHANGE_PLAYER_POSITION)
+  {
+    Game::instance().transferPlayer("", data.data.changePlayerPosition.x, data.data.changePlayerPosition.y);
+  }
+}
