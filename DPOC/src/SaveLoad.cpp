@@ -41,7 +41,7 @@ void save_game(const std::string& saveFile)
 
   xml << Game::instance().getCurrentMap()->xmlDump();
   xml << get_player()->xmlDump();
-  xml << Persistent<int>::instance().xmlDump();
+  xml << Persistent::instance().xmlDump();
 
   xml << "</save>\n";
 
@@ -394,6 +394,6 @@ void parsePersistents(const XMLElement* persElement)
 
     TRACE(" - key=%s, value=%d", key.c_str(), value);
 
-    Persistent<int>::instance().set(key, value);
+    Persistent::instance().set(key, value);
   }
 }

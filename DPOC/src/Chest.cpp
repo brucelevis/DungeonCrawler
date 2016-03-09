@@ -29,7 +29,7 @@ Chest::Chest(const std::string& name, const std::vector<std::string> items, cons
 
 void Chest::update()
 {
-  if (!m_spriteChanged && Persistent<int>::instance().isSet(getTag()))
+  if (!m_spriteChanged && Persistent::instance().isSet(getTag()))
   {
     changeSprite();
   }
@@ -41,10 +41,10 @@ void Chest::interact(const Entity* interactor)
 
   std::string key = getTag();
 
-  if (!Persistent<int>::instance().isSet(key))
+  if (!Persistent::instance().isSet(key))
   {
     changeSprite();
-    Persistent<int>::instance().set(key, 1);
+    Persistent::instance().set(key, 1);
 
     if (!m_isTrapped)
     {

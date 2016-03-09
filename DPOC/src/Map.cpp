@@ -466,7 +466,7 @@ bool Map::trapAt(int x, int y) const
 {
   for (auto it = m_traps.begin(); it != m_traps.end(); ++it)
   {
-    if (it->x == x && it->y == y && !Persistent<int>::instance().isSet(getTrapKey(&(*it))))
+    if (it->x == x && it->y == y && !Persistent::instance().isSet(getTrapKey(&(*it))))
     {
       return true;
     }
@@ -492,7 +492,7 @@ void Map::disableTrap(const Trap* trap)
 {
   // Mark this trap as "sprung" in the persistent storage so that it can be
   // saved.
-  Persistent<int>::instance().set(getTrapKey(trap), 1);
+  Persistent::instance().set(getTrapKey(trap), 1);
 }
 
 bool Map::blocking(int x, int y)

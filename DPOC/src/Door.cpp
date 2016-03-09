@@ -156,13 +156,13 @@ void Door::openFinished()
   setIsVisible(false);
   setWalkThrough(true);
 
-  Persistent<int>::instance().set(getTag(), true);
+  Persistent::instance().set(getTag(), true);
 }
 
 bool Door::isOpen() const
 {
-  return Persistent<int>::instance().isSet(getTag()) &&
-         Persistent<int>::instance().get(getTag());
+  return Persistent::instance().isSet(getTag()) &&
+         Persistent::instance().getAs<int>(getTag());
 }
 
 void Door::close()
@@ -171,7 +171,7 @@ void Door::close()
   m_openingCount = 0.05f;
 
   setIsVisible(true);
-  Persistent<int>::instance().set(getTag(), false);
+  Persistent::instance().set(getTag(), false);
 }
 
 void Door::closeFinished()

@@ -175,8 +175,8 @@ void register_lua_bindings(lua::LuaEnv& luaState)
 
   lua::reg{luaState}
     // Misc functions
-    ("set_global", [](const std::string& globalName, int value) { Persistent<int>::instance().set(globalName, value); })
-    ("get_global", [](const std::string& globalName) { return global<int>(globalName); })
+    ("set_global", [](const std::string& globalName, const std::string& value) { Persistent::instance().set(globalName, value); })
+    ("get_global", [](const std::string& globalName) { return global<std::string>(globalName); })
     ("enable_encounters", [](bool enabled) { config::ENCOUNTERS_ENABLED = enabled; })
     ("skill_trainer", []() { SceneManager::instance().addScene( new SkillTrainer({"Cartography", "Swimming", "Lockpicking"})); })
     ("start_encounter", [](const std::string& encounterName)

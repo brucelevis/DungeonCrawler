@@ -46,7 +46,7 @@ static void get_if_value(const Entity* entity, const std::string& input, const s
 
   if (input == "local" || input == "global")
   {
-    value = Persistent<int>::instance().get(fixedKey);
+    value = Persistent::instance().getAs<int>(fixedKey);
   }
   else if (input == "const")
   {
@@ -283,9 +283,9 @@ static std::string replace_variables_in_string(const std::string& str, const Ent
       key = callingEntity->getTag() + "@@" + variable;
     }
 
-    if (Persistent<int>::instance().isSet(key))
+    if (Persistent::instance().isSet(key))
     {
-      std::string value = toString(Persistent<int>::instance().get(key));
+      std::string value = Persistent::instance().get(key);
 
       size_t pos = buffer.find(variable);
       buffer.replace(pos, variable.size(), value);
@@ -871,11 +871,11 @@ void Script::executeScriptLine()
 
     if (key[0] == '$')
     {
-      Persistent<int>::instance().set(key, value);
+      Persistent::instance().set(key, value);
     }
     else if (key[0] == '%')
     {
-      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + key, value);
+      Persistent::instance().set(m_callingEntity->getTag() + "@@" + key, value);
     }
 
     advance();
@@ -894,25 +894,25 @@ void Script::executeScriptLine()
 
     if (key[0] == '$')
     {
-      int current = Persistent<int>::instance().get(key);
+      int current = Persistent::instance().getAs<int>(key);
 
       if (operation == ARITHM_OP_ADD) current += value;
       if (operation == ARITHM_OP_SUB) current -= value;
       if (operation == ARITHM_OP_MUL) current *= value;
       if (operation == ARITHM_OP_DIV) current /= value;
 
-      Persistent<int>::instance().set(key, current);
+      Persistent::instance().set(key, current);
     }
     else if (key[0] == '%')
     {
-      int current = Persistent<int>::instance().get(m_callingEntity->getTag() + "@@" + key);
+      int current = Persistent::instance().getAs<int>(m_callingEntity->getTag() + "@@" + key);
 
       if (operation == ARITHM_OP_ADD) current += value;
       if (operation == ARITHM_OP_SUB) current -= value;
       if (operation == ARITHM_OP_MUL) current *= value;
       if (operation == ARITHM_OP_DIV) current /= value;
 
-      Persistent<int>::instance().set(m_callingEntity->getTag() + "@@" + key, current);
+      Persistent::instance().set(m_callingEntity->getTag() + "@@" + key, current);
     }
 
     advance();

@@ -73,7 +73,7 @@ Game::Game()
   m_targetTexture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
 
   // Clear all persistents when a new game is created.
-  Persistent<int>::instance().clear();
+  Persistent::instance().clear();
 }
 
 Game::~Game()

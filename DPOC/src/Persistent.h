@@ -5,11 +5,11 @@
 
 #include <sstream>
 #include <string>
-#include <map>
+#include <unordered_map>
 
+#include "Utility.h"
 #include "logger.h"
 
-template <typename T>
 class Persistent
 {
 public:
@@ -24,19 +24,31 @@ public:
     return m_storage.count(key) > 0;
   }
 
-  T get(const std::string& key) const
+  std::string get(const std::string& key) const
   {
     auto it = m_storage.find(key);
     if (it != m_storage.end())
     {
       return it->second;
     }
-    return T();
+    return "";
   }
 
-  void set(const std::string& key, T value)
+  template <typename T>
+  T getAs(const std::string& key) const
+  {
+    return fromString<T>(get(key));
+  }
+
+  void set(const std::string& key, const std::string& value)
   {
     m_storage[key] = value;
+  }
+
+  template <typename T>
+  void set(const std::string& key, const T& value)
+  {
+    m_storage[key] = toString(value);
   }
 
   std::string xmlDump() const
@@ -61,19 +73,19 @@ public:
 protected:
   Persistent() {}
 private:
-  std::map<std::string, T> m_storage;
+  std::unordered_map<std::string, std::string> m_storage;
 };
 
 template <typename T>
 inline T global(const std::string& name)
 {
-  return Persistent<T>::instance().get(name);
+  return Persistent::instance().getAs<T>(name);
 }
 
 template <typename T>
-inline void set_global(const std::string& name, T value)
+inline void set_global(const std::string& name, const T& value)
 {
-  Persistent<T>::instance().set(name, value);
+  Persistent::instance().set(name, value);
 }
 
 #endif
