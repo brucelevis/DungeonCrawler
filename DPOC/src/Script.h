@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
+
 #include "Direction.h"
 
 class Entity;
@@ -72,170 +74,8 @@ public:
   struct ScriptData
   {
     Opcode opcode;
-
-    union
-    {
-      struct
-      {
-        char message[MAX_SCRIPT_MESSAGE_BUFFER_SIZE];
-      } messageData;
-
-      struct
-      {
-        Direction dir;
-      } walkData;
-
-      struct
-      {
-        int duration;
-      } waitData;
-
-      struct
-      {
-        char key[MAX_SCRIPT_KEY_SIZE];
-        char value[MAX_SCRIPT_KEY_SIZE];
-        char type[MAX_SCRIPT_KEY_SIZE];
-      } setPersistentData;
-
-      struct
-      {
-        char key[MAX_SCRIPT_KEY_SIZE];
-        char value[MAX_SCRIPT_KEY_SIZE];
-        char type[MAX_SCRIPT_KEY_SIZE];
-        ArithmOp operation;
-      } arithmeticData;
-
-      struct
-      {
-        char lhs[MAX_SCRIPT_KEY_SIZE];
-        char rhs[MAX_SCRIPT_KEY_SIZE];
-
-        char lhsKey[MAX_SCRIPT_KEY_SIZE];
-        char rhsKey[MAX_SCRIPT_KEY_SIZE];
-
-        char boolOperation[MAX_SCRIPT_KEY_SIZE];
-      } ifData;
-
-      struct
-      {
-        int numberOfChoices;
-        char choices[MAX_CHOICES][MAX_SCRIPT_KEY_SIZE];
-      } choiceData;
-
-      struct
-      {
-        int tileId;
-      } setTileIdData;
-
-      struct
-      {
-        char itemName[MAX_SCRIPT_KEY_SIZE];
-        int amount;
-      } giveItemData;
-
-      struct
-      {
-        int amount;
-      } giveGoldData;
-
-      struct
-      {
-        char sound[MAX_SCRIPT_KEY_SIZE];
-      } playSoundData;
-
-      struct
-      {
-        char name[MAX_SCRIPT_KEY_SIZE];
-        char className[MAX_SCRIPT_KEY_SIZE];
-        int level;
-      } addPartyMemberData;
-
-      struct
-      {
-        char name[MAX_SCRIPT_KEY_SIZE];
-      } removePartyMemberData;
-
-      struct
-      {
-        bool visibility;
-      } setVisibleData;
-
-      struct
-      {
-        bool walkthrough;
-      } setWalkthroughData;
-
-      struct
-      {
-        bool enabled;
-      } enableControlsData;
-
-      struct
-      {
-        int number;
-        char monsters[MAX_SCRIPT_KEY_SIZE][MAX_SCRIPT_KEY_SIZE];
-        bool canEscape;
-      } combatData;
-
-      struct
-      {
-        char encounterName[MAX_SCRIPT_KEY_SIZE];
-      } encounterData;
-
-      struct
-      {
-        char key[MAX_SCRIPT_KEY_SIZE];
-        char value[MAX_SCRIPT_KEY_SIZE];
-      } setConfigData;
-
-      struct
-      {
-        char targetMap[MAX_SCRIPT_KEY_SIZE];
-        int x, y;
-        Direction dir;
-      } transferData;
-
-      struct
-      {
-        char inventory[32][MAX_SCRIPT_KEY_SIZE];
-        int number;
-      } shopData;
-
-      struct
-      {
-        char name[MAX_SCRIPT_KEY_SIZE];
-        float x, y;
-      } showPictureData;
-
-      struct
-      {
-        char name[MAX_SCRIPT_KEY_SIZE];
-      } hidePictureData;
-
-      struct
-      {
-        char skills[32][MAX_SCRIPT_KEY_SIZE];
-        int number;
-      } skillTrainer;
-
-      struct
-      {
-        char layer[32];
-        int x, y;
-        int tilenum;
-      } changeTile;
-
-      struct
-      {
-        int duration;
-        int r, g, b;
-      } flashScreen;
-
-      struct
-      {
-        int x, y;
-      } changePlayerPosition;
-    } data;
+    std::unordered_map<std::string, std::string> arguments;
+    std::unordered_map<std::string, std::vector<std::string>> listArguments;
   };
 
   Script();
@@ -255,7 +95,7 @@ private:
   void advance();
   void executeScriptLine();
 
-  ScriptData getCurrentData() const;
+  const ScriptData& getCurrentData() const;
   bool peekNext(ScriptData& out) const;
 
   ScriptData parseLine(const std::string& line) const;

@@ -378,7 +378,7 @@ bool Script::active() const
   return m_running;
 }
 
-Script::ScriptData Script::getCurrentData() const
+const Script::ScriptData& Script::getCurrentData() const
 {
   static ScriptData dummy = { OP_NOP };
   if (m_currentIndex >= m_data.size())
@@ -437,28 +437,31 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
   if (opcode == OP_MESSAGE)
   {
-    memset(data.data.messageData.message, 0, MAX_SCRIPT_MESSAGE_BUFFER_SIZE);
+    std::string message;
 
     for (size_t i = 1; i < strings.size(); i++)
     {
-      std::strcat(data.data.messageData.message, strings[i].c_str());
+      message.append(strings[i]);
+
       if (i < strings.size() - 1)
       {
-        std::strcat(data.data.messageData.message, " ");
+        message.push_back(' ');
       }
     }
+
+    data.arguments["message"] = message;
   }
   else if (opcode == OP_WALK)
   {
-    data.data.walkData.dir = directionFromString(strings[1]);
+    data.arguments["direction"] = strings[1];
   }
   else if (opcode == OP_SET_DIR || opcode == OP_SET_PLAYER_DIR)
   {
-    data.data.walkData.dir = directionFromString(strings[1]);
+    data.arguments["direction"] = strings[1];
   }
   else if (opcode == OP_WAIT)
   {
-    data.data.waitData.duration = atoi(strings[1].c_str());
+    data.arguments["duration"] = strings[1];
   }
   else if (opcode == OP_ASSIGNMENT || opcode == OP_ARITHMETIC)
   {
@@ -472,24 +475,16 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     if (opcode == OP_ASSIGNMENT)
     {
-      memset(data.data.setPersistentData.key, 0, MAX_SCRIPT_KEY_SIZE);
-      memset(data.data.setPersistentData.type, 0, MAX_SCRIPT_KEY_SIZE);
-      memset(data.data.setPersistentData.value, 0, MAX_SCRIPT_KEY_SIZE);
-
-      strcpy(data.data.setPersistentData.key, key.c_str());
-      strcpy(data.data.setPersistentData.type, assign_type.c_str());
-      strcpy(data.data.setPersistentData.value, assign_key.c_str());
+      data.arguments["key"] = key;
+      data.arguments["type"] = assign_type;
+      data.arguments["value"] = assign_key;
     }
     else if (opcode == OP_ARITHMETIC)
     {
-      memset(data.data.arithmeticData.key, 0, MAX_SCRIPT_KEY_SIZE);
-      memset(data.data.arithmeticData.type, 0, MAX_SCRIPT_KEY_SIZE);
-      memset(data.data.arithmeticData.value, 0, MAX_SCRIPT_KEY_SIZE);
-
-      data.data.arithmeticData.operation = get_arithm_op(strings[1]);
-      strcpy(data.data.arithmeticData.key, key.c_str());
-      strcpy(data.data.arithmeticData.type, assign_type.c_str());
-      strcpy(data.data.arithmeticData.value, assign_key.c_str());
+      data.arguments["operation"] = strings[1];
+      data.arguments["key"] = key;
+      data.arguments["type"] = assign_type;
+      data.arguments["value"] = assign_key;
     }
   }
   else if (opcode == OP_IF || opcode == OP_WHILE)
@@ -501,23 +496,17 @@ Script::ScriptData Script::parseLine(const std::string& line) const
     std::string lhs_what, rhs_what;
     std::string lhs_key, rhs_key;
 
-    memset(data.data.ifData.rhs, 0, MAX_SCRIPT_KEY_SIZE);
-    memset(data.data.ifData.lhs, 0, MAX_SCRIPT_KEY_SIZE);
-    memset(data.data.ifData.rhsKey, 0, MAX_SCRIPT_KEY_SIZE);
-    memset(data.data.ifData.lhsKey, 0, MAX_SCRIPT_KEY_SIZE);
-    memset(data.data.ifData.boolOperation, 0, MAX_SCRIPT_KEY_SIZE);
-
     get_if_statement_input(lhs, lhs_key, lhs_what);
     get_if_statement_input(rhs, rhs_key, rhs_what);
 
     TRACE("OP_IF: (%s %s %s), lhs_what=%s, rhs_what=%s, lhs_key=%s, rhs_key=%s, operation='%s'",
         lhs.c_str(), operation.c_str(), rhs.c_str(), lhs_what.c_str(), rhs_what.c_str(), lhs_key.c_str(), rhs_key.c_str(), operation.c_str());
 
-    strcpy(data.data.ifData.rhs, rhs_what.c_str());
-    strcpy(data.data.ifData.lhs, lhs_what.c_str());
-    strcpy(data.data.ifData.rhsKey, rhs_key.c_str());
-    strcpy(data.data.ifData.lhsKey, lhs_key.c_str());
-    strcpy(data.data.ifData.boolOperation, operation.c_str());
+    data.arguments["rhs"] = rhs_what;
+    data.arguments["lhs"] = lhs_what;
+    data.arguments["rhsKey"] = rhs_key;
+    data.arguments["lhsKey"] = lhs_key;
+    data.arguments["boolOperation"] = operation;
   }
   else if (opcode == OP_END_IF)
   {
@@ -537,11 +526,6 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_CHOICE)
   {
-    for (int i = 0; i < MAX_CHOICES; i++)
-    {
-      memset(data.data.choiceData.choices[i], '\0', MAX_SCRIPT_KEY_SIZE);
-    }
-
     std::string all;
     for (size_t i = 1; i < strings.size(); i++)
     {
@@ -552,71 +536,61 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     std::vector<std::string> choices = split_string(all, ',');
 
-    data.data.choiceData.numberOfChoices = choices.size();
     for (size_t i = 0; i < choices.size(); i++)
     {
-      strcpy(data.data.choiceData.choices[i], choices[i].c_str());
+      data.listArguments["choices"].push_back(choices[i]);
     }
   }
   else if (opcode == OP_SET_TILE_ID)
   {
-    data.data.setTileIdData.tileId = atoi(strings[1].c_str());
+    data.arguments["tileId"] = strings[1];
   }
   else if (opcode == OP_GIVE_ITEM || opcode == OP_TAKE_ITEM)
   {
-    memset(data.data.giveItemData.itemName, '\0', MAX_SCRIPT_KEY_SIZE);
-    data.data.giveItemData.amount = atoi(strings[1].c_str());
+    data.arguments["amount"] = strings[1];
+
+    std::string itemName;
+
     for (size_t i = 2; i < strings.size(); i++)
     {
-      strcat(data.data.giveItemData.itemName, strings[i].c_str());
+      itemName.append(strings[i]);
       if (i < strings.size() - 1)
-        strcat(data.data.giveItemData.itemName, " ");
+      {
+        itemName.push_back(' ');
+      }
     }
+
+    data.arguments["itemName"] = itemName;
   }
   else if (opcode == OP_GIVE_GOLD || opcode == OP_TAKE_GOLD)
   {
-    data.data.giveGoldData.amount = atoi(strings[1].c_str());
+    data.arguments["amount"] = strings[1];
   }
   else if (opcode == OP_PLAY_SOUND)
   {
-    memset(data.data.playSoundData.sound, '\0', MAX_SCRIPT_KEY_SIZE);
-    strcpy(data.data.playSoundData.sound, strings[1].c_str());
+    data.arguments["sound"] = strings[1];
   }
   else if (opcode == OP_ADD_PARTY_MEMBER)
   {
-    memset(data.data.addPartyMemberData.className, '\0', MAX_SCRIPT_KEY_SIZE);
-    memset(data.data.addPartyMemberData.name, '\0', MAX_SCRIPT_KEY_SIZE);
-    data.data.addPartyMemberData.level = 1;
-
-    strcpy(data.data.addPartyMemberData.name, strings[1].c_str());
-    strcpy(data.data.addPartyMemberData.className, strings[2].c_str());
-    data.data.addPartyMemberData.level = atoi(strings[3].c_str());
+    data.arguments["name"] = strings[1];
+    data.arguments["className"] = strings[2];
+    data.arguments["level"] = strings[3];
   }
   else if (opcode == OP_REMOVE_PARTY_MEMBER)
   {
-    memset(data.data.removePartyMemberData.name, '\0', MAX_SCRIPT_KEY_SIZE);
-    strcpy(data.data.removePartyMemberData.name, strings[1].c_str());
+    data.arguments["name"] = strings[1];
   }
   else if (opcode == OP_SET_VISIBLE)
   {
-    if (strings[1] == "true")
-      data.data.setVisibleData.visibility = true;
-    else
-      data.data.setVisibleData.visibility = false;
+    data.arguments["visibility"] = strings[1];
   }
   else if (opcode == OP_SET_WALKTHROUGH)
   {
-    if (strings[1] == "true")
-      data.data.setWalkthroughData.walkthrough = true;
-    else
-      data.data.setWalkthroughData.walkthrough = false;
+    data.arguments["walkthrough"] = strings[1];
   }
   else if (opcode == OP_ENABLE_CONTROLS)
   {
-    if (strings[1] == "true")
-      data.data.enableControlsData.enabled = true;
-    else
-      data.data.enableControlsData.enabled = false;
+    data.arguments["enabled"] = strings[1];
   }
   else if (opcode == OP_RECOVER_ALL)
   {
@@ -624,9 +598,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_COMBAT || opcode == OP_COMBAT_NO_ESAPE)
   {
-    memset(data.data.combatData.monsters, '\0', MAX_SCRIPT_KEY_SIZE * MAX_SCRIPT_KEY_SIZE);
-
-    data.data.combatData.canEscape = opcode != OP_COMBAT_NO_ESAPE;
+    data.arguments["canEscape"] = opcode != OP_COMBAT_NO_ESAPE ? "true" : "false";
 
     std::string all;
 
@@ -648,14 +620,11 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     for (size_t i = 0; i < monsters.size(); i++)
     {
-      strcpy(data.data.combatData.monsters[i], monsters[i].c_str());
+      data.listArguments["monsters"].push_back(monsters[i]);
     }
-
-    data.data.combatData.number = monsters.size();
   }
   else if (opcode == OP_ENCOUNTER)
   {
-    memset(data.data.encounterData.encounterName, '\0', MAX_SCRIPT_KEY_SIZE);
     std::string buffer;
     for (size_t i = 1; i < strings.size(); i++)
     {
@@ -664,7 +633,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
         buffer += " ";
     }
 
-    strcpy(data.data.encounterData.encounterName, buffer.c_str());
+    data.arguments["encounterName"] = buffer;
   }
   else if (opcode == OP_END_GAME)
   {
@@ -672,31 +641,19 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_SET_CONFIG)
   {
-    memset(data.data.setConfigData.key, '\0', MAX_SCRIPT_KEY_SIZE);
-    memset(data.data.setConfigData.value, '\0', MAX_SCRIPT_KEY_SIZE);
-
-    strcpy(data.data.setConfigData.key, strings[1].c_str());
-    strcpy(data.data.setConfigData.value, strings[2].c_str());
+    data.arguments["key"] = strings[1];
+    data.arguments["value"] = strings[2];
   }
   else if (opcode == OP_TRANSFER)
   {
-    memset(data.data.transferData.targetMap, '\0', MAX_SCRIPT_KEY_SIZE);
-    strcpy(data.data.transferData.targetMap, strings[1].c_str());
-
-    data.data.transferData.x = atoi(strings[2].c_str());
-    data.data.transferData.y = atoi(strings[3].c_str());
-    data.data.transferData.dir = DIR_RANDOM;
-
+    data.arguments["targetMap"] = strings[1];
+    data.arguments["x"] = strings[2];
+    data.arguments["y"] = strings[3];
+    data.arguments["dir"] = strings.size() > 4 ? strings[4] : "DIR_RANDOM";
     // If a direction is given update player dir after transfer.
-    if (strings.size() > 4)
-    {
-      data.data.transferData.dir = directionFromString(strings[4]);
-    }
   }
   else if (opcode == OP_SHOP)
   {
-    memset(data.data.combatData.monsters, '\0', MAX_SCRIPT_KEY_SIZE * 32);
-
     std::string all;
 
     for (size_t i = 1; i < strings.size(); i++)
@@ -717,27 +674,21 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     for (size_t i = 0; i < items.size(); i++)
     {
-      strcpy(data.data.shopData.inventory[i], items[i].c_str());
+      data.listArguments["inventory"].push_back(items[i]);
     }
-
-    data.data.shopData.number = items.size();
   }
   else if (opcode == OP_SHOW_PICTURE)
   {
-    memset(data.data.showPictureData.name, '\0', MAX_SCRIPT_KEY_SIZE);
-    strcpy(data.data.showPictureData.name, strings[1].c_str());
-    data.data.showPictureData.x = atoi(strings[2].c_str());
-    data.data.showPictureData.y = atoi(strings[3].c_str());
+    data.arguments["name"] = strings[1];
+    data.arguments["x"] = strings[2];
+    data.arguments["y]"] = strings[3];
   }
   else if (opcode == OP_HIDE_PICTURE)
   {
-    memset(data.data.hidePictureData.name, '\0', MAX_SCRIPT_KEY_SIZE);
-    strcpy(data.data.hidePictureData.name, strings[1].c_str());
+    data.arguments["name"] = strings[1];
   }
   else if (opcode == OP_SKILL_TRAINER)
   {
-    memset(data.data.skillTrainer.skills, '\0', MAX_SCRIPT_KEY_SIZE * 32);
-
     std::string all;
 
     for (size_t i = 1; i < strings.size(); i++)
@@ -758,10 +709,8 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
     for (size_t i = 0; i < skills.size(); i++)
     {
-      strcpy(data.data.skillTrainer.skills[i], skills[i].c_str());
+      data.listArguments["skills"].push_back(skills[i]);
     }
-
-    data.data.skillTrainer.number = skills.size();
   }
   else if (opcode == OP_CAMPSITE)
   {
@@ -769,26 +718,22 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_CHANGE_TILE)
   {
-    memset(&data.data.changeTile, '\0', sizeof(data.data.changeTile));
-
-    strncpy(data.data.changeTile.layer, strings[1].c_str(), 32);
-    data.data.changeTile.x = atoi(strings[2].c_str());
-    data.data.changeTile.y = atoi(strings[3].c_str());
-    data.data.changeTile.tilenum = atoi(strings[4].c_str());
+    data.arguments["layer"] = strings[1];
+    data.arguments["x"] = strings[2];
+    data.arguments["y"] = strings[3];
+    data.arguments["tilenum"] = strings[4];
   }
   else if (opcode == OP_FLASH_SCREEN)
   {
-    memset(&data.data.flashScreen, 0, sizeof(data.data.flashScreen));
-
-    data.data.flashScreen.duration = atoi(strings[1].c_str());
-    data.data.flashScreen.r = atoi(strings[2].c_str());
-    data.data.flashScreen.g = atoi(strings[3].c_str());
-    data.data.flashScreen.b = atoi(strings[4].c_str());
+    data.arguments["duration"] = strings[1];
+    data.arguments["r"] = strings[2];
+    data.arguments["g"] = strings[3];
+    data.arguments["b"] = strings[4];
   }
   else if (opcode == OP_CHANGE_PLAYER_POSITION)
   {
-    data.data.changePlayerPosition.x = atoi(strings[1].c_str());
-    data.data.changePlayerPosition.y = atoi(strings[2].c_str());
+    data.arguments["x"] = strings[1];
+    data.arguments["y"] = strings[2];
   }
   else
   {
@@ -870,7 +815,7 @@ void Script::executeScriptLine()
 
   if (data.opcode == Script::OP_MESSAGE)
   {
-    std::string msg = replace_variables_in_string(data.data.messageData.message, m_callingEntity);
+    std::string msg = replace_variables_in_string(data.arguments.at("message"), m_callingEntity);
     Message::instance().show(msg);
 
     Script::ScriptData nextLine;
@@ -887,7 +832,7 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      m_callingEntity->step(data.data.walkData.dir);
+      m_callingEntity->step(directionFromString(data.arguments.at("dir")));
     }
   }
   else if (data.opcode == Script::OP_SET_DIR)
@@ -898,7 +843,7 @@ void Script::executeScriptLine()
       bool fixTemp = m_callingEntity->m_fixedDirection;
       m_callingEntity->setFixedDirection(false);
 
-      m_callingEntity->setDirection(data.data.walkData.dir);
+      m_callingEntity->setDirection(directionFromString(data.arguments.at("dir")));
 
       m_callingEntity->setFixedDirection(fixTemp);
     }
@@ -907,18 +852,18 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      m_callingEntity->m_scriptWaitMap[this] = data.data.waitData.duration;
+      m_callingEntity->m_scriptWaitMap[this] = fromString<int>(data.arguments.at("duration"));
     }
     else if (m_callingBattle)
     {
-      m_callingBattle->m_turnDelay = data.data.waitData.duration;
+      m_callingBattle->m_turnDelay = fromString<int>(data.arguments.at("duration"));
     }
   }
   else if (data.opcode == Script::OP_ASSIGNMENT)
   {
-    std::string key = data.data.setPersistentData.key;
-    std::string assign_key = data.data.setPersistentData.value;
-    std::string assign_type = data.data.setPersistentData.type;
+    std::string key = data.arguments.at("key");
+    std::string assign_key = data.arguments.at("value");
+    std::string assign_type = data.arguments.at("type");
 
     int value;
 
@@ -938,10 +883,10 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_ARITHMETIC)
   {
-    std::string key = data.data.arithmeticData.key;
-    std::string assign_key = data.data.arithmeticData.value;
-    std::string assign_type = data.data.arithmeticData.type;
-    ArithmOp operation = data.data.arithmeticData.operation;
+    std::string key = data.arguments.at("key");
+    std::string assign_key = data.arguments.at("value");
+    std::string assign_type = data.arguments.at("type");
+    ArithmOp operation = get_arithm_op(data.arguments.at("operation"));
 
     int value;
 
@@ -975,11 +920,11 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_IF)
   {
-    std::string lhs = data.data.ifData.lhs;
-    std::string rhs = data.data.ifData.rhs;
-    std::string lhsKey = data.data.ifData.lhsKey;
-    std::string rhsKey = data.data.ifData.rhsKey;
-    std::string operation = data.data.ifData.boolOperation;
+    std::string lhs = data.arguments.at("lhs");
+    std::string rhs = data.arguments.at("rhs");
+    std::string lhsKey = data.arguments.at("lhsKey");
+    std::string rhsKey = data.arguments.at("rhsKey");
+    std::string operation = data.arguments.at("boolOperation");
 
     int lhsValue, rhsValue;
 
@@ -1033,11 +978,11 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_WHILE)
   {
-    std::string lhs = data.data.ifData.lhs;
-    std::string rhs = data.data.ifData.rhs;
-    std::string lhsKey = data.data.ifData.lhsKey;
-    std::string rhsKey = data.data.ifData.rhsKey;
-    std::string operation = data.data.ifData.boolOperation;
+    std::string lhs = data.arguments.at("lhs");
+    std::string rhs = data.arguments.at("rhs");
+    std::string lhsKey = data.arguments.at("lhsKey");
+    std::string rhsKey = data.arguments.at("rhsKey");
+    std::string operation = data.arguments.at("boolOperation");
 
     int lhsValue, rhsValue;
 
@@ -1110,9 +1055,9 @@ void Script::executeScriptLine()
   {
     std::vector<std::string> choices;
 
-    for (int i = 0; i < data.data.choiceData.numberOfChoices; i++)
+    for (const auto& choice : data.listArguments.at("choices"))
     {
-      choices.push_back(replace_string(data.data.choiceData.choices[i], '_', ' '));
+      choices.push_back(replace_string(choice, '_', ' '));
     }
 
     Game::instance().openChoiceMenu(choices);
@@ -1121,7 +1066,7 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      int tileId = data.data.setTileIdData.tileId;
+      int tileId = fromString<int>(data.arguments.at("tileId"));
 
       TileSprite* tileSprite = dynamic_cast<TileSprite*>(m_callingEntity->m_sprite);
       if (tileSprite)
@@ -1136,38 +1081,38 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_GIVE_ITEM)
   {
-    int amount = data.data.giveItemData.amount;
-    std::string itemName = data.data.giveItemData.itemName;
+    int amount = fromString<int>(data.arguments.at("amount"));
+    std::string itemName = data.arguments.at("itemName");
 
     get_player()->addItemToInventory(itemName, amount);
   }
   else if (data.opcode == Script::OP_TAKE_ITEM)
   {
-    int amount = data.data.giveItemData.amount;
-    std::string itemName = data.data.giveItemData.itemName;
+    int amount = fromString<int>(data.arguments.at("amount"));
+    std::string itemName = data.arguments.at("itemName");
 
     get_player()->removeItemFromInventory(itemName, amount);
   }
   else if (data.opcode == Script::OP_GIVE_GOLD)
   {
-    int amount = data.data.giveGoldData.amount;
+    int amount = fromString<int>(data.arguments.at("amount"));
     get_player()->gainGold(amount);
   }
   else if (data.opcode == Script::OP_TAKE_GOLD)
   {
-    int amount = data.data.giveGoldData.amount;
+    int amount = fromString<int>(data.arguments.at("amount"));
     get_player()->removeGold(amount);
   }
   else if (data.opcode == Script::OP_PLAY_SOUND)
   {
-    std::string sound = data.data.playSoundData.sound;
+    std::string sound = data.arguments.at("sound");
     play_sound("Audio/" + sound);
   }
   else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
   {
-    int level = data.data.addPartyMemberData.level; // TODO
-    std::string name = data.data.addPartyMemberData.name;
-    std::string className = data.data.addPartyMemberData.className;
+    int level = fromString<int>(data.arguments.at("level"));
+    std::string name = data.arguments.at("name");
+    std::string className = data.arguments.at("className");
 
     int x = get_player()->getTrain().back()->x;
     int y = get_player()->getTrain().back()->y;
@@ -1176,7 +1121,7 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_REMOVE_PARTY_MEMBER)
   {
-    std::string name = data.data.removePartyMemberData.name;
+    std::string name = data.arguments.at("name");
 
     get_player()->removeCharacter(name);
   }
@@ -1184,19 +1129,19 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      m_callingEntity->m_visible = data.data.setVisibleData.visibility;
+      m_callingEntity->m_visible = parseBool(data.arguments.at("visibility"));
     }
   }
   else if (data.opcode == Script::OP_SET_WALKTHROUGH)
   {
     if (m_callingEntity)
     {
-      m_callingEntity->m_walkThrough = data.data.setWalkthroughData.walkthrough;
+      m_callingEntity->m_walkThrough = parseBool(data.arguments.at("walkthrough"));
     }
   }
   else if (data.opcode == Script::OP_ENABLE_CONTROLS)
   {
-    get_player()->setControlsEnabled(data.data.enableControlsData.enabled);
+    get_player()->setControlsEnabled(parseBool(data.arguments.at("enabled")));
   }
   else if (data.opcode == Script::OP_RECOVER_ALL)
   {
@@ -1206,16 +1151,16 @@ void Script::executeScriptLine()
   {
     std::vector<std::string> monsters;
 
-    for (int i = 0; i < data.data.combatData.number; i++)
+    for (const auto& monsterName : data.listArguments.at("monsters"))
     {
-      monsters.push_back(data.data.combatData.monsters[i]);
+      monsters.push_back(monsterName);
     }
 
-    Game::instance().startBattle(monsters, data.data.combatData.canEscape);
+    Game::instance().startBattle(monsters, parseBool(data.arguments.at("canEscape")));
   }
   else if (data.opcode == Script::OP_ENCOUNTER)
   {
-    std::string encounterName = data.data.encounterData.encounterName;
+    std::string encounterName = data.arguments.at("encounterName");
 
     const Encounter* encounter = get_encounter(encounterName);
     if (encounter)
@@ -1230,46 +1175,48 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_SET_CONFIG)
   {
-    config::set(data.data.setConfigData.key, data.data.setConfigData.value);
+    config::set(data.arguments.at("key"), data.arguments.at("value"));
   }
   else if (data.opcode == Script::OP_TRANSFER)
   {
-    std::string targetMap = data.data.transferData.targetMap;
-    Game::instance().prepareTransfer(targetMap, data.data.transferData.x, data.data.transferData.y, data.data.transferData.dir);
+    std::string targetMap = data.arguments.at("targetMap");
+    int x = fromString<int>(data.arguments.at("x"));
+    int y = fromString<int>(data.arguments.at("y"));
+    Direction dir = directionFromString(data.arguments.at("dir"));
+
+    Game::instance().prepareTransfer(targetMap, x, y, dir);
   }
   else if (data.opcode == Script::OP_SHOP)
   {
     std::vector<std::string> items;
 
-    for (int i = 0; i < data.data.shopData.number; i++)
+    for (const auto& item : data.listArguments.at("inventory"))
     {
-      items.push_back(data.data.shopData.inventory[i]);
+      items.push_back(item);
     }
 
     Game::instance().openShop(items);
   }
   else if (data.opcode == Script::OP_SHOW_PICTURE)
   {
-    std::string name = data.data.showPictureData.name;
-    float x = data.data.showPictureData.x;
-    float y = data.data.showPictureData.y;
+    std::string name = data.arguments.at("name");
+    float x = fromString<int>(data.arguments.at("x"));
+    float y = fromString<int>(data.arguments.at("y"));
 
     SceneManager::instance().showPicture(name, x, y);
   }
   else if (data.opcode == Script::OP_HIDE_PICTURE)
   {
-    std::string name = data.data.hidePictureData.name;
+    std::string name = data.arguments.at("name");
 
     SceneManager::instance().hidePicture(name);
   }
   else if (data.opcode == Script::OP_SKILL_TRAINER)
   {
-    int numberOfSkills = data.data.skillTrainer.number;
-
     std::vector<std::string> skills;
-    for (int i = 0; i < numberOfSkills; i++)
+    for (const auto& skillName : data.listArguments.at("skills"))
     {
-      skills.push_back(data.data.skillTrainer.skills[i]);
+      skills.push_back(skillName);
     }
 
     Game::instance().openSkillTrainer(skills);
@@ -1281,31 +1228,34 @@ void Script::executeScriptLine()
   else if (data.opcode == Script::OP_SET_PLAYER_DIR)
   {
     Direction oldDir = get_player()->player()->getDirection();
-    get_player()->player()->setDirection(data.data.walkData.dir);
+    get_player()->player()->setDirection(directionFromString(data.arguments.at("dir")));
 
     // Need to update camera.
     Game::instance().fixCamera(oldDir);
   }
   else if (data.opcode == Script::OP_CHANGE_TILE)
   {
-    std::string layer = data.data.changeTile.layer;
-    int x = data.data.changeTile.x;
-    int y = data.data.changeTile.y;
-    int tilenum = data.data.changeTile.tilenum;
+    std::string layer = data.arguments.at("layer");
+    int x = fromString<int>(data.arguments.at("x"));
+    int y = fromString<int>(data.arguments.at("y"));
+    int tilenum = fromString<int>(data.arguments.at("tilenum"));
 
     Game::instance().getCurrentMap()->setTileAt(x, y, layer, tilenum);
   }
   else if (data.opcode == Script::OP_FLASH_SCREEN)
   {
-    int duration = data.data.flashScreen.duration;
-    uint8_t r = static_cast<uint8_t>(data.data.flashScreen.r);
-    uint8_t g = static_cast<uint8_t>(data.data.flashScreen.g);
-    uint8_t b = static_cast<uint8_t>(data.data.flashScreen.b);
+    int duration = fromString<int>(data.arguments.at("duration"));
+    uint8_t r = static_cast<uint8_t>(fromString<int>(data.arguments.at("r")));
+    uint8_t g = static_cast<uint8_t>(fromString<int>(data.arguments.at("g")));
+    uint8_t b = static_cast<uint8_t>(fromString<int>(data.arguments.at("b")));
 
     SceneManager::instance().flashScreen(duration, sf::Color{r, g, b});
   }
   else if (data.opcode == Script::OP_CHANGE_PLAYER_POSITION)
   {
-    Game::instance().transferPlayer("", data.data.changePlayerPosition.x, data.data.changePlayerPosition.y);
+    int x = fromString<int>(data.arguments.at("x"));
+    int y = fromString<int>(data.arguments.at("y"));
+
+    Game::instance().transferPlayer("", x, y);
   }
 }

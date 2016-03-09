@@ -2,6 +2,7 @@
 #include <sstream>
 #include <algorithm>
 #include <ctype.h>
+#include <stdexcept>
 
 #include "Utility.h"
 
@@ -40,6 +41,21 @@ std::vector<std::string> get_lines(std::istringstream& infile)
     lines.push_back(line);
   }
   return lines;
+}
+
+bool parseBool(const std::string& boolString)
+{
+  if (boolString == "true")
+  {
+    return true;
+  }
+
+  if (boolString == "false")
+  {
+    return false;
+  }
+
+  throw std::runtime_error{"String should be true or false, got " + boolString};
 }
 
 std::string limit_string(const std::string& str, int limit)

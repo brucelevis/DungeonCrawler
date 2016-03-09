@@ -33,6 +33,8 @@ T fromString(const std::string& val)
   return result;
 }
 
+bool parseBool(const std::string& boolString);
+
 std::string limit_string(const std::string& str, int limit);
 
 std::string to_lower(const std::string& str);
