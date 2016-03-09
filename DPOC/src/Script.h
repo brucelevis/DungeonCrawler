@@ -100,6 +100,8 @@ private:
 
   ScriptData parseLine(const std::string& line) const;
   Opcode getOpCode(const std::string& opStr) const;
+
+  std::string extractValue(const std::string& input) const;
 private:
   std::vector<ScriptData> m_data;
   size_t m_currentIndex;

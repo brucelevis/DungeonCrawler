@@ -609,13 +609,6 @@ Script::ScriptData Script::parseLine(const std::string& line) const
         all += " ";
     }
 
-    // Error checking
-    if (all.size() >= MAX_SCRIPT_KEY_SIZE * MAX_SCRIPT_KEY_SIZE)
-    {
-      TRACE("Too long string for combat command: %s", all.c_str());
-      throw std::runtime_error("Too long string for combat command!");
-    }
-
     std::vector<std::string> monsters = split_string(all, ',');
 
     for (size_t i = 0; i < monsters.size(); i++)
@@ -663,13 +656,6 @@ Script::ScriptData Script::parseLine(const std::string& line) const
         all += " ";
     }
 
-    // Error checking
-    if (all.size() >= MAX_SCRIPT_KEY_SIZE * 32)
-    {
-      TRACE("Too long string for shop command: %s", all.c_str());
-      throw std::runtime_error("Too long string for shop command!");
-    }
-
     std::vector<std::string> items = split_string(all, ',');
 
     for (size_t i = 0; i < items.size(); i++)
@@ -696,13 +682,6 @@ Script::ScriptData Script::parseLine(const std::string& line) const
       all += strings[i];
       if (i < strings.size() - 1)
         all += " ";
-    }
-
-    // Error checking
-    if (all.size() >= MAX_SCRIPT_KEY_SIZE * 32)
-    {
-      TRACE("Too long string for skills command: %s", all.c_str());
-      throw std::runtime_error("Too long string for skills command!");
     }
 
     std::vector<std::string> skills = split_string(all, ',');
@@ -809,6 +788,31 @@ void Script::setCallingBattle(Battle* battle)
   m_callingBattle = battle;
 }
 
+std::string Script::extractValue(const std::string& input) const
+{
+  if (input.size())
+  {
+    if (input[0] == '$')
+    {
+      if (Persistent::instance().isSet(input))
+      {
+        return Persistent::instance().get(input);
+      }
+    }
+    else if (input[0] == '%' && m_callingEntity)
+    {
+      std::string key = m_callingEntity->getTag() + "@@" + input;
+
+      if (Persistent::instance().isSet(key))
+      {
+        return Persistent::instance().get(key);
+      }
+    }
+  }
+
+  return input;
+}
+
 void Script::executeScriptLine()
 {
   const Script::ScriptData& data = getCurrentData();
@@ -832,7 +836,7 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      m_callingEntity->step(directionFromString(data.arguments.at("dir")));
+      m_callingEntity->step(directionFromString(extractValue(data.arguments.at("dir"))));
     }
   }
   else if (data.opcode == Script::OP_SET_DIR)
@@ -843,7 +847,7 @@ void Script::executeScriptLine()
       bool fixTemp = m_callingEntity->m_fixedDirection;
       m_callingEntity->setFixedDirection(false);
 
-      m_callingEntity->setDirection(directionFromString(data.arguments.at("dir")));
+      m_callingEntity->setDirection(directionFromString(extractValue(data.arguments.at("dir"))));
 
       m_callingEntity->setFixedDirection(fixTemp);
     }
@@ -852,11 +856,11 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      m_callingEntity->m_scriptWaitMap[this] = fromString<int>(data.arguments.at("duration"));
+      m_callingEntity->m_scriptWaitMap[this] = fromString<int>(extractValue(data.arguments.at("duration")));
     }
     else if (m_callingBattle)
     {
-      m_callingBattle->m_turnDelay = fromString<int>(data.arguments.at("duration"));
+      m_callingBattle->m_turnDelay = fromString<int>(extractValue(data.arguments.at("duration")));
     }
   }
   else if (data.opcode == Script::OP_ASSIGNMENT)
@@ -1057,7 +1061,7 @@ void Script::executeScriptLine()
 
     for (const auto& choice : data.listArguments.at("choices"))
     {
-      choices.push_back(replace_string(choice, '_', ' '));
+      choices.push_back(replace_string(extractValue(choice), '_', ' '));
     }
 
     Game::instance().openChoiceMenu(choices);
@@ -1066,7 +1070,7 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      int tileId = fromString<int>(data.arguments.at("tileId"));
+      int tileId = fromString<int>(extractValue(data.arguments.at("tileId")));
 
       TileSprite* tileSprite = dynamic_cast<TileSprite*>(m_callingEntity->m_sprite);
       if (tileSprite)
@@ -1081,38 +1085,38 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_GIVE_ITEM)
   {
-    int amount = fromString<int>(data.arguments.at("amount"));
-    std::string itemName = data.arguments.at("itemName");
+    int amount = fromString<int>(extractValue(data.arguments.at("amount")));
+    std::string itemName = data.arguments.at(extractValue("itemName"));
 
     get_player()->addItemToInventory(itemName, amount);
   }
   else if (data.opcode == Script::OP_TAKE_ITEM)
   {
-    int amount = fromString<int>(data.arguments.at("amount"));
-    std::string itemName = data.arguments.at("itemName");
+    int amount = fromString<int>(extractValue(data.arguments.at("amount")));
+    std::string itemName = extractValue(data.arguments.at("itemName"));
 
     get_player()->removeItemFromInventory(itemName, amount);
   }
   else if (data.opcode == Script::OP_GIVE_GOLD)
   {
-    int amount = fromString<int>(data.arguments.at("amount"));
+    int amount = fromString<int>(extractValue(data.arguments.at("amount")));
     get_player()->gainGold(amount);
   }
   else if (data.opcode == Script::OP_TAKE_GOLD)
   {
-    int amount = fromString<int>(data.arguments.at("amount"));
+    int amount = fromString<int>(extractValue(data.arguments.at("amount")));
     get_player()->removeGold(amount);
   }
   else if (data.opcode == Script::OP_PLAY_SOUND)
   {
-    std::string sound = data.arguments.at("sound");
+    std::string sound = extractValue(data.arguments.at("sound"));
     play_sound("Audio/" + sound);
   }
   else if (data.opcode == Script::OP_ADD_PARTY_MEMBER)
   {
-    int level = fromString<int>(data.arguments.at("level"));
-    std::string name = data.arguments.at("name");
-    std::string className = data.arguments.at("className");
+    int level = fromString<int>(extractValue(data.arguments.at("level")));
+    std::string name = extractValue(data.arguments.at("name"));
+    std::string className = extractValue(data.arguments.at("className"));
 
     int x = get_player()->getTrain().back()->x;
     int y = get_player()->getTrain().back()->y;
@@ -1121,7 +1125,7 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_REMOVE_PARTY_MEMBER)
   {
-    std::string name = data.arguments.at("name");
+    std::string name = extractValue(data.arguments.at("name"));
 
     get_player()->removeCharacter(name);
   }
@@ -1129,19 +1133,19 @@ void Script::executeScriptLine()
   {
     if (m_callingEntity)
     {
-      m_callingEntity->m_visible = parseBool(data.arguments.at("visibility"));
+      m_callingEntity->m_visible = parseBool(extractValue(data.arguments.at("visibility")));
     }
   }
   else if (data.opcode == Script::OP_SET_WALKTHROUGH)
   {
     if (m_callingEntity)
     {
-      m_callingEntity->m_walkThrough = parseBool(data.arguments.at("walkthrough"));
+      m_callingEntity->m_walkThrough = parseBool(extractValue(data.arguments.at("walkthrough")));
     }
   }
   else if (data.opcode == Script::OP_ENABLE_CONTROLS)
   {
-    get_player()->setControlsEnabled(parseBool(data.arguments.at("enabled")));
+    get_player()->setControlsEnabled(parseBool(extractValue(data.arguments.at("enabled"))));
   }
   else if (data.opcode == Script::OP_RECOVER_ALL)
   {
@@ -1153,14 +1157,14 @@ void Script::executeScriptLine()
 
     for (const auto& monsterName : data.listArguments.at("monsters"))
     {
-      monsters.push_back(monsterName);
+      monsters.push_back(extractValue(monsterName));
     }
 
     Game::instance().startBattle(monsters, parseBool(data.arguments.at("canEscape")));
   }
   else if (data.opcode == Script::OP_ENCOUNTER)
   {
-    std::string encounterName = data.arguments.at("encounterName");
+    std::string encounterName = extractValue(data.arguments.at("encounterName"));
 
     const Encounter* encounter = get_encounter(encounterName);
     if (encounter)
@@ -1175,14 +1179,14 @@ void Script::executeScriptLine()
   }
   else if (data.opcode == Script::OP_SET_CONFIG)
   {
-    config::set(data.arguments.at("key"), data.arguments.at("value"));
+    config::set(extractValue(data.arguments.at("key")), extractValue(data.arguments.at("value")));
   }
   else if (data.opcode == Script::OP_TRANSFER)
   {
-    std::string targetMap = data.arguments.at("targetMap");
-    int x = fromString<int>(data.arguments.at("x"));
-    int y = fromString<int>(data.arguments.at("y"));
-    Direction dir = directionFromString(data.arguments.at("dir"));
+    std::string targetMap = extractValue(data.arguments.at("targetMap"));
+    int x = fromString<int>(extractValue(data.arguments.at("x")));
+    int y = fromString<int>(extractValue(data.arguments.at("y")));
+    Direction dir = directionFromString(extractValue(data.arguments.at("dir")));
 
     Game::instance().prepareTransfer(targetMap, x, y, dir);
   }
@@ -1192,22 +1196,22 @@ void Script::executeScriptLine()
 
     for (const auto& item : data.listArguments.at("inventory"))
     {
-      items.push_back(item);
+      items.push_back(extractValue(item));
     }
 
     Game::instance().openShop(items);
   }
   else if (data.opcode == Script::OP_SHOW_PICTURE)
   {
-    std::string name = data.arguments.at("name");
-    float x = fromString<int>(data.arguments.at("x"));
-    float y = fromString<int>(data.arguments.at("y"));
+    std::string name = extractValue(data.arguments.at("name"));
+    float x = fromString<int>(extractValue(data.arguments.at("x")));
+    float y = fromString<int>(extractValue(data.arguments.at("y")));
 
     SceneManager::instance().showPicture(name, x, y);
   }
   else if (data.opcode == Script::OP_HIDE_PICTURE)
   {
-    std::string name = data.arguments.at("name");
+    std::string name = extractValue(data.arguments.at("name"));
 
     SceneManager::instance().hidePicture(name);
   }
@@ -1216,7 +1220,7 @@ void Script::executeScriptLine()
     std::vector<std::string> skills;
     for (const auto& skillName : data.listArguments.at("skills"))
     {
-      skills.push_back(skillName);
+      skills.push_back(extractValue(skillName));
     }
 
     Game::instance().openSkillTrainer(skills);
@@ -1228,33 +1232,33 @@ void Script::executeScriptLine()
   else if (data.opcode == Script::OP_SET_PLAYER_DIR)
   {
     Direction oldDir = get_player()->player()->getDirection();
-    get_player()->player()->setDirection(directionFromString(data.arguments.at("dir")));
+    get_player()->player()->setDirection(directionFromString(extractValue(data.arguments.at("dir"))));
 
     // Need to update camera.
     Game::instance().fixCamera(oldDir);
   }
   else if (data.opcode == Script::OP_CHANGE_TILE)
   {
-    std::string layer = data.arguments.at("layer");
-    int x = fromString<int>(data.arguments.at("x"));
-    int y = fromString<int>(data.arguments.at("y"));
-    int tilenum = fromString<int>(data.arguments.at("tilenum"));
+    std::string layer = extractValue(data.arguments.at("layer"));
+    int x = fromString<int>(extractValue(data.arguments.at("x")));
+    int y = fromString<int>(extractValue(data.arguments.at("y")));
+    int tilenum = fromString<int>(extractValue(data.arguments.at("tilenum")));
 
     Game::instance().getCurrentMap()->setTileAt(x, y, layer, tilenum);
   }
   else if (data.opcode == Script::OP_FLASH_SCREEN)
   {
-    int duration = fromString<int>(data.arguments.at("duration"));
-    uint8_t r = static_cast<uint8_t>(fromString<int>(data.arguments.at("r")));
-    uint8_t g = static_cast<uint8_t>(fromString<int>(data.arguments.at("g")));
-    uint8_t b = static_cast<uint8_t>(fromString<int>(data.arguments.at("b")));
+    int duration = fromString<int>(extractValue(data.arguments.at("duration")));
+    uint8_t r = static_cast<uint8_t>(fromString<int>(extractValue(data.arguments.at("r"))));
+    uint8_t g = static_cast<uint8_t>(fromString<int>(extractValue(data.arguments.at("g"))));
+    uint8_t b = static_cast<uint8_t>(fromString<int>(extractValue(data.arguments.at("b"))));
 
     SceneManager::instance().flashScreen(duration, sf::Color{r, g, b});
   }
   else if (data.opcode == Script::OP_CHANGE_PLAYER_POSITION)
   {
-    int x = fromString<int>(data.arguments.at("x"));
-    int y = fromString<int>(data.arguments.at("y"));
+    int x = fromString<int>(extractValue(data.arguments.at("x")));
+    int y = fromString<int>(extractValue(data.arguments.at("y")));
 
     Game::instance().transferPlayer("", x, y);
   }
