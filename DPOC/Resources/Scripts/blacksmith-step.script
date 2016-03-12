@@ -1,8 +1,8 @@
-message Welcome to the blacksmith. We deal in weapons and armour.
-choice Trade,Leave
+message "Welcome to the blacksmith. We deal in weapons and armour."
+choice "Trade" "Leave"
 if $sys:choice == 0
-  shop Copper Sword
+  shop "Copper Sword"
 endif
-message See you soon.
+message "See you soon."
 transfer Town.tmx 7 15
 wait 50

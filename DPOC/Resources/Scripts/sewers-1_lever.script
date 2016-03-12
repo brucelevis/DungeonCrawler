@@ -1,7 +1,7 @@
-message This is some kind of lever. Pull it?
-choice Yes,No
+message "This is some kind of lever. Pull it?"
+choice "Yes" "No"
 if $sys:choice == 0
-  message You hear a rumble in the distance.
+  message "You hear a rumble in the distance."
   if $sewer_1_fence_opened == false
     $sewer_1_fence_opened = true
   else

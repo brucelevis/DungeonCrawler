@@ -1,8 +1,8 @@
-message Welcome to the general store.
-choice Trade,Leave
+message "Welcome to the general store."
+choice "Trade "Leave"
 if $sys:choice == 0
-  shop Cure Potion
+  shop "Cure Potion"
 endif
-message See you soon.
+message "See you soon."
 transfer Town.tmx 4 11
 wait 50

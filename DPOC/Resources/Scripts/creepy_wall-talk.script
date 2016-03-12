@@ -1,2 +1,2 @@
-message There's something uncanny about this...
+message "There's something uncanny about this..."
 change_tile wall 6 9 18

@@ -17,8 +17,10 @@
 #include "Encounter.h"
 #include "Battle.h"
 
+#include "Error.h"
 #include "logger.h"
 #include "Utility.h"
+#include "Tokenizer.h"
 #include "Script.h"
 
 static bool exec_bool_operation(const std::string& operation, int lhs, int rhs)
@@ -63,7 +65,7 @@ static void get_if_value(const Entity* entity, const std::string& input, const s
   {
     if (key != "gold")
     {
-      Item* item = get_player()->getItem(replace_string(key, '_', ' '));
+      Item* item = get_player()->getItem(key);
       if (item)
       {
         value = item->stackSize;
@@ -80,7 +82,7 @@ static void get_if_value(const Entity* entity, const std::string& input, const s
   }
   else
   {
-    TRACE("Unknown input value %s from script.", input.c_str());
+    CRASH("Unknown input value %s from script.", input.c_str());
   }
 }
 
@@ -336,10 +338,12 @@ void Script::loadFromLines(std::vector<std::string> lines, const std::vector<std
   strip_comments(lines);
   replace_arguments(lines, arguments);
 
-  for (auto it = lines.begin(); it != lines.end(); ++it)
+  for (size_t i = 0; i < lines.size(); i++)
   {
-    TRACE("Current Line = %s", it->c_str());
-    ScriptData data = parseLine(*it);
+    const std::string& line = lines[i];
+    TRACE("Current Line = %s", line.c_str());
+
+    ScriptData data = parseLine(line, static_cast<int>(i));
     m_data.push_back(data);
   }
 
@@ -399,9 +403,10 @@ bool Script::peekNext(ScriptData& out) const
   return false;
 }
 
-Script::ScriptData Script::parseLine(const std::string& line) const
+Script::ScriptData Script::parseLine(const std::string& line, int lineNumber) const
 {
-  std::vector<std::string> strings = split_string(line, ' ');
+  Tokenizer tokenizer{line, lineNumber};
+  std::vector<std::string> strings = tokenizer.tokenize();
 
   Opcode opcode = OP_NOP;
 
@@ -437,19 +442,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
 
   if (opcode == OP_MESSAGE)
   {
-    std::string message;
-
-    for (size_t i = 1; i < strings.size(); i++)
-    {
-      message.append(strings[i]);
-
-      if (i < strings.size() - 1)
-      {
-        message.push_back(' ');
-      }
-    }
-
-    data.arguments["message"] = message;
+    data.arguments["message"] = strings[1];
   }
   else if (opcode == OP_WALK)
   {
@@ -526,19 +519,9 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_CHOICE)
   {
-    std::string all;
     for (size_t i = 1; i < strings.size(); i++)
     {
-      all += strings[i];
-      if (i < strings.size() - 1)
-        all += " ";
-    }
-
-    std::vector<std::string> choices = split_string(all, ',');
-
-    for (size_t i = 0; i < choices.size(); i++)
-    {
-      data.listArguments["choices"].push_back(choices[i]);
+      data.listArguments["choices"].push_back(strings[i]);
     }
   }
   else if (opcode == OP_SET_TILE_ID)
@@ -548,19 +531,7 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   else if (opcode == OP_GIVE_ITEM || opcode == OP_TAKE_ITEM)
   {
     data.arguments["amount"] = strings[1];
-
-    std::string itemName;
-
-    for (size_t i = 2; i < strings.size(); i++)
-    {
-      itemName.append(strings[i]);
-      if (i < strings.size() - 1)
-      {
-        itemName.push_back(' ');
-      }
-    }
-
-    data.arguments["itemName"] = itemName;
+    data.arguments["itemName"] = strings[2];
   }
   else if (opcode == OP_GIVE_GOLD || opcode == OP_TAKE_GOLD)
   {
@@ -600,33 +571,14 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   {
     data.arguments["canEscape"] = opcode != OP_COMBAT_NO_ESAPE ? "true" : "false";
 
-    std::string all;
-
     for (size_t i = 1; i < strings.size(); i++)
     {
-      all += strings[i];
-      if (i < strings.size() - 1)
-        all += " ";
-    }
-
-    std::vector<std::string> monsters = split_string(all, ',');
-
-    for (size_t i = 0; i < monsters.size(); i++)
-    {
-      data.listArguments["monsters"].push_back(monsters[i]);
+      data.listArguments["monsters"].push_back(strings[i]);
     }
   }
   else if (opcode == OP_ENCOUNTER)
   {
-    std::string buffer;
-    for (size_t i = 1; i < strings.size(); i++)
-    {
-      buffer += strings[i];
-      if (i < strings.size() - 1)
-        buffer += " ";
-    }
-
-    data.arguments["encounterName"] = buffer;
+    data.arguments["encounterName"] = strings[1];
   }
   else if (opcode == OP_END_GAME)
   {
@@ -647,27 +599,16 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_SHOP)
   {
-    std::string all;
-
     for (size_t i = 1; i < strings.size(); i++)
     {
-      all += strings[i];
-      if (i < strings.size() - 1)
-        all += " ";
-    }
-
-    std::vector<std::string> items = split_string(all, ',');
-
-    for (size_t i = 0; i < items.size(); i++)
-    {
-      data.listArguments["inventory"].push_back(items[i]);
+      data.listArguments["inventory"].push_back(strings[i]);
     }
   }
   else if (opcode == OP_SHOW_PICTURE)
   {
     data.arguments["name"] = strings[1];
     data.arguments["x"] = strings[2];
-    data.arguments["y]"] = strings[3];
+    data.arguments["y"] = strings[3];
   }
   else if (opcode == OP_HIDE_PICTURE)
   {
@@ -675,20 +616,9 @@ Script::ScriptData Script::parseLine(const std::string& line) const
   }
   else if (opcode == OP_SKILL_TRAINER)
   {
-    std::string all;
-
     for (size_t i = 1; i < strings.size(); i++)
     {
-      all += strings[i];
-      if (i < strings.size() - 1)
-        all += " ";
-    }
-
-    std::vector<std::string> skills = split_string(all, ',');
-
-    for (size_t i = 0; i < skills.size(); i++)
-    {
-      data.listArguments["skills"].push_back(skills[i]);
+      data.listArguments["skills"].push_back(strings[i]);
     }
   }
   else if (opcode == OP_CAMPSITE)
@@ -1061,7 +991,7 @@ void Script::executeScriptLine()
 
     for (const auto& choice : data.listArguments.at("choices"))
     {
-      choices.push_back(replace_string(extractValue(choice), '_', ' '));
+      choices.push_back(extractValue(choice));
     }
 
     Game::instance().openChoiceMenu(choices);

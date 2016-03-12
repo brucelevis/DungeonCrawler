@@ -1,14 +1,14 @@
 $guld = 1337
 give_gold $guld
-message I just gave you $guld gold!!!!!
+message "I just gave you $guld gold!!!!!"
 
 while 1 == 1
-  message Do ye wish to fight?
-  choice Yes,No
+  message "Do ye wish to fight?"
+  choice "Yes" "No"
   if $sys:choice == 0
-    encounter test man
+    encounter "test man"
     break
   else
-    message But thou must!
+    message "But thou must!"
   endif
 wend

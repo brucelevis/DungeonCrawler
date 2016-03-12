@@ -39,21 +39,18 @@
     </group>
   </encounter>
   <encounter name="test man" canEscape="false" music="Battle4.ogg">
-    <script>
-      if $sys:turn_count == 1
-        message You are a goddamn asshole, you know that right?
-      endif
-      if $sys:turn_count == 2
-        message What's the matter, getting tired?
-      endif
+    <script>if $sys:turn_count == 1
+  message "You are a goddamn asshole, you know that right?"
+endif
+if $sys:turn_count == 2
+  message "What's the matter, getting tired?"
+endif
     </script>
     <group>
       <monster name="Sewer Fish" />
     </group>
   </encounter>
   <encounter name="lame boss" canEscape="false" music="Battle4.ogg">
-    <group>
-      <monster name="Dark Knight" />
-    </group>
+    <group />
   </encounter>
 </encounters>

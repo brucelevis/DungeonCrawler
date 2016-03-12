@@ -98,7 +98,7 @@ private:
   const ScriptData& getCurrentData() const;
   bool peekNext(ScriptData& out) const;
 
-  ScriptData parseLine(const std::string& line) const;
+  ScriptData parseLine(const std::string& line, int lineNumber) const;
   Opcode getOpCode(const std::string& opStr) const;
 
   std::string extractValue(const std::string& input) const;
