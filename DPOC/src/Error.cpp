@@ -5,6 +5,8 @@
 #endif
 
 #include <cstdlib>
+#include <cstdarg>
+
 #include "logger.h"
 #include "Error.h"
 
