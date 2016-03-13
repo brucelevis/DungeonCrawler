@@ -22,6 +22,7 @@ struct Tile
   int tileX, tileY;
   bool solid;
   int tileId;
+  float height;
 };
 
 struct Warp

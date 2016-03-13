@@ -108,8 +108,8 @@
  <objectgroup name="Object Layer 1" width="20" height="20">
   <object name="guard" gid="663" x="320" y="608">
    <properties>
+    <property name="argument1" value="No one may leave town at this time!"/>
     <property name="talkScript" value="message.script"/>
-    <property name="argument1" value="No one may leave town at this time!" />
    </properties>
   </object>
   <object type="obstacle" gid="463" x="384" y="448"/>
@@ -124,39 +124,49 @@
   <object type="obstacle" gid="466" x="512" y="544"/>
   <object name="Inn" type="door" x="320" y="352" width="32" height="32">
    <properties>
+    <property name="argument1" value="TravellersInn.tmx"/>
+    <property name="argument2" value="1"/>
+    <property name="argument3" value="1"/>
     <property name="talkScript" value="transfer.script"/>
-    <property name="argument1" value="TravellersInn.tmx" />
-    <property name="argument2" value="1" />
-    <property name="argument3" value="1" />
    </properties>
   </object>
   <object name="Blacksmith" type="door" x="192" y="480" width="32" height="32">
    <properties>
+    <property name="argument1" value="Blacksmith.tmx"/>
+    <property name="argument2" value="1"/>
+    <property name="argument3" value="1"/>
     <property name="talkScript" value="transfer.script"/>
-    <property name="argument1" value="Blacksmith.tmx" />
-    <property name="argument2" value="1" />
-    <property name="argument3" value="1" />
    </properties>
   </object>
   <object name="Guildhall" type="door" x="448" y="160" width="32" height="32">
    <properties>
+    <property name="argument1" value="GuildHall.tmx"/>
+    <property name="argument2" value="1"/>
+    <property name="argument3" value="1"/>
     <property name="talkScript" value="transfer.script"/>
-    <property name="argument1" value="GuildHall.tmx" />
-    <property name="argument2" value="1" />
-    <property name="argument3" value="1" />
    </properties>
   </object>
   <object name="Item Shop" type="door" x="128" y="320" width="32" height="32">
    <properties>
+    <property name="argument1" value="GeneralStore.tmx"/>
+    <property name="argument2" value="1"/>
+    <property name="argument3" value="1"/>
     <property name="talkScript" value="transfer.script"/>
-    <property name="argument1" value="GeneralStore.tmx" />
-    <property name="argument2" value="1" />
-    <property name="argument3" value="1" />
    </properties>
   </object>
   <object name="Dungeon" type="door" x="192" y="128" width="32" height="32">
    <properties>
-    <property name="talkScript" value="enter_sewers.script" />
+    <property name="talkScript" value="enter_sewers.script"/>
+   </properties>
+  </object>
+  <object name="height_adjust" x="288" y="288" width="96" height="64">
+   <properties>
+    <property name="height" value="2"/>
+   </properties>
+  </object>
+  <object name="height_adjust" x="32" y="576" width="288" height="32">
+   <properties>
+    <property name="height" value="4"/>
    </properties>
   </object>
  </objectgroup>

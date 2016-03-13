@@ -44,9 +44,9 @@ private:
     const Door* door; // When drawing doors.
   };
 
-  void drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, int tileId);
+  void drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int lineHeight, int wallStart, int wallEnd, int tileId, float wallHeight = 1);
 
-  RayInfo castRay(int x, int width) const;
+  std::vector<RayInfo> castRay(int x, int width) const;
   RayInfo castDoorRay(int x, int width) const;
 
   bool sameCoord(const RayInfo& a, const RayInfo& b) const;
