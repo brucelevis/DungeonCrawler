@@ -324,7 +324,9 @@ void MainMenu::handleConfirm()
     }
     else if (getCurrentMenuChoice() == "Item")
     {
-      if (m_characterMenu->getItemToUse().size() > 0 && get_player()->getItem(m_characterMenu->getItemToUse()))
+      Item* itemToUse = get_player()->getItem(m_characterMenu->getItemToUse());
+
+      if (m_characterMenu->getItemToUse().size() > 0 && itemToUse)
       {
         m_characterMenu->setUserToCurrentChoice();
         m_characterMenu->setTargetToCurrentChoice();
@@ -332,12 +334,11 @@ void MainMenu::handleConfirm()
         bool targetOK = isOKTarget(m_characterMenu->getTarget(),
             create_item(m_characterMenu->getItemToUse(), 1).target);
 
-        if (m_characterMenu->getTarget() && targetOK)
+        if (m_characterMenu->getTarget() && targetOK && m_characterMenu->getUser()->canUseItemInMenu(*itemToUse))
         {
           play_sound(config::get("SOUND_USE_ITEM"));
 
-          Item* item = get_player()->getItem(m_characterMenu->getItemToUse());
-          use_item(item, m_characterMenu->getUser(), m_characterMenu->getTarget());
+          use_item(itemToUse, m_characterMenu->getUser(), m_characterMenu->getTarget());
 
           get_player()->removeItemFromInventory(m_characterMenu->getItemToUse(), 1);
 
@@ -1361,8 +1362,7 @@ void BattleMenu::handleConfirm()
 
     m_itemMemory[m_statusMenu->getCurrentActor()] = m_itemMenu->getCurrentChoiceIndex();
 
-    if (item->target != TARGET_NONE &&
-        (item->type == ITEM_USE || item->type == ITEM_USE_BATTLE))
+    if (m_statusMenu->getCurrentActor()->canUseItemInBattle(*item))
     {
       if (item->target == TARGET_SINGLE_ENEMY)
       {

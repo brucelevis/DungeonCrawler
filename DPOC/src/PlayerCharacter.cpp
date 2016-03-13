@@ -71,6 +71,18 @@ bool PlayerCharacter::meetsPrereqsForItem(const Item& item) const
   return true;
 }
 
+bool PlayerCharacter::canUseItemInBattle(const Item& item) const
+{
+  return item.target != TARGET_NONE &&
+    (item.type == ITEM_USE || item.type == ITEM_USE_BATTLE) &&
+    meetsPrereqsForItem(item);
+}
+
+bool PlayerCharacter::canUseItemInMenu(const Item& item) const
+{
+  return meetsPrereqsForItem(item);
+}
+
 int PlayerCharacter::computeCurrentAttribute(const std::string& attribName)
 {
   int sum = Character::computeCurrentAttribute(attribName);

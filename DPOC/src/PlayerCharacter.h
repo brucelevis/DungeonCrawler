@@ -23,6 +23,9 @@ public:
   bool canEquip(const Item& item) const;
   bool meetsPrereqsForItem(const Item& item) const;
 
+  bool canUseItemInBattle(const Item& item) const;
+  bool canUseItemInMenu(const Item& item) const;
+
   int computeCurrentAttribute(const std::string& attribName);
   int getBaseAttribute(const std::string& attribName) const;
   void advanceAttribute(const std::string& attribName, int value);
