@@ -20,7 +20,8 @@ public:
 
   void equip(const std::string& equipmentSlot, const std::string& itemName);
   Item* getEquipment(const std::string& equipmentSlot);
-  bool canEquip(const std::string& itemName);
+  bool canEquip(const Item& item) const;
+  bool meetsPrereqsForItem(const Item& item) const;
 
   int computeCurrentAttribute(const std::string& attribName);
   int getBaseAttribute(const std::string& attribName) const;

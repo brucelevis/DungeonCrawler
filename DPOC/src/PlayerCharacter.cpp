@@ -47,9 +47,28 @@ Item* PlayerCharacter::getEquipment(const std::string& equipmentSlot)
   return 0;
 }
 
-bool PlayerCharacter::canEquip(const std::string& itemName)
+bool PlayerCharacter::canEquip(const Item& item) const
 {
-  return std::find(m_class.equipment.begin(), m_class.equipment.end(), itemName) != m_class.equipment.end();
+  return (std::find(m_class.equipment.begin(), m_class.equipment.end(), item.name) != m_class.equipment.end()) &&
+          meetsPrereqsForItem(item);
+}
+
+bool PlayerCharacter::meetsPrereqsForItem(const Item& item) const
+{
+  // If any attribute in the prereqs list is less than the required,
+  // return false.
+
+  for (const auto& pair : item.prerequisites)
+  {
+    int attrValue = getBaseAttribute(pair.first);
+
+    if (attrValue < pair.second)
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 int PlayerCharacter::computeCurrentAttribute(const std::string& attribName)

@@ -829,7 +829,7 @@ void EquipItemMenu::refresh(const std::string& equipmentType)
 
   for (auto it = items.begin(); it != items.end(); ++it)
   {
-    if (equip_type_string(it->type) == equipmentType && m_character->canEquip(it->name))
+    if (equip_type_string(it->type) == equipmentType && m_character->canEquip(*it))
     {
       std::string stack = toString(it->stackSize);
       std::string name = it->name;
@@ -1040,7 +1040,7 @@ void EquipMenu::doEquip()
   Item* currentItem = get_player()->getItem(currentItemName);
   Item* currentEquip = m_character->getEquipment(getCurrentMenuChoice());
 
-  if (currentItem && getCurrentMenuChoice() == equip_type_string(currentItem->type) && m_character->canEquip(currentItemName))
+  if (currentItem && getCurrentMenuChoice() == equip_type_string(currentItem->type) && m_character->canEquip(*currentItem))
   {
     if (currentEquip)
     {

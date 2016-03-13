@@ -404,7 +404,7 @@ void ShopBuyMenu::draw(sf::RenderTarget& target, int x, int y)
 
     sf::Color color = sf::Color::White;
     int _bump = 0;
-    if (!party[i]->canEquip(itemName) && (item.type != ITEM_USE && item.type != ITEM_USE_BATTLE && item.type != ITEM_USE_MENU))
+    if (!party[i]->canEquip(item) && (item.type != ITEM_USE && item.type != ITEM_USE_BATTLE && item.type != ITEM_USE_MENU))
     {
       color = sf::Color(127, 127, 127);
     }
@@ -442,9 +442,10 @@ void ShopBuyMenu::drawDeltas(sf::RenderTarget& target, PlayerCharacter* characte
   int newSpd;
   int newLuk;
 
-  if (character->canEquip(itemName))
+  Item& item = item_ref(itemName);
+
+  if (character->canEquip(item))
   {
-    Item& item = item_ref(itemName);
     std::string equipSlot = equip_type_string(item.type);
 
     std::string currentEquip = character->getEquipment(equipSlot) ?

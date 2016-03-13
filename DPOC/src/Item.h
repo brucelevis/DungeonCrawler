@@ -61,6 +61,9 @@ struct Item
   /// Map because resist amount.
   std::map<std::string, float> elements;
 
+  /// Maps attribute to minimum value required to use item.
+  std::map<std::string, int> prerequisites;
+
   // Put members that should not be initialized after this comment.
 
   int stackSize;

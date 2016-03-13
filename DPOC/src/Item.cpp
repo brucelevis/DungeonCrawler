@@ -152,6 +152,18 @@ static Item parse_item_element(const XMLElement* itemElement)
     }
   }
 
+  // List of prereqs: <prerequisites> <attribute name="x" value="y"/> ... </prerequisites>
+  const XMLElement* prereqElement = itemElement->FirstChildElement("prerequisites");
+  if (prereqElement)
+  {
+    for (const XMLElement* element = prereqElement->FirstChildElement(); element; element = element->NextSiblingElement())
+    {
+      std::string attrName = element->FindAttribute("name")->Value();
+      int attrValue = fromString<int>(element->FindAttribute("value")->Value());
+      item.prerequisites[attrName] = attrValue;
+    }
+  }
+
   return item;
 }
 
