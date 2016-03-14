@@ -132,8 +132,8 @@ void Raycaster::drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int
 {
   Tile* featureTile = tileId > -1 ? m_tilemap->getTileAt(info.mapX, info.mapY, "wallfeature") : nullptr;
 
-//  const int originWallStart = wallStart;
-//  const float quote = (wallHeight*config::TILE_H) / lineHeight;
+  const int originWallStart = wallStart;
+  const float quote = (wallHeight*config::TILE_H) / lineHeight;
 
   if (wallStart < 0)
   {
@@ -144,14 +144,17 @@ void Raycaster::drawWallSlice(const RayInfo& info, sf::Image& buffer, int x, int
   {
     if (tileId > -1)
     {
-//  Original texture selection algorithm.
       int d, textureY;
 
-      d = y * 256 - m_height * 128 + lineHeight * 128;
-      textureY = ((d * config::TILE_W) / lineHeight) / 256;
-
-      // New algorithm
-//      int textureY = (int)((float)(y - originWallStart) * quote) % config::TILE_H;
+      if (static_cast<int>(wallHeight) == 1)
+      {
+        d = y * 256 - m_height * 128 + lineHeight * 128;
+        textureY = ((d * config::TILE_W) / lineHeight) / 256;
+      }
+      else
+      {
+        textureY = (int)((float)(y - originWallStart) * quote) % config::TILE_H;
+      }
 
       sf::Color color = computeIntensity(
           m_tileTextures[tileId].getPixel(info.textureX, textureY),
