@@ -39,7 +39,7 @@
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
-31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
+31,31,31,31,31,31,31,31,31,31,31,31,31,31,511,31,31,31,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,516,31,516,31,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,517,31,
 31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,516,31,516,31,31,
@@ -105,6 +105,14 @@
     <property name="argument1" value="8"/>
     <property name="argument2" value="9"/>
     <property name="talkScript" value="magic_teleport.script"/>
+   </properties>
+  </object>
+  <object name="to_castle" x="448" y="224" width="32" height="32">
+   <properties>
+    <property name="argument1" value="Castle.tmx"/>
+    <property name="argument2" value="29"/>
+    <property name="argument3" value="59"/>
+    <property name="talkScript" value="transfer.script"/>
    </properties>
   </object>
  </objectgroup>
