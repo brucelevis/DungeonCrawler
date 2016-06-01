@@ -7,7 +7,9 @@ struct EntityData;
 
 #include <map>
 #include <vector>
+
 #include <SFML/Graphics.hpp>
+#include <GameLib/Camera.h>
 
 #include "coord.h"
 #include "Item.h"
@@ -60,12 +62,16 @@ public:
   static Player* create();
   static Player* createBlank();
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
+
+  const gamelib::Camera& getCamera() const { return m_camera; }
 private:
   Player();
 
   void moveTrain();
   void handleStep();
 private:
+  gamelib::Camera m_camera;
+
   std::vector<Entity*> m_playerTrain;
   std::vector<Item> m_inventory;
   std::vector<PlayerCharacter*> m_party;

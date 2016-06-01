@@ -24,7 +24,7 @@ public:
 
   void update();
 
-  void draw(sf::RenderTarget& target);
+  void draw(sf::RenderTexture& target);
 
   void handleEvent(sf::Event& event);
 

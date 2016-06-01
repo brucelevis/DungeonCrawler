@@ -15,3 +15,4 @@ Save*xml
 /Debug/
 *.swp
 *.bak
+DPOC/deps/*

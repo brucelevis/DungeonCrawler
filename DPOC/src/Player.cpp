@@ -26,11 +26,11 @@
 using namespace tinyxml2;
 
 Player::Player()
- : m_gold(0),
+ : m_camera(glm::vec3(0, 0, 0), glm::pi<float>()),
+   m_gold(0),
    m_controlsEnabled(true),
    m_movedBackwards(false)
 {
-
 }
 
 Player::~Player()
@@ -111,6 +111,9 @@ void Player::update()
       pc->flash().update();
     }
   }
+
+  m_camera.position.x = m_playerTrain.front()->x;
+  m_camera.position.z = m_playerTrain.front()->y;
 }
 
 void Player::moveTrain()

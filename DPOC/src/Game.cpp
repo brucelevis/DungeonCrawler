@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 
+#include <GL/glew.h>
 #include <SFML/System.hpp>
 
 #include "SceneManager.h"
@@ -35,6 +36,9 @@
 
 using namespace tinyxml2;
 
+static const float FOV = 60.f;
+static const float ASPECT_RATIO = (float)config::RAYCASTER_RES_X / (float)config::RAYCASTER_RES_Y;
+
 Game* Game::theInstance = 0;
 
 Game& Game::instance()
@@ -48,13 +52,13 @@ Game& Game::instance()
 }
 
 Game::Game()
- : m_currentMap(0),
+ : m_projectionMatrix(glm::perspective(glm::radians(FOV), ASPECT_RATIO, 0.1f, 100.f)),
+   m_currentMap(0),
    m_player(0),
    m_choiceMenu(0),
    m_transferInProgress(false),
    m_playerMoved(false),
    m_camera(Vec2(4.5f, 4.5f), Vec2(-1, 0), Vec2(0, -0.66f)),
-   m_raycaster(new Raycaster(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y)),
 
    m_isRotating(false),
    m_angleToRotate(0),
@@ -68,9 +72,19 @@ Game::Game()
    m_battleInProgress(false),
    m_campSite(false)
 {
-  m_raycasterBuffer.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
   m_texture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
-  m_targetTexture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
+  m_targetTexture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y, true);
+  m_targetTexture.setActive();
+
+  glViewport(0, 0, config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL); // GL_LEQUAL, GL_LESS
+
+  glEnable(GL_ALPHA_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  glClearColor(0,0,0,1);
 
   // Clear all persistents when a new game is created.
   Persistent::instance().clear();
@@ -283,23 +297,19 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   }
 }
 
-void Game::draw(sf::RenderTarget& target)
+void Game::draw(sf::RenderTexture& target)
 {
-  for (int y = 0; y < config::RAYCASTER_RES_Y; y++)
-  {
-    for (int x = 0; x < config::RAYCASTER_RES_X; x++)
-    {
-      m_raycasterBuffer.setPixel(x, y, sf::Color::Black);
-    }
-  }
-
-  m_raycaster->raycast(&m_camera, m_raycasterBuffer, m_player->player()->getDirection());
-  m_texture.loadFromImage(m_raycasterBuffer);
+  m_targetTexture.setActive();
+  m_targetTexture.pushGLStates();
+  m_targetTexture.clear();
+  m_mapRenderer->render(m_targetTexture, m_projectionMatrix, m_player->getCamera());
+  m_targetTexture.popGLStates();
 
   sf::Sprite sprite(m_texture);
   m_targetTexture.draw(sprite);
   m_targetTexture.display();
 
+  target.setActive();
   sprite.setTexture(m_targetTexture.getTexture());
   sprite.setPosition(0, 0);
   target.draw(sprite);
@@ -566,19 +576,21 @@ void Game::loadNewMap(const std::string& file)
     SceneManager::instance().close();
   }
 
-  m_raycaster->setTilemap(m_currentMap);
-  m_raycaster->clearEntities();
-  for (auto& entity : m_currentMap->getEntities())
-  {
-    if (entity->sprite() && entity->getType() != "door")
-    {
-      m_raycaster->addEntity(entity);
-    }
-    else if (entity->getType() == "door")
-    {
-      m_raycaster->addDoor(static_cast<Door*>(entity));
-    }
-  }
+  m_mapRenderer.reset(new MapRenderer{m_currentMap});
+
+//  m_raycaster->setTilemap(m_currentMap);
+//  m_raycaster->clearEntities();
+//  for (auto& entity : m_currentMap->getEntities())
+//  {
+//    if (entity->sprite() && entity->getType() != "door")
+//    {
+//      m_raycaster->addEntity(entity);
+//    }
+//    else if (entity->getType() == "door")
+//    {
+//      m_raycaster->addDoor(static_cast<Door*>(entity));
+//    }
+//  }
 
   if (!m_currentMap->getMusic().empty())
   {
@@ -687,9 +699,9 @@ void Game::postFade(FadeType fadeType)
     }
     else if (m_campSite)
     {
-      ScriptScene* campSite = new ScriptScene(config::res_path("Scripts/Campsite.lua"));
+//      ScriptScene* campSite = new ScriptScene(config::res_path("Scripts/Campsite.lua"));
 
-      //Campsite* campSite = new Campsite;
+      Campsite* campSite = new Campsite;
       SceneManager::instance().addScene(campSite);
     }
   }

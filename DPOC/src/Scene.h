@@ -18,7 +18,7 @@ public:
   virtual ~Scene() {}
 
   virtual void update() = 0;
-  virtual void draw(sf::RenderTarget& target) = 0;
+  virtual void draw(sf::RenderTexture& target) = 0;
   virtual void handleEvent(sf::Event& event) = 0;
 
   virtual void preFade(FadeType) {}

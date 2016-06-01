@@ -1,7 +1,7 @@
 #include "logger.h"
 #include "LuaBindings.h"
 #include "ScriptScene.h"
-
+/*
 ScriptScene::ScriptScene(const std::string& scriptFile)
 {
   register_lua_bindings(m_luaState);
@@ -26,7 +26,7 @@ void ScriptScene::update()
   m_luaState.call_function("update", this);
 }
 
-void ScriptScene::draw(sf::RenderTarget& target)
+void ScriptScene::draw(sf::RenderTexture& target)
 {
   m_luaState.call_function("draw", this, &target);
 }
@@ -44,4 +44,4 @@ void ScriptScene::preFade(Scene::FadeType fadeType)
 void ScriptScene::postFade(Scene::FadeType fadeType)
 {
   m_luaState.call_function("post_fade", this, static_cast<int>(fadeType));
-}
+}*/

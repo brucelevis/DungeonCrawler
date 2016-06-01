@@ -33,7 +33,7 @@ void DungeonMap::update()
   m_minimap.updatePosition(m_map, m_centerX, m_centerY, get_player()->player()->x, get_player()->player()->y);
 }
 
-void DungeonMap::draw(sf::RenderTarget& target)
+void DungeonMap::draw(sf::RenderTexture& target)
 {
   m_minimap.draw(target);
 

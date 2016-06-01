@@ -52,7 +52,7 @@ public:
   void start(bool canEscape = true);
 
   void update();
-  void draw(sf::RenderTarget& target);
+  void draw(sf::RenderTexture& target);
   void handleEvent(sf::Event& event);
 
   void setAction(Character* user, Action action);

@@ -3,7 +3,7 @@
 
 #include "Scene.h"
 #include "Lua.h"
-
+/*
 class ScriptScene : public Scene
 {
 public:
@@ -12,7 +12,7 @@ public:
 
   void update();
 
-  void draw(sf::RenderTarget& target);
+  void draw(sf::RenderTexture& target);
 
   void handleEvent(sf::Event& event);
 
@@ -20,6 +20,6 @@ public:
   void postFade(Scene::FadeType fadeType);
 private:
   lua::LuaEnv m_luaState;
-};
+};*/
 
 #endif /* SCRIPTSCENE_H_ */

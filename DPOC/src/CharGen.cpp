@@ -857,7 +857,7 @@ void CharGen::update()
 
 }
 
-void CharGen::draw(sf::RenderTarget& target)
+void CharGen::draw(sf::RenderTexture& target)
 {
   m_selectMenu->draw(target, 8, config::GAME_RES_Y - m_selectMenu->getHeight() - 8);
 }

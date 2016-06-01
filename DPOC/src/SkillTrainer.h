@@ -17,7 +17,7 @@ public:
   ~SkillTrainer();
 
   void update();
-  void draw(sf::RenderTarget& target);
+  void draw(sf::RenderTexture& target);
   void handleEvent(sf::Event& event);
 private:
   void handleKeyPress(sf::Keyboard::Key key);

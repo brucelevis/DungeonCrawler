@@ -52,6 +52,7 @@ private:
 
   bool checkBuiltInEvent(sf::Event& event);
 private:
+  sf::ContextSettings m_glContext;
   std::vector< Scene* > m_scenes;
 
   sf::RenderWindow m_window;

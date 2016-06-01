@@ -1,5 +1,8 @@
+#include <cstdio>
+#include <cstdlib>
 #include <algorithm>
 
+#include <GL/glew.h>
 #include <SFML/System.hpp>
 
 #include "Console.h"
@@ -32,22 +35,30 @@ void SceneManager::create()
 {
   setResolution(false);
 
+  GLenum glew_status = glewInit();
+  if (GLEW_OK != glew_status)
+  {
+    fprintf(stderr, "Could not initialize GLEW.\n");
+    exit(1);
+  }
+
   m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
 }
 
 void SceneManager::setResolution(bool fullScreen)
 {
   m_fullScreen = fullScreen;
+  m_glContext.depthBits = 32;
 
   if (m_window.isOpen()) m_window.close();
 
   if (m_fullScreen)
   {
-    m_window.create(sf::VideoMode::getDesktopMode(), "DPOC", sf::Style::None);
+    m_window.create(sf::VideoMode::getDesktopMode(), "DPOC", sf::Style::None, m_glContext);
   }
   else
   {
-    m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
+    m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC", sf::Style::Default, m_glContext);
   }
 
   m_window.setKeyRepeatEnabled(false);
@@ -113,7 +124,7 @@ void SceneManager::cleanUp()
 
 void SceneManager::draw()
 {
-  m_window.clear();
+  m_targetTexture.setActive();
   m_targetTexture.clear();
 
   // Because "clear" doesn't clear...
@@ -136,6 +147,8 @@ void SceneManager::draw()
 
   m_targetTexture.display();
 
+  m_window.setActive();
+  m_window.clear();
   displayScreen();
 
   if (m_console && m_console->isOpen())

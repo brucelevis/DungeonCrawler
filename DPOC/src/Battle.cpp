@@ -944,7 +944,7 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
   }
 }
 
-void Battle::draw(sf::RenderTarget& target)
+void Battle::draw(sf::RenderTexture& target)
 {
   int battleMenuX = 0;
 

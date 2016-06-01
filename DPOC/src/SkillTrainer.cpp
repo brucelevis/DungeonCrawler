@@ -135,7 +135,7 @@ void SkillTrainer::update()
 
 }
 
-void SkillTrainer::draw(sf::RenderTarget& target)
+void SkillTrainer::draw(sf::RenderTexture& target)
 {
   draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
 

@@ -642,7 +642,7 @@ void Shop::update()
   }
 }
 
-void Shop::draw(sf::RenderTarget& target)
+void Shop::draw(sf::RenderTexture& target)
 {
   m_menu.draw(target, 0, 0);
 }

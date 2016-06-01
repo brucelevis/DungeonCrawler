@@ -3,6 +3,11 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -12,6 +17,7 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Camera.h"
+#include "MapRenderer.h"
 
 #include "Minimap.h"
 
@@ -28,7 +34,7 @@ public:
   void start(Player* thePlayer);
 
   void update();
-  void draw(sf::RenderTarget& target);
+  void draw(sf::RenderTexture& target);
   void handleEvent(sf::Event& event);
 
   Map* getCurrentMap() { return m_currentMap; }
@@ -78,6 +84,8 @@ private:
 
   void drawParty(sf::RenderTarget& target) const;
 private:
+  glm::mat4 m_projectionMatrix;
+
   Map* m_currentMap;
   Player* m_player;
   coord_t m_view;
@@ -95,7 +103,7 @@ private:
   std::vector<Entity*> m_entitiesToDraw;
 
   Camera m_camera;
-  Raycaster* m_raycaster;
+  std::unique_ptr<MapRenderer> m_mapRenderer;
 
   bool m_isRotating;
   int m_angleToRotate;
@@ -103,7 +111,6 @@ private:
   int m_accumulatedAngle;
   float m_rotateDegs;
 
-  sf::Image m_raycasterBuffer;
   sf::Texture m_texture;
   sf::RenderTexture m_targetTexture;
 

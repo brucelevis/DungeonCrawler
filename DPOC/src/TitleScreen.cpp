@@ -121,7 +121,7 @@ void TitleScreen::update()
 {
 }
 
-void TitleScreen::draw(sf::RenderTarget& target)
+void TitleScreen::draw(sf::RenderTexture& target)
 {
   if (m_titleTexture)
   {

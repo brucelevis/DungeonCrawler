@@ -1,5 +1,8 @@
 #include <cstdlib>
+#include <cstdio>
 #include <string>
+
+#include <GL/glew.h>
 
 #include "SceneManager.h"
 

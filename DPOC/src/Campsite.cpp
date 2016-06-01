@@ -60,7 +60,7 @@ void Campsite::update()
   }
 }
 
-void Campsite::draw(sf::RenderTarget& target)
+void Campsite::draw(sf::RenderTexture& target)
 {
   if (m_draw)
   {
