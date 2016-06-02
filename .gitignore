@@ -13,4 +13,10 @@ Save*xml
 /Debug/
 *.swp
 *.bak
-DPOC/deps/*
+DPOC/deps/ext
+DPOC/deps/glew
+DPOC/deps/lua*
+DPOC/deps/SFML
+DPOC/deps/glm
+DPOC/deps/*.a
+DPOC/deps/*.dll
