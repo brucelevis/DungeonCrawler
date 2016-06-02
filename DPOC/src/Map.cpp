@@ -148,7 +148,6 @@ Map* Map::loadTiledFile(const std::string& filename)
         tile.solid = false;
         tile.tileX = 0;
         tile.tileY = 0;
-        tile.height = 1;
 
         if (tileId > 0)
         {
@@ -309,28 +308,6 @@ Map* Map::loadTiledFile(const std::string& filename)
           TRACE("New trap: trapX=%d, trapY=%d, trapType=%s, luck=%d",
               trapX, trapY, trapType.c_str(), luckToBeat);
         }
-        else if (to_lower(name) == "height_adjust")
-        {
-          TRACE("Height adjustment:");
-
-          float heightAdjust = fromString<float>(loader.getObjectProperty(objectIndex, "height"));
-          int rectX = object->x / config::TILE_W;
-          int rectY = object->y / config::TILE_H;
-          int rectW = object->width / config::TILE_W;
-          int rectH = object->height / config::TILE_H;
-
-          for (int y = rectY; y < rectY + rectH; y++)
-          {
-            for (int x = rectX; x < rectX + rectW; x++)
-            {
-              if (Tile* tile = map->getTileAt(x, y, "wall"))
-              {
-                tile->height = heightAdjust;
-                TRACE(" - x=%d, y=%d, height=%f", x, y, heightAdjust);
-              }
-            }
-          }
-        }
         else
         {
           // Entities without picture.
@@ -422,7 +399,6 @@ Map* Map::createEmptyFrom(const Map* other, int width, int height)
         tile.solid = false;
         tile.tileX = 0;
         tile.tileY = 0;
-        tile.height = 1;
 
         tile.tileId = tileId;
 
