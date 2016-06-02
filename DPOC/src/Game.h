@@ -45,7 +45,6 @@ public:
   void openChoiceMenu(const std::vector<std::string>& choices);
 
   void setPlayer(Player* player);
-  void fixCamera(Direction initDir);
 
   void loadNewMap(const std::string& file);
 
@@ -79,9 +78,6 @@ private:
 
   void closeChoiceMenu();
 
-  void startRotate(int angle, int angleInc);
-  void execRotate();
-
   void drawParty(sf::RenderTarget& target) const;
 private:
   glm::mat4 m_projectionMatrix;
@@ -102,14 +98,7 @@ private:
 
   std::vector<Entity*> m_entitiesToDraw;
 
-  Camera m_camera;
   std::unique_ptr<MapRenderer> m_mapRenderer;
-
-  bool m_isRotating;
-  int m_angleToRotate;
-  int m_angleInc;
-  int m_accumulatedAngle;
-  float m_rotateDegs;
 
   sf::Texture m_texture;
   sf::RenderTexture m_targetTexture;

@@ -96,7 +96,7 @@ const char* const Shader_LightShader_Fragment =
 "  color = vec3( min(lighting_color.r, texture_color.r),\n"
 "                min(lighting_color.g, texture_color.g),\n"
 "                min(lighting_color.b, texture_color.b) );\n"
-"  //color = texture(texture0, inverted);\n"
+"  //color = texture(texture0, inverted).rgb;\n"
 "}\n";
 
 #endif /* SHADERS_H_ */

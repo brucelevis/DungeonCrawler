@@ -58,14 +58,6 @@ Game::Game()
    m_choiceMenu(0),
    m_transferInProgress(false),
    m_playerMoved(false),
-   m_camera(Vec2(4.5f, 4.5f), Vec2(-1, 0), Vec2(0, -0.66f)),
-
-   m_isRotating(false),
-   m_angleToRotate(0),
-   m_angleInc(0),
-   m_accumulatedAngle(0),
-   m_rotateDegs(0),
-
    m_rotKeyDown(false),
 
    m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 68, 56, 56),
@@ -73,9 +65,9 @@ Game::Game()
    m_campSite(false)
 {
   m_texture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
+
   m_targetTexture.create(config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y, true);
   m_targetTexture.setActive();
-
   glViewport(0, 0, config::RAYCASTER_RES_X, config::RAYCASTER_RES_Y);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL); // GL_LEQUAL, GL_LESS
@@ -143,11 +135,11 @@ void Game::start(Player* thePlayer)
 
 void Game::update()
 {
-  if (m_player)
-  {
-    m_camera.pos.x = m_player->player()->x + 0.5f;
-    m_camera.pos.y = m_player->player()->y + 0.5f;
-  }
+//  if (m_player)
+//  {
+//    m_camera.pos.x = m_player->player()->x + 0.5f;
+//    m_camera.pos.y = m_player->player()->y + 0.5f;
+//  }
 
   if (Message::instance().isVisible())
   {
@@ -300,16 +292,12 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
 void Game::draw(sf::RenderTexture& target)
 {
   m_targetTexture.setActive();
-  m_targetTexture.pushGLStates();
-  m_targetTexture.clear();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   m_mapRenderer->render(m_targetTexture, m_projectionMatrix, m_player->getCamera());
-  m_targetTexture.popGLStates();
-
-  sf::Sprite sprite(m_texture);
-  m_targetTexture.draw(sprite);
   m_targetTexture.display();
 
   target.setActive();
+  sf::Sprite sprite;
   sprite.setTexture(m_targetTexture.getTexture());
   sprite.setPosition(0, 0);
   target.draw(sprite);
@@ -405,22 +393,24 @@ void Game::drawParty(sf::RenderTarget& target) const
 
 void Game::updatePlayer()
 {
+  static const float INTERPOLATION_FRAMES = 1.f / 20.f;
+
   if (m_player)
   {
     m_player->update();
 
-    if (!m_player->player()->isWalking() && !m_isRotating && m_player->isControlsEnabled())
+    if (!m_player->player()->isWalking() && !m_player->isRotating() && m_player->isControlsEnabled())
     {
       if (!m_rotKeyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
       {
-        startRotate(-90, -10);
+        m_player->rotate(m_player->getCamera().horizontal_angle + glm::pi<float>() / 2, INTERPOLATION_FRAMES);
         m_player->player()->turnLeft();
 
         m_rotKeyDown = true;
       }
       else if (!m_rotKeyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
       {
-        startRotate(90, 10);
+        m_player->rotate(m_player->getCamera().horizontal_angle - glm::pi<float>() / 2, INTERPOLATION_FRAMES);
         m_player->player()->turnRight();
 
         m_rotKeyDown = true;
@@ -434,11 +424,6 @@ void Game::updatePlayer()
       {
         m_rotKeyDown = false;
       }
-    }
-
-    if (m_isRotating)
-    {
-      execRotate();
     }
   }
 }
@@ -692,7 +677,7 @@ void Game::postFade(FadeType fadeType)
       {
         Direction oldDir = m_player->player()->getDirection();
         m_player->player()->setDirection(m_currentWarp.dir);
-        fixCamera(oldDir);
+        m_player->initCamera(oldDir);
       }
 
       SceneManager::instance().fadeIn(32);
@@ -731,102 +716,15 @@ void Game::openMap()
   SceneManager::instance().addScene( new DungeonMap(m_currentMap) );
 }
 
-void Game::startRotate(int angle, int angleInc)
-{
-  m_isRotating = true;
-  m_angleToRotate = angle;
-  m_angleInc = angleInc;
-  m_accumulatedAngle = 0;
-  m_rotateDegs = PI_F * (float)angleInc / 180.0f;
-}
-
-void Game::execRotate()
-{
-  m_camera.rotate(m_rotateDegs);
-
-  m_accumulatedAngle += m_angleInc;
-
-  if (abs(m_accumulatedAngle) >= abs(m_angleToRotate))
-  {
-    m_isRotating = false;
-  }
-}
-
 void Game::setPlayer(Player* player)
 {
   m_player = player;
 
-  fixCamera(DIR_LEFT);
+  m_player->initCamera(DIR_LEFT);
 
   // So it shows up at beginning of game.
   m_minimap.updatePosition(m_currentMap, m_player->player()->x, m_player->player()->y, m_player->player()->x, m_player->player()->y);
 
   // Also explore starting position.
   m_currentMap->explore(m_player->player()->x, m_player->player()->y);
-}
-
-void Game::fixCamera(Direction initDir)
-{
-  Direction playerDir = m_player->player()->getDirection();
-
-  if (initDir == DIR_LEFT)
-  {
-    if (playerDir == DIR_UP)
-    {
-      m_camera.rotate(deg2rad(90));
-    }
-    else if (playerDir == DIR_DOWN)
-    {
-      m_camera.rotate(deg2rad(-90));
-    }
-    else if (playerDir == DIR_RIGHT)
-    {
-      m_camera.rotate(deg2rad(180));
-    }
-  }
-  else if (initDir == DIR_RIGHT)
-  {
-    if (playerDir == DIR_UP)
-    {
-      m_camera.rotate(deg2rad(-90));
-    }
-    else if (playerDir == DIR_DOWN)
-    {
-      m_camera.rotate(deg2rad(90));
-    }
-    else if (playerDir == DIR_LEFT)
-    {
-      m_camera.rotate(deg2rad(180));
-    }
-  }
-  else if (initDir == DIR_UP)
-  {
-    if (playerDir == DIR_DOWN)
-    {
-      m_camera.rotate(deg2rad(180));
-    }
-    else if (playerDir == DIR_LEFT)
-    {
-      m_camera.rotate(deg2rad(90));
-    }
-    else if (playerDir == DIR_RIGHT)
-    {
-      m_camera.rotate(deg2rad(-90));
-    }
-  }
-  else if (initDir == DIR_DOWN)
-  {
-    if (playerDir == DIR_UP)
-    {
-      m_camera.rotate(deg2rad(180));
-    }
-    else if (playerDir == DIR_LEFT)
-    {
-      m_camera.rotate(deg2rad(-90));
-    }
-    else if (playerDir == DIR_RIGHT)
-    {
-      m_camera.rotate(deg2rad(90));
-    }
-  }
 }

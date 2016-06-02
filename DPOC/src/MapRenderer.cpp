@@ -58,6 +58,8 @@ MapRenderer::MapRenderer(Map* tilemap)
 {
   m_lightShader.loadFromMemory(Shader_LightShader_Vertex, Shader_LightShader_Fragment);
 
+  initMeshes();
+
   auto tileImages = m_tilemap->getTilesetImages();
   for (const auto& img : tileImages)
   {
@@ -95,7 +97,7 @@ void MapRenderer::render(sf::RenderTarget& target, const glm::mat4& projectionMa
           glm::mat4 modelMatrix{1.f};
           glm::mat4 mvp{1.f};
 
-          modelMatrix *= glm::translate(glm::vec3(static_cast<float>(x), 1.f, static_cast<float>(y)));
+          modelMatrix *= glm::translate(glm::vec3(static_cast<float>(x), -1.f, static_cast<float>(y)));
           mvp = projectionMatrix * camera.viewMatrix() * modelMatrix;
 
           _draw_mesh(mvp, modelMatrix, camera.viewMatrix(), camera.position, gamelib::Material::getDefaultMaterial(), m_wallCube, m_lightShader, m_textures[tile->tileId]);
@@ -109,7 +111,7 @@ void MapRenderer::render(sf::RenderTarget& target, const glm::mat4& projectionMa
           glm::mat4 modelMatrix{1.f};
           glm::mat4 mvp{1.f};
 
-          modelMatrix *= glm::translate(glm::vec3(static_cast<float>(x), -1.f, static_cast<float>(y)));
+          modelMatrix *= glm::translate(glm::vec3(static_cast<float>(x), 1.f, static_cast<float>(y)));
           mvp = projectionMatrix * camera.viewMatrix() * modelMatrix;
 
           _draw_mesh(mvp, modelMatrix, camera.viewMatrix(), camera.position, gamelib::Material::getDefaultMaterial(), m_wallCube, m_lightShader, m_textures[tile->tileId]);

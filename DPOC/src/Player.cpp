@@ -53,7 +53,17 @@ Entity* Player::player()
 
 void Player::update()
 {
-  if (m_controlsEnabled)
+  if (m_isRotating)
+  {
+    m_rotationInterpolator.update();
+    m_camera.horizontal_angle = m_rotationInterpolator.getCurrent();
+    if (m_rotationInterpolator.isDone())
+    {
+      m_camera.horizontal_angle = m_targetAngle;
+      m_isRotating = false;
+    }
+  }
+  else if (m_controlsEnabled)
   {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
@@ -450,5 +460,33 @@ void Player::handleStep()
     }
 
     steps = 0;
+  }
+}
+
+void Player::rotate(float angle, float speed)
+{
+  m_isRotating = true;
+  m_targetAngle = angle;
+  m_rotationInterpolator.set(m_camera.horizontal_angle, m_targetAngle, speed);
+}
+
+void Player::initCamera(Direction initDir)
+{
+  switch (player()->getDirection())
+  {
+  case DIR_LEFT:
+    m_camera.horizontal_angle = -glm::pi<float>() / 2;
+    break;
+  case DIR_UP:
+    m_camera.horizontal_angle = glm::pi<float>() / 4;
+    break;
+  case DIR_DOWN:
+    m_camera.horizontal_angle = glm::pi<float>() / 2 + glm::pi<float>() / 4;
+    break;
+  case DIR_RIGHT:
+    m_camera.horizontal_angle = glm::pi<float>() / 2;
+    break;
+  default:
+    break;
   }
 }

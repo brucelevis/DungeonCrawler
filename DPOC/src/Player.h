@@ -10,11 +10,13 @@ struct EntityData;
 
 #include <SFML/Graphics.hpp>
 #include <GameLib/Camera.h>
+#include <GameLib/Interpolator.h>
 
 #include "coord.h"
 #include "Item.h"
 #include "Character.h"
 #include "PlayerCharacter.h"
+#include "Direction.h"
 
 class Player
 {
@@ -64,6 +66,9 @@ public:
   static Player* createFromSaveData(std::vector<CharacterData*> charData, std::vector<EntityData*> entData);
 
   const gamelib::Camera& getCamera() const { return m_camera; }
+  void rotate(float angle, float speed);
+  bool isRotating() const { return m_isRotating; }
+  void initCamera(Direction initDir);
 private:
   Player();
 
@@ -71,6 +76,7 @@ private:
   void handleStep();
 private:
   gamelib::Camera m_camera;
+  gamelib::Interpolator<float> m_rotationInterpolator;
 
   std::vector<Entity*> m_playerTrain;
   std::vector<Item> m_inventory;
@@ -82,6 +88,9 @@ private:
 
   bool m_controlsEnabled;
   bool m_movedBackwards;
+
+  bool  m_isRotating  = false;
+  float m_targetAngle = 0;
 };
 
 Player* get_player();

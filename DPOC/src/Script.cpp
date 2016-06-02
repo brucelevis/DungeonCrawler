@@ -1165,7 +1165,7 @@ void Script::executeScriptLine()
     get_player()->player()->setDirection(directionFromString(extractValue(data.arguments.at("dir"))));
 
     // Need to update camera.
-    Game::instance().fixCamera(oldDir);
+    get_player()->initCamera(oldDir);
   }
   else if (data.opcode == Script::OP_CHANGE_TILE)
   {
