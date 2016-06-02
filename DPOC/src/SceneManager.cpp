@@ -47,7 +47,7 @@ void SceneManager::setResolution(bool fullScreen)
   }
   else
   {
-    m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
+    m_window.create(sf::VideoMode(config::GAME_RES_X, config::GAME_RES_Y), "DPOC");
   }
 
   m_window.setKeyRepeatEnabled(false);
@@ -156,7 +156,7 @@ void SceneManager::displayScreen()
 
   if (!m_fullScreen)
   {
-    sprite.setScale(sf::Vector2f(2, 2));
+    //sprite.setScale(sf::Vector2f(2, 2));
   }
   else
   {

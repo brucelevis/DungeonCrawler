@@ -16,7 +16,7 @@
 
 #include "Raycaster.h"
 
-float zbuffer[320];
+float zbuffer[config::GAME_RES_X];
 
 namespace
 {
