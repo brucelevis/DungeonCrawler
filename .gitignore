@@ -1,8 +1,6 @@
 /Default
 *.dll
 log.txt
-.cproject
-.project
 .settings
 Thumbs.db
 *.wav
@@ -15,3 +13,4 @@ Save*xml
 /Debug/
 *.swp
 *.bak
+DPOC/deps
