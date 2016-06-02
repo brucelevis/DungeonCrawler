@@ -1,3 +1,7 @@
+EXPERIMENTAL OPENGL RENDERING BRANCH
+------------------------------------
+This is some goddamn garbage.
+
 Map format (Tiled)
 ------------------
 First tileset is the map tileset. Other tilesets are used for entities.
