@@ -1,8 +1,6 @@
 /Default
 *.dll
 log.txt
-.cproject
-.project
 .settings
 Thumbs.db
 *.wav
