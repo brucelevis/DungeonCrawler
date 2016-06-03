@@ -55,7 +55,7 @@ void battle_message(const char* fmt, ...)
 
   std::vector<std::string> strings = split_string(buffer, ' ');
 
-  static const size_t WORDS = 256 / 8 - 2;
+  static const size_t WORDS = config::GAME_RES_X / 8 - 2;
 
   std::string tmp = strings[0];
   for (size_t i = 1; i < strings.size(); i++)
@@ -209,6 +209,14 @@ void Message::update()
 
 void Message::draw(sf::RenderTarget& target)
 {
-  draw_frame(target, config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 70, 256, 64);
-  draw_text_bmp(target, 8 + config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 70 + 6, "%s", m_currentBuffer.c_str());
+  draw_frame(target,
+      config::GAME_RES_X / 2 - config::MESSAGE_BOX_WIDTH / 2,
+      config::GAME_RES_Y - config::MESSAGE_BOX_BOTTOM_MARGIN,
+      config::MESSAGE_BOX_WIDTH,
+      config::MESSAGE_BOX_HEIGHT);
+
+  draw_text_bmp(target,
+      8 + config::GAME_RES_X / 2 - config::MESSAGE_BOX_WIDTH / 2,
+      config::GAME_RES_Y - config::MESSAGE_BOX_BOTTOM_MARGIN + 6,
+      "%s", m_currentBuffer.c_str());
 }

@@ -610,7 +610,7 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
 
     if (currentState == STATE_STATUS_MENU)
     {
-      drawStatus(target, x + 24, y + 24);
+      drawStatus(target, config::GAME_RES_X / 2 - config::STATUS_SCREEN_WIDTH / 2, config::GAME_RES_Y / 2 - config::STATUS_SCREEN_HEIGHT / 2);
     }
     else if (currentState == STATE_SKILL_MENU)
     {
@@ -646,7 +646,7 @@ void MainMenu::drawStatus(sf::RenderTarget& target, int x, int y)
 {
   PlayerCharacter* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->getCurrentMenuChoice());
 
-  draw_frame(target, 16, 16, 14*16, 13*16);
+  draw_frame(target, x - config::FONT_SIZE, y - config::FONT_SIZE, config::STATUS_SCREEN_WIDTH, config::STATUS_SCREEN_HEIGHT);
 
   character->draw(target, x, y);
 
@@ -676,10 +676,10 @@ void MainMenu::drawSkills(sf::RenderTarget& target, int x, int y)
 {
   PlayerCharacter* character = Game::instance().getPlayer()->getCharacter(m_characterMenu->getCurrentMenuChoice());
 
-  int frameX = 16;
-  int frameY = 16;
-  int frameW = 14*16;
-  int frameH = 13*16;
+  int frameX = x - config::FONT_SIZE;
+  int frameY = y - config::FONT_SIZE;
+  int frameW = config::STATUS_SCREEN_WIDTH;
+  int frameH = config::STATUS_SCREEN_HEIGHT;
 
   draw_frame(target, frameX, frameY, frameW, frameH);
 
@@ -713,8 +713,8 @@ void MainMenu::drawSkills(sf::RenderTarget& target, int x, int y)
 ///////////////////////////////////////////////////////////////////////////////
 
 ItemMenu::ItemMenu()
- : m_width(14*16),
-   m_height(12*16)
+ : m_width(config::THING_MENU_WIDTH),
+   m_height(config::THING_MENU_HEIGHT)
 {
   refresh();
 }
@@ -908,12 +908,12 @@ void SpellMenu::draw(sf::RenderTarget& target, int x, int y)
 
 int SpellMenu::getWidth() const
 {
-  return 14*16;
+  return config::THING_MENU_WIDTH;
 }
 
 int SpellMenu::getHeight() const
 {
-  return 12*16;
+  return config::THING_MENU_HEIGHT;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -955,7 +955,9 @@ void CharacterMenu::refresh()
 
 void CharacterMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x + 72, y, 184, 240);
+  const int indent = 72;
+
+  draw_frame(target, x + indent, y, config::GAME_RES_X - indent, config::GAME_RES_Y);
 
   for (int i = 0; i < getNumberOfChoice(); i++)
   {
@@ -995,7 +997,7 @@ void CharacterMenu::setTargetToCurrentChoice()
 
 EquipMenu::EquipMenu(PlayerCharacter* character)
  : m_character(character),
-   m_itemMenu(new EquipItemMenu(character, 256, 104)),
+   m_itemMenu(new EquipItemMenu(character, config::GAME_RES_X, 104)),
    m_state(STATE_SELECT_EQUIPMENT_TYPE)
 {
   for (const auto equipName : get_equip_names())
@@ -1114,11 +1116,11 @@ void EquipMenu::moveArrow(Direction dir)
 
 void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, 128, 112);
-  draw_frame(target, x + 128, y, 128, 112);
+  draw_frame(target, x, y, config::EQUIP_MENU_STATS_WIDTH, config::EQUIP_MENU_PARTS_HEIGHT);
+  draw_frame(target, x + config::EQUIP_MENU_STATS_WIDTH, y, config::EQUIP_MENU_PARTS_WIDTH, config::EQUIP_MENU_PARTS_HEIGHT);
 
   // Top.
-  draw_frame(target, x, y, 256, 32);
+  draw_frame(target, x, y, config::GAME_RES_X, 32);
   m_character->draw(target, x, y);
   draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
 
@@ -1137,13 +1139,13 @@ void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 
     std::string typeShortName = vocab_short(getChoice(i));
     std::string itemShortName = equipment ?
-        limit_string(equipment->name, 8) :
+        limit_string(equipment->name, config::EQUIP_MENU_MAX_EQUIPPED_ITEM_NAME_LENGTH) :
         "";
 
     draw_text_bmp(target, offX, offY + 12 * i, "%s: %s", typeShortName.c_str(), itemShortName.c_str());
   }
 
-  sf::RectangleShape rect = make_select_rect(offX - 1, offY - 1 + getCurrentChoiceIndex() * 12, 114, 10);
+  sf::RectangleShape rect = make_select_rect(offX - 1, offY - 1 + getCurrentChoiceIndex() * (config::FONT_SIZE+4), 178, config::FONT_SIZE+2);
   target.draw(rect);
 }
 
