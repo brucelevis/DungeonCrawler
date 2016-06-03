@@ -26,8 +26,8 @@
   <SOUND_FIELD_DAMAGE>Audio/Numbness2.wav</SOUND_FIELD_DAMAGE>
   <SOUND_DOOR>Audio/Close1.wav</SOUND_DOOR>
   <DEBUG_MODE>true</DEBUG_MODE>
-  <DEBUG_SHOP>Copper Sword,Cure Potion,Apprentice Staff,Dagger,,,,,</DEBUG_SHOP>
-  <DEBUG_BATTLE>Batty,,,,,</DEBUG_BATTLE>
+  <DEBUG_SHOP>Copper Sword,Cure Potion,Apprentice Staff,Dagger,,,,,,,,</DEBUG_SHOP>
+  <DEBUG_BATTLE>Batty,,,,,,,,</DEBUG_BATTLE>
   <MAX_LEVEL>30</MAX_LEVEL>
   <SOUND_SPELL>
   </SOUND_SPELL>

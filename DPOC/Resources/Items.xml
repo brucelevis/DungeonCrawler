@@ -16,8 +16,25 @@
     </element>
     <attributes>
       <attribute name="hp" value="25" />
+      <attribute name="mp" value="0" />
+      <attribute name="strength" value="0" />
+      <attribute name="defense" value="0" />
+      <attribute name="magic" value="0" />
+      <attribute name="mag.def" value="0" />
+      <attribute name="speed" value="0" />
+      <attribute name="luck" value="0" />
     </attributes>
-    <elements />
+    <elements>
+      <element name="fire" value="1" />
+      <element name="ice" value="1" />
+      <element name="air" value="1" />
+      <element name="holy" value="1" />
+      <element name="dark" value="1" />
+      <element name="slashing" value="1" />
+      <element name="piercing" value="1" />
+      <element name="crushing" value="1" />
+    </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Elixir</name>
@@ -38,6 +55,7 @@
       <attribute name="hp" value="75" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Ether</name>
@@ -58,6 +76,7 @@
       <attribute name="mp" value="25" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Antidote</name>
@@ -78,6 +97,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Eye Drops</name>
@@ -98,6 +118,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Adrenaline</name>
@@ -118,6 +139,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Phoenix</name>
@@ -138,6 +160,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Rusty Knife</name>
@@ -161,6 +184,7 @@
     <elements>
       <element name="fire" value="1" />
     </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Key</name>
@@ -182,6 +206,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Rusty Key</name>
@@ -203,6 +228,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Crowbar</name>
@@ -224,6 +250,7 @@
     </element>
     <attributes />
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Copper Sword</name>
@@ -243,6 +270,7 @@
       <attribute name="strength" value="4" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Iron Sword</name>
@@ -263,6 +291,7 @@
       <attribute name="strength" value="8" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Longsword</name>
@@ -283,6 +312,7 @@
       <attribute name="strength" value="13" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Bastard Sword</name>
@@ -303,6 +333,7 @@
       <attribute name="strength" value="19" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Mithril Blade</name>
@@ -323,6 +354,7 @@
       <attribute name="strength" value="27" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Hanzo Steel</name>
@@ -343,6 +375,7 @@
       <attribute name="strength" value="38" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Legendary Sword</name>
@@ -363,6 +396,7 @@
       <attribute name="strength" value="50" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Scalpel</name>
@@ -385,6 +419,7 @@
       <attribute name="luck" value="1" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Knife</name>
@@ -407,6 +442,7 @@
       <attribute name="luck" value="1" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Stiletto</name>
@@ -429,6 +465,7 @@
       <attribute name="luck" value="3" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Dagger</name>
@@ -451,6 +488,7 @@
       <attribute name="luck" value="6" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Main Gauche</name>
@@ -473,6 +511,7 @@
       <attribute name="luck" value="10" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Epee</name>
@@ -495,6 +534,7 @@
       <attribute name="luck" value="14" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Rapier</name>
@@ -517,6 +557,7 @@
       <attribute name="luck" value="23" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Club</name>
@@ -537,6 +578,7 @@
       <attribute name="strength" value="2" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Mace</name>
@@ -557,6 +599,7 @@
       <attribute name="strength" value="6" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Flail</name>
@@ -577,6 +620,7 @@
       <attribute name="strength" value="11" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Warhammer</name>
@@ -597,6 +641,7 @@
       <attribute name="strength" value="16" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Maul</name>
@@ -617,6 +662,7 @@
       <attribute name="strength" value="24" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Great Mace</name>
@@ -638,6 +684,7 @@
       <attribute name="speed" value="-20" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Apprentice Staff</name>
@@ -659,6 +706,7 @@
       <attribute name="magic" value="6" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Journeyman Staff</name>
@@ -680,6 +728,7 @@
       <attribute name="magic" value="10" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Runed Staff</name>
@@ -701,6 +750,7 @@
       <attribute name="magic" value="17" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Advocate's Staff</name>
@@ -722,6 +772,7 @@
       <attribute name="magic" value="24" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Judicator's Staff</name>
@@ -743,6 +794,7 @@
       <attribute name="magic" value="48" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Staff of the Magi</name>
@@ -764,6 +816,7 @@
       <attribute name="magic" value="64" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Wood Shield</name>
@@ -786,6 +839,7 @@
       <attribute name="defense" value="2" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Bronze Shield</name>
@@ -808,6 +862,7 @@
       <attribute name="defense" value="6" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Iron Shield</name>
@@ -830,6 +885,7 @@
       <attribute name="defense" value="10" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Large Shield</name>
@@ -852,6 +908,7 @@
       <attribute name="defense" value="15" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Tower Shield</name>
@@ -875,6 +932,7 @@
       <attribute name="speed" value="-30" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Crusader Shield</name>
@@ -897,6 +955,7 @@
       <attribute name="defense" value="27" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Dragon Shield</name>
@@ -919,6 +978,7 @@
       <attribute name="defense" value="35" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Magic Tome</name>
@@ -942,6 +1002,7 @@
       <attribute name="mag.def" value="12" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Rags</name>
@@ -964,6 +1025,7 @@
       <attribute name="defense" value="1" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Robes</name>
@@ -987,6 +1049,7 @@
       <attribute name="mag.def" value="3" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Apprentice Robes</name>
@@ -1010,6 +1073,7 @@
       <attribute name="mag.def" value="7" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Journeyman Robes</name>
@@ -1033,6 +1097,7 @@
       <attribute name="mag.def" value="13" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Mage Robes</name>
@@ -1056,6 +1121,7 @@
       <attribute name="mag.def" value="20" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Necromancers Robe</name>
@@ -1079,6 +1145,7 @@
       <attribute name="mag.def" value="30" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Ancient Robes</name>
@@ -1102,6 +1169,7 @@
       <attribute name="mag.def" value="40" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Leather Vest</name>
@@ -1124,6 +1192,7 @@
       <attribute name="defense" value="2" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Leather Armor</name>
@@ -1146,6 +1215,7 @@
       <attribute name="defense" value="4" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Studded Leather</name>
@@ -1168,6 +1238,7 @@
       <attribute name="defense" value="6" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Chain Vest</name>
@@ -1190,6 +1261,7 @@
       <attribute name="defense" value="8" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Chain Shirt</name>
@@ -1212,6 +1284,7 @@
       <attribute name="defense" value="13" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Thief's Garb</name>
@@ -1235,6 +1308,7 @@
       <attribute name="luck" value="8" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Catsuite</name>
@@ -1258,6 +1332,7 @@
       <attribute name="luck" value="15" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Mithril Armor</name>
@@ -1280,6 +1355,7 @@
       <attribute name="defense" value="40" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Chain Mail</name>
@@ -1302,6 +1378,7 @@
       <attribute name="defense" value="14" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Splint Mail</name>
@@ -1324,6 +1401,7 @@
       <attribute name="defense" value="24" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Steel Mail</name>
@@ -1346,6 +1424,7 @@
       <attribute name="defense" value="32" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Full Plate</name>
@@ -1368,6 +1447,7 @@
       <attribute name="defense" value="50" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Dragon Armor</name>
@@ -1393,6 +1473,7 @@
     <elements>
       <element name="fire" value="0.5" />
     </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Luminant Robes</name>
@@ -1419,6 +1500,7 @@
       <element name="holy" value="0.5" />
       <element name="dark" value="0.5" />
     </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Shadow Armor</name>
@@ -1444,6 +1526,7 @@
     <elements>
       <element name="dark" value="0.5" />
     </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Robe of Archmagi</name>
@@ -1467,6 +1550,7 @@
       <attribute name="mag.def" value="55" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Fancy Hat</name>
@@ -1489,6 +1573,7 @@
       <attribute name="defense" value="1" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Bronze Helmet</name>
@@ -1511,6 +1596,7 @@
       <attribute name="defense" value="4" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Pointy Cap</name>
@@ -1534,6 +1620,7 @@
       <attribute name="mag.def" value="2" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Iron Helmet</name>
@@ -1556,6 +1643,7 @@
       <attribute name="defense" value="8" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Knight Helmet</name>
@@ -1578,6 +1666,7 @@
       <attribute name="defense" value="12" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Mithril Helmet</name>
@@ -1600,6 +1689,7 @@
       <attribute name="defense" value="16" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Pirate Hat</name>
@@ -1623,6 +1713,7 @@
       <attribute name="luck" value="9" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Wizard Hat</name>
@@ -1647,6 +1738,7 @@
       <attribute name="magic" value="3" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Bishop's Miter</name>
@@ -1670,6 +1762,7 @@
       <attribute name="mag.def" value="9" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Boots of Defense</name>
@@ -1692,6 +1785,7 @@
       <attribute name="defense" value="5" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Boots of Speed</name>
@@ -1714,6 +1808,7 @@
       <attribute name="speed" value="10" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Lucky Slippers</name>
@@ -1736,6 +1831,7 @@
       <attribute name="luck" value="10" />
     </attributes>
     <elements />
+    <prerequisites />
   </item>
   <item>
     <name>Boots of Grounding</name>
@@ -1758,6 +1854,7 @@
     <elements>
       <element name="air" value="0.5" />
     </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Hoverboots</name>
@@ -1780,6 +1877,7 @@
     <elements>
       <element name="earth" value="0" />
     </elements>
+    <prerequisites />
   </item>
   <item>
     <name>Protect Ring</name>
@@ -1799,9 +1897,61 @@
     <element>
     </element>
     <attributes>
+      <attribute name="hp" value="0" />
+      <attribute name="mp" value="0" />
+      <attribute name="strength" value="0" />
       <attribute name="defense" value="5" />
+      <attribute name="magic" value="0" />
       <attribute name="mag.def" value="5" />
+      <attribute name="speed" value="0" />
+      <attribute name="luck" value="0" />
     </attributes>
-    <elements />
+    <elements>
+      <element name="fire" value="1" />
+      <element name="ice" value="1" />
+      <element name="air" value="1" />
+      <element name="holy" value="1" />
+      <element name="dark" value="1" />
+      <element name="slashing" value="1" />
+      <element name="piercing" value="1" />
+      <element name="crushing" value="1" />
+    </elements>
+    <prerequisites />
+  </item>
+  <item>
+    <name>Book of Phoenix</name>
+    <description>Teaches "phoenix" spell</description>
+    <cost>0</cost>
+    <type>ITEM_USE_MENU</type>
+    <target>TARGET_SINGLE_ALLY</target>
+    <onUse>ITEM_CUSTOM</onUse>
+    <statusEffects />
+    <effect animation="" sound="" />
+    <verb>
+    </verb>
+    <formula>teach_spell(a, "Phoenix")</formula>
+    <element>
+    </element>
+    <attributes>
+      <attribute name="hp" value="0" />
+      <attribute name="mp" value="0" />
+      <attribute name="strength" value="0" />
+      <attribute name="defense" value="0" />
+      <attribute name="magic" value="0" />
+      <attribute name="mag.def" value="0" />
+      <attribute name="speed" value="0" />
+      <attribute name="luck" value="0" />
+    </attributes>
+    <elements>
+      <element name="fire" value="1" />
+      <element name="ice" value="1" />
+      <element name="air" value="1" />
+      <element name="holy" value="1" />
+      <element name="dark" value="1" />
+      <element name="slashing" value="1" />
+      <element name="piercing" value="1" />
+      <element name="crushing" value="1" />
+    </elements>
+    <prerequisites />
   </item>
 </items>

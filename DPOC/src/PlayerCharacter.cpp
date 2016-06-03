@@ -253,14 +253,19 @@ void PlayerCharacter::setLevel(int levelReached, bool display)
 
       for (auto spellIt = it->second.begin(); spellIt != it->second.end(); ++spellIt)
       {
-        if (std::find(m_spells.begin(), m_spells.end(), *spellIt) == m_spells.end())
-        {
-          m_spells.push_back(*spellIt);
-          if (display)
-            show_message("%s learned %s!", getName().c_str(), spellIt->c_str());
-        }
+        learnSpell(*spellIt, display);
       }
     }
+  }
+}
+
+void PlayerCharacter::learnSpell(const std::string& spellName, bool display)
+{
+  if (std::find(m_spells.begin(), m_spells.end(), spellName) == m_spells.end())
+  {
+    m_spells.push_back(spellName);
+    if (display)
+      show_message("%s learned %s!", getName().c_str(), spellName.c_str());
   }
 }
 

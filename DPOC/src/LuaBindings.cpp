@@ -132,6 +132,14 @@ namespace
   {
     return static_cast<int>(event->key.code);
   }
+
+  ////////////////////////////////////////////////////////////////////////////
+  // Game logic
+  ////////////////////////////////////////////////////////////////////////////
+  void lua_teachSpell(Character* target, const std::string& spellName)
+  {
+    dynamic_cast<PlayerCharacter*>(target)->learnSpell(spellName, true);
+  }
 }
 
 void run_lua_script(lua::LuaEnv& luaState, const std::string& script)
@@ -204,6 +212,7 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     ("character_has_status", &Character::hasStatus)
     ("get_current_attribute", [](Character* chr, const std::string& attr) { return chr->getAttribute(attr).current; })
     ("get_max_attribute", [](Character* chr, const std::string& attr) { return chr->getAttribute(attr).max; })
+    ("teach_spell", lua_teachSpell)
 
     // Item functions
     ("create_item", [](const std::string& itemName, int amount) { get_player()->addItemToInventory(itemName, amount); })
@@ -262,6 +271,14 @@ void register_lua_bindings(lua::LuaEnv& luaState)
 
 lua::LuaEnv* global_lua_env()
 {
+  static bool initialized = false;
   static lua::LuaEnv env;
+
+  if (!initialized)
+  {
+    register_lua_bindings(env);
+    initialized = true;
+  }
+
   return &env;
 }

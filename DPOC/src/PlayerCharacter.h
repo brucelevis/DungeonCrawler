@@ -33,6 +33,7 @@ public:
   int toNextLevel();
   int expForLevel();
   int checkLevelUp(bool display = true);
+  void learnSpell(const std::string& spellName, bool display);
 
   std::string xmlDump() const;
 

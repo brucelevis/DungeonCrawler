@@ -8,6 +8,7 @@
 #include "Utility.h"
 #include "Message.h"
 #include "Vocabulary.h"
+#include "LuaBindings.h"
 #include "Item.h"
 
 #include "XMLHelpers.h"
@@ -16,6 +17,14 @@
 using namespace tinyxml2;
 
 static std::vector<Item> itemDefinitions;
+
+namespace
+{
+  std::string _wrap_in_function(const std::string& formula)
+  {
+    return std::string("function __use_item(a, b)\n return ") + formula + "\nend";
+  }
+}
 
 #define E_S(A, B) if (A == #B) return B
 
@@ -278,6 +287,17 @@ int use_item(Item* item, Character* user, Character* target)
     if (nothingHappened)
     {
       battle_message("No effect...");
+    }
+  }
+
+  if (item->itemUseType == ITEM_CUSTOM)
+  {
+    if (item->formula.size())
+    {
+      std::string funcWrap = _wrap_in_function(item->formula);
+
+      global_lua_env()->executeLine(funcWrap);
+      global_lua_env()->call_function("__use_item", user, target);
     }
   }
 
