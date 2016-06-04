@@ -118,7 +118,7 @@ static StatusEffect parse_status_effect_element(const XMLElement* statusElement)
     status.recoveryChance = fromString<int>(recovChanceElem->GetText());
   if (valid_text_element(incapElem))
     status.incapacitate = fromString<bool>(incapElem->GetText());
-  if (damageElem)
+  if (damageElem && damageElem->FindAttribute("type"))
   {
     status.damageType = damageTypeFromString(damageElem->FindAttribute("type")->Value());
     status.damagePerTurn = fromString<int>(damageElem->FindAttribute("amount")->Value());

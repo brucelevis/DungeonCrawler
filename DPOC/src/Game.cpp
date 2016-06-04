@@ -20,6 +20,7 @@
 #include "Raycaster.h"
 #include "Encounter.h"
 #include "BattleBackground.h"
+#include "Frame.h"
 
 #include "Vocabulary.h"
 #include "Door.h"
@@ -64,7 +65,7 @@ Game::Game()
 
    m_rotKeyDown(false),
 
-   m_minimap(1 + config::GAME_RES_X - 60, 1 + config::GAME_RES_Y - 68, 56, 56),
+   m_minimap(1 + config::GAME_RES_X - 68, 1 + config::GAME_RES_Y - 68, 56, 56),
    m_battleInProgress(false),
    m_campSite(false)
 {
@@ -341,6 +342,8 @@ void Game::drawParty(sf::RenderTarget& target) const
 {
   int delta = config::GAME_RES_Y - config::RAYCASTER_RES_Y;
   int yPos = config::RAYCASTER_RES_Y + (delta / 2) - 24;
+
+  draw_gui_frame(target, 0, config::RAYCASTER_RES_Y, config::GAME_RES_X, config::GAME_RES_Y - config::RAYCASTER_RES_Y);
 
   auto party = m_player->getParty();
   int partyPosX = 16;
