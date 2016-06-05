@@ -586,10 +586,13 @@ void MainMenu::draw(sf::RenderTarget& target, int x, int y)
   }
   else
   {
+    const int menuChoicesWidth = 72;
+    const int gpPanelHeight = 32;
+
     draw_frame(target, x, y, config::GAME_RES_X, config::GAME_RES_Y);
 
-    draw_frame(target, x, y, 80, getNumberOfChoice() * 16);
-    draw_frame(target, x, y + 208, 80, 32);
+    draw_frame(target, x, y, menuChoicesWidth, getNumberOfChoice() * 16);
+    draw_frame(target, x, y + 208, menuChoicesWidth, gpPanelHeight);
 
     draw_text_bmp(target, x + 8, y + 13*16+7, "%s", vocab_short(terms::gold).c_str());
     draw_text_bmp(target, x + 8, y + 13*16+19, "%d", get_player()->getGold());
@@ -763,9 +766,9 @@ void ItemMenu::refresh()
 
 void ItemMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, getWidth(), 48);
-
-  Menu::draw(target, x, y + 24);
+  const int descriptionPanelHeight = 24;
+  draw_frame(target, x, y, getWidth(), descriptionPanelHeight);
+  Menu::draw(target, x, y + descriptionPanelHeight);
 
   if (cursorVisible() && hasItem(getSelectedItemName()))
   {
@@ -899,7 +902,9 @@ const Spell* SpellMenu::getSelectedSpell() const
 
 void SpellMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, getWidth(), 3*16);
+  const int descriptionPanelHeight = 24;
+  draw_frame(target, x, y, getWidth(), descriptionPanelHeight);
+  Menu::draw(target, x, y + descriptionPanelHeight);
 
   Menu::draw(target, x, y + 24);
 
@@ -1114,11 +1119,18 @@ void EquipMenu::moveArrow(Direction dir)
 
 void EquipMenu::draw(sf::RenderTarget& target, int x, int y)
 {
-  draw_frame(target, x, y, 128, 112);
-  draw_frame(target, x + 128, y, 128, 112);
+  const int nameFrameHeight = 32;
+
+  const int leftPanelY = y + nameFrameHeight;
+  const int leftPanelW = 128;
+  const int leftPanelH = 80;
+  const int rightPanelW = 128;
+
+  draw_frame(target, x, leftPanelY, leftPanelW, leftPanelH);
+  draw_frame(target, x + leftPanelW, leftPanelY, rightPanelW, leftPanelH);
 
   // Top.
-  draw_frame(target, x, y, 256, 32);
+  draw_frame(target, x, y, config::GAME_RES_X, nameFrameHeight);
   m_character->draw(target, x, y);
   draw_text_bmp(target, x + 36, y + 8, "%s", m_character->getName().c_str());
 
