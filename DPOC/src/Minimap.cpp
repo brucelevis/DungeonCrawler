@@ -136,24 +136,6 @@ void Minimap::draw(sf::RenderTarget& target) const
     }
   }
 
-  for (int y = 1; y < numberY; y++)
-  {
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(m_w, 1));
-    rect.setPosition(m_x, m_y + y * TILE_SIZE);
-    rect.setFillColor(sf::Color::White);
-    target.draw(rect);
-  }
-
-  for (int x = 1; x < numberX; x++)
-  {
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(1, m_h));
-    rect.setPosition(m_x + x * TILE_SIZE, m_y);
-    rect.setFillColor(sf::Color::White);
-    target.draw(rect);
-  }
-
   sf::RectangleShape minimap;
   minimap.setSize(sf::Vector2f(m_w, m_h));
   minimap.setFillColor(sf::Color::Transparent);
