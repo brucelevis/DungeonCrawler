@@ -19,6 +19,8 @@
 #include "Player.h"
 #include "PlayerClass.h"
 #include "MenuTextHelpers.h"
+#include "Utility.h"
+#include "Error.h"
 
 #include "CharGen.h"
 
@@ -163,24 +165,59 @@ private:
 
 struct SelectFaceMenu : public Menu
 {
-  SelectFaceMenu()
-   : m_faces(get_faces()),
-     m_faceIndex(0),
-     m_faceTexture(0),
-     m_arrowTexture(cache::loadTexture("UI/Arrow.png"))
-  {
-    for (auto it = m_faces.begin(); it != m_faces.end(); ++it)
-    {
-      addEntry(*it);
-    }
+  const int EyesW = 32;
+  const int EyesH = 16;
+  const int FaceW = 32;
+  const int FaceH = 32;
 
-    reloadTexture();
+  enum EditMode
+  {
+    MODE_HEAD     = 0,
+    MODE_EYE      = 1,
+    MODE_EYEBROW  = 2,
+    MODE_BEARD    = 3,
+    MODE_HAIR     = 4,
+    MODE_NOSE     = 5,
+    MODE_MOUTH    = 6,
+    MODE_EAR      = 7
+  };
+
+  SelectFaceMenu()
+   : m_arrowTexture(cache::loadTexture("UI/Arrow.png")),
+
+     m_heads(cache::loadTexture("Customize/Heads.png")),
+     m_ears(cache::loadTexture("Customize/Ears.png")),
+     m_eyes(cache::loadTexture("Customize/Eyes.png")),
+     m_eyebrows(cache::loadTexture("Customize/Eyebrows.png")),
+     m_beards(cache::loadTexture("Customize/Beards.png")),
+     m_hairStyles(cache::loadTexture("Customize/Hair.png")),
+     m_noses(cache::loadTexture("Customize/Noses.png")),
+     m_mouths(cache::loadTexture("Customize/Mouths.png")),
+
+     m_editMode(MODE_HEAD)
+  {
+    m_numberOfHeads        = (m_heads->getSize().x / FaceW) * (m_heads->getSize().y / FaceH);
+    m_numberOfEar          = (m_ears->getSize().x / FaceW) * (m_ears->getSize().y / FaceH);
+    m_numberOfEyes         = (m_eyes->getSize().x / FaceW) * (m_eyes->getSize().y / EyesH);
+    m_numberOfEyeBrows     = (m_eyebrows->getSize().x / FaceW) * (m_eyebrows->getSize().y / EyesH);
+    m_numberOfBeards       = (m_beards->getSize().x / FaceW) * (m_beards->getSize().y / EyesH);
+    m_numberOfHair         = (m_hairStyles->getSize().x / FaceW) * (m_hairStyles->getSize().y / FaceH);
+    m_numberOfNose         = (m_noses->getSize().x / FaceW) * (m_noses->getSize().y / EyesH);
+    m_numberOfMouth        = (m_mouths->getSize().x / FaceW) * (m_mouths->getSize().y / EyesH);
   }
 
   ~SelectFaceMenu()
   {
-    cache::releaseTexture(m_faceTexture);
     cache::releaseTexture(m_arrowTexture);
+
+    cache::releaseTexture(m_heads);
+    cache::releaseTexture(m_ears);
+    cache::releaseTexture(m_eyes);
+    cache::releaseTexture(m_eyebrows);
+    cache::releaseTexture(m_beards);
+    cache::releaseTexture(m_hairStyles);
+    cache::releaseTexture(m_noses);
+    cache::releaseTexture(m_mouths);
   }
 
   void handleConfirm()
@@ -195,32 +232,48 @@ struct SelectFaceMenu : public Menu
 
   void moveArrow(Direction dir)
   {
-    int oldIndex = m_faceIndex;
-
     if (dir == DIR_LEFT)
     {
-      m_faceIndex--;
-      if (m_faceIndex < 0) m_faceIndex = m_faces.size() - 1;
+      (*m_currentIndex)--;
+      if ((*m_currentIndex) < 0) (*m_currentIndex) = (*m_currentMax) - 1;
     }
     else if (dir == DIR_RIGHT)
     {
-      m_faceIndex++;
-      if ((size_t)m_faceIndex >= m_faces.size()) m_faceIndex = 0;
+      (*m_currentIndex)++;
+      if ((*m_currentIndex) >= (*m_currentMax)) (*m_currentIndex) = 0;
     }
-
-    if (oldIndex != m_faceIndex)
+    else if (dir == DIR_UP)
     {
-      reloadTexture();
+      if (static_cast<int>(m_editMode) != static_cast<int>(MODE_HEAD))
+      {
+        m_editMode = static_cast<EditMode>( static_cast<int>(m_editMode) - 1 );
+        setupPointers();
+      }
     }
-
-    setCurrentChoice(m_faceIndex);
+    else if (dir == DIR_DOWN)
+    {
+      if (static_cast<int>(m_editMode) != static_cast<int>(MODE_EAR))
+      {
+        m_editMode = static_cast<EditMode>( static_cast<int>(m_editMode) + 1 );
+        setupPointers();
+      }
+    }
   }
 
   void resetChoice()
   {
-    m_faceIndex = 0;
-    setCurrentChoice(m_faceIndex);
-    reloadTexture();
+    m_currentHead     = 0;
+    m_currentEar      = 0;
+    m_currentEye      = 0;
+    m_currentEyeBrows = 0;
+    m_currentBeard    = 0;
+    m_currentHair     = 0;
+    m_currentNose     = 0;
+    m_currentMouth    = 0;
+
+    m_currentIndex = &m_currentHead;
+    m_currentMax   = &m_numberOfHeads;
+    m_editMode = MODE_HEAD;
   }
 
   void draw(sf::RenderTarget& target, int x, int y)
@@ -234,12 +287,13 @@ struct SelectFaceMenu : public Menu
     int xPos = config::GAME_RES_X / 2 - width / 2;
     int yPos = config::GAME_RES_Y / 2 - height / 2;
 
+    drawEditMode(target, xPos, yPos - 16);
+
     draw_frame(target, xPos, yPos, width, height);
 
-    sf::Sprite faceSprite;
-    faceSprite.setTexture(*m_faceTexture);
-    faceSprite.setPosition(xPos + 2, yPos + 2);
-    target.draw(faceSprite);
+    int drawPosX = xPos + 2;
+    int drawPosY = yPos + 2;
+    drawFace(target, drawPosX, drawPosY);
 
     sf::Sprite arrowLeft;
     arrowLeft.setTexture(*m_arrowTexture);
@@ -254,21 +308,189 @@ struct SelectFaceMenu : public Menu
     arrowRight.setPosition(xPos + width + 2, yPos + height / 2 - 4);
     target.draw(arrowRight);
   }
-private:
-  void reloadTexture()
+
+  void randomize()
   {
-    if (m_faceTexture)
+    m_currentHead     = random_range(0, m_numberOfHeads - 1);
+    m_currentEar      = random_range(0, m_numberOfEar - 1);
+    m_currentEye      = random_range(0, m_numberOfEyes - 1);
+    m_currentEyeBrows = random_range(0, m_numberOfEyeBrows - 1);
+    m_currentBeard    = random_range(0, m_numberOfBeards - 1);
+    m_currentHair     = random_range(0, m_numberOfHair - 1);
+    m_currentNose     = random_range(0, m_numberOfNose - 1);
+    m_currentMouth    = random_range(0, m_numberOfMouth - 1);
+  }
+
+  std::string saveFace()
+  {
+    std::vector<int> indices{m_currentHead, m_currentEar, m_currentEye, m_currentEyeBrows, m_currentBeard, m_currentHair, m_currentNose, m_currentMouth};
+
+    std::string hashString;
+    for (const auto& i : indices)
     {
-      cache::releaseTexture(m_faceTexture);
+      hashString += toString(i);
     }
 
-    m_faceTexture = cache::loadTexture("Faces/" + m_faces[m_faceIndex]);
+    hashString += ".png";
+    TRACE("Saving face %s.", hashString.c_str());
+
+    sf::RenderTexture texture;
+    texture.create(FaceW, FaceH);
+    texture.clear(sf::Color::Transparent);
+    drawFace(texture, 0, 0);
+
+    texture.display();
+    sf::Image imageToSave = texture.getTexture().copyToImage();
+    if (imageToSave.saveToFile(config::res_path("Faces/" + hashString)))
+    {
+      TRACE("Image successfully saved.");
+    }
+    else
+    {
+      CRASH("Failed to save %s!!!", hashString.c_str());
+    }
+
+    return hashString;
   }
 private:
-  std::vector<std::string> m_faces;
-  int m_faceIndex;
-  sf::Texture* m_faceTexture;
+  void drawFace(sf::RenderTarget& target, int drawPosX, int drawPosY) const
+  {
+    drawPart(target, m_heads, m_currentHead, FaceW, FaceH, drawPosX, drawPosY);
+    drawPart(target, m_ears,  m_currentEar,  FaceW, FaceH, drawPosX, drawPosY);
+    drawPart(target, m_eyes,  m_currentEye, EyesW, EyesH, drawPosX, drawPosY + FaceH / 2 - EyesH / 2);
+    drawPart(target, m_eyebrows, m_currentEyeBrows, EyesW, EyesH, drawPosX, drawPosY);
+    drawPart(target, m_beards, m_currentBeard, EyesW, EyesH, drawPosX, drawPosY + FaceH / 2);
+    drawPart(target, m_noses, m_currentNose, EyesW, EyesH, drawPosX, drawPosY + FaceH / 2 - EyesH / 2);
+    drawPart(target, m_mouths, m_currentMouth, EyesW, EyesH, drawPosX, drawPosY + FaceH / 2);
+    drawPart(target, m_hairStyles, m_currentHair, FaceW, FaceH, drawPosX, drawPosY);
+  }
+
+  void drawEditMode(sf::RenderTarget& target, int x, int y) const
+  {
+    std::string stringToDraw;
+
+    switch (m_editMode)
+    {
+    case MODE_HEAD:
+      stringToDraw = "Choose head";
+      break;
+    case MODE_EYE:
+      stringToDraw = "Choose eyes";
+      break;
+    case MODE_EYEBROW:
+      stringToDraw = "Choose eyebrows";
+      break;
+    case MODE_BEARD:
+      stringToDraw = "Choose beard";
+      break;
+    case MODE_HAIR:
+      stringToDraw = "Choose hair";
+      break;
+    case MODE_NOSE:
+      stringToDraw = "Choose nose";
+      break;
+    case MODE_MOUTH:
+      stringToDraw = "Choose mouth";
+      break;
+    case MODE_EAR:
+      stringToDraw = "Choose ears";
+      break;
+    }
+
+    static const std::string randomStr = "Press R to randomize";
+
+    draw_text_bmp(target, x - 8 * randomStr.size() / 2, y - 8, "%s", randomStr.c_str());
+    draw_text_bmp(target, x - 8 * (stringToDraw.size() / 2), y, "%s (%d/%d)",
+      stringToDraw.c_str(), (*m_currentIndex) + 1, *m_currentMax);
+  }
+
+  void setupPointers()
+  {
+    switch (m_editMode)
+    {
+    case MODE_HEAD:
+      m_currentIndex = &m_currentHead;
+      m_currentMax   = &m_numberOfHeads;
+      break;
+    case MODE_EYE:
+      m_currentIndex = &m_currentEye;
+      m_currentMax   = &m_numberOfEyes;
+      break;
+    case MODE_EYEBROW:
+      m_currentIndex = &m_currentEyeBrows;
+      m_currentMax   = &m_numberOfEyeBrows;
+      break;
+    case MODE_BEARD:
+      m_currentIndex = &m_currentBeard;
+      m_currentMax   = &m_numberOfBeards;
+      break;
+    case MODE_HAIR:
+      m_currentIndex = &m_currentHair;
+      m_currentMax   = &m_numberOfHair;
+      break;
+    case MODE_NOSE:
+      m_currentIndex = &m_currentNose;
+      m_currentMax   = &m_numberOfNose;
+      break;
+    case MODE_MOUTH:
+      m_currentIndex = &m_currentMouth;
+      m_currentMax   = &m_numberOfMouth;
+      break;
+    case MODE_EAR:
+      m_currentIndex = &m_currentEar;
+      m_currentMax   = &m_numberOfEar;
+      break;
+    }
+  }
+
+  void drawPart(sf::RenderTarget& target, sf::Texture* textureToUse, int index, int dimX, int dimY, int posX, int posY) const
+  {
+    int amountX = textureToUse->getSize().x / dimX;
+
+    int selX = (index % amountX) * dimX;
+    int selY = (index / amountX) * dimY;
+
+    sf::Sprite sprite;
+    sprite.setPosition(posX, posY);
+    sprite.setTexture(*textureToUse);
+    sprite.setTextureRect(sf::IntRect{selX, selY, dimX, dimY});
+
+    target.draw(sprite);
+  }
+private:
   sf::Texture* m_arrowTexture;
+
+  sf::Texture* m_heads;
+  sf::Texture* m_ears;
+  sf::Texture* m_eyes;
+  sf::Texture* m_eyebrows;
+  sf::Texture* m_beards;
+  sf::Texture* m_hairStyles;
+  sf::Texture* m_noses;
+  sf::Texture* m_mouths;
+
+  EditMode m_editMode;
+
+  int m_currentHead     = 0;
+  int m_currentEar      = 0;
+  int m_currentEye      = 0;
+  int m_currentEyeBrows = 0;
+  int m_currentBeard    = 0;
+  int m_currentHair     = 0;
+  int m_currentNose     = 0;
+  int m_currentMouth    = 0;
+
+  int m_numberOfHeads;
+  int m_numberOfEar;
+  int m_numberOfEyes;
+  int m_numberOfEyeBrows;
+  int m_numberOfBeards;
+  int m_numberOfHair;
+  int m_numberOfNose;
+  int m_numberOfMouth;
+
+  int* m_currentIndex = &m_currentHead;
+  int* m_currentMax   = &m_numberOfHeads;
 };
 
 struct GenerateMenu : public Menu, public Proxy::Listener
@@ -358,7 +580,7 @@ struct GenerateMenu : public Menu, public Proxy::Listener
 
       if (!m_selectFaceMenu.isVisible())
       {
-        theFace = m_selectFaceMenu.getCurrentMenuChoice();
+        theFace = m_selectFaceMenu.saveFace();
 
         reloadFace();
 
@@ -498,6 +720,14 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     {
       cache::releaseTexture(m_faceTexture);
       m_faceTexture = 0;
+    }
+  }
+
+  void randomizeFace()
+  {
+    if (m_state == STATE_SELECT_AVATAR)
+    {
+      m_selectFaceMenu.randomize();
     }
   }
 
@@ -817,6 +1047,11 @@ struct SelectMenu : public Menu
       draw_status(target, m_player->getCharacter(m_inspectChar), 24, 24);
     }
   }
+
+  void randomizeFace()
+  {
+    m_genMenu.randomizeFace();
+  }
 private:
   void defaultEquip()
   {
@@ -901,6 +1136,10 @@ void CharGen::handleKeyPress(sf::Keyboard::Key key)
     else if (key == sf::Keyboard::Escape)
     {
       m_selectMenu->handleEscape();
+    }
+    else if (key == sf::Keyboard::R)
+    {
+      dynamic_cast<SelectMenu*>(m_selectMenu)->randomizeFace();
     }
 
     if (key == sf::Keyboard::Down) m_selectMenu->moveArrow(DIR_DOWN);
