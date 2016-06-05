@@ -15,4 +15,6 @@ enum Direction
 Direction directionFromString(const std::string& dirStr);
 std::string directionToString(Direction dir);
 
+int getAngleFromDirection(Direction dir);
+
 #endif

@@ -26,3 +26,20 @@ std::string directionToString(Direction dir)
 
   return "DIR_RANDOM";
 }
+
+int getAngleFromDirection(Direction dir)
+{
+  switch (dir)
+  {
+  case DIR_RIGHT:
+    return 0;
+  case DIR_LEFT:
+    return 180;
+  case DIR_UP:
+    return 90;
+  case DIR_DOWN:
+    return 270;
+  default:
+    return 0;
+  }
+}

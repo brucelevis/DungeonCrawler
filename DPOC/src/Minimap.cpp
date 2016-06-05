@@ -3,10 +3,13 @@
 #include "Player.h"
 #include "Game.h"
 #include "draw_text.h"
+#include "Drawing.h"
 #include "Minimap.h"
 
 namespace
 {
+  const int TILE_SIZE = 8;
+
   Entity* _entity_at(const std::vector<Entity*>& entities, int x, int y)
   {
     for (auto it = entities.begin(); it != entities.end(); ++it)
@@ -20,22 +23,11 @@ namespace
     return nullptr;
   }
 
-  void drawRectangle(sf::RenderTarget& target, int x, int y, const sf::Color& color)
-  {
-    sf::RectangleShape dotRect;
-    dotRect.setSize(sf::Vector2f(8, 8));
-    dotRect.setFillColor(color);
-    dotRect.setPosition(x, y);
-    target.draw(dotRect);
-  }
-
-  void drawIcon(sf::RenderTarget& target, sf::Texture* texture, int x, int y)
-  {
-    sf::Sprite sprite;
-    sprite.setTexture(*texture);
-    sprite.setPosition(x, y);
-    target.draw(sprite);
-  }
+  const int TileId_WallMarker = 1;
+  const int TileId_Floor      = 2;
+  const int TileId_Obstacle   = 6;
+  const int TileId_Door       = 14;
+  const int TileId_Chest      = 25;
 }
 
 Minimap::Minimap(int x, int y, int w, int h)
@@ -48,15 +40,15 @@ Minimap::Minimap(int x, int y, int w, int h)
    m_playerX(0),
    m_playerY(0),
    m_currentMap(0),
-   m_campsiteIcon( cache::loadTexture("Icons/Campfire.png") ),
-   m_doorIcon( cache::loadTexture("Icons/Door.png") )
+   m_mapTiles(cache::loadTexture("UI/MapTiles.png")),
+   m_arrowTexture(cache::loadTexture("UI/MapMarkerArrow.png"))
 {
 }
 
 Minimap::~Minimap()
 {
-  cache::releaseTexture(m_campsiteIcon);
-  cache::releaseTexture(m_doorIcon);
+  cache::releaseTexture(m_mapTiles);
+  cache::releaseTexture(m_arrowTexture);
 }
 
 void Minimap::updatePosition(Map* currentMap, int x, int y, int playerX, int playerY)
@@ -73,8 +65,8 @@ void Minimap::draw(sf::RenderTarget& target) const
   if (!m_currentMap)
     return;
 
-  int numberX = m_w / 8;
-  int numberY = m_h / 8;
+  int numberX = m_w / TILE_SIZE;
+  int numberY = m_h / TILE_SIZE;
 
   auto entities = m_currentMap->getEntities();
 
@@ -86,18 +78,18 @@ void Minimap::draw(sf::RenderTarget& target) const
   {
     for (int x = m_centerX - numberX / 2, px = 0; x <= m_centerX + numberX / 2 + addX; x++, px++)
     {
-      int tx = m_x + px * 8;
-      int ty = m_y + py * 8;
+      int tx = m_x + px * TILE_SIZE;
+      int ty = m_y + py * TILE_SIZE;
 
       if (x < 0 || y < 0 || x >= m_currentMap->getWidth() || y >= m_currentMap->getHeight())
       {
-        drawRectangle(target, tx, ty, sf::Color::Black);
+        draw_rectangle(target, tx, ty, TILE_SIZE, TILE_SIZE, sf::Color::Black);
         continue;
       }
 
       if (!m_currentMap->isExplored(x, y))
       {
-        drawRectangle(target, tx, ty, sf::Color::Black);
+        draw_rectangle(target, tx, ty, TILE_SIZE, TILE_SIZE, sf::Color::Black);
         continue;
       }
 
@@ -105,66 +97,31 @@ void Minimap::draw(sf::RenderTarget& target) const
 
       if (tile && tile->tileId > -1)
       {
-        drawRectangle(target, tx, ty, sf::Color::Blue);
+        drawTile(target, TileId_WallMarker, tx, ty, sf::Color::Blue);
       }
       else if (m_currentMap->blocking(x, y))
       {
-        drawRectangle(target, tx, ty, sf::Color::Red);
+        drawTile(target, TileId_Obstacle, tx, ty, sf::Color::Red);
       }
       else
       {
         // Probably a floor.
-        drawRectangle(target, tx, ty, sf::Color(0, 127, 255));
-      }
-      if (x == m_playerX && y == m_playerY)
-      {
-        drawRectangle(target, tx, ty, sf::Color::Green);
-
-        sf::RectangleShape dotRect;
-
-        auto player = Game::instance().getPlayer()->player();
-        switch (player->getDirection())
-        {
-        case DIR_LEFT:
-          dotRect.setSize(sf::Vector2f(4, 1));
-          dotRect.setFillColor(sf::Color::Black);
-          dotRect.setPosition(tx, ty + 4);
-          break;
-        case DIR_RIGHT:
-          dotRect.setSize(sf::Vector2f(4, 1));
-          dotRect.setFillColor(sf::Color::Black);
-          dotRect.setPosition(tx + 4, ty + 4);
-          break;
-        case DIR_UP:
-          dotRect.setSize(sf::Vector2f(1, 4));
-          dotRect.setFillColor(sf::Color::Black);
-          dotRect.setPosition(tx + 4, ty);
-          break;
-        case DIR_DOWN:
-          dotRect.setSize(sf::Vector2f(1, 4));
-          dotRect.setFillColor(sf::Color::Black);
-          dotRect.setPosition(tx + 4, ty + 4);
-          break;
-        default:
-          break;
-        }
-
-        target.draw(dotRect);
+        drawTile(target, TileId_Floor, tx, ty, sf::Color(0, 127, 255));
       }
 
       if (Entity* entity = _entity_at(entities, x, y))
       {
-        if (entity->getName() == "campsite")
+        if (entity->getName() == "chest")
         {
-          drawIcon(target, m_campsiteIcon, tx, ty);
+          drawTile(target, TileId_Chest, tx, ty, sf::Color::Yellow);
         }
         else if (entity->getType() == "door")
         {
-          drawIcon(target, m_doorIcon, tx, ty);
+          drawTile(target, TileId_Door, tx, ty, sf::Color{0x3a, 0x2a, 0x00});
         }
         else if (entity->getType() == "obstacle")
         {
-          drawRectangle(target, tx, ty, sf::Color::Red);
+          drawTile(target, TileId_Obstacle, tx, ty, sf::Color::Red);
         }
         else
         {
@@ -172,24 +129,31 @@ void Minimap::draw(sf::RenderTarget& target) const
         }
       }
 
+      if (x == m_playerX && y == m_playerY)
+      {
+        drawArrow(target, get_player()->player()->getDirection(), tx + TILE_SIZE/2, ty + TILE_SIZE/2);
+      }
     }
   }
+
   for (int y = 1; y < numberY; y++)
   {
     sf::RectangleShape rect;
     rect.setSize(sf::Vector2f(m_w, 1));
-    rect.setPosition(m_x, m_y + y * 8);
+    rect.setPosition(m_x, m_y + y * TILE_SIZE);
     rect.setFillColor(sf::Color::White);
     target.draw(rect);
   }
+
   for (int x = 1; x < numberX; x++)
   {
     sf::RectangleShape rect;
     rect.setSize(sf::Vector2f(1, m_h));
-    rect.setPosition(m_x + x * 8, m_y);
+    rect.setPosition(m_x + x * TILE_SIZE, m_y);
     rect.setFillColor(sf::Color::White);
     target.draw(rect);
   }
+
   sf::RectangleShape minimap;
   minimap.setSize(sf::Vector2f(m_w, m_h));
   minimap.setFillColor(sf::Color::Transparent);
@@ -197,4 +161,24 @@ void Minimap::draw(sf::RenderTarget& target) const
   minimap.setOutlineThickness(1);
   minimap.setPosition(m_x, m_y);
   target.draw(minimap);
+}
+
+void Minimap::drawArrow(sf::RenderTarget& target, Direction direction, int tx, int ty) const
+{
+  sf::Sprite sprite;
+  sprite.setTexture(*m_arrowTexture);
+  sprite.setOrigin(m_arrowTexture->getSize().x / 2, m_arrowTexture->getSize().y / 2);
+  sprite.rotate(-getAngleFromDirection(direction));
+  sprite.setPosition(tx, ty);
+  target.draw(sprite);
+}
+
+void Minimap::drawTile(sf::RenderTarget& target, int tileId, int tx, int ty, const sf::Color& color) const
+{
+  int numTilesX = m_mapTiles->getSize().x / TILE_SIZE;
+
+  int tileX = tileId % numTilesX;
+  int tileY = tileId / numTilesX;
+
+  draw_texture(target, m_mapTiles, tileX * TILE_SIZE, tileY * TILE_SIZE, TILE_SIZE, TILE_SIZE, tx, ty, color);
 }
