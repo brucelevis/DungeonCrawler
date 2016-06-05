@@ -1557,7 +1557,11 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
   {
     if (!m_actionMenuHidden)
     {
-      draw_frame(target, x, y, config::GAME_RES_X, m_actionMenu->getHeight() + 16);
+      draw_frame(target, x, y, config::GAME_RES_X, 24);
+    }
+    else
+    {
+      draw_frame(target, x + 80, y, m_statusMenu->getWidth(), 24);
     }
 
     if (currentState == STATE_SELECT_MONSTER &&
@@ -1578,6 +1582,13 @@ void BattleMenu::draw(sf::RenderTarget& target, int x, int y)
       if (!m_actionMenuHidden)
       {
         draw_text_bmp(target, x + 8, y + 8, "Action");
+        draw_text_bmp(target, x + 88, y + 8, "Name");
+        draw_text_bmp(target, x + 136, y + 8, "Cond");
+        draw_text_bmp(target, x + 180, y + 8, "%s", vocab_mid(terms::hp).c_str());
+        draw_text_bmp(target, x + 216, y + 8, "%s", vocab_mid(terms::mp).c_str());
+      }
+      else
+      {
         draw_text_bmp(target, x + 88, y + 8, "Name");
         draw_text_bmp(target, x + 136, y + 8, "Cond");
         draw_text_bmp(target, x + 180, y + 8, "%s", vocab_mid(terms::hp).c_str());

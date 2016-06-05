@@ -209,6 +209,9 @@ void Message::update()
 
 void Message::draw(sf::RenderTarget& target)
 {
-  draw_frame(target, config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 70, 256, 64);
-  draw_text_bmp(target, 8 + config::GAME_RES_X / 2 - 256 / 2, config::GAME_RES_Y - 70 + 6, "%s", m_currentBuffer.c_str());
+  const int messageBoxWidth = 256;
+  const int messageBoxHeight = config::GAME_RES_Y - config::RAYCASTER_RES_Y;
+
+  draw_frame(target, config::GAME_RES_X / 2 - messageBoxWidth / 2, config::RAYCASTER_RES_Y, messageBoxWidth, messageBoxHeight);
+  draw_text_bmp(target, 8 + config::GAME_RES_X / 2 - messageBoxWidth / 2, config::GAME_RES_Y - 70 + 6, "%s", m_currentBuffer.c_str());
 }

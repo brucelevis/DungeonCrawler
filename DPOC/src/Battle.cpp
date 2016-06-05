@@ -961,7 +961,7 @@ void Battle::draw(sf::RenderTarget& target)
     target.draw(bgSprite);
   }
 
-  draw_gui_frame(target, 0, config::RAYCASTER_RES_Y, config::GAME_RES_X, config::GAME_RES_Y - config::RAYCASTER_RES_Y);
+  draw_frame(target, 0, config::RAYCASTER_RES_Y, config::GAME_RES_X, config::GAME_RES_Y - config::RAYCASTER_RES_Y);
 
   m_battleMenu.draw(target, battleMenuX, 152);
   if ((m_state != STATE_SELECT_ACTIONS && m_state != STATE_BATTLE_BEGINS) && m_battleMenu.isVisible())

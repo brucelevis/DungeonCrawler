@@ -51,16 +51,16 @@ private:
   }
 };
 
-void draw_frame(sf::RenderTarget& target, int x, int y, int w, int h)
-{
-  sf::RectangleShape rect;
-  rect.setSize(sf::Vector2f(w - 4, h - 4));
-  rect.setPosition(2 + x, 2 + y);
-  rect.setFillColor(sf::Color::Black);
-  rect.setOutlineColor(sf::Color::White);
-  rect.setOutlineThickness(2.0f);
-  target.draw(rect);
-}
+//void draw_frame(sf::RenderTarget& target, int x, int y, int w, int h)
+//{
+//  sf::RectangleShape rect;
+//  rect.setSize(sf::Vector2f(w - 4, h - 4));
+//  rect.setPosition(2 + x, 2 + y);
+//  rect.setFillColor(sf::Color::Black);
+//  rect.setOutlineColor(sf::Color::White);
+//  rect.setOutlineThickness(2.0f);
+//  target.draw(rect);
+//}
 
 void draw_frame(sf::RenderTarget& target, int x, int y, int w, int h, int thickness)
 {
@@ -73,31 +73,11 @@ void draw_frame(sf::RenderTarget& target, int x, int y, int w, int h, int thickn
   target.draw(rect);
 }
 
-void draw_gui_frame(sf::RenderTarget& target, int x, int y, int w, int h)
+void draw_frame(sf::RenderTarget& target, int x, int y, int w, int h)
 {
   GuiParts& guiParts = GuiParts::instance();
 
   sf::Sprite sprite;
-
-  // Top left
-  sprite.setTexture(guiParts.topLeft);
-  sprite.setPosition(x, y);
-  target.draw(sprite);
-
-  // Top right
-  sprite.setTexture(guiParts.topRight);
-  sprite.setPosition(x + w - partSize, y);
-  target.draw(sprite);
-
-  // Bottom right
-  sprite.setTexture(guiParts.bottomRight);
-  sprite.setPosition(x + w - partSize, y + h - partSize);
-  target.draw(sprite);
-
-  // Bottom left
-  sprite.setTexture(guiParts.bottomLeft);
-  sprite.setPosition(x, y + h - partSize);
-  target.draw(sprite);
 
   sprite.setTexture(guiParts.middle);
   sprite.setPosition(x + partSize, y + partSize);
@@ -122,5 +102,26 @@ void draw_gui_frame(sf::RenderTarget& target, int x, int y, int w, int h)
   sprite.setTexture(guiParts.rightBorder);
   sprite.setPosition(x + w - partSize, y + partSize);
   sprite.setTextureRect(sf::IntRect{0, 0, partSize, h - partSize*2});
+  target.draw(sprite);
+
+  sprite.setTextureRect(sf::IntRect{0, 0, partSize, partSize});
+  // Top left
+  sprite.setTexture(guiParts.topLeft);
+  sprite.setPosition(x, y);
+  target.draw(sprite);
+
+  // Top right
+  sprite.setTexture(guiParts.topRight);
+  sprite.setPosition(x + w - partSize, y);
+  target.draw(sprite);
+
+  // Bottom right
+  sprite.setTexture(guiParts.bottomRight);
+  sprite.setPosition(x + w - partSize, y + h - partSize);
+  target.draw(sprite);
+
+  // Bottom left
+  sprite.setTexture(guiParts.bottomLeft);
+  sprite.setPosition(x, y + h - partSize);
   target.draw(sprite);
 }

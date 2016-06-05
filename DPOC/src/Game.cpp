@@ -343,7 +343,7 @@ void Game::drawParty(sf::RenderTarget& target) const
   int delta = config::GAME_RES_Y - config::RAYCASTER_RES_Y;
   int yPos = config::RAYCASTER_RES_Y + (delta / 2) - 24;
 
-  draw_gui_frame(target, 0, config::RAYCASTER_RES_Y, config::GAME_RES_X, config::GAME_RES_Y - config::RAYCASTER_RES_Y);
+  draw_frame(target, 0, config::RAYCASTER_RES_Y, config::GAME_RES_X, config::GAME_RES_Y - config::RAYCASTER_RES_Y);
 
   auto party = m_player->getParty();
   int partyPosX = 16;
