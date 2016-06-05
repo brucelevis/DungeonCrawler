@@ -435,13 +435,13 @@ struct GenerateMenu : public Menu, public Proxy::Listener
     if (m_state == STATE_ENTER_NAME)
     {
       int width = MAX_NAME_SIZE * 8 + 16;
-      int height = 16;
+      int height = 24;
 
       int xPos = config::GAME_RES_X / 2 - width / 2;
       int yPos = config::GAME_RES_Y / 2 - height / 2;
 
       draw_frame(target, xPos, yPos, width, height);
-      draw_text_bmp(target, xPos + 8, yPos + 4, "%s%s",
+      draw_text_bmp(target, xPos + 8, yPos + 8, "%s%s",
           m_nameBuffer.c_str(), m_nameBuffer.size() < MAX_NAME_SIZE ? "_" : "");
     }
 
