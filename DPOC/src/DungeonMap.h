@@ -24,6 +24,7 @@ private:
   Minimap m_minimap;
   int m_centerX, m_centerY;
   sf::Texture* m_arrowTexture;
+  sf::Texture* m_mapTexture;
 };
 
 

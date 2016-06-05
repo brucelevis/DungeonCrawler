@@ -2,10 +2,13 @@
 #include "Player.h"
 #include "Config.h"
 #include "Map.h"
+#include "Frame.h"
+#include "Drawing.h"
+
 #include "DungeonMap.h"
 
-static const int WIDTH = 168;
-static const int HEIGHT = 168;
+static const int WIDTH = 128;
+static const int HEIGHT = 96;
 
 #define POS_X (config::GAME_RES_X / 2 - WIDTH / 2)
 #define POS_Y (config::GAME_RES_Y / 2 - HEIGHT / 2)
@@ -18,7 +21,8 @@ DungeonMap::DungeonMap(Map* map)
               HEIGHT ),
    m_centerX(get_player()->player()->x),
    m_centerY(get_player()->player()->y),
-   m_arrowTexture(cache::loadTexture("UI/Arrow_Big.png"))
+   m_arrowTexture(cache::loadTexture("UI/Arrow_Big.png")),
+   m_mapTexture(cache::loadTexture("UI/Map.png"))
 {
   m_minimap.updatePosition(m_map, m_centerX, m_centerY, m_centerX, m_centerY);
 }
@@ -26,6 +30,7 @@ DungeonMap::DungeonMap(Map* map)
 DungeonMap::~DungeonMap()
 {
   cache::releaseTexture(m_arrowTexture);
+  cache::releaseTexture(m_mapTexture);
 }
 
 void DungeonMap::update()
@@ -35,6 +40,11 @@ void DungeonMap::update()
 
 void DungeonMap::draw(sf::RenderTarget& target)
 {
+  const int mapPosX = config::GAME_RES_X / 2 - m_mapTexture->getSize().x / 2;
+  const int mapPosY = config::GAME_RES_Y / 2 - m_mapTexture->getSize().y / 2;
+
+  draw_frame(target, 0, 0, config::GAME_RES_X, config::GAME_RES_Y);
+  draw_texture(target, m_mapTexture, mapPosX, mapPosY);
   m_minimap.draw(target);
 
   int left  = POS_X - 19;

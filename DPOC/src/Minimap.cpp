@@ -78,17 +78,30 @@ void Minimap::draw(sf::RenderTarget& target) const
 
   auto entities = m_currentMap->getEntities();
 
-  for (int y = m_centerY - numberY / 2, py = 0; y <= m_centerY + numberY / 2; y++, py++)
+  // If even number, need to adjust the check below.
+  int addX = ((numberX % 2) == 0) ? -1 : 0;
+  int addY = ((numberY % 2) == 0) ? -1 : 0;
+
+  for (int y = m_centerY - numberY / 2, py = 0; y <= m_centerY + numberY / 2 + addY; y++, py++)
   {
-    for (int x = m_centerX - numberX / 2, px = 0; x <= m_centerX + numberX / 2; x++, px++)
+    for (int x = m_centerX - numberX / 2, px = 0; x <= m_centerX + numberX / 2 + addX; x++, px++)
     {
-      if (!m_currentMap->isExplored(x, y))
-        continue;
-
-      Tile* tile = m_currentMap->getTileAt(x, y, "wall");
-
       int tx = m_x + px * 8;
       int ty = m_y + py * 8;
+
+      if (x < 0 || y < 0 || x >= m_currentMap->getWidth() || y >= m_currentMap->getHeight())
+      {
+        drawRectangle(target, tx, ty, sf::Color::Black);
+        continue;
+      }
+
+      if (!m_currentMap->isExplored(x, y))
+      {
+        drawRectangle(target, tx, ty, sf::Color::Black);
+        continue;
+      }
+
+      Tile* tile = m_currentMap->getTileAt(x, y, "wall");
 
       if (tile && tile->tileId > -1)
       {
