@@ -82,8 +82,8 @@ public:
 
   Script();
 
-  bool loadFromFile(const std::string& file, const std::vector<std::string>& arguments = {});
-  void loadFromLines(std::vector<std::string> lines, const std::vector<std::string>& arguments = {});
+  bool loadFromFile(const std::string& file, const std::unordered_map<std::string, std::string>& arguments = std::unordered_map<std::string, std::string>());
+  void loadFromLines(std::vector<std::string> lines, const std::unordered_map<std::string, std::string>& arguments = std::unordered_map<std::string, std::string>());
 
   bool isLoaded() const { return m_loaded; }
 

@@ -135,19 +135,19 @@ static void strip_comments(std::vector<std::string>& lines)
   }
 }
 
-static void replace_arguments(std::vector<std::string>& lines, const std::vector<std::string>& arguments)
+static void replace_arguments(std::vector<std::string>& lines, const std::unordered_map<std::string, std::string>& arguments)
 {
   for (std::string& line : lines)
   {
-    for (size_t i = 0; i < arguments.size(); i++)
+    for (const auto& pair : arguments)
     {
-      int varIndex = i + 1;
-      std::string varToken = "@" + toString(varIndex);
+      std::string varToken = pair.first;
+      std::string varTranslate = pair.second;
 
       size_t pos = std::string::npos;
       while ((pos = line.find(varToken)) != std::string::npos)
       {
-        line.replace(pos, varToken.size(), arguments[i]);
+        line.replace(pos, varToken.size(), varTranslate);
       }
     }
   }
@@ -308,7 +308,7 @@ Script::Script()
 
 }
 
-bool Script::loadFromFile(const std::string& file, const std::vector<std::string>& arguments)
+bool Script::loadFromFile(const std::string& file, const std::unordered_map<std::string, std::string>& arguments)
 {
   m_currentIndex = 0;
   m_loaded = true;
@@ -334,7 +334,7 @@ bool Script::loadFromFile(const std::string& file, const std::vector<std::string
   return false;
 }
 
-void Script::loadFromLines(std::vector<std::string> lines, const std::vector<std::string>& arguments)
+void Script::loadFromLines(std::vector<std::string> lines, const std::unordered_map<std::string, std::string>& arguments)
 {
   strip_comments(lines);
   replace_arguments(lines, arguments);

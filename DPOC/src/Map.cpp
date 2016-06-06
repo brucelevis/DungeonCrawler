@@ -24,15 +24,18 @@ namespace
     luckToBeat = fromString<int>(trapData[1]);
   }
 
-  std::vector<std::string> _parse_script_arguments(const TiledLoader& loader, size_t objectIndex)
+  std::unordered_map<std::string, std::string> _parse_script_arguments(const TiledLoader& loader, size_t objectIndex)
   {
-    // Parse arguments (argument1 ... argument9). Empty args will be ignored later.
-    std::vector<std::string> scriptArguments;
-    for (int i = 1; i <= 9; i++)
+    std::unordered_map<std::string, std::string> scriptArguments;
+
+    for (const auto& pair : loader.getObject(objectIndex)->properties)
     {
-      std::string argument = loader.getObjectProperty(objectIndex, "argument" + toString(i));
-      scriptArguments.push_back(argument);
+      if (pair.first.front() == '@')
+      {
+        scriptArguments[pair.first] = pair.second;
+      }
     }
+
     return scriptArguments;
   }
 }

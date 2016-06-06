@@ -102,8 +102,8 @@
   </object>
   <object name="magic transfer" x="576" y="288" width="32" height="32">
    <properties>
-    <property name="argument1" value="8"/>
-    <property name="argument2" value="9"/>
+    <property name="@x" value="8"/>
+    <property name="@y" value="9"/>
     <property name="talkScript" value="magic_teleport.script"/>
    </properties>
   </object>
@@ -119,11 +119,11 @@
   </object>
   <object name="SouthDoorButton" x="224" y="160" width="32" height="32">
    <properties>
-    <property name="argument1" value="7"/>
-    <property name="argument2" value="5"/>
-    <property name="argument3" value="531"/>
-    <property name="argument4" value="530"/>
-    <property name="argument5" value="&quot;SouthDoor&quot;"/>
+    <property name="@defaultTileId" value="530"/>
+    <property name="@doorToOpen" value="&quot;SouthDoor&quot;"/>
+    <property name="@pressedTileId" value="531"/>
+    <property name="@x" value="7"/>
+    <property name="@y" value="5"/>
     <property name="talkScript" value="open_door_toggle.script"/>
    </properties>
   </object>

@@ -50,7 +50,7 @@ Entity::~Entity()
   delete m_sprite;
 }
 
-void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript, const std::vector<std::string>& arguments)
+void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript, const std::unordered_map<std::string, std::string>& arguments)
 {
   TRACE("Entity[%s]::loadScripts(%s, %s)", getTag().c_str(), talkScript.c_str(), stepScript.c_str());
 

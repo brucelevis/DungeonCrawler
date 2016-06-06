@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include <string>
+#include <unordered_map>
 
 #include <SFML/Graphics.hpp>
 
@@ -80,7 +81,7 @@ public:
   void setWalkThrough(bool walkthrough) { m_walkThrough = walkthrough; }
   void setWalkSpeed(float speed) { m_speed = speed; }
 
-  void loadScripts(const std::string& talkScript, const std::string& stepScript, const std::vector<std::string>& arguments);
+  void loadScripts(const std::string& talkScript, const std::string& stepScript, const std::unordered_map<std::string, std::string>& arguments);
 
   void setFixedDirection(bool fixed) { m_fixedDirection = fixed; }
 
