@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="tree" color="#005500"/>
+ <objecttype name="obstacle" color="#ff0000"/>
+ <objecttype name="stairs_down" color="#a0a0a4"/>
+ <objecttype name="stairs_up" color="#a0a0a4"/>
+ <objecttype name="chest" color="#ffff00"/>
+ <objecttype name="door" color="#aa5500"/>
+</objecttypes>
