@@ -34,12 +34,11 @@ public:
   float getOpeningCount() const;
 
   DoorType getType() const { return m_type; }
-private:
   void open();
+  void close();
+private:
   void openFinished();
   bool isOpen() const;
-
-  void close();
   void closeFinished();
 private:
   std::string m_keyRequired;

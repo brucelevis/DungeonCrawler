@@ -16,6 +16,7 @@
 #include "Sound.h"
 #include "Encounter.h"
 #include "Battle.h"
+#include "Door.h"
 
 #include "Error.h"
 #include "logger.h"
@@ -644,6 +645,14 @@ Script::ScriptData Script::parseLine(const std::string& line, int lineNumber) co
     data.arguments["x"] = strings[1];
     data.arguments["y"] = strings[2];
   }
+  else if (opcode == OP_OPEN_DOOR)
+  {
+    data.arguments["entityName"] = strings[1];
+  }
+  else if (opcode == OP_CLOSE_DOOR)
+  {
+    data.arguments["entityName"] = strings[1];
+  }
   else
   {
     TRACE("Error when parsing line %s: No matching opcode found.", line.c_str());
@@ -693,7 +702,9 @@ Script::Opcode Script::getOpCode(const std::string& opStr) const
     { "set_player_dir", OP_SET_PLAYER_DIR },
     { "change_tile", OP_CHANGE_TILE },
     { "flash_screen", OP_FLASH_SCREEN },
-    { "change_player_position", OP_CHANGE_PLAYER_POSITION }
+    { "change_player_position", OP_CHANGE_PLAYER_POSITION },
+    { "open_door", OP_OPEN_DOOR },
+    { "close_door", OP_CLOSE_DOOR }
   };
 
   auto it = OP_MAP.find(opStr);
@@ -1191,5 +1202,49 @@ void Script::executeScriptLine()
     int y = fromString<int>(extractValue(data.arguments.at("y")));
 
     Game::instance().transferPlayer("", x, y);
+  }
+  else if (data.opcode == Script::OP_OPEN_DOOR)
+  {
+    std::string doorName = extractValue(data.arguments.at("entityName"));
+    bool foundDoor = false;
+
+    for (auto& entity : Game::instance().getCurrentMap()->getEntities())
+    {
+      if (entity->getName() == doorName)
+      {
+        if (auto door = dynamic_cast<Door*>(entity))
+        {
+          door->open();
+          foundDoor = true;
+        }
+      }
+    }
+
+    if (!foundDoor)
+    {
+      CRASH("No door with name %s found on map!", doorName.c_str());
+    }
+  }
+  else if (data.opcode == Script::OP_CLOSE_DOOR)
+  {
+    std::string doorName = extractValue(data.arguments.at("entityName"));
+    bool foundDoor = false;
+
+    for (auto& entity : Game::instance().getCurrentMap()->getEntities())
+    {
+      if (entity->getName() == doorName)
+      {
+        if (auto door = dynamic_cast<Door*>(entity))
+        {
+          door->close();
+          foundDoor = true;
+        }
+      }
+    }
+
+    if (!foundDoor)
+    {
+      CRASH("No door with name %s found on map!", doorName.c_str());
+    }
   }
 }

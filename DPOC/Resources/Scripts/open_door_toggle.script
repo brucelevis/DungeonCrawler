@@ -1,0 +1,19 @@
+# @1 = tileX
+# @2 = tileY
+# @3 = tileId_changed
+# @4 = tileId_default
+# @5 = door_name
+
+message "You hear a rumble in the distance."
+
+if %pressed == false
+  open_door @5
+  change_tile "wallfeature" @1 @2 @3
+  %pressed = true
+else
+  if %pressed == true
+    close_door @5
+    change_tile "wallfeature" @1 @2 @4
+    %pressed = false
+  endif
+endif
