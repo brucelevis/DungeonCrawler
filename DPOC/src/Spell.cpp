@@ -11,6 +11,7 @@
 #include "Message.h"
 #include "Character.h"
 #include "StatusEffect.h"
+#include "LuaBindings.h"
 #include "Spell.h"
 
 #include "XMLHelpers.h"
@@ -19,6 +20,14 @@
 using namespace tinyxml2;
 
 static std::vector<Spell> spells;
+
+namespace
+{
+  std::string _wrap_in_function(const std::string& formula)
+  {
+    return std::string("function __use_spell(a, b)\n return ") + formula + "\nend";
+  }
+}
 
 static SpellType spellTypeFromString(const std::string& type)
 {
@@ -269,6 +278,17 @@ int cast_spell(const Spell* spell, Character* caster, Character* target)
       {
         play_sound(config::get("SOUND_DEBUFF"));
       }
+    }
+  }
+
+  if (spell->spellType & SPELL_CUSTOM)
+  {
+    if (spell->formula.size())
+    {
+      std::string funcWrap = _wrap_in_function(spell->formula);
+
+      global_lua_env()->executeLine(funcWrap);
+      global_lua_env()->call_function("__use_spell", caster, target);
     }
   }
 
