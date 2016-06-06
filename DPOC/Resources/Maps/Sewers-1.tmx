@@ -76,7 +76,7 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1" width="30" height="30">
-  <object name="Stairs Up" gid="279" x="448" y="384">
+  <object name="Stairs Up" type="stairs_up" gid="279" x="448" y="384">
    <properties>
     <property name="@map" value="Town.tmx"/>
     <property name="@x" value="7"/>

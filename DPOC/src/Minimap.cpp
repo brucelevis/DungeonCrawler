@@ -26,6 +26,9 @@ namespace
   const int TileId_WallMarker = 1;
   const int TileId_Floor      = 2;
   const int TileId_Obstacle   = 6;
+  const int TileId_Tree       = 10;
+  const int TileId_StairsDown = 12;
+  const int TileId_StairsUp   = 13;
   const int TileId_Door       = 14;
   const int TileId_Chest      = 25;
 }
@@ -119,9 +122,21 @@ void Minimap::draw(sf::RenderTarget& target) const
         {
           drawTile(target, TileId_Door, tx, ty, sf::Color{0x3a, 0x2a, 0x00});
         }
+        else if (entity->getType() == "tree")
+        {
+          drawTile(target, TileId_Tree, tx, ty, sf::Color::Green);
+        }
         else if (entity->getType() == "obstacle")
         {
           drawTile(target, TileId_Obstacle, tx, ty, sf::Color::Red);
+        }
+        else if (entity->getType() == "stairs_down")
+        {
+          drawTile(target, TileId_StairsDown, tx, ty, sf::Color{127,127,127});
+        }
+        else if (entity->getType() == "stairs_up")
+        {
+          drawTile(target, TileId_StairsUp, tx, ty, sf::Color{127,127,127});
         }
         else
         {
