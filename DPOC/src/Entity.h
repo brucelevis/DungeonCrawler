@@ -81,7 +81,7 @@ public:
   void setWalkThrough(bool walkthrough) { m_walkThrough = walkthrough; }
   void setWalkSpeed(float speed) { m_speed = speed; }
 
-  void loadScripts(const std::string& talkScript, const std::string& stepScript, const std::unordered_map<std::string, std::string>& arguments);
+  void loadScripts(const std::string& talkScript, const std::string& stepScript, const std::string& creationScript, const std::unordered_map<std::string, std::string>& arguments);
 
   void setFixedDirection(bool fixed) { m_fixedDirection = fixed; }
 
@@ -115,6 +115,8 @@ private:
   Script m_script;
   // Run every update step.
   Script m_stepScript;
+  // Run when created
+  Script m_creationScript;
 
   State m_state;
   int m_waitCounter;

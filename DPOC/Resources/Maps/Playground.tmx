@@ -124,7 +124,13 @@
     <property name="@pressedTileId" value="531"/>
     <property name="@x" value="7"/>
     <property name="@y" value="5"/>
+    <property name="createScript" value="open_door_toggle_create.script"/>
     <property name="talkScript" value="open_door_toggle.script"/>
+   </properties>
+  </object>
+  <object gid="540" x="448" y="256">
+   <properties>
+    <property name="talkScript" value="playground_go_to_town.script"/>
    </properties>
   </object>
  </objectgroup>

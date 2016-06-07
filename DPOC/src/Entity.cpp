@@ -50,9 +50,9 @@ Entity::~Entity()
   delete m_sprite;
 }
 
-void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript, const std::unordered_map<std::string, std::string>& arguments)
+void Entity::loadScripts(const std::string& talkScript, const std::string& stepScript, const std::string& creationScript, const std::unordered_map<std::string, std::string>& arguments)
 {
-  TRACE("Entity[%s]::loadScripts(%s, %s)", getTag().c_str(), talkScript.c_str(), stepScript.c_str());
+  TRACE("Entity[%s]::loadScripts(%s, %s, %s)", getTag().c_str(), talkScript.c_str(), stepScript.c_str(), creationScript.c_str());
 
   if (!talkScript.empty())
   {
@@ -65,6 +65,13 @@ void Entity::loadScripts(const std::string& talkScript, const std::string& stepS
     m_stepScript.loadFromFile(config::res_path("Scripts/" + stepScript), arguments);
     m_stepScript.setCallingEntity(this);
     m_stepScript.execute();
+  }
+
+  if (!creationScript.empty())
+  {
+    m_creationScript.loadFromFile(config::res_path("Scripts/" + creationScript), arguments);
+    m_creationScript.setCallingEntity(this);
+    m_creationScript.execute();
   }
 }
 
@@ -98,6 +105,11 @@ void Entity::update()
     m_scriptWaitMap[&m_stepScript]--;
   }
 
+  if (m_scriptWaitMap[&m_creationScript] > 0)
+  {
+    m_scriptWaitMap[&m_creationScript]--;
+  }
+
   if (m_state != STATE_WALKING)
   {
     if (m_script.active() && m_scriptWaitMap[&m_script] == 0)
@@ -120,6 +132,11 @@ void Entity::update()
       {
         m_stepScript.execute();
       }
+    }
+
+    if (m_creationScript.active() && m_scriptWaitMap[&m_creationScript] == 0)
+    {
+      m_creationScript.next();
     }
   }
 }

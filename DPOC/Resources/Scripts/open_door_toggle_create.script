@@ -1,0 +1,3 @@
+if %pressed == true
+  change_tile "wallfeature" @x @y @pressedTileId
+endif

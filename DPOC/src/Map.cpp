@@ -270,6 +270,7 @@ Map* Map::loadTiledFile(const std::string& filename)
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),
               loader.getObjectProperty(objectIndex, "stepScript"),
+              loader.getObjectProperty(objectIndex, "createScript"),
               _parse_script_arguments(loader, objectIndex));
 
           TileSprite* tileSprite = new TileSprite(texture, tileX, tileY);
@@ -335,6 +336,7 @@ Map* Map::loadTiledFile(const std::string& filename)
           entity->loadScripts(
               loader.getObjectProperty(objectIndex, "talkScript"),
               loader.getObjectProperty(objectIndex, "stepScript"),
+              loader.getObjectProperty(objectIndex, "createScript"),
               _parse_script_arguments(loader, objectIndex));
 
           map->m_entities.push_back(entity);

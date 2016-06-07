@@ -1,0 +1,6 @@
+message "You wanna go to town?"
+choice "Yes" "No"
+if $sys:choice == 0
+  message "See ya."
+  transfer Town.tmx 10 15 DIR_DOWN
+endif
