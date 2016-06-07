@@ -6,4 +6,5 @@
  <objecttype name="stairs_up" color="#a0a0a4"/>
  <objecttype name="chest" color="#ffff00"/>
  <objecttype name="door" color="#aa5500"/>
+ <objecttype name="npc" color="#ff00ff"/>
 </objecttypes>

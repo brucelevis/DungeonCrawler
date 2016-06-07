@@ -106,7 +106,7 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1" width="20" height="20">
-  <object name="guard" gid="663" x="320" y="608">
+  <object name="guard" type="npc" gid="663" x="320" y="608">
    <properties>
     <property name="@message" value="No one may leave town at this time!"/>
     <property name="talkScript" value="message.script"/>

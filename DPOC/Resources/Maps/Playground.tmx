@@ -90,7 +90,7 @@
    </properties>
   </object>
   <object type="door" gid="392" x="224" y="384"/>
-  <object gid="534" x="512" y="320">
+  <object type="npc" gid="534" x="512" y="320">
    <properties>
     <property name="talkScript" value="testman-talk.script"/>
    </properties>
@@ -128,7 +128,7 @@
     <property name="talkScript" value="open_door_toggle.script"/>
    </properties>
   </object>
-  <object gid="540" x="448" y="256">
+  <object type="npc" gid="540" x="448" y="256">
    <properties>
     <property name="talkScript" value="playground_go_to_town.script"/>
    </properties>
