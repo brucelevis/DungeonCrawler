@@ -294,7 +294,11 @@ void Game::draw(sf::RenderTarget& target)
     }
   }
 
-  m_raycaster->raycast(&m_camera, m_raycasterBuffer, m_player->player()->getDirection());
+  Camera cameraCopy = m_camera.clone();
+  cameraCopy.pos.x -= cameraCopy.dir.x * 0.5f;
+  cameraCopy.pos.y -= cameraCopy.dir.y * 0.5f;
+
+  m_raycaster->raycast(&cameraCopy, m_raycasterBuffer, m_player->player()->getDirection());
   m_texture.loadFromImage(m_raycasterBuffer);
 
   sf::Sprite sprite(m_texture);

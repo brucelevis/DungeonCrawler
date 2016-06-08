@@ -16,6 +16,11 @@ struct Camera
   std::string dump() const;
 
   Vec2 pos, dir, plane;
+
+  Camera clone()
+  {
+    return Camera{pos, dir, plane};
+  }
 };
 
 #endif
