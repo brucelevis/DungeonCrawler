@@ -17,11 +17,11 @@
 
 namespace
 {
-  void _parse_trap(const std::string& trapString, std::string& trapType, int& luckToBeat)
+  void _parse_trap(const std::string& trapString, std::string& trapType, int& trapDifficulty)
   {
     std::vector<std::string> trapData = split_string(trapString, ',');
     trapType = trapData[0];
-    luckToBeat = fromString<int>(trapData[1]);
+    trapDifficulty = fromString<int>(trapData[1]);
   }
 
   std::unordered_map<std::string, std::string> _parse_script_arguments(const TiledLoader& loader, size_t objectIndex)
@@ -224,11 +224,11 @@ Map* Map::loadTiledFile(const std::string& filename)
             else
             {
               std::string trapType;
-              int luckToBeat;
+              int trapDifficulty;
 
-              _parse_trap(trap, trapType, luckToBeat);
+              _parse_trap(trap, trapType, trapDifficulty);
 
-              entity = new Chest(name, split_string(items, ','), trapType, luckToBeat);
+              entity = new Chest(name, split_string(items, ','), trapType, trapDifficulty);
             }
           }
           else if (loader.getObjectType(objectIndex) == "door")
@@ -245,11 +245,11 @@ Map* Map::loadTiledFile(const std::string& filename)
             else
             {
               std::string trapType;
-              int luckToBeat;
+              int trapDifficulty;
 
-              _parse_trap(trap, trapType, luckToBeat);
+              _parse_trap(trap, trapType, trapDifficulty);
 
-              entity = new Door(name, keyRequired, trapType, luckToBeat, type);
+              entity = new Door(name, keyRequired, trapType, trapDifficulty, type);
             }
           }
           else
@@ -305,12 +305,12 @@ Map* Map::loadTiledFile(const std::string& filename)
           int trapY = object->y / config::TILE_H;
 
           std::string trapType = loader.getObjectType(objectIndex);
-          int luckToBeat = fromString<int>(loader.getObjectProperty(objectIndex, "luck"));
+          int trapDifficulty = fromString<int>(loader.getObjectProperty(objectIndex, "difficulty"));
 
-          map->m_traps.push_back( Trap { trapType, luckToBeat, trapX, trapY } );
+          map->m_traps.push_back( Trap { trapType, trapDifficulty, trapX, trapY } );
 
-          TRACE("New trap: trapX=%d, trapY=%d, trapType=%s, luck=%d",
-              trapX, trapY, trapType.c_str(), luckToBeat);
+          TRACE("New trap: trapX=%d, trapY=%d, trapType=%s, difficulty=%d",
+              trapX, trapY, trapType.c_str(), trapDifficulty);
         }
         else
         {

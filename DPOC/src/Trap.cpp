@@ -10,21 +10,20 @@
 #include "Vocabulary.h"
 #include "Utility.h"
 
-#include "LuaBindings.h"
 #include "Trap.h"
 
 Trap::Trap()
  : x(0),
    y(0),
-   m_luckToBeat(0)
+   m_difficulty(0)
 {
 }
 
-Trap::Trap(const std::string& type, int luck, int _x, int _y)
+Trap::Trap(const std::string& type, int difficulty, int _x, int _y)
  : x(_x),
    y(_y),
    m_type(type),
-   m_luckToBeat(luck)
+   m_difficulty(difficulty)
 {
 
 }
@@ -36,12 +35,19 @@ PlayerCharacter* Trap::triggerTrap() const
 
   PlayerCharacter* detector = 0;
 
-  for (auto it = party.begin(); it != party.end(); ++it)
+  for (auto& character : party)
   {
-    if (check_vs_luck((*it)->computeCurrentAttribute(terms::luck), m_luckToBeat))
+    int totalSkill = character->computeCurrentAttribute(terms::luck) + character->getBaseAttribute(terms::searching);
+
+    if (random_range(0, totalSkill) >= m_difficulty)
     {
-      detector = *it;
-      break;
+      totalSkill = character->computeCurrentAttribute(terms::luck) + character->getBaseAttribute(terms::mechanics);
+
+      if (random_range(0, totalSkill) >= m_difficulty)
+      {
+        detector = character;
+        break;
+      }
     }
   }
 
@@ -68,17 +74,20 @@ void Trap::checkTrap() const
 
 void Trap::applyTrap(const std::vector<PlayerCharacter*>& party) const
 {
-  if (m_type == "poison")
+  for (auto& character : party)
   {
-    for (auto it = party.begin(); it != party.end(); ++it)
-    {
-      if (!check_vs_luck((*it)->computeCurrentAttribute(terms::luck), m_luckToBeat))
-      {
-        (*it)->afflictStatus("Poison", -1);
+    int totalSkill = character->computeCurrentAttribute(terms::speed) / 2 +
+        character->computeCurrentAttribute(terms::luck) / 2 +
+        character->getBaseAttribute(terms::evasion);
 
-        show_message("%s was poisoned!", (*it)->getName().c_str());
+    if (random_range(0, totalSkill) < m_difficulty)
+    {
+      if (m_type == "poison")
+      {
+        character->afflictStatus("Poison", -1);
+
+        show_message("%s was poisoned!", character->getName().c_str());
       }
     }
-    //run_lua_script("Scripts/PoisonTrap.lua");
   }
 }

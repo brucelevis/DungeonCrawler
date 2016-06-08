@@ -205,7 +205,6 @@ void register_lua_bindings(lua::LuaEnv& luaState)
     // Character functions
     ("afflict_status", &Character::afflictStatus)
     ("cure_status", &Character::cureStatus)
-    ("check_vs_luck", check_vs_luck)
     ("get_attribute", &Character::computeCurrentAttribute)
     ("deal_damage", &Character::takeDamage)
     ("get_character_name", &Character::getName)

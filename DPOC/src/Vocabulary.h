@@ -37,6 +37,12 @@ namespace terms
   const std::string helmet = "Helmet";
   const std::string misc1  = "Misc1";
   const std::string misc2  = "Misc2";
+
+  // Skill names
+  const std::string searching = "Searching";
+  const std::string mechanics = "Mechanics";
+  const std::string evasion   = "Evasion";
+  const std::string merchant  = "Merchant";
 }
 
 #endif /* VOCABULARY_H_ */

@@ -1,8 +1,6 @@
 <skills>
-  <skill name="Cartography" ranks="1" costOfRank="10" />
   <skill name="Searching" ranks="20" costOfRank="5" />
-  <skill name="Lockpicking" ranks="50" costOfRank="5" />
+  <skill name="Mechanics" ranks="50" costOfRank="5" />
   <skill name="Evasion" ranks="25" costOfRank="10" />
-  <skill name="Swimming" ranks="1" costOfRank="15" />
   <skill name="Merchant" ranks="50" costOfRank="8" />
 </skills>
