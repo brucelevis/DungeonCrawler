@@ -1,5 +1,5 @@
 <init>
-  <start map="Playground.tmx" x="8" y="9" />
+  <start map="Stage_1.tmx" x="1" y="38" />
   <gold>500</gold>
   <party>
     <character name="Aslan" class="Fighter" />
