@@ -54,7 +54,7 @@ int StatusEffect::applyDamage(Character* character) const
 
 static DamageType damageTypeFromString(const std::string& type)
 {
-  if (type == "DAMAGE_NONE") return DAMAGE_NONE;
+  if (type == "DAMAGE_NONE" || type.empty()) return DAMAGE_NONE;
   if (type == "DAMAGE_FIXED") return DAMAGE_FIXED;
   if (type == "DAMAGE_PERCENT") return DAMAGE_PERCENT;
 
