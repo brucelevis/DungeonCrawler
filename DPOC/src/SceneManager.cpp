@@ -28,8 +28,10 @@ SceneManager::SceneManager()
 {
 }
 
-void SceneManager::create()
+void SceneManager::create(const std::string& gameName)
 {
+  m_gameName = gameName;
+
   setResolution(false);
 
   m_targetTexture.create(config::GAME_RES_X, config::GAME_RES_Y);
@@ -43,11 +45,11 @@ void SceneManager::setResolution(bool fullScreen)
 
   if (m_fullScreen)
   {
-    m_window.create(sf::VideoMode::getDesktopMode(), "DPOC", sf::Style::None);
+    m_window.create(sf::VideoMode::getDesktopMode(), m_gameName, sf::Style::None);
   }
   else
   {
-    m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), "DPOC");
+    m_window.create(sf::VideoMode(config::GAME_RES_X*2, config::GAME_RES_Y*2), m_gameName);
   }
 
   m_window.setKeyRepeatEnabled(false);

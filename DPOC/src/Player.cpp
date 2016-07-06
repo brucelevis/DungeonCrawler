@@ -251,19 +251,9 @@ Player* Player::create()
   int startY = 0;
 
   XMLDocument doc;
-  doc.LoadFile(config::res_path("Player.xml").c_str());
+  doc.LoadFile(config::res_path("Init.xml").c_str());
 
-  const XMLElement* root = doc.FirstChildElement("player");
-  const XMLElement* start = root->FirstChildElement("start");
-  if (start)
-  {
-    startX = fromString<int>(start->FindAttribute("x")->Value());
-    startY = fromString<int>(start->FindAttribute("y")->Value());
-    std::string startMap = start->FindAttribute("map")->Value();
-
-    Game::instance().loadNewMap("Maps/" + startMap);
-  }
-
+  const XMLElement* root = doc.FirstChildElement("init");
   const XMLElement* party = root->FirstChildElement("party");
   if (party)
   {
@@ -273,18 +263,6 @@ Player* Player::create()
       std::string className = element->FindAttribute("class")->Value();
 
       player->addNewCharacter(name, className, startX, startY);
-    }
-  }
-
-  const XMLElement* inventory = root->FirstChildElement("inventory");
-  if (inventory)
-  {
-    for (const XMLElement* element = inventory->FirstChildElement(); element; element = element->NextSiblingElement())
-    {
-      std::string name = element->FindAttribute("name")->Value();
-      int amount = fromString<int>(element->FindAttribute("amount")->Value());
-
-      player->m_inventory.push_back(create_item(name, amount));
     }
   }
 
@@ -349,12 +327,12 @@ void Player::addNewCharacter(const std::string& name, const std::string& classNa
   entity->setPosition(x, y);
   entity->setWalkSpeed(0.1f);
 
-  Sprite* sprite = new Sprite;
-  sprite->create(pc.texture,
-      pc.textureBlock.left, pc.textureBlock.top,
-      pc.textureBlock.width, pc.textureBlock.height);
-
-  entity->setSprite(sprite);
+//  Sprite* sprite = new Sprite;
+//  sprite->create(pc.texture,
+//      pc.textureBlock.left, pc.textureBlock.top,
+//      pc.textureBlock.width, pc.textureBlock.height);
+//
+//  entity->setSprite(sprite);
 
   if (m_playerTrain.size() > 0)
     entity->setWalkThrough(true);

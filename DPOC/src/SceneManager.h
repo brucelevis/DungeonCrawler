@@ -16,7 +16,7 @@ class SceneManager
 {
 public:
   static SceneManager& instance();
-  void create();
+  void create(const std::string& gameName);
 
   void run();
 
@@ -74,6 +74,7 @@ private:
   bool m_fullScreen;
 
   Console* m_console;
+  std::string m_gameName;
 };
 
 #endif

@@ -10,6 +10,8 @@
 #include "Message.h"
 
 #include "CharGen.h"
+#include "Scenario.h"
+
 #include "TitleScreen.h"
 
 TitleMenu::TitleMenu()
@@ -177,7 +179,15 @@ void TitleScreen::postFade(FadeType fadeType)
 
     if (m_menu.getCurrentMenuChoice() == "New Game")
     {
-      SceneManager::instance().addScene(new CharGen);
+      if (Scenario::instance().useCharGen())
+      {
+        SceneManager::instance().addScene(new CharGen);
+      }
+      else
+      {
+        Game::instance().start(Player::create());
+        SceneManager::instance().addScene(&Game::instance());
+      }
     }
     else if (m_menu.getCurrentMenuChoice() == "Load Game")
     {

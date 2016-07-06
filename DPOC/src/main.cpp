@@ -23,6 +23,7 @@
 #include "Player.h"
 #include "Game.h"
 
+#include "Scenario.h"
 #include "Console.h"
 
 int main(int argc, char* argv[])
@@ -31,6 +32,9 @@ int main(int argc, char* argv[])
 
   Console console;
   Logger::instance().setConsole(&console);
+
+  // Load current scenario.
+  Scenario::instance();
 
   init_text_drawing();
 
@@ -48,7 +52,7 @@ int main(int argc, char* argv[])
 
   srand(time(0));
 
-  SceneManager::instance().create();
+  SceneManager::instance().create(Scenario::instance().getName());
   SceneManager::instance().setConsole(&console);
 
   if (argc > 1)
