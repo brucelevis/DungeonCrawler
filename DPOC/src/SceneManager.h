@@ -37,6 +37,8 @@ public:
   void hidePicture(const std::string& pictureName);
 
   void setConsole(Console* console) { m_console = console; }
+
+  GuiStack* getGuiStack() { return &m_guiStack; }
 private:
   SceneManager();
 
