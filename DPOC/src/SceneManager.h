@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Scene.h"
+#include "GuiStack.h"
 
 class Console;
 class Picture;
@@ -75,6 +76,8 @@ private:
 
   Console* m_console;
   std::string m_gameName;
+
+  GuiStack m_guiStack;
 };
 
 #endif

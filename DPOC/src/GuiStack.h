@@ -11,7 +11,7 @@ class GuiStack
 public:
   void update();
 
-  void handleInput(sf::Keyboard key);
+  bool handleEvent(const sf::Event& event);
 
   template <typename T, typename ... Args>
   T* addWidget(Args&& ... args)

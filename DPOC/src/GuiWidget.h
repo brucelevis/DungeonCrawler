@@ -19,7 +19,7 @@ public:
   bool cursorVisible() const { return m_cursorVisible; }
 
   virtual void update() {}
-  virtual bool handleInput(sf::Keyboard key) = 0;
+  virtual bool handleInput(sf::Keyboard::Key key) = 0;
   virtual void draw(sf::RenderTarget& target) = 0;
 protected:
   GuiStack* getGuiStack() const;

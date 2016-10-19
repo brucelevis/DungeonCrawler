@@ -14,7 +14,7 @@ ItemMenu::ItemMenu(int x, int y, int w, int h)
   refresh();
 }
 
-bool ItemMenu::handleInput(sf::Keyboard key)
+bool ItemMenu::handleInput(sf::Keyboard::Key key)
 {
   switch (key)
   {
@@ -26,6 +26,10 @@ bool ItemMenu::handleInput(sf::Keyboard key)
     break;
   case sf::Keyboard::Space:
   case sf::Keyboard::Return:
+    if (m_callback)
+    {
+      m_callback(getItem(getSelectedItemName()));
+    }
     break;
   case sf::Keyboard::Escape:
     getGuiStack()->removeWidget(this);

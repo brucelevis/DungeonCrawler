@@ -80,6 +80,8 @@ void SceneManager::run()
 
       pollEvents();
 
+      m_guiStack.update();
+
       if (m_scenes.size() > 0)
       {
         m_scenes.back()->update();
@@ -298,9 +300,15 @@ void SceneManager::pollEvents()
       break;
     default:
 
-      if (!checkBuiltInEvent(event) && m_scenes.size() > 0)
+      if (!checkBuiltInEvent(event))
       {
-        m_scenes.back()->handleEvent(event);
+        if (!m_guiStack.handleEvent(event))
+        {
+          if (m_scenes.size() > 0)
+          {
+            m_scenes.back()->handleEvent(event);
+          }
+        }
       }
       break;
     }

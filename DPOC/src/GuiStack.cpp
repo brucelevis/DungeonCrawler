@@ -9,17 +9,24 @@ void GuiStack::update()
   }
 }
 
-void GuiStack::handleInput(sf::Keyboard key)
+bool GuiStack::handleEvent(const sf::Event& event)
 {
-  for (auto rit = m_guiWidgets.rbegin(); rit != m_guiWidgets.rend(); ++rit)
+  if (event.type == sf::Event::KeyPressed)
   {
-    GuiWidget* widget = rit->get();
+    sf::Keyboard::Key key = event.key.code;
 
-    if (widget->handleInput(key))
+    for (auto rit = m_guiWidgets.rbegin(); rit != m_guiWidgets.rend(); ++rit)
     {
-      break;
+      GuiWidget* widget = rit->get();
+
+      if (widget->handleInput(key))
+      {
+        return true;
+      }
     }
   }
+
+  return false;
 }
 
 void GuiStack::removeWidget(const GuiWidget* widget)
