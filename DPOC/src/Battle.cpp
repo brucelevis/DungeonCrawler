@@ -971,7 +971,7 @@ void Battle::draw(sf::RenderTarget& target)
       PlayerCharacter* actor = get_player()->getParty()[i];
 
       int posX;
-      int posY = config::GAME_RES_Y - 72;
+      int posY = config::GAME_RES_Y - 64;
 
       // adjust for lower portraits
       if (i == 2 || i == 3) posY += 32;
