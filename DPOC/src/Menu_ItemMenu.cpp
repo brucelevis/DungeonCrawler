@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Frame.h"
+#include "Player.h"
 #include "Utility.h"
 #include "draw_text.h"
 #include "Menu_ItemMenu.h"
@@ -28,7 +29,7 @@ bool ItemMenu::handleInput(sf::Keyboard::Key key)
   case sf::Keyboard::Return:
     if (m_callback)
     {
-      m_callback(getItem(getSelectedItemName()));
+      m_callback(getSelectedItemName());
     }
     break;
   case sf::Keyboard::Escape:
@@ -54,13 +55,20 @@ void ItemMenu::draw(sf::RenderTarget& target)
   {
     if (index < (int)m_items.size())
     {
-      std::string stack = toString(m_items[index]->stackSize);
+      if (const Item* item = getItem(m_items[index]))
+      {
+        std::string stack = toString(item->stackSize);
 
-      // Add some padding.
-      if (stack.size() == 1)
-        stack += " ";
+        // Add some padding.
+        if (stack.size() == 1)
+          stack += " ";
 
-      draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s %s", stack.c_str(), m_items[index]->name.c_str());
+        draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s %s", stack.c_str(), item->name.c_str());
+      }
+      else
+      {
+        draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_items[index].c_str());
+      }
     }
 
     if (m_itemRange.getIndex() == index && cursorVisible())
@@ -93,9 +101,14 @@ void ItemMenu::refresh()
 
   for (const auto& item : items)
   {
-    m_items.push_back(&item);
+    m_items.push_back(item.name);
   }
 
+  fixRange();
+}
+
+void ItemMenu::fixRange()
+{
   if (m_itemRange.getIndex() >= m_items.size())
   {
     m_itemRange.reset();
@@ -108,14 +121,14 @@ void ItemMenu::refresh()
 
 std::string ItemMenu::getSelectedItemName() const
 {
-  return m_items[m_itemRange.getIndex()]->name;
+  return m_items[m_itemRange.getIndex()];
 }
 
 bool ItemMenu::hasItem(const std::string& name) const
 {
-  for (auto it = m_items.begin(); it != m_items.end(); ++it)
+  for (const auto& s : m_items)
   {
-    if ((*it)->name == name)
+    if (s == name)
       return true;
   }
   return false;
@@ -123,12 +136,13 @@ bool ItemMenu::hasItem(const std::string& name) const
 
 const Item* ItemMenu::getItem(const std::string& name) const
 {
-  for (auto it = m_items.begin(); it != m_items.end(); ++it)
+  for (const auto& item : get_player()->getInventory())
   {
-    if ((*it)->name == name)
+    if (item.name == name)
     {
-      return *it;
+      return &item;
     }
   }
+
   return nullptr;
 }

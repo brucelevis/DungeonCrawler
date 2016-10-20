@@ -715,51 +715,6 @@ void MainMenu::drawSkills(sf::RenderTarget& target, int x, int y)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EquipItemMenu::EquipItemMenu(PlayerCharacter* character, int width, int height)
- : ItemMenu(width, height),
-   m_character(character)
-{
-
-}
-
-void EquipItemMenu::refresh(const std::string& equipmentType)
-{
-  clear();
-  m_items.clear();
-
-  const std::vector<Item>& items = get_player()->getInventory();
-
-  addEntry("* Remove *");
-
-  for (auto it = items.begin(); it != items.end(); ++it)
-  {
-    if (equip_type_string(it->type) == equipmentType && m_character->canEquip(*it))
-    {
-      std::string stack = toString(it->stackSize);
-      std::string name = it->name;
-
-      // Add some padding.
-      if (stack.size() == 1)
-        stack += " ";
-
-      addEntry(stack + " " + name);
-
-      m_items.push_back(&(*it));
-    }
-  }
-
-  if (getCurrentChoiceIndex() >= getNumberOfChoice())
-  {
-    resetChoice();
-  }
-
-  int visible = m_height / 12 - 1;
-
-  setMaxVisible(visible);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 CharacterMenu::CharacterMenu()
  : m_spellToUse(0),
    m_user(0),

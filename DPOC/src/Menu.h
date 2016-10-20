@@ -142,17 +142,6 @@ private:
   std::stack<State> m_stateStack;
 };
 
-class EquipItemMenu : public ItemMenu
-{
-public:
-  EquipItemMenu(PlayerCharacter* character, int width, int height);
-  void refresh(const std::string& equipmentType);
-
-  bool validChoice() const { return getCurrentMenuChoice() != "* Remove *"; }
-private:
-  PlayerCharacter* m_character;
-};
-
 class CharacterMenu : public Menu
 {
 public:
