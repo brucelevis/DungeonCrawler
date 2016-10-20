@@ -6,6 +6,8 @@
 
 class GuiStack;
 
+const int ENTRY_OFFSET = 12;
+
 class GuiWidget
 {
 public:

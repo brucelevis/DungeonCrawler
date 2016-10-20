@@ -142,32 +142,6 @@ private:
   std::stack<State> m_stateStack;
 };
 
-class ItemMenu : public Menu
-{
-public:
-  ItemMenu();
-  ItemMenu(int width, int height);
-  virtual ~ItemMenu() {}
-
-  void handleConfirm();
-
-  void refresh();
-
-  void draw(sf::RenderTarget& target, int x, int y);
-
-  int getWidth() const;
-  int getHeight() const;
-
-  std::string getSelectedItemName() const;
-private:
-  bool hasItem(const std::string& name) const;
-  const Item* getItem(const std::string& name) const;
-protected:
-  std::vector<const Item*> m_items;
-
-  int m_width, m_height;
-};
-
 class EquipItemMenu : public ItemMenu
 {
 public:
@@ -177,22 +151,6 @@ public:
   bool validChoice() const { return getCurrentMenuChoice() != "* Remove *"; }
 private:
   PlayerCharacter* m_character;
-};
-
-class SpellMenu : public Menu
-{
-public:
-  SpellMenu(const std::string& characterName);
-
-  void handleConfirm();
-
-  const Spell* getSelectedSpell() const;
-
-  void draw(sf::RenderTarget& target, int x, int y);
-
-  int getWidth() const;
-  int getHeight() const;
-private:
 };
 
 class CharacterMenu : public Menu

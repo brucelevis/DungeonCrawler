@@ -1,15 +1,15 @@
+#include "Game.h"
 #include "Frame.h"
 #include "Utility.h"
 #include "draw_text.h"
 #include "Menu_ItemMenu.h"
 
-static const int ENTRY_OFFSET = 12;
-
-ItemMenu::ItemMenu(int x, int y, int w, int h)
+ItemMenu::ItemMenu(const Callback& callback, int x, int y, int w, int h)
   : m_x(x),
     m_y(y),
     m_width(w),
-    m_height(h)
+    m_height(h),
+    m_callback(callback)
 {
   refresh();
 }
@@ -63,7 +63,7 @@ void ItemMenu::draw(sf::RenderTarget& target)
       draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s %s", stack.c_str(), m_items[index]->name.c_str());
     }
 
-    if (m_currentMenuChoice == index && cursorVisible())
+    if (m_itemRange.getIndex() == index && cursorVisible())
     {
       drawSelectArrow(target, x + 8, y + 8 + i * ENTRY_OFFSET);
     }

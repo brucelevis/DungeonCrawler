@@ -10,6 +10,7 @@ struct Range
     WRAP
   };
 
+  Range();
   Range(int min, int max, int rangeLength);
 
   void reset();

@@ -14,7 +14,7 @@ class ItemMenu : public GuiWidget
 public:
   using Callback = std::function<void(const Item*)>;
 
-  ItemMenu(int x, int y, int w = 14*16, int h = 12*16);
+  ItemMenu(const Callback& callback, int x, int y, int w = 14*16, int h = 12*16);
 
   bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;

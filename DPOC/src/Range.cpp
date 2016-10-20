@@ -1,5 +1,15 @@
 #include "Range.h"
 
+Range::Range()
+  : m_index(0),
+    m_start(0),
+    m_end(0),
+    m_min(0),
+    m_max(0),
+    m_rangeLength(0)
+{
+}
+
 Range::Range(int min, int max, int rangeLength)
   : m_index(0),
     m_start(0),
