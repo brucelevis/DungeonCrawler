@@ -142,39 +142,6 @@ private:
   std::stack<State> m_stateStack;
 };
 
-class CharacterMenu : public Menu
-{
-public:
-  CharacterMenu();
-
-  void handleConfirm();
-
-  int getWidth() const;
-  int getHeight() const;
-
-  void refresh();
-
-  void draw(sf::RenderTarget& target, int x, int y);
-
-  void setSpellToUse(const Spell* spell) { m_spellToUse = spell; }
-  const Spell* getSpellToUse() const { return m_spellToUse; }
-
-  void setItemToUse(const std::string& itemToUse) { m_itemToUse = itemToUse; }
-  std::string getItemToUse() const { return m_itemToUse; }
-
-  PlayerCharacter* getUser() const { return m_user; }
-  PlayerCharacter* getTarget() const { return m_target; }
-
-  void setUserToCurrentChoice();
-  void setTargetToCurrentChoice();
-private:
-  const Spell* m_spellToUse;
-  std::string m_itemToUse;
-
-  PlayerCharacter* m_user;
-  PlayerCharacter* m_target;
-};
-
 class BattleActionMenu;
 class BattleStatusMenu;
 class BattleMonsterMenu;
