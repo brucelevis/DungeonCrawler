@@ -21,7 +21,7 @@ SpellMenu::SpellMenu(const Callback& callback, const std::string& characterName,
 
   const int maxVisible = 10;
 
-  m_range = Range{0, m_spells.size() - 1, maxVisible};
+  m_range = Range{0, m_spells.size(), maxVisible};
 }
 
 bool SpellMenu::handleInput(sf::Keyboard::Key key)

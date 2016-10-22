@@ -13,8 +13,11 @@ class CharacterMenu : public GuiWidget
 {
 public:
   using Callback = std::function<void(PlayerCharacter*)>;
+  using EscapeCallback = std::function<void()>;
 
-  CharacterMenu(const Callback& callback, int x, int y);
+  CharacterMenu(const Callback& callback, const EscapeCallback& escapeCallback, int x, int y);
+
+  void reset();
 
   bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;
@@ -27,6 +30,9 @@ public:
 
   PlayerCharacter* getUser() const { return m_user; }
   PlayerCharacter* getTarget() const { return m_target; }
+
+  void setUser(PlayerCharacter* character);
+  void setTarget(PlayerCharacter* character);
 private:
   int m_x, m_y;
 
@@ -40,6 +46,7 @@ private:
   Range m_range;
 
   Callback m_callback;
+  EscapeCallback m_escapeCallback;
 };
 
 #endif /* MENU_CHARACTERMENU_H_ */

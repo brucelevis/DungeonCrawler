@@ -89,59 +89,6 @@ class SpellMenu;
 class CharacterMenu;
 class EquipMenu;
 
-class MainMenu : public Menu
-{
-  enum State
-  {
-    STATE_MAIN_MENU,
-    STATE_ITEM_MENU,
-    STATE_CHARACTER_MENU,
-    STATE_EQUIP_MENU,
-    STATE_SPELL_MENU,
-    STATE_STATUS_MENU,
-    STATE_SKILL_MENU,
-    STATE_SAVE_MENU
-  };
-public:
-  MainMenu();
-  ~MainMenu();
-
-  void handleConfirm();
-  void handleEscape();
-
-  void moveArrow(Direction dir);
-
-  void open();
-
-  void draw(sf::RenderTarget& target, int x, int y);
-private:
-  void openItemMenu();
-  void closeItemMenu();
-
-  void openSpellMenu(const std::string& characterName);
-  void closeSpellMenu();
-
-  void openCharacterMenu();
-  void closeCharacterMenu();
-
-  void openEquipMenu();
-  void closeEquipMenu();
-
-  void openSaveMenu();
-  void closeSaveMenu();
-
-  void drawStatus(sf::RenderTarget& target, int x, int y);
-  void drawSkills(sf::RenderTarget& target, int x, int y);
-private:
-  ItemMenu* m_itemMenu;
-  SpellMenu* m_spellMenu;
-  CharacterMenu* m_characterMenu;
-  EquipMenu* m_equipMenu;
-  SaveMenu* m_saveMenu;
-
-  std::stack<State> m_stateStack;
-};
-
 class BattleActionMenu;
 class BattleStatusMenu;
 class BattleMonsterMenu;

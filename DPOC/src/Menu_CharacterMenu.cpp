@@ -2,13 +2,14 @@
 #include "draw_text.h"
 #include "Menu_CharacterMenu.h"
 
-CharacterMenu::CharacterMenu(const Callback& callback, int x, int y)
+CharacterMenu::CharacterMenu(const Callback& callback, const EscapeCallback& escapeCallback, int x, int y)
   : m_x(x),
     m_y(y),
     m_spellToUse(nullptr),
     m_user(nullptr),
     m_target(nullptr),
-    m_callback(callback)
+    m_callback(callback),
+    m_escapeCallback(escapeCallback)
 {
   setCursorVisible(false);
 
@@ -19,7 +20,12 @@ CharacterMenu::CharacterMenu(const Callback& callback, int x, int y)
     m_characters.push_back(character);
   }
 
-  m_range = Range{0, m_characters.size() - 1, m_characters.size() - 1};
+  m_range = Range{0, m_characters.size(), m_characters.size()};
+}
+
+void CharacterMenu::reset()
+{
+  m_range.reset();
 }
 
 bool CharacterMenu::handleInput(sf::Keyboard::Key key)
@@ -40,6 +46,10 @@ bool CharacterMenu::handleInput(sf::Keyboard::Key key)
     }
     break;
   case sf::Keyboard::Escape:
+    if (m_escapeCallback)
+    {
+      m_escapeCallback();
+    }
     break;
   default:
     break;
@@ -77,4 +87,14 @@ void CharacterMenu::draw(sf::RenderTarget& target)
       target.draw(rect);
     }
   }
+}
+
+void CharacterMenu::setUser(PlayerCharacter* character)
+{
+  m_user = character;
+}
+
+void CharacterMenu::setTarget(PlayerCharacter* character)
+{
+  m_target = character;
 }

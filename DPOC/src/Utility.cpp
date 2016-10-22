@@ -148,3 +148,16 @@ bool check_vs_luck(int luck, int luckToBeat)
 {
   return random_range(0, luck) > random_range(0, luckToBeat);
 }
+
+std::string get_longest_string(const std::vector<std::string>& strings)
+{
+  std::string longest;
+
+  for (auto it = strings.begin(); it != strings.end(); ++it)
+  {
+    if (it->size() > longest.size())
+      longest = *it;
+  }
+
+  return longest;
+}

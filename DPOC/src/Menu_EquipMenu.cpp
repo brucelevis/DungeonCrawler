@@ -14,7 +14,7 @@ EquipMenu::EquipMenu(PlayerCharacter* character, int x, int y)
   : m_x(x),
     m_y(y),
     m_character(character),
-    m_range(0, get_equip_names().size() - 1, get_equip_names().size() - 1),
+    m_range(0, get_equip_names().size(), get_equip_names().size()),
     m_equipItemMenu(nullptr)
 {
   for (const auto equipName : get_equip_names())

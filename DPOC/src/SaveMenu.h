@@ -4,9 +4,10 @@
 #include <vector>
 #include <string>
 
-#include "Menu.h"
+#include "Range.h"
+#include "GuiWidget.h"
 
-class SaveMenu : public Menu
+class SaveMenu : public GuiWidget
 {
 public:
   enum SaveOrLoad
@@ -17,12 +18,16 @@ public:
 
   SaveMenu(SaveOrLoad type);
 
-  void handleConfirm();
+  bool handleInput(sf::Keyboard::Key key) override;
+  void draw(sf::RenderTarget& target) override;
 private:
+  void handleConfirm();
   void refresh();
 private:
   SaveOrLoad m_type;
   std::vector<std::string> m_filenames;
+  std::vector<std::string> m_slotNames;
+  Range m_range;
 };
 
 #endif

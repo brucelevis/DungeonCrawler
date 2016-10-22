@@ -33,7 +33,7 @@ void Range::addIndex(int num, WrapMode wrapMode)
 
   fixWrap(wrapMode);
 
-  if (m_index > m_end)
+  if (m_index >= m_end)
   {
     m_start++;
     m_end++;
@@ -55,11 +55,11 @@ void Range::subIndex(int num, WrapMode wrapMode)
 
 void Range::fixWrap(WrapMode wrapMode)
 {
-  if (m_index > m_max)
+  if (m_index >= m_max)
   {
     if (wrapMode == NO_WRAP)
     {
-      m_index = m_max;
+      m_index = m_max - 1;
     }
     else
     {
@@ -74,7 +74,7 @@ void Range::fixWrap(WrapMode wrapMode)
     }
     else
     {
-      m_index = m_max;
+      m_index = m_max - 1;
     }
   }
 }

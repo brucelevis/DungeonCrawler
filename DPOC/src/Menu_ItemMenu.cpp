@@ -116,7 +116,7 @@ void ItemMenu::fixRange()
 
   int visible = m_height / 12 - 1;
 
-  m_itemRange = Range{0, m_items.size() - 1, visible};
+  m_itemRange = Range{0, m_items.size(), visible};
 }
 
 std::string ItemMenu::getSelectedItemName() const

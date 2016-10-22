@@ -53,5 +53,6 @@ std::string replace_string(const std::string& str, char from, char to);
 float deg2rad(float degs);
 
 bool check_vs_luck(int luck, int luckToBeat);
+std::string get_longest_string(const std::vector<std::string>& strings);
 
 #endif
