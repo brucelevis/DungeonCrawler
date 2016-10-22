@@ -85,7 +85,6 @@ private:
   std::string m_currentMusicName;
   sf::Music m_currentMusic;
 
-  MainMenu m_menu;
   ChoiceMenu* m_choiceMenu;
 
   bool m_transferInProgress;

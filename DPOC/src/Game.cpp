@@ -21,6 +21,7 @@
 #include "Encounter.h"
 #include "BattleBackground.h"
 #include "Frame.h"
+#include "Menu_MainMenu.h"
 
 #include "Vocabulary.h"
 #include "Door.h"
@@ -146,10 +147,6 @@ void Game::update()
       m_choiceMenu->setVisible(true);
     }
   }
-  else if (m_menu.isVisible())
-  {
-
-  }
   else
   {
     if (m_currentMap && !m_transferInProgress)
@@ -218,11 +215,7 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
     }
     else if (!Message::instance().isVisible())
     {
-      if (m_menu.isVisible())
-      {
-        m_menu.handleConfirm();
-      }
-      else if (m_choiceMenu && m_choiceMenu->isVisible())
+      if (m_choiceMenu && m_choiceMenu->isVisible())
       {
         // ChoiceMenu when no message box is open.
 
@@ -246,25 +239,14 @@ void Game::handleKeyPress(sf::Keyboard::Key key)
   {
     if (!Message::instance().isVisible() && m_player->isControlsEnabled())
     {
-      if (!m_player->player()->isWalking() && !Message::instance().isVisible() && !m_menu.isVisible())
+      if (!m_player->player()->isWalking() && !Message::instance().isVisible())
       {
-        m_menu.open();
-      }
-      else
-      {
-        m_menu.handleEscape();
+        SceneManager::instance().getGuiStack()->addWidget<MainMenu>();
       }
     }
   }
 
-  if (m_menu.isVisible() && !Message::instance().isVisible())
-  {
-    if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
-    else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
-    else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
-    else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
-  }
-  else if (m_choiceMenu && m_choiceMenu->isVisible())
+  if (m_choiceMenu && m_choiceMenu->isVisible())
   {
     if (key == sf::Keyboard::Down) m_choiceMenu->moveArrow(DIR_DOWN);
     else if (key == sf::Keyboard::Up) m_choiceMenu->moveArrow(DIR_UP);
@@ -315,11 +297,6 @@ void Game::draw(sf::RenderTarget& target)
   drawParty(target);
 
   m_minimap.draw(target);
-
-  if (m_menu.isVisible())
-  {
-    m_menu.draw(target, 0, 0);
-  }
 
   if (m_currentMap)
   {
