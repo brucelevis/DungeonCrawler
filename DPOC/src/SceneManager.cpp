@@ -131,6 +131,8 @@ void SceneManager::draw()
     m_scenes.back()->draw(m_targetTexture);
   }
 
+  m_guiStack.draw(m_targetTexture);
+
   for (auto it = m_pictures.begin(); it != m_pictures.end(); ++it)
   {
     it->second->draw(m_targetTexture);

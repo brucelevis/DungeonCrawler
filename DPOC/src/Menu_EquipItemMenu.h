@@ -13,6 +13,8 @@ public:
 
   void refresh() override;
 
+  bool handleInput(sf::Keyboard::Key key) override;
+
   void setEquipmentType(const std::string& equipmentType);
 
   static std::string removeEquipmentString();

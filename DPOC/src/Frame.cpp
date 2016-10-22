@@ -125,3 +125,15 @@ void draw_frame(sf::RenderTarget& target, int x, int y, int w, int h)
   sprite.setPosition(x, y + h - partSize);
   target.draw(sprite);
 }
+
+sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color color)
+{
+  sf::RectangleShape rect;
+  rect.setFillColor(sf::Color::Transparent);
+  rect.setOutlineThickness(1.0f);
+  rect.setOutlineColor(color);
+  rect.setSize(sf::Vector2f(w, h));
+  rect.setPosition(x, y);
+
+  return rect;
+}

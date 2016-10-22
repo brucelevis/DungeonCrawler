@@ -20,6 +20,7 @@ public:
   void setCursorVisible(bool visible) { m_cursorVisible = visible; }
   bool cursorVisible() const { return m_cursorVisible; }
 
+  virtual void start() {}
   virtual void update() {}
   virtual bool handleInput(sf::Keyboard::Key key) = 0;
   virtual void draw(sf::RenderTarget& target) = 0;

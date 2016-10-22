@@ -13,14 +13,18 @@ public:
 
   bool handleEvent(const sf::Event& event);
 
-  template <typename T, typename ... Args>
-  T* addWidget(Args&& ... args)
+  template <typename T, typename... Args>
+  T* addWidget(Args&&... args)
   {
     std::unique_ptr<T> ptr{new T{std::forward<Args>(args)...}};
     ptr->setGuiStack(this);
     m_guiWidgets.emplace_back(std::move(ptr));
+    m_guiWidgets.back()->start();
     return m_guiWidgets.back().get();
   }
+
+  void bringToFront(const GuiWidget* widget);
+  void yield(const GuiWidget* widget);
 
   void removeWidget(const GuiWidget* widget);
 
@@ -37,6 +41,12 @@ public:
 
     return nullptr;
   }
+
+  GuiWidget* getTop();
+
+  void draw(sf::RenderTarget& target);
+private:
+  std::vector<std::unique_ptr<GuiWidget>>::iterator findIterator(const GuiWidget* widget);
 private:
   std::vector<std::unique_ptr<GuiWidget>> m_guiWidgets;
 };

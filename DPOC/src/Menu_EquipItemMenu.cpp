@@ -27,6 +27,21 @@ void EquipItemMenu::refresh()
   fixRange();
 }
 
+bool EquipItemMenu::handleInput(sf::Keyboard::Key key)
+{
+  // Special handling for escape -- window should not be closed.
+
+  if (key == sf::Keyboard::Escape)
+  {
+    setCursorVisible(false);
+    getGuiStack()->yield(this);
+
+    return true;
+  }
+
+  return ItemMenu::handleInput(key);
+}
+
 void EquipItemMenu::setEquipmentType(const std::string& equipmentType)
 {
   m_equipmentType = equipmentType;

@@ -81,18 +81,6 @@ static std::vector<std::string> get_faces()
   return faces;
 }
 
-static sf::RectangleShape make_select_rect(int x, int y, int w, int h, sf::Color color = sf::Color::Red)
-{
-  sf::RectangleShape rect;
-  rect.setFillColor(sf::Color::Transparent);
-  rect.setOutlineThickness(1.0f);
-  rect.setOutlineColor(color);
-  rect.setSize(sf::Vector2f(w, h));
-  rect.setPosition(x, y);
-
-  return rect;
-}
-
 static void draw_status(sf::RenderTarget& target, PlayerCharacter* character, int x, int y)
 {
   draw_frame(target, 16, 16, 14*16, 13*16);

@@ -17,7 +17,7 @@ public:
   ItemMenu(const Callback& callback, int x, int y, int w = 14*16, int h = 12*16);
   virtual ~ItemMenu() {}
 
-  bool handleInput(sf::Keyboard::Key key) override;
+  virtual bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;
 
   virtual void refresh();

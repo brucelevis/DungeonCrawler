@@ -175,35 +175,6 @@ private:
   PlayerCharacter* m_target;
 };
 
-class EquipMenu : public Menu
-{
-  enum State
-  {
-    STATE_SELECT_EQUIPMENT_TYPE,
-    STATE_EQUIP_ITEM
-  };
-public:
-  EquipMenu(PlayerCharacter* character);
-  ~EquipMenu();
-
-  void handleConfirm();
-  void handleEscape();
-
-  void moveArrow(Direction dir);
-
-  void draw(sf::RenderTarget& target, int x, int y);
-private:
-  void doEquip();
-  void doUnEquip();
-
-  void drawDeltas(sf::RenderTarget& target, int x, int y);
-private:
-  PlayerCharacter* m_character;
-  EquipItemMenu* m_itemMenu;
-
-  State m_state;
-};
-
 class BattleActionMenu;
 class BattleStatusMenu;
 class BattleMonsterMenu;
