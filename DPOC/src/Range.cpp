@@ -103,3 +103,8 @@ int Range::getMax() const
 {
   return m_max;
 }
+
+int Range::getRangeLength() const
+{
+  return m_rangeLength;
+}

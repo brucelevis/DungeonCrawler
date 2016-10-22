@@ -25,6 +25,8 @@ struct Range
 
   int getMin() const;
   int getMax() const;
+
+  int getRangeLength() const;
 private:
   void fixWrap(WrapMode wrapMode);
 private:

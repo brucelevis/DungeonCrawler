@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 
 #include "Range.h"
 #include "GuiWidget.h"
@@ -16,10 +17,17 @@ public:
     LOAD
   };
 
+  using LoadGameCallback = std::function<void()>;
+
   SaveMenu(SaveOrLoad type);
 
   bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;
+
+  void setLoadGameCallback(const LoadGameCallback& callback)
+  {
+    m_callback = callback;
+  }
 private:
   void handleConfirm();
   void refresh();
@@ -28,6 +36,7 @@ private:
   std::vector<std::string> m_filenames;
   std::vector<std::string> m_slotNames;
   Range m_range;
+  LoadGameCallback m_callback;
 };
 
 #endif

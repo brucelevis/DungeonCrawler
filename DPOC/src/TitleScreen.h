@@ -6,23 +6,7 @@
 
 #include "Direction.h"
 #include "Scene.h"
-#include "Menu.h"
-#include "SaveMenu.h"
-
-class TitleMenu : public Menu
-{
-public:
-  TitleMenu();
-  ~TitleMenu();
-
-  void handleConfirm();
-  void moveArrow(Direction dir);
-  void handleEscape();
-
-  void draw(sf::RenderTarget& target, int x, int y);
-private:
-  SaveMenu* m_saveMenu;
-};
+#include "Menu_TitleMenu.h"
 
 class TitleScreen : public Scene
 {
@@ -36,11 +20,13 @@ public:
 
   void postFade(FadeType fadeType);
 private:
+  void handleTitleOption(TitleMenu::Action action);
+
   void handleKeyPress(sf::Keyboard::Key key);
 private:
-  TitleMenu m_menu;
   sf::Texture* m_titleTexture;
   sf::Music m_titleMusic;
+  TitleMenu::Action m_selectedAction;
 };
 
 #endif

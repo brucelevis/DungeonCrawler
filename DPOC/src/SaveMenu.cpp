@@ -101,7 +101,10 @@ void SaveMenu::handleConfirm()
     {
       load_game(m_filenames[m_range.getIndex()]);
 
-      getGuiStack()->removeWidget(this);
+      if (m_callback)
+      {
+        m_callback();
+      }
     }
     else
     {

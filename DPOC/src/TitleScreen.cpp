@@ -12,102 +12,13 @@
 #include "CharGen.h"
 #include "Scenario.h"
 
+#include "Menu_TitleMenu.h"
 #include "TitleScreen.h"
 
-TitleMenu::TitleMenu()
- : m_saveMenu(0)
-{
-
-}
-
-TitleMenu::~TitleMenu()
-{
-  delete m_saveMenu;
-}
-
-void TitleMenu::handleConfirm()
-{
-  if (m_saveMenu)
-  {
-    m_saveMenu->handleConfirm();
-
-    if (!m_saveMenu->isVisible())
-    {
-      delete m_saveMenu;
-      m_saveMenu = 0;
-
-      setVisible(false);
-      SceneManager::instance().fadeOut(32);
-    }
-  }
-  else
-  {
-    std::string choice = getCurrentMenuChoice();
-
-    if (choice == "New Game")
-    {
-      setVisible(false);
-
-      //Game::instance().setPlayer(Player::create());
-      SceneManager::instance().fadeOut(32);
-    }
-    else if (choice == "Load Game")
-    {
-      m_saveMenu = new SaveMenu(SaveMenu::LOAD);
-      m_saveMenu->setVisible(true);
-    }
-    else if (choice == "Exit")
-    {
-      SceneManager::instance().close();
-    }
-  }
-}
-
-void TitleMenu::moveArrow(Direction dir)
-{
-  if (m_saveMenu)
-  {
-    m_saveMenu->moveArrow(dir);
-  }
-  else
-  {
-    Menu::moveArrow(dir);
-  }
-}
-
-void TitleMenu::handleEscape()
-{
-  if (m_saveMenu)
-  {
-    m_saveMenu->handleEscape();
-
-    if (!m_saveMenu->isVisible())
-    {
-      delete m_saveMenu;
-      m_saveMenu = 0;
-    }
-  }
-}
-
-void TitleMenu::draw(sf::RenderTarget& target, int x, int y)
-{
-  Menu::draw(target, x, y);
-
-  if (m_saveMenu)
-  {
-    m_saveMenu->draw(target, config::GAME_RES_X / 2 - m_saveMenu->getWidth() / 2,
-        config::GAME_RES_Y / 2 - m_saveMenu->getHeight() / 2);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 TitleScreen::TitleScreen()
+  : m_selectedAction(TitleMenu::NONE)
 {
-  m_menu.addEntry("New Game");
-  m_menu.addEntry("Load Game");
-  m_menu.addEntry("Exit");
-  m_menu.setVisible(true);
+  SceneManager::instance().getGuiStack()->addWidget<TitleMenu>();
 
   m_titleTexture = cache::loadTexture("Title/TitleScreen.png");
   m_titleMusic.openFromFile(config::res_path(config::get("MUSIC_TITLE")));
@@ -131,8 +42,6 @@ void TitleScreen::draw(sf::RenderTarget& target)
     sprite.setTexture(*m_titleTexture);
     target.draw(sprite);
   }
-
-  m_menu.draw(target, config::GAME_RES_X / 2 - m_menu.getWidth() / 2, config::GAME_RES_Y / 2);
 }
 
 void TitleScreen::handleEvent(sf::Event& event)
@@ -148,24 +57,14 @@ void TitleScreen::handleEvent(sf::Event& event)
   }
 }
 
+void TitleScreen::handleTitleOption(TitleMenu::Action action)
+{
+  SceneManager::instance().fadeOut(32);
+  m_selectedAction = action;
+}
+
 void TitleScreen::handleKeyPress(sf::Keyboard::Key key)
 {
-  if (m_menu.isVisible())
-  {
-    if (key == sf::Keyboard::Space)
-    {
-      m_menu.handleConfirm();
-    }
-    else if (key == sf::Keyboard::Escape)
-    {
-      m_menu.handleEscape();
-    }
-
-    if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
-    else if (key == sf::Keyboard::Up) m_menu.moveArrow(DIR_UP);
-    else if (key == sf::Keyboard::Right) m_menu.moveArrow(DIR_RIGHT);
-    else if (key == sf::Keyboard::Down) m_menu.moveArrow(DIR_DOWN);
-  }
 }
 
 void TitleScreen::postFade(FadeType fadeType)
@@ -177,8 +76,12 @@ void TitleScreen::postFade(FadeType fadeType)
 
     SceneManager::instance().fadeIn(32);
 
-    if (m_menu.getCurrentMenuChoice() == "New Game")
+    auto guiStack = SceneManager::instance().getGuiStack();
+    guiStack->removeWidget(guiStack->findWidget<TitleMenu>());
+
+    switch (m_selectedAction)
     {
+    case TitleMenu::NEW_GAME:
       if (Scenario::instance().useCharGen())
       {
         SceneManager::instance().addScene(new CharGen);
@@ -188,15 +91,18 @@ void TitleScreen::postFade(FadeType fadeType)
         Game::instance().start(Player::create());
         SceneManager::instance().addScene(&Game::instance());
       }
-    }
-    else if (m_menu.getCurrentMenuChoice() == "Load Game")
-    {
+      break;
+    case TitleMenu::LOAD_GAME:
       SceneManager::instance().addScene(&Game::instance());
+      break;
+    case TitleMenu::EXIT_GAME:
+      SceneManager::instance().close();
+      break;
     }
   }
   else if (fadeType == FADE_IN)
   {
-    m_menu.setVisible(true);
+    SceneManager::instance().getGuiStack()->addWidget<TitleMenu>();
     Message::instance().clear();
 
     m_titleMusic.play();
