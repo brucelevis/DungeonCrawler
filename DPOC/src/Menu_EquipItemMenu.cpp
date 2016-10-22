@@ -1,5 +1,6 @@
 #include "Item.h"
 #include "Player.h"
+#include "GuiStack.h"
 #include "Menu_EquipItemMenu.h"
 
 EquipItemMenu::EquipItemMenu(PlayerCharacter* character, const Callback& callback, int x, int y, int width, int height)

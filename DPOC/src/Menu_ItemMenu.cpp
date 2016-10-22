@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Utility.h"
 #include "draw_text.h"
+#include "GuiStack.h"
 #include "Menu_ItemMenu.h"
 
 ItemMenu::ItemMenu(const Callback& callback, int x, int y, int w, int h)

@@ -65,7 +65,7 @@ GuiWidget* GuiStack::getTop()
 {
   if (m_guiWidgets.size())
   {
-    return m_guiWidgets.back();
+    return m_guiWidgets.back().get();
   }
 
   return nullptr;

@@ -84,8 +84,6 @@ public:
 };
 
 class MainMenu;
-class ItemMenu;
-class SpellMenu;
 class CharacterMenu;
 class EquipMenu;
 

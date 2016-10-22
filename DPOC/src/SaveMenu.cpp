@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "SaveLoad.h"
 #include "Utility.h"
+#include "GuiStack.h"
 #include "SaveMenu.h"
 
 const int NUM_VISIBLE_SAVES = 8;

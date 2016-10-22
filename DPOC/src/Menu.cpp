@@ -26,8 +26,6 @@
 
 #include "Menu.h"
 
-static const int ENTRY_OFFSET = 12;
-
 static bool isOKTarget(Character* target, Target targetType)
 {
   bool targetOK = !target->hasStatus("Dead");
