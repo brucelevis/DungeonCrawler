@@ -1,5 +1,8 @@
-#include "Game.h"
+#include "Player.h"
+#include "Frame.h"
 #include "Utility.h"
+#include "draw_text.h"
+#include "GuiStack.h"
 #include "Menu_SpellMenu.h"
 
 SpellMenu::SpellMenu(const Callback& callback, const std::string& characterName, int x, int y)
@@ -9,7 +12,7 @@ SpellMenu::SpellMenu(const Callback& callback, const std::string& characterName,
     m_height(12*16),
     m_callback(callback)
 {
-  const std::vector<std::string>& spells = Game::instance().getPlayer()->getCharacter(characterName)->getSpells();
+  const std::vector<std::string>& spells = get_player()->getCharacter(characterName)->getSpells();
 
   for (const std::string& spellName : spells)
   {
@@ -21,7 +24,7 @@ SpellMenu::SpellMenu(const Callback& callback, const std::string& characterName,
 
   const int maxVisible = 10;
 
-  m_range = Range{0, m_spells.size(), maxVisible};
+  m_range = Range{0, static_cast<int>(m_spells.size()), maxVisible};
 }
 
 bool SpellMenu::handleInput(sf::Keyboard::Key key)

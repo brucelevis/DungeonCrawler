@@ -110,14 +110,14 @@ void ItemMenu::refresh()
 
 void ItemMenu::fixRange()
 {
-  if (m_itemRange.getIndex() >= m_items.size())
+  if (m_itemRange.getIndex() >= static_cast<int>(m_items.size()))
   {
     m_itemRange.reset();
   }
 
   int visible = m_height / 12 - 1;
 
-  m_itemRange = Range{0, m_items.size(), visible};
+  m_itemRange = Range{0, static_cast<int>(m_items.size()), visible};
 }
 
 std::string ItemMenu::getSelectedItemName() const

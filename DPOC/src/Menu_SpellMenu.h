@@ -20,6 +20,8 @@ public:
   void draw(sf::RenderTarget& target) override;
 
   const Spell* getSelectedSpell() const;
+  const Range& getRange() const { return m_range; }
+  Range& getRange() { return m_range; }
 private:
   int m_x, m_y;
   int m_width, m_height;

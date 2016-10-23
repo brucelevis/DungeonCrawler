@@ -5,6 +5,8 @@
 #include "Frame.h"
 #include "Config.h"
 #include "Player.h"
+#include "Utility.h"
+#include "GuiStack.h"
 #include "draw_text.h"
 #include "Vocabulary.h"
 #include "Menu_EquipItemMenu.h"
@@ -34,7 +36,7 @@ void EquipMenu::start()
 
   m_equipItemMenu = getGuiStack()->addWidget<EquipItemMenu>(m_character,
     std::bind(&EquipMenu::handleSelectEquipmentCallback, this, _1),
-    itemMenuX, itemMenuY, itemMenuX, itemMenuH);
+    itemMenuX, itemMenuY, itemMenuW, itemMenuH);
   m_equipItemMenu->setCursorVisible(false);
   refreshItemMenu();
 

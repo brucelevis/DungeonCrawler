@@ -23,6 +23,8 @@ public:
   virtual void refresh();
 
   std::string getSelectedItemName() const;
+  const Range& getRange() const { return m_itemRange; }
+  Range& getRange() { return m_itemRange; }
 protected:
   void fixRange();
 private:

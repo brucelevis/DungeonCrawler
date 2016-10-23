@@ -23,6 +23,8 @@ private:
   void handleTitleOption(TitleMenu::Action action);
 
   void handleKeyPress(sf::Keyboard::Key key);
+
+  void createTitleMenu();
 private:
   sf::Texture* m_titleTexture;
   sf::Music m_titleMusic;

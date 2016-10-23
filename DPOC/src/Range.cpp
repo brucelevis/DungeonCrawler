@@ -27,6 +27,24 @@ void Range::reset()
   m_end = m_rangeLength;
 }
 
+void Range::moveTo(int index)
+{
+  if (index < m_index)
+  {
+    while (index < m_index)
+    {
+      addIndex(1, NO_WRAP);
+    }
+  }
+  else if (index > m_index)
+  {
+    while (index > m_index)
+    {
+      subIndex(1, NO_WRAP);
+    }
+  }
+}
+
 void Range::addIndex(int num, WrapMode wrapMode)
 {
   m_index += num;

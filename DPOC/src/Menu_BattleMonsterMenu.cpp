@@ -1,6 +1,7 @@
 #include "Frame.h"
 #include "Config.h"
 #include "draw_text.h"
+#include "Monster.h"
 #include "Menu_BattleMonsterMenu.h"
 
 BattleMonsterMenu::BattleMonsterMenu(const Callback& callback, const std::vector<Character*>& monsters)
@@ -63,7 +64,7 @@ bool BattleMonsterMenu::handleInput(sf::Keyboard::Key key)
   {
     m_index = m_monsters.size() - 1;
   }
-  else if (m_index >= m_monsters.size())
+  else if (m_index >= static_cast<int>(m_monsters.size()))
   {
     m_index = 0;
   }

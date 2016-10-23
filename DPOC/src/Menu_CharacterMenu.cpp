@@ -1,6 +1,10 @@
 #include "Frame.h"
 #include "Player.h"
 #include "draw_text.h"
+#include "MenuTextHelpers.h"
+#include "StatusEffect.h"
+#include "draw_text.h"
+
 #include "Menu_CharacterMenu.h"
 
 CharacterMenu::CharacterMenu(const Callback& callback, const EscapeCallback& escapeCallback, int x, int y)
@@ -21,7 +25,7 @@ CharacterMenu::CharacterMenu(const Callback& callback, const EscapeCallback& esc
     m_characters.push_back(character);
   }
 
-  m_range = Range{0, m_characters.size(), m_characters.size()};
+  m_range = Range{0, static_cast<int>(m_characters.size()), static_cast<int>(m_characters.size())};
 }
 
 void CharacterMenu::reset()
@@ -66,7 +70,7 @@ void CharacterMenu::draw(sf::RenderTarget& target)
 
   draw_frame(target, m_x, m_y, width, height);
 
-  for (size_t i = 0; i < m_characters.size(); i++)
+  for (int i = 0; i < static_cast<int>(m_characters.size()); i++)
   {
     PlayerCharacter* character = m_characters[i];
 

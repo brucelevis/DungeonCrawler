@@ -1,6 +1,9 @@
 #include "Frame.h"
 #include "SaveMenu.h"
 #include "draw_text.h"
+#include "Utility.h"
+#include "GuiStack.h"
+
 #include "Menu_TitleMenu.h"
 
 TitleMenu::TitleMenu(const Callback& callback)
@@ -10,7 +13,7 @@ TitleMenu::TitleMenu(const Callback& callback)
   m_options.push_back("Load Game");
   m_options.push_back("Exit");
 
-  m_range = Range{0, m_options.size(), m_options.size()};
+  m_range = Range{0, static_cast<int>(m_options.size()), static_cast<int>(m_options.size())};
 }
 
 bool TitleMenu::handleInput(sf::Keyboard::Key key)

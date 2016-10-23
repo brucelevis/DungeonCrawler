@@ -5,6 +5,8 @@
 #include "Sound.h"
 #include "Battle.h"
 #include "Target.h"
+#include "Player.h"
+#include "Config.h"
 #include "GuiStack.h"
 #include "Character.h"
 #include "Vocabulary.h"
@@ -59,7 +61,7 @@ void BattleMenu::start()
 
   m_statusMenu = stack->addWidget<BattleStatusMenu>(
     std::bind(&BattleMenu::playerSelected, this, std::placeholders::_1),
-    std::bind(&BattleMenu::statusMenuEscape, this, std::placeholders::_1),
+    std::bind(&BattleMenu::statusMenuEscape, this),
     statusMenuX, statusMenuY);
 
   stack->bringToFront(m_actionMenu);
@@ -226,7 +228,7 @@ void BattleMenu::battleActionSelected(const std::string& action)
     auto it = m_spellMemory.find(m_statusMenu->getCurrentActor());
     if (it != m_spellMemory.end())
     {
-      spellMenu->setCurrentChoice(it->second);
+      spellMenu->getRange().moveTo(it->second);
     }
   }
   else if (action == "Item")
@@ -238,7 +240,7 @@ void BattleMenu::battleActionSelected(const std::string& action)
     auto it = m_itemMemory.find(m_statusMenu->getCurrentActor());
     if (it != m_itemMemory.end())
     {
-      itemMenu->setCurrentChoice(it->second);
+      itemMenu->getRange().moveTo(it->second);
     }
   }
   else if (action == "Guard")
@@ -277,7 +279,7 @@ void BattleMenu::itemSelected(const std::string& itemName)
   auto itemMenu = getGuiStack()->findWidget<ItemMenu>();
   const Item* item = get_player()->getItem(itemName);
 
-  m_itemMemory[m_statusMenu->getCurrentActor()] = itemMenu->getCurrentChoiceIndex();
+  m_itemMemory[m_statusMenu->getCurrentActor()] = itemMenu->getRange().getIndex();
 
   if (m_statusMenu->getCurrentActor()->canUseItemInBattle(*item))
   {
@@ -309,7 +311,7 @@ void BattleMenu::itemSelected(const std::string& itemName)
 void BattleMenu::spellSelected(const Spell* spell)
 {
   auto spellMenu = getGuiStack()->findWidget<SpellMenu>();
-  m_spellMemory[m_statusMenu->getCurrentActor()] = spellMenu->getCurrentChoiceIndex();
+  m_spellMemory[m_statusMenu->getCurrentActor()] = spellMenu->getRange().getIndex();
 
   if (spell->target == TARGET_NONE || spell->mpCost > m_statusMenu->getCurrentActor()->getAttribute(terms::mp).current)
   {
@@ -423,7 +425,7 @@ void BattleMenu::selectCharacter()
 
 void BattleMenu::closeSpellMenu()
 {
-  getGuiStack->removeWidget(getGuiStack()->findWidget<SpellMenu>());
+  getGuiStack()->removeWidget(getGuiStack()->findWidget<SpellMenu>());
 }
 
 void BattleMenu::closeItemMenu()

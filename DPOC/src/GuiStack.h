@@ -20,7 +20,7 @@ public:
     ptr->setGuiStack(this);
     m_guiWidgets.emplace_back(std::move(ptr));
     m_guiWidgets.back()->start();
-    return m_guiWidgets.back().get();
+    return static_cast<T*>(m_guiWidgets.back().get());
   }
 
   void bringToFront(const GuiWidget* widget);
@@ -35,7 +35,7 @@ public:
     {
       if (dynamic_cast<T*>(w.get()))
       {
-        return w.get();
+        return dynamic_cast<T*>(w.get());
       }
     }
 

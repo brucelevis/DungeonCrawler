@@ -23,6 +23,8 @@ public:
   void init(PlayerCharacter* character);
 
   void resetChoice();
+
+  const std::string& getCurrentMenuChoice() const;
 private:
   void addEntry(const std::string& option);
 private:

@@ -1,5 +1,7 @@
 #include <string>
+#include <functional>
 
+#include "logger.h"
 #include "SceneManager.h"
 #include "Config.h"
 #include "Cache.h"
@@ -18,7 +20,7 @@
 TitleScreen::TitleScreen()
   : m_selectedAction(TitleMenu::NONE)
 {
-  SceneManager::instance().getGuiStack()->addWidget<TitleMenu>();
+  createTitleMenu();
 
   m_titleTexture = cache::loadTexture("Title/TitleScreen.png");
   m_titleMusic.openFromFile(config::res_path(config::get("MUSIC_TITLE")));
@@ -98,13 +100,21 @@ void TitleScreen::postFade(FadeType fadeType)
     case TitleMenu::EXIT_GAME:
       SceneManager::instance().close();
       break;
+    default:
+      TRACE("ERROR: Should never get here");
+      break;
     }
   }
   else if (fadeType == FADE_IN)
   {
-    SceneManager::instance().getGuiStack()->addWidget<TitleMenu>();
+    createTitleMenu();
     Message::instance().clear();
 
     m_titleMusic.play();
   }
+}
+
+void TitleScreen::createTitleMenu()
+{
+  SceneManager::instance().getGuiStack()->addWidget<TitleMenu>(std::bind(&TitleScreen::handleTitleOption, this, std::placeholders::_1));
 }

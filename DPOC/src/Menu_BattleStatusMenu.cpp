@@ -5,6 +5,7 @@
 #include "GuiStack.h"
 #include "Vocabulary.h"
 #include "StatusEffect.h"
+#include "draw_text.h"
 
 #include "Menu_BattleActionMenu.h"
 #include "Menu_BattleStatusMenu.h"
@@ -59,7 +60,7 @@ void BattleStatusMenu::draw(sf::RenderTarget& target)
 {
   draw_frame(target, m_x, m_y, getWidth(), getHeight());
 
-  for (size_t i = 0; i < m_party.size(); i++)
+  for (int i = 0; i < static_cast<int>(m_party.size()); i++)
   {
     PlayerCharacter* character = m_party[i];
     std::string name = character->getName();

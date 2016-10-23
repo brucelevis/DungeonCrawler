@@ -9,6 +9,8 @@
 #include "Player.h"
 #include "Vocabulary.h"
 #include "Target.h"
+#include "draw_text.h"
+#include "GuiStack.h"
 
 #include "SaveMenu.h"
 #include "Menu_ItemMenu.h"
@@ -31,7 +33,7 @@ MainMenu::MainMenu()
   addEntry("Save");
   addEntry("Close");
 
-  m_range = Range{0, m_options.size(), m_options.size()};
+  m_range = Range{0, static_cast<int>(m_options.size()), static_cast<int>(m_options.size())};
 }
 
 MainMenu::~MainMenu()
@@ -93,7 +95,7 @@ void MainMenu::draw(sf::RenderTarget& target)
   draw_text_bmp(target, x + 8, y + 13*16+7, "%s", vocab_short(terms::gold).c_str());
   draw_text_bmp(target, x + 8, y + 13*16+19, "%d", get_player()->getGold());
 
-  for (size_t i = 0; i < m_options.size(); i++)
+  for (int i = 0; i < static_cast<int>(m_options.size()); i++)
   {
     draw_text_bmp(target, x + 18, y + 10 + i * 14, "%s", m_options[i].c_str());
     if (i == m_range.getIndex())

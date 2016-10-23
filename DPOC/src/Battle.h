@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Script.h"
 
+class BattleAnimation;
 class BattleBackground;
 class Character;
 class PlayerCharacter;

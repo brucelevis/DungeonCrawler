@@ -1,12 +1,13 @@
 #include "Frame.h"
 #include "draw_text.h"
+#include "Utility.h"
 #include "Menu_BattleActionMenu.h"
 
 BattleActionMenu::BattleActionMenu(const ConfirmCallback& confirmCallback, const EscapeCallback& escapeCallback, int x, int y)
-  : m_confirmCallback(confirmCallback),
-    m_escapeCallback(escapeCallback),
-    m_x(x),
-    m_y(y)
+  : m_x(x),
+    m_y(y),
+    m_confirmCallback(confirmCallback),
+    m_escapeCallback(escapeCallback)
 {
   addEntry("Attack");
   addEntry("Spell");
@@ -14,7 +15,7 @@ BattleActionMenu::BattleActionMenu(const ConfirmCallback& confirmCallback, const
   addEntry("Guard");
   addEntry("Run");
 
-  m_range = Range{0, m_options.size(), 4};
+  m_range = Range{0, static_cast<int>(m_options.size()), 4};
 }
 
 bool BattleActionMenu::handleInput(sf::Keyboard::Key key)
@@ -96,10 +97,15 @@ void BattleActionMenu::init(PlayerCharacter* character)
     addEntry(*it);
   }
 
-  m_range = Range{0, m_options.size(), 4};
+  m_range = Range{0, static_cast<int>(m_options.size()), 4};
 }
 
 void BattleActionMenu::resetChoice()
 {
   m_range.reset();
+}
+
+const std::string& BattleActionMenu::getCurrentMenuChoice() const
+{
+  return m_options[m_range.getIndex()];
 }

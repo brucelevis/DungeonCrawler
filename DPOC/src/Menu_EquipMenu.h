@@ -25,7 +25,7 @@ private:
   void doEquip(const std::string& itemName);
   void doUnEquip();
 
-  void drawDeltas(sf::RenderTarget& target);
+  void drawDeltas(sf::RenderTarget& target, int offX, int offY);
   void refreshItemMenu();
 private:
   int m_x, m_y;

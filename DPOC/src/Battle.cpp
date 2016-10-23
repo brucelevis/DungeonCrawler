@@ -948,6 +948,11 @@ void Battle::draw(sf::RenderTarget& target)
     battleMenuX = -40;
   }
 
+  if (m_battleMenu)
+  {
+    m_battleMenu->setX(battleMenuX);
+  }
+
   if (m_battleBackground)
   {
     sf::Sprite bgSprite;
