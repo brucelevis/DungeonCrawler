@@ -27,18 +27,18 @@ void Range::reset()
   m_end = m_rangeLength;
 }
 
-void Range::moveTo(int index)
+void Range::moveTo(int targetIndex)
 {
-  if (index < m_index)
+  if (m_index < targetIndex)
   {
-    while (index < m_index)
+    while (m_index < targetIndex)
     {
       addIndex(1, NO_WRAP);
     }
   }
-  else if (index > m_index)
+  else if (m_index > targetIndex)
   {
-    while (index > m_index)
+    while (m_index > targetIndex)
     {
       subIndex(1, NO_WRAP);
     }
@@ -81,7 +81,7 @@ void Range::fixWrap(WrapMode wrapMode)
     }
     else
     {
-      m_index = m_min;
+      moveTo(m_min);
     }
   }
   else if (m_index < m_min)
@@ -92,7 +92,7 @@ void Range::fixWrap(WrapMode wrapMode)
     }
     else
     {
-      m_index = m_max - 1;
+      moveTo(m_max - 1);
     }
   }
 }

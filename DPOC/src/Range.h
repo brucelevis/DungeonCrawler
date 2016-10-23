@@ -14,7 +14,7 @@ struct Range
   Range(int min, int max, int rangeLength);
 
   void reset();
-  void moveTo(int index);
+  void moveTo(int targetIndex);
 
   void addIndex(int num, WrapMode wrapMode);
   void subIndex(int num, WrapMode wrapMode);

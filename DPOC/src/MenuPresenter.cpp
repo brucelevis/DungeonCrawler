@@ -63,7 +63,7 @@ void MenuPresenter::draw(sf::RenderTarget& target, int x, int y, const GuiWidget
     draw_frame(target, x, y, width, height);
   }
 
-  for (int index = m_range.getStart(), i = 0; index <= m_range.getEnd(); index++, i++)
+  for (int index = m_range.getStart(), i = 0; index < m_range.getEnd(); index++, i++)
   {
     if (index < (int)m_options.size())
     {
