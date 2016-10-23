@@ -204,24 +204,4 @@ private:
   BattleActionMenu* m_actionMenu;
 };
 
-class BattleMonsterMenu : public Menu
-{
-public:
-  BattleMonsterMenu(const std::vector<Character*>& monsters);
-
-  void handleConfirm();
-  void moveArrow(Direction dir);
-
-  void draw(sf::RenderTarget& target, int x, int y);
-
-  Character* getCurrentMonster();
-
-  /// Find first non-dead target.
-  void fixSelection();
-
-  void addMonster(Character* monster);
-private:
-  std::vector<Character*> m_monsters;
-};
-
 #endif
