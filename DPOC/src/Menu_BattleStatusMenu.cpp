@@ -20,6 +20,10 @@ BattleStatusMenu::BattleStatusMenu(const ConfirmCallback& confirmCallback, const
     m_escapeCallback(escapeCallback)
 {
   m_party = get_player()->getParty();
+}
+
+void BattleStatusMenu::start()
+{
   resetActor();
 }
 

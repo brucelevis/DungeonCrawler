@@ -28,6 +28,7 @@ public:
   MenuPresenter(Style style = NO_STYLE);
 
   void clear();
+  void reset();
 
   void scrollUp();
   void scrollDown();

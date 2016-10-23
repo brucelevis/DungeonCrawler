@@ -23,14 +23,13 @@ CharacterMenu::CharacterMenu(const Callback& callback, const EscapeCallback& esc
   for (PlayerCharacter* character : party)
   {
     m_characters.push_back(character);
+    m_presenter.addEntry(character->getName());
   }
-
-  m_range = Range{0, static_cast<int>(m_characters.size()), static_cast<int>(m_characters.size())};
 }
 
 void CharacterMenu::reset()
 {
-  m_range.reset();
+  m_presenter.reset();
 }
 
 bool CharacterMenu::handleInput(sf::Keyboard::Key key)
@@ -38,16 +37,16 @@ bool CharacterMenu::handleInput(sf::Keyboard::Key key)
   switch (key)
   {
   case sf::Keyboard::Up:
-    m_range.subIndex(1, Range::WRAP);
+    m_presenter.scrollUp();
     break;
   case sf::Keyboard::Down:
-    m_range.addIndex(1, Range::WRAP);
+    m_presenter.scrollDown();
     break;
   case sf::Keyboard::Space:
   case sf::Keyboard::Return:
     if (m_callback)
     {
-      m_callback(m_characters[m_range.getIndex()]);
+      m_callback(m_characters[m_presenter.getSelectedOption().entryIndex]);
     }
     break;
   case sf::Keyboard::Escape:
@@ -74,7 +73,7 @@ void CharacterMenu::draw(sf::RenderTarget& target)
   {
     PlayerCharacter* character = m_characters[i];
 
-    int offX = m_x + 8 + 5 * 16;
+    int offX = m_x + 16;
     int offY = m_y + 8;
 
     character->draw(target, offX, offY + i * 48);
@@ -86,7 +85,7 @@ void CharacterMenu::draw(sf::RenderTarget& target)
     draw_hp(target, character, offX + 40, offY + i * 48 + 12);
     draw_mp(target, character, offX + 40, offY + i * 48 + 24);
 
-    if (cursorVisible() && i == m_range.getIndex())
+    if (cursorVisible() && i == m_presenter.getSelectedOption().entryIndex)
     {
       sf::RectangleShape rect = make_select_rect(offX - 2, offY + i * 48 - 2, 164, 36);
       target.draw(rect);

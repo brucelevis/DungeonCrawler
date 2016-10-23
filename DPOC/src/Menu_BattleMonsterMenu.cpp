@@ -21,6 +21,11 @@ bool BattleMonsterMenu::handleInput(sf::Keyboard::Key key)
   case sf::Keyboard::Left:
     m_index--;
 
+    if (m_index < 0)
+    {
+      m_index = m_monsters.size() - 1;
+    }
+
     while (getCurrentMonster()->getStatus() == "Dead")
     {
       m_index--;
@@ -33,6 +38,11 @@ bool BattleMonsterMenu::handleInput(sf::Keyboard::Key key)
     break;
   case sf::Keyboard::Right:
     m_index++;
+
+    if (m_index >= static_cast<int>(m_monsters.size()))
+    {
+      m_index = 0;
+    }
 
     while (getCurrentMonster()->getStatus() == "Dead")
     {
@@ -58,15 +68,6 @@ bool BattleMonsterMenu::handleInput(sf::Keyboard::Key key)
     break;
   default:
     break;
-  }
-
-  if (m_index < 0)
-  {
-    m_index = m_monsters.size() - 1;
-  }
-  else if (m_index >= static_cast<int>(m_monsters.size()))
-  {
-    m_index = 0;
   }
 
   return true;

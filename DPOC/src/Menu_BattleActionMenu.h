@@ -5,8 +5,8 @@
 #include <vector>
 #include <functional>
 
-#include "Range.h"
 #include "GuiWidget.h"
+#include "MenuPresenter.h"
 #include "PlayerCharacter.h"
 
 class BattleActionMenu : public GuiWidget
@@ -24,14 +24,13 @@ public:
 
   void resetChoice();
 
-  const std::string& getCurrentMenuChoice() const;
+  std::string getCurrentMenuChoice() const;
 private:
   void addEntry(const std::string& option);
 private:
   int m_x, m_y;
 
-  Range m_range;
-  std::vector<std::string> m_options;
+  MenuPresenter m_presenter;
 
   ConfirmCallback m_confirmCallback;
   EscapeCallback m_escapeCallback;

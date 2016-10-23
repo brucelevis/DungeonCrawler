@@ -87,9 +87,7 @@ void MainMenu::draw(sf::RenderTarget& target)
   const int x = 0;
   const int y = 0;
 
-  draw_frame(target, x, y, config::GAME_RES_X, config::GAME_RES_Y);
-
-  draw_frame(target, x, y, menuChoicesWidth, m_options.size() * 16);
+  draw_frame(target, x, y, menuChoicesWidth, target.getSize().y - gpPanelHeight);
   draw_frame(target, x, y + 208, menuChoicesWidth, gpPanelHeight);
 
   draw_text_bmp(target, x + 8, y + 13*16+7, "%s", vocab_short(terms::gold).c_str());

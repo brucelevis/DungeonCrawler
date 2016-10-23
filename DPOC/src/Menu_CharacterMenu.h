@@ -5,8 +5,8 @@
 #include <functional>
 
 #include "Spell.h"
-#include "Range.h"
 #include "GuiWidget.h"
+#include "MenuPresenter.h"
 #include "PlayerCharacter.h"
 
 class CharacterMenu : public GuiWidget
@@ -43,7 +43,7 @@ private:
   PlayerCharacter* m_target;
 
   std::vector<PlayerCharacter*> m_characters;
-  Range m_range;
+  MenuPresenter m_presenter;
 
   Callback m_callback;
   EscapeCallback m_escapeCallback;

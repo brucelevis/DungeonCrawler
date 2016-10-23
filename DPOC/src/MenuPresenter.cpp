@@ -16,6 +16,11 @@ void MenuPresenter::clear()
   m_options.clear();
 }
 
+void MenuPresenter::reset()
+{
+  m_range.moveTo(0);
+}
+
 void MenuPresenter::scrollUp()
 {
   m_range.subIndex(1, Range::WRAP);

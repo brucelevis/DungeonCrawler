@@ -3,19 +3,21 @@
 #include "Utility.h"
 #include "Menu_BattleActionMenu.h"
 
+const int MAX_VISIBLE_ACTION_ENTRIES = 4;
+
 BattleActionMenu::BattleActionMenu(const ConfirmCallback& confirmCallback, const EscapeCallback& escapeCallback, int x, int y)
   : m_x(x),
     m_y(y),
+    m_presenter(MenuPresenter::STYLE_FRAME),
     m_confirmCallback(confirmCallback),
     m_escapeCallback(escapeCallback)
 {
-  addEntry("Attack");
-  addEntry("Spell");
-  addEntry("Item");
-  addEntry("Guard");
-  addEntry("Run");
-
-  m_range = Range{0, static_cast<int>(m_options.size()), 4};
+  m_presenter.addEntry("Attack");
+  m_presenter.addEntry("Spell");
+  m_presenter.addEntry("Item");
+  m_presenter.addEntry("Guard");
+  m_presenter.addEntry("Run");
+  m_presenter.setMaxVisible(MAX_VISIBLE_ACTION_ENTRIES);
 }
 
 bool BattleActionMenu::handleInput(sf::Keyboard::Key key)
@@ -23,16 +25,16 @@ bool BattleActionMenu::handleInput(sf::Keyboard::Key key)
   switch (key)
   {
   case sf::Keyboard::Up:
-    m_range.subIndex(1, Range::WRAP);
+    m_presenter.scrollUp();
     break;
   case sf::Keyboard::Down:
-    m_range.addIndex(1, Range::WRAP);
+    m_presenter.scrollDown();
     break;
   case sf::Keyboard::Space:
   case sf::Keyboard::Return:
     if (m_confirmCallback)
     {
-      m_confirmCallback(m_options[m_range.getIndex()]);
+      m_confirmCallback(m_presenter.getSelectedOption().entryName);
     }
     break;
   case sf::Keyboard::Escape:
@@ -50,45 +52,20 @@ bool BattleActionMenu::handleInput(sf::Keyboard::Key key)
 
 void BattleActionMenu::draw(sf::RenderTarget& target)
 {
-  const int width = 4 + get_longest_string(m_options).size() * 8;
-  const int height = 2 * 8 + m_range.getRangeLength() * ENTRY_OFFSET;
   const int x = m_x;
   const int y = m_y;
 
-  draw_frame(target, x, y, width, height);
-
-  for (int index = m_range.getStart(), i = 0; index <= m_range.getEnd(); index++, i++)
-  {
-    if (index < (int)m_options.size())
-    {
-      draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_options[index].c_str());
-    }
-
-    if (m_range.getIndex() == index && cursorVisible())
-    {
-      drawSelectArrow(target, x + 8, y + 8 + i * ENTRY_OFFSET);
-    }
-  }
-
-  if (m_range.getStart() > m_range.getMin())
-  {
-    drawTopScrollArrow(target, x + width - 12, y + 4);
-  }
-
-  if (m_range.getEnd() < m_range.getMax())
-  {
-    drawBottomScrollArrow(target, x + width - 12, y + height - 12);
-  }
+  m_presenter.draw(target, x, y, this);
 }
 
 void BattleActionMenu::addEntry(const std::string& option)
 {
-  m_options.push_back(option);
+  m_presenter.addEntry(option);
 }
 
 void BattleActionMenu::init(PlayerCharacter* character)
 {
-  m_options.clear();
+  m_presenter.clear();
 
   for (auto it = character->getClass().battleActions.begin();
        it != character->getClass().battleActions.end();
@@ -97,15 +74,15 @@ void BattleActionMenu::init(PlayerCharacter* character)
     addEntry(*it);
   }
 
-  m_range = Range{0, static_cast<int>(m_options.size()), 4};
+  m_presenter.setMaxVisible(MAX_VISIBLE_ACTION_ENTRIES);
 }
 
 void BattleActionMenu::resetChoice()
 {
-  m_range.reset();
+  m_presenter.reset();
 }
 
-const std::string& BattleActionMenu::getCurrentMenuChoice() const
+std::string BattleActionMenu::getCurrentMenuChoice() const
 {
-  return m_options[m_range.getIndex()];
+  return m_presenter.getSelectedOption().entryName;
 }

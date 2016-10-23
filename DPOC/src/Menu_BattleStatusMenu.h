@@ -15,6 +15,8 @@ public:
 
   BattleStatusMenu(const ConfirmCallback& confirmCallback, const EscapeCallback& escapeCallback, int x, int y);
 
+  void start() override;
+
   bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;
 
