@@ -8,7 +8,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Menu.h"
 #include "Target.h"
 #include "Effect.h"
 #include "Scene.h"
@@ -17,6 +16,7 @@
 class BattleBackground;
 class Character;
 class PlayerCharacter;
+class BattleMenu;
 
 class Battle : public Scene
 {
@@ -99,12 +99,13 @@ private:
   std::vector<Character*> getAllActors() const;
 
   bool checkVictoryOrDefeat();
+  void closeBattleMenu();
 private:
   bool m_battleOngoing;
   State m_state;
   int m_turnCounter;
 
-  BattleMenu m_battleMenu;
+  BattleMenu* m_battleMenu;
   std::vector<Character*> m_monsters;
   std::vector<Character*> m_battleOrder;
   std::map<Character*, std::vector<Action> > m_battleActions;

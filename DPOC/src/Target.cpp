@@ -1,3 +1,4 @@
+#include "Character.h"
 #include "logger.h"
 #include "Target.h"
 
@@ -46,4 +47,21 @@ Target targetFromString(const std::string& str)
   TRACE("Unknown target %s, returning TARGET_NONE", str.c_str());
 
   return TARGET_NONE;
+}
+
+bool isOKTarget(Character* target, Target targetType)
+{
+  bool targetOK = !target->hasStatus("Dead");
+
+  if (!targetOK && targetType == TARGET_DEAD)
+  {
+    targetOK = true;
+  }
+  else if (targetOK && targetType == TARGET_DEAD)
+  {
+    // Can't target living with TARGET_DEAD.
+    targetOK = false;
+  }
+
+  return targetOK;
 }

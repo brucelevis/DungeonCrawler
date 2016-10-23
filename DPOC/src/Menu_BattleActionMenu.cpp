@@ -98,3 +98,8 @@ void BattleActionMenu::init(PlayerCharacter* character)
 
   m_range = Range{0, m_options.size(), 4};
 }
+
+void BattleActionMenu::resetChoice()
+{
+  m_range.reset();
+}

@@ -209,3 +209,8 @@ int BattleStatusMenu::getPartySize() const
 {
   return static_cast<int>(m_party.size());
 }
+
+void BattleStatusMenu::resetChoice()
+{
+  m_index = 0;
+}

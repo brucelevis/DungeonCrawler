@@ -39,6 +39,7 @@ public:
   PlayerCharacter* getCurrentSelectedActor();
 
   void resetActor();
+  void resetChoice();
 
   void setCurrentActorRectHidden(bool hidden) { m_currenActorRectHidden = hidden; }
 private:

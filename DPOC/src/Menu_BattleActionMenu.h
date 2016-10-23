@@ -21,6 +21,8 @@ public:
   void draw(sf::RenderTarget& target) override;
 
   void init(PlayerCharacter* character);
+
+  void resetChoice();
 private:
   void addEntry(const std::string& option);
 private:

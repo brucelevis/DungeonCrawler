@@ -17,4 +17,7 @@ enum Target
 std::string targetToString(Target target);
 Target targetFromString(const std::string& str);
 
+class Character;
+bool isOKTarget(Character* target, Target targetType);
+
 #endif

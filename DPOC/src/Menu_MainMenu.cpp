@@ -8,6 +8,7 @@
 #include "Frame.h"
 #include "Player.h"
 #include "Vocabulary.h"
+#include "Target.h"
 
 #include "SaveMenu.h"
 #include "Menu_ItemMenu.h"
@@ -16,26 +17,6 @@
 #include "Menu_CharacterMenu.h"
 
 #include "Menu_MainMenu.h"
-
-namespace
-{
-  bool isOKTarget(Character* target, Target targetType)
-  {
-    bool targetOK = !target->hasStatus("Dead");
-
-    if (!targetOK && targetType == TARGET_DEAD)
-    {
-      targetOK = true;
-    }
-    else if (targetOK && targetType == TARGET_DEAD)
-    {
-      // Can't target living with TARGET_DEAD.
-      targetOK = false;
-    }
-
-    return targetOK;
-  }
-}
 
 MainMenu::MainMenu()
   : m_characterMenu(nullptr),

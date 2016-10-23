@@ -1,4 +1,5 @@
 #include <iterator>
+#include <algorithm>
 
 #include "SceneManager.h"
 
@@ -11,6 +12,7 @@
 #include "Vocabulary.h"
 #include "Script.h"
 
+#include "Menu_BattleMenu.h"
 #include "StatusEffect.h"
 #include "Monster.h"
 #include "Item.h"
@@ -125,7 +127,6 @@ Battle::Battle(const std::vector<Character*>& monsters, const std::vector<std::s
  : m_battleOngoing(false),
    m_state(STATE_BATTLE_BEGINS),
    m_turnCounter(0),
-   m_battleMenu(this, monsters),
    m_monsters(monsters),
    m_currentActor(0),
    m_turnDelay(0),
@@ -133,6 +134,8 @@ Battle::Battle(const std::vector<Character*>& monsters, const std::vector<std::s
    m_battleBackground(0),
    m_battleBeginFade(1.0f)
 {
+  m_battleMenu = SceneManager::instance().getGuiStack()->addWidget<BattleMenu>(this, monsters);
+
   if (scriptLines.size())
   {
     m_script.loadFromLines(scriptLines);
@@ -505,7 +508,7 @@ void Battle::executeActions()
       if (random_range(0, 10) >= 2)
       {
         play_sound(config::get("SOUND_ESCAPE"));
-        m_battleMenu.setVisible(false);
+        closeBattleMenu();
         show_message("You run away.");
       }
       else
@@ -537,7 +540,7 @@ void Battle::executeActions()
     Character* newMonster = Character::createMonster(action.objectName);
 
     m_monsters.push_back(newMonster);
-    m_battleMenu.addMonster(newMonster);
+    m_battleMenu->addMonster(newMonster);
 
     battle_message("%s appears!", newMonster->getName().c_str());
   }
@@ -749,7 +752,7 @@ void Battle::doVictory()
   if (!effectInProgress() && m_turnDelay == 0)
   {
     clear_message();
-    m_battleMenu.setVisible(false);
+    closeBattleMenu();
     m_battleMusic.stop();
     m_battleMusic.openFromFile(config::res_path(config::get("MUSIC_VICTORY")));
     m_battleMusic.setLoop(false);
@@ -805,8 +808,8 @@ void Battle::processStatusEffects()
     }
     else
     {
-      m_battleMenu.setActionMenuHidden(false);
-      m_battleMenu.resetChoice();
+      m_battleMenu->setActionMenuHidden(false);
+      m_battleMenu->resetChoice();
 
       clear_message();
 
@@ -934,15 +937,6 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
       }
     }
   }
-  else if (m_state == STATE_SELECT_ACTIONS)
-  {
-    if (key == sf::Keyboard::Up) m_battleMenu.moveArrow(DIR_UP);
-    else if (key == sf::Keyboard::Down) m_battleMenu.moveArrow(DIR_DOWN);
-    else if (key == sf::Keyboard::Left) m_battleMenu.moveArrow(DIR_LEFT);
-    else if (key == sf::Keyboard::Right) m_battleMenu.moveArrow(DIR_RIGHT);
-    else if (key == sf::Keyboard::Space) m_battleMenu.handleConfirm();
-    else if (key == sf::Keyboard::Escape) m_battleMenu.handleEscape();
-  }
 }
 
 void Battle::draw(sf::RenderTarget& target)
@@ -963,8 +957,7 @@ void Battle::draw(sf::RenderTarget& target)
 
   draw_frame(target, 0, config::RAYCASTER_RES_Y, config::GAME_RES_X, config::GAME_RES_Y - config::RAYCASTER_RES_Y);
 
-  m_battleMenu.draw(target, battleMenuX, 152);
-  if ((m_state != STATE_SELECT_ACTIONS && m_state != STATE_BATTLE_BEGINS) && m_battleMenu.isVisible())
+  if ((m_state != STATE_SELECT_ACTIONS && m_state != STATE_BATTLE_BEGINS) && m_battleMenu)
   {
     for (size_t i = 0; i < get_player()->getParty().size(); i++)
     {
@@ -1121,7 +1114,7 @@ void Battle::doneSelectingActions()
     it->first->getAttribute(terms::speed).current = it->second;
   }
 
-  m_battleMenu.setActionMenuHidden(true);
+  m_battleMenu->setActionMenuHidden(true);
 
   m_state = STATE_EXECUTE_ACTIONS;
 }
@@ -1425,4 +1418,10 @@ void Battle::setBattleBackground(BattleBackground* battleBackground)
 {
   m_battleBackground = battleBackground;
   m_battleBackgroundTexture = battleBackground->getBackgroundTexture();
+}
+
+void Battle::closeBattleMenu()
+{
+  SceneManager::instance().getGuiStack()->removeWidget(m_battleMenu);
+  m_battleMenu = nullptr;
 }
