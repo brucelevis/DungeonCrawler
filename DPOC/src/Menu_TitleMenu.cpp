@@ -7,13 +7,12 @@
 #include "Menu_TitleMenu.h"
 
 TitleMenu::TitleMenu(const Callback& callback)
-  : m_callback(callback)
+  : m_callback(callback),
+    m_presenter(MenuPresenter::STYLE_FRAME)
 {
-  m_options.push_back("New Game");
-  m_options.push_back("Load Game");
-  m_options.push_back("Exit");
-
-  m_range = Range{0, static_cast<int>(m_options.size()), static_cast<int>(m_options.size())};
+  m_presenter.addEntry("New Game");
+  m_presenter.addEntry("Load Game");
+  m_presenter.addEntry("Exit");
 }
 
 bool TitleMenu::handleInput(sf::Keyboard::Key key)
@@ -21,14 +20,14 @@ bool TitleMenu::handleInput(sf::Keyboard::Key key)
   switch (key)
   {
   case sf::Keyboard::Up:
-    m_range.subIndex(1, Range::WRAP);
+    m_presenter.scrollUp();
     break;
   case sf::Keyboard::Down:
-    m_range.addIndex(1, Range::WRAP);
+    m_presenter.scrollDown();
     break;
   case sf::Keyboard::Space:
   case sf::Keyboard::Return:
-    handleConfirm(m_options[m_range.getIndex()]);
+    handleConfirm(m_presenter.getSelectedOption().entryName);
     break;
   case sf::Keyboard::Escape:
     break;
@@ -58,25 +57,10 @@ void TitleMenu::handleConfirm(const std::string& option)
 
 void TitleMenu::draw(sf::RenderTarget& target)
 {
-  const int width = 4 + get_longest_string(m_options).size() * 8;
-  const int height = 2 * 8 + m_range.getRangeLength() * ENTRY_OFFSET;
-  const int x = target.getSize().x / 2 - width / 2;
-  const int y = target.getSize().y / 2 - height / 2;
+  const int x = target.getSize().x / 2 - m_presenter.getWidth() / 2;
+  const int y = target.getSize().y / 2;
 
-  draw_frame(target, x, y, width, height);
-
-  for (int index = m_range.getStart(), i = 0; index <= m_range.getEnd(); index++, i++)
-  {
-    if (index < (int)m_options.size())
-    {
-      draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_options[index].c_str());
-    }
-
-    if (m_range.getIndex() == index && cursorVisible())
-    {
-      drawSelectArrow(target, x + 8, y + 8 + i * ENTRY_OFFSET);
-    }
-  }
+  m_presenter.draw(target, x, y, this);
 }
 
 void TitleMenu::gameLoaded()

@@ -25,10 +25,12 @@ public:
   virtual bool handleInput(sf::Keyboard::Key key) = 0;
   virtual void draw(sf::RenderTarget& target) = 0;
 protected:
+  friend class MenuPresenter;
+
   GuiStack* getGuiStack() const;
-  void drawSelectArrow(sf::RenderTarget& target, int x, int y);
-  void drawTopScrollArrow(sf::RenderTarget& target, int x, int y);
-  void drawBottomScrollArrow(sf::RenderTarget& target, int x, int y);
+  void drawSelectArrow(sf::RenderTarget& target, int x, int y) const;
+  void drawTopScrollArrow(sf::RenderTarget& target, int x, int y) const;
+  void drawBottomScrollArrow(sf::RenderTarget& target, int x, int y) const;
 private:
   friend class GuiStack;
   void setGuiStack(GuiStack* guiStack);

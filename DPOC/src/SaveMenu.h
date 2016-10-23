@@ -5,8 +5,8 @@
 #include <string>
 #include <functional>
 
-#include "Range.h"
 #include "GuiWidget.h"
+#include "MenuPresenter.h"
 
 class SaveMenu : public GuiWidget
 {
@@ -34,8 +34,7 @@ private:
 private:
   SaveOrLoad m_type;
   std::vector<std::string> m_filenames;
-  std::vector<std::string> m_slotNames;
-  Range m_range;
+  MenuPresenter m_presenter;
   LoadGameCallback m_callback;
 };
 

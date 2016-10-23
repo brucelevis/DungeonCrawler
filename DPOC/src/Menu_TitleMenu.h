@@ -4,8 +4,8 @@
 #include <vector>
 #include <functional>
 
-#include "Range.h"
 #include "GuiWidget.h"
+#include "MenuPresenter.h"
 
 class TitleMenu : public GuiWidget
 {
@@ -28,9 +28,8 @@ private:
   void handleConfirm(const std::string& option);
   void gameLoaded();
 private:
-  std::vector<std::string> m_options;
-  Range m_range;
   Callback m_callback;
+  MenuPresenter m_presenter;
 };
 
 #endif /* MENU_TITLEMENU_H_ */

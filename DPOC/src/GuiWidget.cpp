@@ -24,7 +24,7 @@ void GuiWidget::setGuiStack(GuiStack* guiStack)
   m_guiStack = guiStack;
 }
 
-void GuiWidget::drawSelectArrow(sf::RenderTarget& target, int x, int y)
+void GuiWidget::drawSelectArrow(sf::RenderTarget& target, int x, int y) const
 {
   sf::Sprite sprite;
   sprite.setTexture(*m_arrowTexture);
@@ -33,7 +33,7 @@ void GuiWidget::drawSelectArrow(sf::RenderTarget& target, int x, int y)
   target.draw(sprite);
 }
 
-void GuiWidget::drawTopScrollArrow(sf::RenderTarget& target, int x, int y)
+void GuiWidget::drawTopScrollArrow(sf::RenderTarget& target, int x, int y) const
 {
   sf::Sprite sprite;
   sprite.setTexture(*m_arrowTexture);
@@ -42,7 +42,7 @@ void GuiWidget::drawTopScrollArrow(sf::RenderTarget& target, int x, int y)
   target.draw(sprite);
 }
 
-void GuiWidget::drawBottomScrollArrow(sf::RenderTarget& target, int x, int y)
+void GuiWidget::drawBottomScrollArrow(sf::RenderTarget& target, int x, int y) const
 {
   sf::Sprite sprite;
   sprite.setTexture(*m_arrowTexture);
