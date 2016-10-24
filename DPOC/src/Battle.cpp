@@ -1427,6 +1427,6 @@ void Battle::setBattleBackground(BattleBackground* battleBackground)
 
 void Battle::closeBattleMenu()
 {
-  SceneManager::instance().getGuiStack()->removeWidget(m_battleMenu);
+  m_battleMenu->close();
   m_battleMenu = nullptr;
 }

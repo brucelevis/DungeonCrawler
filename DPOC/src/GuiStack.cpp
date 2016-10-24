@@ -8,10 +8,7 @@ void GuiStack::update()
     widget->update();
   }
 
-  if (m_toBeRemoved.size())
-  {
-    cleanup();
-  }
+  cleanup();
 }
 
 bool GuiStack::handleEvent(const sf::Event& event)
@@ -33,10 +30,7 @@ bool GuiStack::handleEvent(const sf::Event& event)
       }
     }
 
-    if (m_toBeRemoved.size())
-    {
-      cleanup();
-    }
+    cleanup();
   }
 
   return eventHandled;
@@ -62,11 +56,6 @@ void GuiStack::yield(const GuiWidget* widget)
 
     std::iter_swap(it, it-1);
   }
-}
-
-void GuiStack::removeWidget(const GuiWidget* widget)
-{
-  m_toBeRemoved.push_back(widget);
 }
 
 GuiWidget* GuiStack::getTop()
@@ -105,22 +94,13 @@ void GuiStack::cleanup()
   // Remove if widget is in toBeRemoved list.
   auto it = std::remove_if(m_guiWidgets.begin(), m_guiWidgets.end(), [this](const std::unique_ptr<GuiWidget>& w)
   {
-    for (auto& widget : m_toBeRemoved)
-    {
-      if (widget == w.get())
-      {
-        return true;
-      }
-    }
-
-    return false;
+    return w->isOpen() == false;
   });
 
-  m_toBeRemoved.clear();
   m_guiWidgets.erase(it, m_guiWidgets.end());
 
-  // Keep calling this for widgets that closes thing when they are closed.
-  if (m_toBeRemoved.size())
+  // Continue cleanup if more widgets has been closed.
+  if (m_guiWidgets.end() != std::find_if(m_guiWidgets.begin(), m_guiWidgets.end(), [&](const std::unique_ptr<GuiWidget>& w) { return w->isOpen() == false; }))
   {
     cleanup();
   }

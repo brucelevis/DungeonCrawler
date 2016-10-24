@@ -33,11 +33,9 @@ BattleMenu::BattleMenu(Battle* battle, const std::vector<Character*>& monsters)
 
 BattleMenu::~BattleMenu()
 {
-  auto stack = getGuiStack();
-
-  stack->removeWidget(m_actionMenu);
-  stack->removeWidget(m_monsterMenu);
-  stack->removeWidget(m_statusMenu);
+  m_actionMenu->close();
+  m_monsterMenu->close();
+  m_statusMenu->close();
 }
 
 void BattleMenu::start()
@@ -430,12 +428,18 @@ void BattleMenu::selectCharacter()
 
 void BattleMenu::closeSpellMenu()
 {
-  getGuiStack()->removeWidget(getGuiStack()->findWidget<SpellMenu>());
+  if (auto spellMenu = getGuiStack()->findWidget<SpellMenu>())
+  {
+    spellMenu->close();
+  }
 }
 
 void BattleMenu::closeItemMenu()
 {
-  getGuiStack()->removeWidget(getGuiStack()->findWidget<ItemMenu>());
+  if (auto itemMenu = getGuiStack()->findWidget<ItemMenu>())
+  {
+    itemMenu->close();
+  }
 }
 
 Character* BattleMenu::getTarget(Target targetType) const

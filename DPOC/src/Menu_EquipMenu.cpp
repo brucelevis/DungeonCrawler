@@ -61,8 +61,8 @@ bool EquipMenu::handleInput(sf::Keyboard::Key key)
     getGuiStack()->bringToFront(m_equipItemMenu);
     break;
   case sf::Keyboard::Escape:
-    getGuiStack()->removeWidget(m_equipItemMenu);
-    getGuiStack()->removeWidget(this);
+    m_equipItemMenu->close();
+    close();
     break;
   default:
     break;

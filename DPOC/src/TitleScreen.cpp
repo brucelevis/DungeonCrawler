@@ -79,7 +79,7 @@ void TitleScreen::postFade(FadeType fadeType)
     SceneManager::instance().fadeIn(32);
 
     auto guiStack = SceneManager::instance().getGuiStack();
-    guiStack->removeWidget(guiStack->findWidget<TitleMenu>());
+    guiStack->findWidget<TitleMenu>()->close();
 
     switch (m_selectedAction)
     {

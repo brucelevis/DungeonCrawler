@@ -45,7 +45,7 @@ bool SpellMenu::handleInput(sf::Keyboard::Key key)
     }
     break;
   case sf::Keyboard::Escape:
-    getGuiStack()->removeWidget(this);
+    close();
     break;
   default:
     break;

@@ -47,7 +47,7 @@ bool SaveMenu::handleInput(sf::Keyboard::Key key)
     handleConfirm();
     break;
   case sf::Keyboard::Escape:
-    getGuiStack()->removeWidget(this);
+    close();
     break;
   default:
     break;

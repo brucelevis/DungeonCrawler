@@ -65,6 +65,6 @@ void TitleMenu::draw(sf::RenderTarget& target)
 
 void TitleMenu::gameLoaded()
 {
-  getGuiStack()->removeWidget(getGuiStack()->findWidget<SaveMenu>());
+  getGuiStack()->findWidget<SaveMenu>()->close();
   m_callback(LOAD_GAME);
 }

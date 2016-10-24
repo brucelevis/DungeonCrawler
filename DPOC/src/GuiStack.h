@@ -27,8 +27,6 @@ public:
   void bringToFront(const GuiWidget* widget);
   void yield(const GuiWidget* widget);
 
-  void removeWidget(const GuiWidget* widget);
-
   template <typename T>
   T* findWidget()
   {
@@ -51,7 +49,6 @@ private:
   void cleanup();
 private:
   std::vector<std::unique_ptr<GuiWidget>> m_guiWidgets;
-  std::vector<const GuiWidget*> m_toBeRemoved;
 };
 
 #endif /* GUISTACK_H_ */

@@ -5,7 +5,8 @@ GuiWidget::GuiWidget()
   : m_arrowTexture(cache::loadTexture("UI/Arrow.png")),
     m_visible(true),
     m_cursorVisible(true),
-    m_guiStack(nullptr)
+    m_guiStack(nullptr),
+    m_isOpen(true)
 {
 }
 
@@ -49,4 +50,9 @@ void GuiWidget::drawBottomScrollArrow(sf::RenderTarget& target, int x, int y) co
   sprite.setPosition(x, y);
   sprite.setTextureRect(sf::IntRect(16, 0, 8, 8));
   target.draw(sprite);
+}
+
+void GuiWidget::close()
+{
+  m_isOpen = false;
 }

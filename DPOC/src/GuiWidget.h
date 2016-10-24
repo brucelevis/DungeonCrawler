@@ -20,6 +20,9 @@ public:
   void setCursorVisible(bool visible) { m_cursorVisible = visible; }
   bool cursorVisible() const { return m_cursorVisible; }
 
+  void close();
+  bool isOpen() const { return m_isOpen; }
+
   virtual void start() {}
   virtual void update() {}
   virtual bool handleInput(sf::Keyboard::Key key) = 0;
@@ -41,6 +44,7 @@ private:
   bool m_cursorVisible;
 
   GuiStack* m_guiStack;
+  bool m_isOpen;
 };
 
 #endif /* GUIWIDGET_H_ */

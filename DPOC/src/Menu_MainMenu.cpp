@@ -38,7 +38,7 @@ MainMenu::MainMenu()
 
 MainMenu::~MainMenu()
 {
-  getGuiStack()->removeWidget(m_characterMenu);
+  m_characterMenu->close();
 }
 
 void MainMenu::start()
@@ -70,7 +70,7 @@ bool MainMenu::handleInput(sf::Keyboard::Key key)
     handleConfirm();
     break;
   case sf::Keyboard::Escape:
-    getGuiStack()->removeWidget(this);
+    close();
     break;
   default:
     break;
@@ -109,7 +109,7 @@ void MainMenu::handleConfirm()
 
   if (option == "Close")
   {
-    getGuiStack()->removeWidget(this);
+    close();
   }
   else if (option == "Item")
   {
