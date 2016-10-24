@@ -63,7 +63,7 @@ void SpellMenu::draw(sf::RenderTarget& target)
   int x = m_x;
   int y = m_y + descriptionPanelHeight;
 
-  for (int index = m_range.getStart(), i = 0; index <= m_range.getEnd(); index++, i++)
+  for (int index = m_range.getStart(), i = 0; index < m_range.getEnd(); index++, i++)
   {
     if (index < (int)m_spells.size())
     {

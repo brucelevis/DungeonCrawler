@@ -51,7 +51,7 @@ void Range::addIndex(int num, WrapMode wrapMode)
 
   fixWrap(wrapMode);
 
-  if (m_index >= m_end)
+  if (size() && m_index >= m_end)
   {
     m_start++;
     m_end++;
@@ -64,7 +64,7 @@ void Range::subIndex(int num, WrapMode wrapMode)
 
   fixWrap(wrapMode);
 
-  if (m_index < m_start)
+  if (size() && m_index < m_start)
   {
     m_start--;
     m_end--;
@@ -73,6 +73,8 @@ void Range::subIndex(int num, WrapMode wrapMode)
 
 void Range::fixWrap(WrapMode wrapMode)
 {
+  if (!size()) m_index = 0;
+
   if (m_index >= m_max)
   {
     if (wrapMode == NO_WRAP)
@@ -125,4 +127,9 @@ int Range::getMax() const
 int Range::getRangeLength() const
 {
   return m_rangeLength;
+}
+
+int Range::size() const
+{
+  return m_max - m_min;
 }

@@ -29,6 +29,7 @@ struct Range
 
   int getRangeLength() const;
 private:
+  int size() const;
   void fixWrap(WrapMode wrapMode);
 private:
   int m_index;

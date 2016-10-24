@@ -52,7 +52,7 @@ void ItemMenu::draw(sf::RenderTarget& target)
   int x = m_x;
   int y = m_y + descriptionPanelHeight;
 
-  for (int index = m_itemRange.getStart(), i = 0; index <= m_itemRange.getEnd(); index++, i++)
+  for (int index = m_itemRange.getStart(), i = 0; index < m_itemRange.getEnd(); index++, i++)
   {
     if (index < (int)m_items.size())
     {
@@ -66,7 +66,7 @@ void ItemMenu::draw(sf::RenderTarget& target)
 
         draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s %s", stack.c_str(), item->name.c_str());
       }
-      else
+      else if (index < static_cast<int>(m_items.size()))
       {
         draw_text_bmp(target, x + 16, y + 8 + i * ENTRY_OFFSET, "%s", m_items[index].c_str());
       }
@@ -88,7 +88,7 @@ void ItemMenu::draw(sf::RenderTarget& target)
     drawBottomScrollArrow(target, x + m_width - 12, y + m_height - 12);
   }
 
-  if (cursorVisible() && hasItem(getSelectedItemName()))
+  if (cursorVisible() && getItem(getSelectedItemName()))
   {
     draw_text_bmp(target, m_x + 8, m_y + 8, "%s", getItem(getSelectedItemName())->description.c_str());
   }
@@ -122,6 +122,11 @@ void ItemMenu::fixRange()
 
 std::string ItemMenu::getSelectedItemName() const
 {
+  if (m_items.empty())
+  {
+    return "";
+  }
+
   return m_items[m_itemRange.getIndex()];
 }
 
