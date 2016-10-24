@@ -48,8 +48,10 @@ public:
   void draw(sf::RenderTarget& target);
 private:
   std::vector<std::unique_ptr<GuiWidget>>::iterator findIterator(const GuiWidget* widget);
+  void cleanup();
 private:
   std::vector<std::unique_ptr<GuiWidget>> m_guiWidgets;
+  std::vector<const GuiWidget*> m_toBeRemoved;
 };
 
 #endif /* GUISTACK_H_ */
