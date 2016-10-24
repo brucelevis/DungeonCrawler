@@ -344,14 +344,19 @@ void BattleMenu::nextActor()
 
   m_monsterMenu->setCursorVisible(false);
   m_statusMenu->setCursorVisible(false);
+  m_actionMenu->resetChoice();
 
   if (!m_statusMenu->nextActor())
   {
+    m_actionMenu->setVisible(false);
+
     // If no more actors, we are done.
     m_battle->doneSelectingActions();
   }
-
-  m_actionMenu->resetChoice();
+  else
+  {
+    getGuiStack()->bringToFront(m_actionMenu);
+  }
 }
 
 void BattleMenu::prepareAction()

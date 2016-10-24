@@ -22,6 +22,11 @@ BattleActionMenu::BattleActionMenu(const ConfirmCallback& confirmCallback, const
 
 bool BattleActionMenu::handleInput(sf::Keyboard::Key key)
 {
+  if (!cursorVisible() || !isVisible())
+  {
+    return false;
+  }
+
   switch (key)
   {
   case sf::Keyboard::Up:

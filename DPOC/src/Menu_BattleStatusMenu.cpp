@@ -29,6 +29,11 @@ void BattleStatusMenu::start()
 
 bool BattleStatusMenu::handleInput(sf::Keyboard::Key key)
 {
+  if (!cursorVisible() || !isVisible())
+  {
+    return false;
+  }
+
   switch (key)
   {
   case sf::Keyboard::Up:

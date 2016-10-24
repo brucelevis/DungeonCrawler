@@ -14,6 +14,11 @@ BattleMonsterMenu::BattleMonsterMenu(const Callback& callback, const std::vector
 
 bool BattleMonsterMenu::handleInput(sf::Keyboard::Key key)
 {
+  if (!cursorVisible() || !isVisible())
+  {
+    return false;
+  }
+
   int prev = m_index;
 
   switch (key)

@@ -18,9 +18,10 @@ public:
   {
     std::unique_ptr<T> ptr{new T{std::forward<Args>(args)...}};
     ptr->setGuiStack(this);
+    T* rawPtr = static_cast<T*>(ptr.get());
     m_guiWidgets.emplace_back(std::move(ptr));
     m_guiWidgets.back()->start();
-    return static_cast<T*>(m_guiWidgets.back().get());
+    return rawPtr;
   }
 
   void bringToFront(const GuiWidget* widget);
