@@ -62,12 +62,12 @@ void BattleMenu::start()
     std::bind(&BattleMenu::statusMenuEscape, this),
     statusMenuX, statusMenuY);
 
-  stack->bringToFront(m_actionMenu);
+  stack->bringToFront(this);
 }
 
 bool BattleMenu::handleInput(sf::Keyboard::Key)
 {
-  return false;
+  return true;
 }
 
 void BattleMenu::draw(sf::RenderTarget& target)
@@ -117,6 +117,11 @@ void BattleMenu::draw(sf::RenderTarget& target)
       draw_text_bmp(target, x + 216, y + 8, "%s", vocab_mid(terms::mp).c_str());
     }
   }
+}
+
+void BattleMenu::activate()
+{
+  getGuiStack()->bringToFront(m_actionMenu);
 }
 
 void BattleMenu::resetChoice()

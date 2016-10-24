@@ -27,6 +27,7 @@ public:
   bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;
 
+  void activate();
   void resetChoice();
 
   void setActionMenuHidden(bool hidden);

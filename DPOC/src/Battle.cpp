@@ -278,6 +278,8 @@ void Battle::nextTurn()
     m_script.execute();
   }
 
+  m_battleMenu->activate();
+
   m_state = STATE_SELECT_ACTIONS;
 }
 
