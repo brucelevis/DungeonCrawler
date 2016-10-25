@@ -2,6 +2,7 @@
 #define MENU_SHOPCONFIRMMENU_H_
 
 #include <string>
+#include <functional>
 
 #include "GuiWidget.h"
 #include "MenuPresenter.h"
@@ -14,7 +15,9 @@ public:
     BUY, SELL
   };
 
-  ShopConfirmMenu(BuyOrSell type, const std::string& itemName);
+  using ConfirmCallback = std::function<void()>;
+
+  ShopConfirmMenu(BuyOrSell type, const std::string& itemName, const ConfirmCallback confirmCallback = ConfirmCallback());
 
   bool handleInput(sf::Keyboard::Key key) override;
   void draw(sf::RenderTarget& target) override;
@@ -31,6 +34,7 @@ private:
   BuyOrSell m_type;
   std::string m_itemName;
   MenuPresenter m_presenter;
+  ConfirmCallback m_callback;
 };
 
 #endif /* MENU_SHOPCONFIRMMENU_H_ */

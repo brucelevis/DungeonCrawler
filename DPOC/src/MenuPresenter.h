@@ -40,6 +40,7 @@ public:
   int getHeight() const;
 
   Entry getSelectedOption() const;
+  void setSelectedIndex(int index);
 
   void draw(sf::RenderTarget& target, int x, int y, const GuiWidget* guiWidget) const;
 private:

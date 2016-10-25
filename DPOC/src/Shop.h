@@ -11,28 +11,6 @@
 #include "Menu.h"
 
 class PlayerCharacter;
-class ConfirmMenu;
-
-class ShopSellMenu : public Menu
-{
-public:
-  ShopSellMenu();
-  ~ShopSellMenu();
-
-  void handleConfirm();
-  void handleEscape();
-  void moveArrow(Direction dir);
-
-  int getWidth() const;
-  int getHeight() const;
-
-  void draw(sf::RenderTarget& target, int x, int y);
-private:
-  void refresh();
-private:
-  std::vector<std::string> m_inventory;
-  ConfirmMenu* m_confirmMenu;
-};
 
 class ShopMenu : public Menu
 {

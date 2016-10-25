@@ -8,11 +8,12 @@
 
 #include "Menu_ShopConfirmMenu.h"
 
-ShopConfirmMenu::ShopConfirmMenu(BuyOrSell type, const std::string& itemName)
+ShopConfirmMenu::ShopConfirmMenu(BuyOrSell type, const std::string& itemName, const ConfirmCallback confirmCallback)
   : m_quantity(1),
     m_type(type),
     m_itemName(itemName),
-    m_presenter(MenuPresenter::STYLE_FRAME)
+    m_presenter(MenuPresenter::STYLE_FRAME),
+    m_callback(confirmCallback)
 {
   m_presenter.addEntry(type == BUY ? "Buy" : "Sell");
   m_presenter.addEntry("Cancel");
@@ -112,6 +113,11 @@ void ShopConfirmMenu::handleConfirm()
     get_player()->removeItemFromInventory(m_itemName, m_quantity);
 
     play_sound(config::get("SOUND_SHOP"));
+
+    if (m_callback)
+    {
+      m_callback();
+    }
 
     close();
   }
