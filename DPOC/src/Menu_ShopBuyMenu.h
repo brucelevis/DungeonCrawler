@@ -7,6 +7,8 @@
 #include "GuiWidget.h"
 #include "MenuPresenter.h"
 
+class PlayerCharacter;
+
 class ShopBuyMenu : public GuiWidget
 {
 public:

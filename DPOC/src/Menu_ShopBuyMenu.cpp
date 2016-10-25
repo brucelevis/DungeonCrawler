@@ -5,6 +5,9 @@
 #include "Player.h"
 #include "Sound.h"
 #include "Vocabulary.h"
+#include "Frame.h"
+#include "GuiStack.h"
+#include "PlayerCharacter.h"
 
 #include "Menu_ShopConfirmMenu.h"
 #include "Menu_ShopBuyMenu.h"
@@ -68,6 +71,8 @@ void ShopBuyMenu::draw(sf::RenderTarget& target)
 {
   const int x = 0;
   const int y = 24;
+
+  draw_frame(target, 0, 0, target.getSize().x, target.getSize().y);
 
   std::string itemName = get_string_after_first_space(m_presenter.getSelectedOption().entryName);
   Item& item = item_ref(itemName);

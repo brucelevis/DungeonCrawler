@@ -7,28 +7,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "Scene.h"
-#include "Direction.h"
-#include "Menu.h"
 
 class PlayerCharacter;
-
-class ShopMenu : public Menu
-{
-public:
-  ShopMenu(const std::vector<std::string>& inventory);
-  ~ShopMenu();
-
-  void moveArrow(Direction dir);
-  void handleConfirm();
-  void handleEscape();
-
-  void draw(sf::RenderTarget& target, int x, int y);
-private:
-  ShopBuyMenu* m_buyMenu;
-  ShopSellMenu* m_sellMenu;
-
-  std::vector<std::string> m_inventory;
-};
 
 class Shop : public Scene
 {
@@ -39,9 +19,8 @@ public:
   void draw(sf::RenderTarget& target);
   void handleEvent(sf::Event& event);
 private:
+  void menuClosed();
   void handleKeyPress(sf::Keyboard::Key key);
-private:
-  ShopMenu m_menu;
 };
 
 #endif

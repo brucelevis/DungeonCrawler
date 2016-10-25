@@ -6,6 +6,7 @@
 #include "Sound.h"
 #include "Utility.h"
 #include "Vocabulary.h"
+#include "GuiStack.h"
 
 #include "Frame.h"
 #include "draw_text.h"
@@ -19,7 +20,7 @@ ShopSellMenu::ShopSellMenu()
   refresh();
 }
 
-bool ShopBuyMenu::handleInput(sf::Keyboard::Key key)
+bool ShopSellMenu::handleInput(sf::Keyboard::Key key)
 {
   switch (key)
   {
@@ -47,6 +48,8 @@ void ShopSellMenu::draw(sf::RenderTarget& target)
 {
   const int x = 0;
   const int y = 24;
+
+  draw_frame(target, 0, 0, target.getSize().x, target.getSize().y);
 
   std::string itemName = get_string_after_first_space(m_presenter.getSelectedOption().entryName);
   Item& item = item_ref(itemName);
