@@ -23,6 +23,8 @@ public:
   int getWidth() const;
   int getHeight() const;
 
+  void setX(int x) { m_x = x; }
+
   /////////////////////////////////////////////////////////////////////////////
   ///
   /// @return  False if no previous actor available.

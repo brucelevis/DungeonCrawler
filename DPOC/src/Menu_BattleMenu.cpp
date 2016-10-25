@@ -24,6 +24,15 @@
 
 #include "Menu_BattleMenu.h"
 
+namespace
+{
+  const int actionMenuX = 0;
+  const int actionMenuY = config::RAYCASTER_RES_Y;
+
+  const int statusMenuX = 80;
+  const int statusMenuY = config::RAYCASTER_RES_Y;
+}
+
 BattleMenu::BattleMenu(Battle* battle, const std::vector<Character*>& monsters)
  : m_battle(battle),
    m_monsters(monsters),
@@ -42,9 +51,6 @@ void BattleMenu::start()
 {
   auto stack = getGuiStack();
 
-  const int actionMenuX = 0;
-  const int actionMenuY = 176;
-
   m_actionMenu = stack->addWidget<BattleActionMenu>(
     std::bind(&BattleMenu::battleActionSelected, this, std::placeholders::_1),
     std::bind(&BattleMenu::battleActionEscape, this),
@@ -53,9 +59,6 @@ void BattleMenu::start()
   m_monsterMenu = stack->addWidget<BattleMonsterMenu>(
     std::bind(&BattleMenu::monsterSelected, this, std::placeholders::_1),
     m_monsters);
-
-  const int statusMenuX = 80;
-  const int statusMenuY = 176;
 
   m_statusMenu = stack->addWidget<BattleStatusMenu>(
     std::bind(&BattleMenu::playerSelected, this, std::placeholders::_1),
@@ -72,17 +75,8 @@ bool BattleMenu::handleInput(sf::Keyboard::Key)
 
 void BattleMenu::draw(sf::RenderTarget& target)
 {
-  const int x = m_x;
+  const int x = 0;
   const int y = 152;
-
-  if (!m_actionMenuHidden)
-  {
-    draw_frame(target, x, y, config::GAME_RES_X, 24);
-  }
-  else
-  {
-    draw_frame(target, x + 80, y, m_statusMenu->getWidth(), 24);
-  }
 
   if ((getGuiStack()->getTop() == m_monsterMenu) &&
       (m_actionMenu->getCurrentMenuChoice() == "Spell" ||
@@ -97,24 +91,6 @@ void BattleMenu::draw(sf::RenderTarget& target)
     {
       auto itemMenu = getGuiStack()->findWidget<ItemMenu>();
       draw_text_bmp(target, x + 8, y + 8, "Using: %s", itemMenu->getSelectedItemName().c_str());
-    }
-  }
-  else
-  {
-    if (!m_actionMenuHidden)
-    {
-      draw_text_bmp(target, x + 8, y + 8, "Action");
-      draw_text_bmp(target, x + 88, y + 8, "Name");
-      draw_text_bmp(target, x + 136, y + 8, "Cond");
-      draw_text_bmp(target, x + 180, y + 8, "%s", vocab_mid(terms::hp).c_str());
-      draw_text_bmp(target, x + 216, y + 8, "%s", vocab_mid(terms::mp).c_str());
-    }
-    else
-    {
-      draw_text_bmp(target, x + 88, y + 8, "Name");
-      draw_text_bmp(target, x + 136, y + 8, "Cond");
-      draw_text_bmp(target, x + 180, y + 8, "%s", vocab_mid(terms::hp).c_str());
-      draw_text_bmp(target, x + 216, y + 8, "%s", vocab_mid(terms::mp).c_str());
     }
   }
 }
@@ -142,6 +118,15 @@ void BattleMenu::setActionMenuHidden(bool hidden)
   m_actionMenuHidden = hidden;
   m_actionMenu->setVisible(!hidden);
   m_statusMenu->setCurrentActorRectHidden(hidden);
+
+  if (hidden)
+  {
+    m_statusMenu->setX(statusMenuX - 40);
+  }
+  else
+  {
+    m_statusMenu->setX(statusMenuX);
+  }
 }
 
 void BattleMenu::addMonster(Character* monster)

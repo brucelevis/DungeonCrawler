@@ -1,14 +1,15 @@
+#include "Config.h"
 #include "Frame.h"
 #include "draw_text.h"
 #include "Utility.h"
 #include "Menu_BattleActionMenu.h"
 
-const int MAX_VISIBLE_ACTION_ENTRIES = 4;
+const int MAX_VISIBLE_ACTION_ENTRIES = 5;
 
 BattleActionMenu::BattleActionMenu(const ConfirmCallback& confirmCallback, const EscapeCallback& escapeCallback, int x, int y)
   : m_x(x),
     m_y(y),
-    m_presenter(MenuPresenter::STYLE_FRAME),
+    m_presenter(MenuPresenter::NO_STYLE),
     m_confirmCallback(confirmCallback),
     m_escapeCallback(escapeCallback)
 {
@@ -60,6 +61,7 @@ void BattleActionMenu::draw(sf::RenderTarget& target)
   const int x = m_x;
   const int y = m_y;
 
+  draw_frame(target, x, y, m_presenter.getWidth(), config::GAME_RES_Y - config::RAYCASTER_RES_Y);
   m_presenter.draw(target, x, y, this);
 }
 

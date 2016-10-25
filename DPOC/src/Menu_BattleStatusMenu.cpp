@@ -111,7 +111,9 @@ int BattleStatusMenu::getWidth() const
 
 int BattleStatusMenu::getHeight() const
 {
-  return 2 * 8 + 4 * 12;
+  const int numberOfLines = 5;
+
+  return config::GAME_RES_Y - config::RAYCASTER_RES_Y;
 }
 
 bool BattleStatusMenu::prevActor()

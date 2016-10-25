@@ -943,18 +943,6 @@ void Battle::handleKeyPress(sf::Keyboard::Key key)
 
 void Battle::draw(sf::RenderTarget& target)
 {
-  int battleMenuX = 0;
-
-  if (m_state != STATE_SELECT_ACTIONS && m_state != STATE_BATTLE_BEGINS)
-  {
-    battleMenuX = -40;
-  }
-
-  if (m_battleMenu)
-  {
-    m_battleMenu->setX(battleMenuX);
-  }
-
   if (m_battleBackground)
   {
     sf::Sprite bgSprite;

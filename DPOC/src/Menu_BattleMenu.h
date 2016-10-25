@@ -33,8 +33,6 @@ public:
   void setActionMenuHidden(bool hidden);
 
   void addMonster(Character* monster);
-
-  void setX(int x) { m_x = x; }
 private:
   void monsterSelected(Character* monster);
   void playerSelected(PlayerCharacter* character);
@@ -60,8 +58,6 @@ private:
 private:
   Battle* m_battle;
   std::vector<Character*> m_monsters;
-
-  int m_x = 0;
 
   bool m_actionMenuHidden;
 
