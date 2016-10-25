@@ -13,27 +13,6 @@
 class PlayerCharacter;
 class ConfirmMenu;
 
-class ShopBuyMenu : public Menu
-{
-public:
-  ShopBuyMenu(const std::vector<std::string>& inventory);
-  ~ShopBuyMenu();
-
-  void handleConfirm();
-  void handleEscape();
-  void moveArrow(Direction dir);
-
-  int getWidth() const;
-  int getHeight() const;
-
-  void draw(sf::RenderTarget& target, int x, int y);
-private:
-  void drawDeltas(sf::RenderTarget& target, PlayerCharacter* character, const std::string& itemName, int x, int y);
-private:
-  std::vector<std::string> m_inventory;
-  ConfirmMenu* m_confirmMenu;
-};
-
 class ShopSellMenu : public Menu
 {
 public:
