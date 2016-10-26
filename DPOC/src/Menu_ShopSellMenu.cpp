@@ -64,7 +64,9 @@ void ShopSellMenu::draw(sf::RenderTarget& target)
 
 void ShopSellMenu::refresh()
 {
-  int currentIndex = m_presenter.getSelectedOption().entryIndex;
+  int currentIndex = m_presenter.getNumberOfOptions() > 0 ?
+      m_presenter.getSelectedOption().entryIndex :
+      0;
 
   m_presenter.clear();
 

@@ -41,6 +41,7 @@ public:
 
   Entry getSelectedOption() const;
   void setSelectedIndex(int index);
+  int getNumberOfOptions() const;
 
   void draw(sf::RenderTarget& target, int x, int y, const GuiWidget* guiWidget) const;
 private:

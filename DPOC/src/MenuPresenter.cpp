@@ -63,6 +63,11 @@ void MenuPresenter::setSelectedIndex(int index)
   m_range.moveTo(index);
 }
 
+int MenuPresenter::getNumberOfOptions() const
+{
+  return static_cast<int>(m_options.size());
+}
+
 void MenuPresenter::draw(sf::RenderTarget& target, int x, int y, const GuiWidget* guiWidget) const
 {
   const int width = getWidth();
